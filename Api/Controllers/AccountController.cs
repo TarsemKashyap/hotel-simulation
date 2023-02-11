@@ -16,6 +16,17 @@ public class AccountController : ControllerBase
         _roleManager = roleManager;
     }
 
+    [HttpGet]
+    public async Task<ActionResult> CreateAdmin()
+    {
+        var result = await _userManager.CreateAsync(new IdentityUser
+        {
+            UserName = "greatGursoy",
+            PasswordHash = "12345"
+        });
+        return Ok();
+    }
+
 
 
 }

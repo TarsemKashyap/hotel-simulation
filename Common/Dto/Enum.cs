@@ -6,7 +6,7 @@ public enum Roles
     Admin = 0,
     [EnumMember(Value = "Instructor")]
     Instructor = 1,
-   [EnumMember(Value = "Student")]
+    [EnumMember(Value = "Student")]
     Student = 3
 
 }
