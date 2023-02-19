@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class intial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,6 +57,28 @@ namespace Database.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Class",
+                columns: table => new
+                {
+                    ClassId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
+                    Memo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    HotelsCount = table.Column<int>(type: "int", nullable: false),
+                    RoomInEachHotel = table.Column<int>(type: "int", nullable: false),
+                    CurrentQuater = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Class", x => x.ClassId);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -75,6 +97,29 @@ namespace Database.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppUsers",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    LastName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Mobile = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    IdentityUserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUsers", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_AppUsers_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -168,6 +213,11 @@ namespace Database.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppUsers_IdentityUserId",
+                table: "AppUsers",
+                column: "IdentityUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -209,6 +259,9 @@ namespace Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppUsers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -222,6 +275,9 @@ namespace Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Class");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

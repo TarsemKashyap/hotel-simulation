@@ -10,9 +10,12 @@ public class HotelDbContext : IdentityDbContext<IdentityUser>
     {
     }
 
-   // public DbSet<Course> Courses { get; set; }
+    public DbSet<AppUser> AppUsers { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.ApplyConfiguration(new AppUserEntityConfig());
+        builder.ApplyConfiguration(new ClassSessionEntityConfig());
+        
         base.OnModelCreating(builder);
     }
 }
