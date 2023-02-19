@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,9 @@ namespace Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    FirstName = table.Column<string>(type: "longtext", nullable: true),
+                    LastName = table.Column<string>(type: "longtext", nullable: true),
+                    UserType = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -70,7 +73,8 @@ namespace Database.Migrations
                     RoomInEachHotel = table.Column<int>(type: "int", nullable: false),
                     CurrentQuater = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Code = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,29 +101,6 @@ namespace Database.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AppUsers",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    LastName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Mobile = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    IdentityUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppUsers", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_AppUsers_AspNetUsers_IdentityUserId",
-                        column: x => x.IdentityUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -212,10 +193,52 @@ namespace Database.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AppUsers_IdentityUserId",
-                table: "AppUsers",
-                column: "IdentityUserId");
+            migrationBuilder.CreateTable(
+                name: "ClassGroup",
+                columns: table => new
+                {
+                    GroupId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
+                    Serial = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassGroup", x => x.GroupId);
+                    table.ForeignKey(
+                        name: "FK_ClassGroup_Class_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Class",
+                        principalColumn: "ClassId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ClassMonth",
+                columns: table => new
+                {
+                    MonthId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false),
+                    TotalMarket = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsComplete = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    ConfigId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassMonth", x => x.MonthId);
+                    table.ForeignKey(
+                        name: "FK_ClassMonth_Class_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Class",
+                        principalColumn: "ClassId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -253,14 +276,21 @@ namespace Database.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClassGroup_ClassID",
+                table: "ClassGroup",
+                column: "ClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClassGroup_ClassID",
+                table: "ClassMonth",
+                column: "ClassId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AppUsers");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -277,13 +307,19 @@ namespace Database.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Class");
+                name: "ClassGroup");
+
+            migrationBuilder.DropTable(
+                name: "ClassMonth");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Class");
         }
     }
 }

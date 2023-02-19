@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 public class ClassSession
 {
     public int ClassId { get; set; }
@@ -13,6 +13,11 @@ public class ClassSession
     public int CurrentQuater { get; set; }
     public ClassStatus Status { get; set; }
     public DateTime CreatedOn { get; set; }
+    public string Code { get; set; }
+    public virtual ICollection<ClassGroup> Groups { get; set; }
+    public virtual ICollection<Month> Months { get; set; }
+
+
 
 
 }
@@ -30,15 +35,18 @@ public class ClassSessionEntityConfig : IEntityTypeConfiguration<ClassSession>
     {
         builder.ToTable("Class");
         builder.HasKey(x => x.ClassId);
+        builder.HasMany(x => x.Groups);
         builder.Property(x => x.Title).HasMaxLength(300).IsRequired();
         builder.Property(x => x.Memo).HasMaxLength(300).IsRequired();
+        builder.Property(x => x.Code).IsRequired();
         builder.Property(x => x.StartDate).IsRequired();
         builder.Property(x => x.EndDate).IsRequired();
         builder.Property(x => x.HotelsCount).IsRequired();
         builder.Property(x => x.RoomInEachHotel).IsRequired();
         builder.Property(x => x.CurrentQuater).IsRequired();
         builder.Property(x => x.Status).IsRequired().HasConversion<string>();
-        builder.Property(x=>x.CreatedOn).IsRequired();
+        builder.Property(x => x.CreatedOn).IsRequired();
 
     }
+
 }

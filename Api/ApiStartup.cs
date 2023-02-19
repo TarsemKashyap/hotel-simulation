@@ -24,7 +24,7 @@ public class ApiStartup
         {
             options.UseMySQL(_configRoot.GetConnectionString("DbConn"));
         });
-        services.AddIdentity<IdentityUser, IdentityRole>()
+        services.AddIdentity<AppUser, AppUserRole>()
         .AddEntityFrameworkStores<HotelDbContext>()
         .AddDefaultTokenProviders();
         Jwt jwt = new Jwt();
