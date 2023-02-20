@@ -16,15 +16,18 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     {
     }
 
-
-
     public DbSet<AppUser> AppUsers { get; set; }
+    public DbSet<Instructor> Instructors { get; set; }
+    public DbSet<ClassSession> ClassSessions { get; set; }
+    public DbSet<ClassGroup> ClassGroups { get; set; }
+    public DbSet<Month> Months { get; set; }
+   public DbSet<MigrationScript> MigrationScripts { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
-      //  builder.ApplyConfiguration(new AppUserEntityConfig());
-       // builder.ApplyConfiguration(new ClassSessionEntityConfig());
-      //  builder.ApplyConfiguration(new ClassGroupEntityConfig());
-      builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
+        //  builder.ApplyConfiguration(new AppUserEntityConfig());
+        // builder.ApplyConfiguration(new ClassSessionEntityConfig());
+        //  builder.ApplyConfiguration(new ClassGroupEntityConfig());
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(), t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
 
         base.OnModelCreating(builder);
     }

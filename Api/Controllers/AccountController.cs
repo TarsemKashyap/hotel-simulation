@@ -9,10 +9,10 @@ namespace Api.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly RoleManager<AppUserRole> _roleManager;
 
-    public AccountController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AccountController(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -21,15 +21,15 @@ public class AccountController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> CreateAdmin()
     {
-        var appuser = new IdentityUser
+        var appuser = new AppUser
         {
             UserName = "greatGursoy",
             PasswordHash = "12345"
         };
         var result = await _userManager.CreateAsync(appuser);
-        if (!await _roleManager.RoleExistsAsync(UserType.Admin.ToString()))
+        if (!await _roleManager.RoleExistsAsync(AppRoleType.Admin.ToString()))
         {
-            await _userManager.AddToRoleAsync(appuser, UserType.Admin.ToString());
+            await _userManager.AddToRoleAsync(appuser, AppRoleType.Admin.ToString());
         }
 
         return Ok();

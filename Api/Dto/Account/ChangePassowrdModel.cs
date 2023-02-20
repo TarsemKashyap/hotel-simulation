@@ -1,4 +1,5 @@
 namespace Api.Dto;
-public class ChangePasswordDto {
-    
+public class ChangePasswordDto
+{
+
 }
