@@ -24,9 +24,8 @@ public class ApiStartup
         {
             options.UseMySQL(_configRoot.GetConnectionString("DbConn"));
         });
-        services.AddIdentity<AppUser, AppUserRole>()
-        .AddEntityFrameworkStores<HotelDbContext>()
-        .AddDefaultTokenProviders();
+        services.AddIdentity<AppUser, AppUserRole>().AddEntityFrameworkStores<HotelDbContext>().AddDefaultTokenProviders();
+        services.Configure<DataProtectionTokenProviderOptions>(opt =>opt.TokenLifespan = TimeSpan.FromHours(2));
         Jwt jwt = new Jwt();
         _configRoot.GetSection("jwt").Bind(jwt);
         services.AddJwt(jwt);
@@ -45,9 +44,10 @@ public class ApiStartup
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => { 
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix=string.Empty;
+                c.RoutePrefix = string.Empty;
             });
         }
 

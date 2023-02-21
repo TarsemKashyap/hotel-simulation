@@ -1,44 +1,32 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Api.Dto;
 using Microsoft.AspNetCore.Authorization;
-
+using Service;
 namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly RoleManager<AppUserRole> _roleManager;
+    private readonly IAccountService _accountService;
 
-    public AccountController(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration)
+    public AccountController(IAccountService accountService)
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
+        _accountService = accountService;
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<ActionResult> CreateAdmin()
     {
-        var appuser = new AppUser
-        {
-            UserName = "greatGursoy",
-            PasswordHash = "12345"
-        };
-        var result = await _userManager.CreateAsync(appuser);
-        if (!await _roleManager.RoleExistsAsync(AppRoleType.Admin.ToString()))
-        {
-            await _userManager.AddToRoleAsync(appuser, AppRoleType.Admin.ToString());
-        }
-
+        await _accountService.CreateAdminAccount();
         return Ok();
     }
 
     [Authorize]
-    public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest model)
     {
-        //  await _userManager.ChangePasswordAsync(User, model.CurrentPassword, model.NewPassword);
+       await _accountService.ChangePassword(User.Identity.Name,model.CurrentPassword,model.NewPassword);
         return Ok();
 
     }

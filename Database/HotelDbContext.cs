@@ -21,7 +21,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<ClassSession> ClassSessions { get; set; }
     public DbSet<ClassGroup> ClassGroups { get; set; }
     public DbSet<Month> Months { get; set; }
-   public DbSet<MigrationScript> MigrationScripts { get; set; }
+    public DbSet<MigrationScript> MigrationScripts { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         //  builder.ApplyConfiguration(new AppUserEntityConfig());
