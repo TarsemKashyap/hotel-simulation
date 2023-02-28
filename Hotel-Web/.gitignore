@@ -11,8 +11,8 @@
 *.suo
 *.vs
 *.vscode
-*.angular
-*.vscode
+.angular
+dist/*
 node_modules
 # Include dlls if they’re in the NuGet packages directory
 !/packages/*/lib/*.dll

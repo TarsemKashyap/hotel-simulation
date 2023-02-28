@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MatButtonModule } from "@angular/material/button";
-import {MatButtonToggleModule} from "@angular/material/button-toggle"
+import { HeaderMenuComponent } from './header-menu/header-menu.component';
+import { AccountModule } from "./account";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderMenuComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatButtonModule,MatButtonToggleModule
+    AccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]

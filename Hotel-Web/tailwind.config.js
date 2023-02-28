@@ -1,6 +1,10 @@
 module.exports = {
-  content: [".src/*/**/*.html", "./assets/**/*.js"],
-
+  content: [
+    './index.html',
+    ".src/**/*.html",
+    ".src/**/*.ts",
+    "./assets/**/*.js"
+  ],
   theme: {
     screens: {
       sm: "540px",
