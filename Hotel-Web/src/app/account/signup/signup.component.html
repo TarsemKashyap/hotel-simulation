@@ -1,1 +1,77 @@
-<p>signup works!</p>
+<!-- ====== Forms Section Start -->
+<section class="bg-[#F4F7FF] py-14 lg:py-20">
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4">
+                <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white py-14 px-8 text-center sm:px-12 md:px-[60px]"
+                    data-wow-delay=".15s">
+                    <div class="mb-10 text-center">
+                        <a href="javascript:void(0)" class="mx-auto inline-block max-w-[160px]">
+                            <img src="assets/images/logo/logo.svg" alt="logo" />
+                        </a>
+                    </div>
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <div class="mb-6">
+
+                            <input type="text" placeholder="First name" formControlName="firstName"
+                                [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" class="input-field" />
+
+                            <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                                <div *ngIf="f.firstName.errors.required">First name is required</div>
+                            </div>
+
+                        </div>
+                        <div class="mb-6">
+
+                            <input type="text" placeholder="Last name" formControlName="lastName"
+                                [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" class="input-field" />
+
+                            <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                                <div *ngIf="f.lastName.errors.required">Last name is required</div>
+                            </div>
+
+                        </div>
+                        <div class="mb-6">
+                            <input type="email" placeholder="Email" formControlName="email" class="input-field" />
+                        </div>
+                        <div class="mb-6">
+                            <input type="password" placeholder="Password" class="input-field" />
+                        </div>
+                        <div class="mb-1 float-left">
+                            <label class="mb-4 text-base text-[#adadad]">
+                                <input type="checkbox" />
+                                <p >
+                                    By creating an account you are agree with our
+                                    <a href="javascript:void(0)" class="text-primary hover:underline">
+                                        Privacy
+                                    </a>
+                                    and
+                                    <a href="javascript:void(0)" class="text-primary hover:underline">
+                                        Policy
+                                    </a>
+                                </p>
+                            </label>
+                        </div>
+                        <div class="mb-10">
+                            <input type="submit" value="Sign Up"
+                                class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
+                        </div>
+                    </form>
+
+
+
+
+                    <p class="text-base text-[#adadad]">
+                        Already have an account?
+                        <a href="signin.html" class="text-primary hover:underline">
+                            Sign In
+                        </a>
+                    </p>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== Forms Section End -->
