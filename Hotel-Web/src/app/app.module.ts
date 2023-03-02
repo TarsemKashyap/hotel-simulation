@@ -4,6 +4,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderMenuComponent } from './header-menu/header-menu.component';
 import { AccountModule } from "./account";
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -13,6 +15,7 @@ import { AccountModule } from "./account";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     AccountModule
   ],
   providers: [],

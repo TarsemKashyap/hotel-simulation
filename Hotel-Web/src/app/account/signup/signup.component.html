@@ -33,9 +33,16 @@
                         </div>
                         <div class="mb-6">
                             <input type="email" placeholder="Email" formControlName="email" class="input-field" />
+                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.required">Email is required</div>
+                                <div *ngIf="f.email.errors.invalid">Email is not valid</div>
+                            </div>
                         </div>
                         <div class="mb-6">
-                            <input type="password" placeholder="Password" class="input-field" />
+                            <input type="password" required="true" placeholder="Password" formControlName="password" class="input-field" />
+                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                <div *ngIf="f.password.errors.required">Password is required</div>
+                            </div>
                         </div>
                         <div class="mb-1 float-left">
                             <label class="mb-4 text-base text-[#adadad]">
@@ -53,8 +60,8 @@
                             </label>
                         </div>
                         <div class="mb-10">
-                            <input type="submit" value="Sign Up"
-                                class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
+                            <button type="submit"
+                                class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"> Sign Up</button>
                         </div>
                     </form>
 
