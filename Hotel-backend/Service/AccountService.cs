@@ -19,15 +19,22 @@ public class AccountService : IAccountService
 
     public async Task CreateAdminAccount()
     {
+        //todo: read admin account from App setting
         var appuser = new AppUser
         {
             UserName = "greatGursoy",
             PasswordHash = "12345"
         };
-        var result = await _userManager.CreateAsync(appuser);
-        if (!await _roleManager.RoleExistsAsync(AppRoleType.Admin.ToString()))
+        var adminAccount = await _userManager.FindByIdAsync(appuser.UserName);
+        if (adminAccount != null)
         {
-            await _userManager.AddToRoleAsync(appuser, AppRoleType.Admin.ToString());
+            throw new ValidationException("Admin account already exists");
+        }
+
+        var result = await _userManager.CreateAsync(appuser);
+        if (!await _roleManager.RoleExistsAsync(RoleType.Admin.ToString()))
+        {
+            await _userManager.AddToRoleAsync(appuser, RoleType.Admin.ToString());
         }
 
     }
@@ -50,9 +57,20 @@ public class AccountService : IAccountService
         var result = await _userManager.CreateAsync(appuser);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(appuser, AppRoleType.Admin.ToString());
+            await CreateRoleifNotExist(RoleType.Instructor);
+            await _userManager.AddToRoleAsync(appuser, RoleType.Instructor);
         }
     }
+
+    private async Task CreateRoleifNotExist(string role)
+    {
+        if (!await _roleManager.RoleExistsAsync(role))
+        {
+            await _roleManager.CreateAsync(new AppUserRole(role));
+        }
+    }
+
+
 
     public async Task<string> ResetPasswordSendLink(string email)
     {
@@ -77,7 +95,8 @@ public class AccountService : IAccountService
     public async Task ChangePassword(string userId, string oldPassword, string newPassword)
     {
         var appUser = await _userManager.FindByIdAsync(userId);
-        if (appUser == null) throw new ValidationException("Account does not exist for given user");
+        if (appUser == null)
+            throw new ValidationException("Account does not exist for given user");
         await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
     }
 

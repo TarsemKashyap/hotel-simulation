@@ -25,7 +25,7 @@ public class SeedService
         {
             var adminUser = new AppUser() { FirstName = "Super", LastName = "Admin", UserName = "admin@hotelsimulation.com", PasswordHash = "123456" };
             await _userManager.CreateAsync(adminUser);
-            await _userManager.AddToRoleAsync(adminUser, AppRoleType.Admin.ToString());
+            await _userManager.AddToRoleAsync(adminUser, RoleType.Admin.ToString());
         }
 
 

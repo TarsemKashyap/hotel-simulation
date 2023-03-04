@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Api.Dto;
+
 public class ChangePasswordRequest
 {
     public string CurrentPassword { get; set; }

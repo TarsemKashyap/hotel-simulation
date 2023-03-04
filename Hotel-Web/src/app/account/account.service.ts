@@ -18,7 +18,8 @@ export class AccountService {
     }),
   };
 
-  CreateAccount(sigup: Signup): Observable<Signup> {
-    return this.httpClient.post<Signup>("/Account/Instructor", sigup, this.httpOptions).pipe();
+  CreateAccount(signup: Signup): Observable<Signup> {
+    return this.httpClient.post<Signup>("account/instructor", signup);
   }
 }
+//http://localhost:5030/account/instructor
