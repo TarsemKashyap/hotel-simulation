@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { Signup } from '../model/signup.model';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'signup',
   templateUrl: './signup.component.html',
@@ -11,7 +13,7 @@ export class SignupComponent {
   form: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService) {
+  constructor(private fb: FormBuilder, private accountService: AccountService, private _snackBar: MatSnackBar) {
     this.form = this.createForm();
   }
 
@@ -35,18 +37,20 @@ export class SignupComponent {
   }
 
   onSubmit(): void {
-   // this.submitted = true;
+    // this.submitted = true;
     if (this.form.invalid) {
       return;
     }
-    console.log("REgister objct", { vv: this.form.value });
     const sigup: Signup = {
       FirstName: this.form.value.firstName,
       LastName: this.form.value.lastName,
       Email: this.form.value.email,
       Password: this.form.value.password
     };
-    this.accountService.CreateAccount(sigup).subscribe(x => console.log(x));
+    this.accountService.CreateAccount(sigup).subscribe(x => {
+      console.log("Signup",x);
+      this._snackBar.open("Instructor Account created");
+    });
 
   }
 

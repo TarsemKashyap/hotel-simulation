@@ -22,4 +22,3 @@ export class AccountService {
     return this.httpClient.post<Signup>("account/instructor", signup);
   }
 }
-//http://localhost:5030/account/instructor
