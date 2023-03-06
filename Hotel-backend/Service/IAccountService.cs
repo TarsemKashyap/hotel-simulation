@@ -3,7 +3,7 @@
 
 using System.Threading.Tasks;
 using Service.Model;
-
+using Common;
 namespace Service;
 public interface IAccountService
 {
@@ -12,4 +12,5 @@ public interface IAccountService
     Task InstructorAccount(InstructorAccountDto dto);
     Task ResetPassword(PasswordResetDto passwordReset);
     Task<string> ResetPasswordSendLink(string email);
+    Task SignAsync(LoginDto login);
 }

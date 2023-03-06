@@ -100,6 +100,11 @@ public class AccountService : IAccountService
         await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
     }
 
+    public Task SignAsync(LoginDto login)
+    {
+        return Task.FromResult(0);
+    }
+
 }
 
 public class ValidationException : System.Exception
