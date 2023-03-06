@@ -23,7 +23,7 @@ import { CoreModule } from './core/core.module';
     HttpClientModule,
     AccountModule,
     MatSnackBarModule,
-    CoreModule
+    CoreModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
