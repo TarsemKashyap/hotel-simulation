@@ -9,6 +9,10 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.logo {
+  width: 175px;
+  height: 70px;
+}
 .sticky {
   @apply fixed z-[9999] bg-white bg-opacity-80 transition;
   backdrop-filter: blur(5px);
