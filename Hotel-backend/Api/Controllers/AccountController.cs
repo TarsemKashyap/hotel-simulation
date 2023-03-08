@@ -53,8 +53,8 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto login)
     {
-        await _accountService.SignAsync(login);
-        return Ok();
+       var signInResult= await _accountService.SignAsync(login);
+        return Ok(signInResult);
     }
 
 

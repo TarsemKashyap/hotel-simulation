@@ -8,6 +8,8 @@ public class AppUser : IdentityUser
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
+
+    public virtual ICollection<AppUserRefreshToken> RefreshTokens { get; set; }
 }
 
 public class AppUserRole : IdentityRole

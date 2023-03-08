@@ -32,10 +32,20 @@ public class ApiStartup
         {
             options.UseMySQL(_configRoot.GetConnectionString("DbConn"));
         });
-        services.AddIdentity<AppUser, AppUserRole>().AddEntityFrameworkStores<HotelDbContext>().AddDefaultTokenProviders();
-        services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
-        Jwt jwt = new Jwt();
-        _configRoot.GetSection("jwt").Bind(jwt);
+        services.AddIdentity<AppUser, AppUserRole>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 5;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        })
+        .AddEntityFrameworkStores<HotelDbContext>()
+        .AddDefaultTokenProviders();
+        // services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
+        JwtSettings jwt = new JwtSettings();
+        _configRoot.GetSection("JwtSettings").Bind(jwt);
+        services.AddSingleton<JwtSettings>(jwt);
         services.AddJwt(jwt);
         services.AddCors(opt =>
         {
@@ -54,7 +64,7 @@ public class ApiStartup
 
     private void RegisterOptions(IServiceCollection service)
     {
-        service.Configure<Jwt>(this._configRoot.GetSection("jwt"));
+        service.Configure<JwtSettings>(this._configRoot.GetSection("JwtSettings"));
         service.Configure<ConnectionStrings>(this._configRoot.GetSection("ConnectionStrings"));
     }
 
@@ -82,6 +92,9 @@ public class ApiStartup
 
     private void RegisterService(IServiceCollection services)
     {
-        services.AddTransient<IAccountService, AccountService>();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<ITokenService, TokenService>();
     }
+
+
 }

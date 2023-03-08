@@ -12,5 +12,5 @@ public interface IAccountService
     Task InstructorAccount(InstructorAccountDto dto);
     Task ResetPassword(PasswordResetDto passwordReset);
     Task<string> ResetPasswordSendLink(string email);
-    Task SignAsync(LoginDto login);
+    Task<LoginResultDto> SignAsync(LoginDto login);
 }
