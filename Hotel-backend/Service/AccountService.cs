@@ -17,14 +17,16 @@ public class AccountService : IAccountService
     private readonly SignInManager<AppUser> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly HotelDbContext _context;
+    private readonly JwtSettings _jwtSettings;
 
-    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context)
+    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, JwtSettings jwtSettings)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _signInManager = signInManager;
         _tokenService = tokenService;
         _context = context;
+        _jwtSettings = jwtSettings;
     }
 
     public async Task CreateAdminAccount()
@@ -135,12 +137,38 @@ public class AccountService : IAccountService
             UserId = user.Id,
             RefreshToken = refreshToken,
             IsActive = true,
+            ExpiryTime = DateTime.Now.AddMinutes(_jwtSettings.RefreshTokenExpirationMinutes),
             CreatedDate = DateTime.Now
         });
         await _context.SaveChangesAsync();
 
         return new LoginResultDto(accessToken, refreshToken);
 
+    }
+
+    public async Task<LoginResultDto> RefreshToken(string accessToken, string refreshToken)
+    {
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+        string userName = principal.Identity.Name;
+        var appuser = await _userManager.FindByNameAsync(userName);
+        var storeRefreshToken = appuser.RefreshTokens?.FirstOrDefault(x => x.RefreshToken.Equals(refreshToken));
+        if (appuser is null || storeRefreshToken is null || storeRefreshToken.RefreshToken.Equals(refreshToken) || storeRefreshToken.ExpiryTime <= DateTime.Now)
+        {
+            throw new ValidationException("Invalid client request");
+        }
+        var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+        var newRefreshToken = _tokenService.GenerateRefreshToken();
+        storeRefreshToken.RefreshToken = newRefreshToken;
+        _context.RefreshTokens.Update(storeRefreshToken);
+        _context.SaveChanges();
+        return new LoginResultDto(newAccessToken, newRefreshToken);
+    }
+
+    public async Task Revoke(string userId)
+    {
+        var tokens = _context.RefreshTokens.Where(x => x.UserId.Equals(userId)).AsEnumerable();
+        _context.RefreshTokens.RemoveRange(tokens);
+        await _context.SaveChangesAsync();
     }
 
 }

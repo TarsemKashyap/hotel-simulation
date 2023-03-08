@@ -9,6 +9,7 @@ public class AppUserRefreshToken
     public string RefreshToken { get; set; }
     public bool IsActive { get; set; }
 
+    public DateTime ExpiryTime { get; set; }
     public DateTime CreatedDate { get; set; }
 
     public virtual AppUser User { get; set; }
@@ -26,6 +27,7 @@ public class AppUserRefreshTokenEntityConfig : IEntityTypeConfiguration<AppUserR
         builder.Property(x => x.RefreshToken).IsRequired().HasMaxLength(2000);
         builder.Property(x => x.IsActive).IsRequired();
         builder.Property(x => x.CreatedDate).IsRequired();
+        builder.Property(x => x.ExpiryTime).IsRequired();
 
     }
 

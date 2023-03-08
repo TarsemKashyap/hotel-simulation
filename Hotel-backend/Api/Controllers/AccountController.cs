@@ -53,10 +53,23 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto login)
     {
-       var signInResult= await _accountService.SignAsync(login);
+        var signInResult = await _accountService.SignAsync(login);
         return Ok(signInResult);
     }
 
+    [HttpPost("token/refresh")]
+    public async Task<IActionResult> TokenRefresh(TokenApiRequest login)
+    {
+        var signInResult = await _accountService.RefreshToken(login.AccessToken, login.RefreshToken);
+        return Ok(signInResult);
+    }
 
+    [HttpPost("token/revoke")]
+    public async Task<IActionResult> Revoke()
+    {
+        string userId = User.Identity.Name;
+        await _accountService.Revoke(userId);
+        return Ok();
+    }
 
 }
