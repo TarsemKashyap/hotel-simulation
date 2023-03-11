@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { canActivateHome } from '../core/auth.gurad';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SignupComponent } from '../account';
 
 const routes: Routes = [
   {
