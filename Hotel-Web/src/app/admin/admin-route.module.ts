@@ -1,8 +1,8 @@
 import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { canActivateHome } from '../core/auth.gurad';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { canActivateHome } from '../shared/auth.gurad';
+import { DashboardComponent } from './dashboard/admin-dashboard.component';
 
 const routes: Routes = [
   {

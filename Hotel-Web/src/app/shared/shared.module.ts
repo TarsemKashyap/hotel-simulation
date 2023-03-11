@@ -12,4 +12,4 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   exports: [],
   providers: [SessionStore, JwtHelperService]
 })
-export class CoreModule { }
+export class SharedModule { }
