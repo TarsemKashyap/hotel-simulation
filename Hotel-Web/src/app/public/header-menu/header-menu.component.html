@@ -84,14 +84,18 @@
           </nav>
         </div>
         <div class="hidden justify-end pr-16 sm:flex lg:pr-0">
-          <a routerLink="/login" class="loginBtn py-3 px-7 text-base font-medium text-white hover:opacity-70">
+          <a routerLink="/login"
+            class="loginBtn py-3 cursor-pointer px-7 text-base font-medium text-white hover:opacity-70">
             Login
           </a>
-          <a routerLink="/signup"
-            class="signUpBtn rounded-lg bg-white bg-opacity-20 py-3 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
+          <a routerLinkActive="router-link-active" routerLink="/signup"
+            class="signUpBtn rounded-lg bg-white cursor-pointer bg-opacity-20 py-3 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
             Student Sign Up
           </a>
-        
+          <a routerLink="/signup"
+            class="inline-flex items-center cursor-pointer justify-center rounded-lg bg-white py-4 px-6 text-center text-base font-medium text-dark transition duration-300 ease-in-out hover:text-primary hover:shadow-lg sm:px-10">
+            Signup to Know More
+          </a>
         </div>
       </div>
     </div>

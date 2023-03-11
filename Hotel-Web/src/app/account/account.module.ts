@@ -4,13 +4,14 @@ import { LoginComponent, SignupComponent } from "./index"
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
 import { CoreModule } from '../core/core.module';
+import { AccountRouteModule } from './account-route.module';
 
 @NgModule({
   declarations: [LoginComponent, SignupComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CoreModule
+    AccountRouteModule,
   ],
   providers: [AccountService]
 })
