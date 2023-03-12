@@ -3,15 +3,27 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { canActivateHome } from '../shared/auth.gurad';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
+const OUTLET = "admin-outlet"
 const routes: Routes = [
   {
     path: '',
-    title: 'Admin',
+    redirectTo: 'dashboard',
+    pathMatch: "full"
+  },
+  {
+    path: 'dashboard',
+    title: '',
     component: DashboardComponent,  // this is the component with the <router-outlet> in the template
-    children: [
-    ],
-  }];
+  },
+
+  { path: 'change-password', component: ChangePasswordComponent, outlet: OUTLET },
+  {
+    path: 'dashboard3', component: DashboardComponent
+  }
+
+];
 
 @NgModule({
   declarations: [],

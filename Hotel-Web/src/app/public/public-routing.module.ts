@@ -7,14 +7,14 @@ export const appRoutes: Routes = [
 
     { path: '', component: HomeComponent },
     { path: 'home', component: HomeComponent },
-    { path: 'login', component: LoginComponent },
+    { path: 'login', component: LoginComponent},
     { path: 'signup', component: SignupComponent }
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(appRoutes)],
     exports: [RouterModule],
-    bootstrap:[HomeComponent]
-   
+    bootstrap: [HomeComponent]
+
 })
 export class publicRoutingModule { }

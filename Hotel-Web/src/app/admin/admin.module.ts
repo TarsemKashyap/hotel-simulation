@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { AdminRouteModule } from './admin-route.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 
 @NgModule({
-  declarations: [
-    DashboardComponent
-  ],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    AdminRouteModule
+    AdminRouteModule,
+    SharedModule
   ],
-  bootstrap:[DashboardComponent]
+  bootstrap: [DashboardComponent]
 })
 export class AdminModule { }
