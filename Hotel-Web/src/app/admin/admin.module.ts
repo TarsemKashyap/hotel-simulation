@@ -3,16 +3,25 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { AdminRouteModule } from './admin-route.module';
 import { SharedModule } from '../shared/shared.module';
+import { ChangePasswordService } from './change-password/change-password.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent,ChangePasswordComponent],
   imports: [
     CommonModule,
     AdminRouteModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
+    HttpClientModule
+
   ],
+  providers: [ChangePasswordService],
   bootstrap: [DashboardComponent]
 })
 export class AdminModule { }

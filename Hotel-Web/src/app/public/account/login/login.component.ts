@@ -40,7 +40,7 @@ export class LoginComponent {
       return;
     }
     const login: LoginModel = {
-      Email: this.form.value.email,
+      UserId: this.form.value.email,
       Password: this.form.value.password
     };
     this.accountService.login(login).subscribe(x => {

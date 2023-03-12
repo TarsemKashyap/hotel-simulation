@@ -6,6 +6,6 @@ export interface Signup {
 }
 
 export interface LoginModel {
-    Email: string;
+    UserId: string;
     Password: string;
 }

@@ -23,16 +23,16 @@ import { publicModule } from './public/public.module';
     publicModule,
     MatSnackBarModule,
     AdminModule,
-    JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: (sessionStore: SessionStore) => {
-          tokenGetter: sessionStore.GetAccessToken()
-          allowedDomains: ["localhost.*"]
-        },
-        deps: [SessionStore]
-      }
-    })
+    // JwtModule.forRoot({
+    //   jwtOptionsProvider: {
+    //     provide: JWT_OPTIONS,
+    //     useFactory: (sessionStore: SessionStore) => {
+    //       tokenGetter: ()=> sessionStore.GetAccessToken()
+    //       allowedDomains: ["localhost.*"]
+    //     },
+    //     deps: [SessionStore]
+    //   }
+    // })
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
