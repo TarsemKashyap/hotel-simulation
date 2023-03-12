@@ -7,22 +7,15 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 
 const OUTLET = "admin-outlet"
 const routes: Routes = [
+
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: "full"
-  },
-  {
-    path: 'dashboard',
     title: '',
-    component: DashboardComponent,  // this is the component with the <router-outlet> in the template
+    component: DashboardComponent,
+    children: [
+      { path: 'change-password', component: ChangePasswordComponent }
+    ]
   },
-
-  { path: 'change-password', component: ChangePasswordComponent, outlet: OUTLET },
-  {
-    path: 'dashboard3', component: DashboardComponent
-  }
-
 ];
 
 @NgModule({
