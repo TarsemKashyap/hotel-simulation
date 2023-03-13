@@ -7,4 +7,5 @@ public interface ITokenService
     string GenerateRefreshToken();
     string GenerateAccessToken(IEnumerable<Claim> claim);
     ClaimsPrincipal GetPrincipalFromExpiredToken(string refreshToken);
+    string ValidateJwtToken(string token);
 }

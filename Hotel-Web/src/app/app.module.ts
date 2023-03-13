@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APIInterceptor } from './interceptors/http.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
+import { JwtInterceptor, JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
 import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
 import { publicModule } from './public/public.module';
+import { AuthGuard } from './shared';
 
 @NgModule({
   declarations: [
@@ -23,22 +24,32 @@ import { publicModule } from './public/public.module';
     publicModule,
     MatSnackBarModule,
     AdminModule,
-    // JwtModule.forRoot({
-    //   jwtOptionsProvider: {
-    //     provide: JWT_OPTIONS,
-    //     useFactory: (sessionStore: SessionStore) => {
-    //       tokenGetter: ()=> sessionStore.GetAccessToken()
-    //       allowedDomains: ["localhost.*"]
-    //     },
-    //     deps: [SessionStore]
-    //   }
-    // })
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [SessionStore]
+      }
+    })
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: APIInterceptor,
-    multi: true,
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: APIInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
+
+
+export function jwtOptionsFactory(sessionStore: SessionStore) {
+  return {
+    tokenGetter: () => {
+      console.log("jwtOptionsFactory");
+      return sessionStore.GetAccessToken();
+    },
+    allowedDomains: ["localhost:4200"]
+  }
+}

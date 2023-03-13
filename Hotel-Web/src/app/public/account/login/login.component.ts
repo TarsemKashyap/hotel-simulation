@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { AccountService } from '../account.service';
 import { LoginModel, Signup } from '../model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent {
   form: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private _snackBar: MatSnackBar) {
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {
     this.form = this.createForm();
   }
 
@@ -40,12 +41,13 @@ export class LoginComponent {
       return;
     }
     const login: LoginModel = {
-      UserId: this.form.value.email,
-      Password: this.form.value.password
+      userId: this.form.value.email,
+      password: this.form.value.password
     };
     this.accountService.login(login).subscribe(x => {
       console.log("Signup", x);
-      this._snackBar.open("Instructor Account created");
+      this.router.navigate(['/', 'admin']);
+
     });
 
   }

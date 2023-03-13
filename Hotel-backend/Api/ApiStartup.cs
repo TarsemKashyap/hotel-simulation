@@ -82,7 +82,7 @@ public class ApiStartup
         }
 
         app.UseHttpsRedirection();
-
+        app.UseMiddleware<JwtMiddleware>();
         app.UseAuthorization();
         app.UseAuthentication();
         app.UseCors(_policyName);

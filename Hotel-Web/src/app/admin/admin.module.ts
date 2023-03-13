@@ -8,11 +8,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { SessionStore } from '../store';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent,ChangePasswordComponent],
+  declarations: [DashboardComponent, ChangePasswordComponent],
   imports: [
     CommonModule,
     AdminRouteModule,

@@ -6,6 +6,12 @@ export interface Signup {
 }
 
 export interface LoginModel {
-    UserId: string;
-    Password: string;
+    userId: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    accessToken: string
+    refreshToken: string
+    roles: Array<string>
 }

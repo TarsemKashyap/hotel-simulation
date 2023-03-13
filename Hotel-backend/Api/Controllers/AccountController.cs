@@ -6,6 +6,7 @@ using FluentValidation;
 namespace Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("account")]
 public class AccountController : ControllerBase
 {
@@ -34,23 +35,25 @@ public class AccountController : ControllerBase
             FirstName = account.FirstName,
             LastName = account.LastName,
             Email = account.Email,
-            Institue = account.Institue
+            Institue = account.Institue,
+            Password=account.Password
+        
         };
         await _accountService.InstructorAccount(instructor);
         return Ok(instructor);
 
     }
 
-    [Authorize]
-    [HttpPost]
+    
+    [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest model)
     {
-        await _accountService.ChangePassword(User.Identity.Name, model.CurrentPassword, model.NewPassword);
+        await _accountService.ChangePassword(User.Identity.Name, model.ConfirmPassword, model.NewPassword);
         return Ok();
 
     }
 
-    [HttpPost("login")]
+    [HttpPost("login"),AllowAnonymous]
     public async Task<IActionResult> Login(LoginDto login)
     {
         var signInResult = await _accountService.SignAsync(login);

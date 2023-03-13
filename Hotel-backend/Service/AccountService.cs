@@ -60,17 +60,17 @@ public class AccountService : IAccountService
         var appuser = new Instructor
         {
             UserName = dto.Email,
-            PasswordHash = dto.Password,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            Institue = dto.Institue
+            Institue = dto.Institue,
+            TwoFactorEnabled = false
         };
         var user = await _userManager.FindByNameAsync(dto.Email);
         if (user != null)
         {
             throw new ValidationException("User with {0} this email already exist", dto.Email);
         }
-        var result = await _userManager.CreateAsync(appuser);
+        var result = await _userManager.CreateAsync(appuser, dto.Password);
         if (result.Succeeded)
         {
             await CreateRoleifNotExist(RoleType.Instructor);
@@ -142,7 +142,14 @@ public class AccountService : IAccountService
         });
         await _context.SaveChangesAsync();
 
-        return new LoginResultDto(accessToken, refreshToken);
+        var roles = await _userManager.GetRolesAsync(user);
+        return new LoginResultDto
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            Roles = roles.ToArray()
+        };
+
 
     }
 
@@ -151,8 +158,8 @@ public class AccountService : IAccountService
         var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
         string userName = principal.Identity.Name;
         var appuser = await _userManager.FindByNameAsync(userName);
-        var storeRefreshToken = appuser.RefreshTokens?.FirstOrDefault(x => x.RefreshToken.Equals(refreshToken));
-        if (appuser is null || storeRefreshToken is null || storeRefreshToken.RefreshToken.Equals(refreshToken) || storeRefreshToken.ExpiryTime <= DateTime.Now)
+        var storeRefreshToken = _context.RefreshTokens.FirstOrDefault(x => x.UserId.Equals(appuser.Id) && x.RefreshToken.Equals(refreshToken));
+        if (appuser is null || storeRefreshToken is null || storeRefreshToken.ExpiryTime <= DateTime.Now)
         {
             throw new ValidationException("Invalid client request");
         }
@@ -161,7 +168,7 @@ public class AccountService : IAccountService
         storeRefreshToken.RefreshToken = newRefreshToken;
         _context.RefreshTokens.Update(storeRefreshToken);
         _context.SaveChanges();
-        return new LoginResultDto(newAccessToken, newRefreshToken);
+        return new LoginResultDto { AccessToken = newAccessToken, RefreshToken = newRefreshToken };
     }
 
     public async Task Revoke(string userId)

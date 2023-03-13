@@ -19,7 +19,7 @@ export class ChangePasswordService {
   };
 
   changePassword(signup: ChangePasswordRequest): Observable<any> {
-    return this.httpClient.post<ChangePasswordRequest>("account/changepassword", signup);
+    return this.httpClient.post<ChangePasswordRequest>("account/change-password", signup);
   }
 
 
