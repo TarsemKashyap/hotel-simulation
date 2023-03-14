@@ -7,90 +7,104 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service;
+using System.Text;
 
 namespace Api;
-public class ApiStartup
+public static class ApiStartupExtensions
 {
-    public IConfiguration _configRoot
-    {
-        get;
-    }
 
-    public ApiStartup(IConfiguration configuration)
+
+
+
+
+    public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration _configRoot)
     {
-        _configRoot = configuration;
-    }
-    private readonly string _policyName = "CorsPolicy";
-    public void RegisterServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddValidatorsFromAssemblyContaining<AccountDto>();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        RegisterOptions(services);
-        services.AddDbContext<HotelDbContext>(options =>
-        {
-            options.UseMySQL(_configRoot.GetConnectionString("DbConn"));
-        });
-        services.AddIdentity<AppUser, AppUserRole>(options =>
-        {
-            options.Password.RequireDigit = false;
-            options.Password.RequiredLength = 5;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireLowercase = false;
-        })
-        .AddEntityFrameworkStores<HotelDbContext>()
-        .AddDefaultTokenProviders();
-        // services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
         JwtSettings jwt = new JwtSettings();
         _configRoot.GetSection("JwtSettings").Bind(jwt);
-        services.AddSingleton<JwtSettings>(jwt);
-        services.AddJwt(jwt);
-        services.AddCors(opt =>
+        services.AddAuthentication(options =>
         {
-            opt.AddPolicy(_policyName, builder =>
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        }).AddJwtBearer(o =>
+        {
+            o.SaveToken = true; // revisit it
+            o.RequireHttpsMetadata = false;
+            o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.AccessTokenSecret)),
+                ValidIssuer = jwt.Issuer,
+                ValidAudience = jwt.Audience,
+                ClockSkew = TimeSpan.Zero
+            };
+            o.Events = new JwtBearerEvents()
             {
 
-                builder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
+                OnAuthenticationFailed = OnAuthFailed,
+                OnForbidden = OnForbidden,
+                OnTokenValidated = onTokenValidated,
+                OnChallenge = onChanllege,
+                OnMessageReceived = onMessageRecieved,
+            };
+
         });
-
-        RegisterService(services);
     }
 
-
-    private void RegisterOptions(IServiceCollection service)
+    private static Task onMessageRecieved(MessageReceivedContext arg)
     {
-        service.Configure<JwtSettings>(this._configRoot.GetSection("JwtSettings"));
-        service.Configure<ConnectionStrings>(this._configRoot.GetSection("ConnectionStrings"));
+        return Task.CompletedTask;
     }
 
-
-    public void Configure(WebApplication app, IWebHostEnvironment env)
+    private static Task onChanllege(JwtBearerChallengeContext arg)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty;
-            });
-        }
-
-        app.UseHttpsRedirection();
-        app.UseMiddleware<JwtMiddleware>();
-        app.UseAuthorization();
-        app.UseAuthentication();
-        app.UseCors(_policyName);
-        app.MapControllers();
-
+        return Task.CompletedTask;
     }
 
-    private void RegisterService(IServiceCollection services)
+    private static Task onTokenValidated(TokenValidatedContext arg)
+    {
+        return Task.CompletedTask;
+    }
+
+    private static Task OnForbidden(ForbiddenContext arg)
+    {
+        return Task.CompletedTask;
+    }
+
+    private static Task OnAuthFailed(AuthenticationFailedContext arg)
+    {
+        return Task.CompletedTask;
+    }
+
+    public static void AddCorsForApp(this IServiceCollection services, string policy)
+    {
+        services.AddCors(opt =>
+              {
+                  opt.AddPolicy(policy, builder =>
+                  {
+
+                      builder.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+                  });
+              });
+    }
+
+
+    public static void RegisterOptions(this IServiceCollection service, IConfiguration config)
+    {
+        service.Configure<JwtSettings>(config.GetSection("JwtSettings"));
+        service.Configure<ConnectionStrings>(config.GetSection("ConnectionStrings"));
+    }
+
+
+
+
+    public static void RegisterAppServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();

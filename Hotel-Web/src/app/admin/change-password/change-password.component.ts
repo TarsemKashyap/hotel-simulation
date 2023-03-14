@@ -24,6 +24,7 @@ export class ChangePasswordComponent {
   private createForm(): FormGroup {
 
     return this.fb.group({
+      currentPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
       newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30)]]
     });
@@ -40,7 +41,8 @@ export class ChangePasswordComponent {
     }
     const login: ChangePasswordRequest = {
       newPassword: this.form.value.newPassword,
-      confirmPassword: this.form.value.confirmPassword
+      confirmPassword: this.form.value.confirmPassword,
+      currentPassword:this.form.value.currentPassword
     };
     this.accountService.changePassword(login).subscribe(x => {
 

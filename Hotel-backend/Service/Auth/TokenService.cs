@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ public class TokenService : ITokenService
 {
     private readonly JwtSettings _jwtSettings;
 
-    public TokenService(JwtSettings jwtSettings)
+    public TokenService(IOptions<JwtSettings> jwtSettings)
     {
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
     }
     public string GenerateAccessToken(IEnumerable<Claim> claims)
     {

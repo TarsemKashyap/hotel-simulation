@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest model)
     {
-        await _accountService.ChangePassword(User.Identity.Name, model.ConfirmPassword, model.NewPassword);
+        await _accountService.ChangePassword(User.Identity.Name, model.CurrentPassword, model.NewPassword);
         return Ok();
 
     }
@@ -60,7 +60,7 @@ public class AccountController : ControllerBase
         return Ok(signInResult);
     }
 
-    [HttpPost("token/refresh")]
+    [HttpPost("token/refresh"),AllowAnonymous]
     public async Task<IActionResult> TokenRefresh(TokenApiRequest login)
     {
         var signInResult = await _accountService.RefreshToken(login.AccessToken, login.RefreshToken);

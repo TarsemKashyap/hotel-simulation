@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Service.Model;
 using Database;
+using Microsoft.Extensions.Options;
 
 namespace Service;
 
@@ -19,14 +20,14 @@ public class AccountService : IAccountService
     private readonly HotelDbContext _context;
     private readonly JwtSettings _jwtSettings;
 
-    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, JwtSettings jwtSettings)
+    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _signInManager = signInManager;
         _tokenService = tokenService;
         _context = context;
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
     }
 
     public async Task CreateAdminAccount()
@@ -110,10 +111,15 @@ public class AccountService : IAccountService
 
     public async Task ChangePassword(string userId, string oldPassword, string newPassword)
     {
-        var appUser = await _userManager.FindByIdAsync(userId);
+        var appUser = await _userManager.FindByNameAsync(userId);
         if (appUser == null)
             throw new ValidationException("Account does not exist for given user");
-        await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
+        var result = await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
+        if (!result.Succeeded)
+        {
+            throw new ValidationException(result.Errors.Select(x => x.Description).ToArray());
+        }
+
     }
 
     public async Task<LoginResultDto> SignAsync(LoginDto login)
@@ -182,9 +188,15 @@ public class AccountService : IAccountService
 
 public class ValidationException : System.Exception
 {
+    private readonly string[] _message;
+
     public ValidationException(string message) : base(message)
     {
 
+    }
+    public ValidationException(params string[] message)
+    {
+        _message = message;
     }
     public ValidationException(string message, params object[] args) : this(FormatMessage(message, args))
     {
