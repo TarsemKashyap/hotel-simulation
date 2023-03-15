@@ -4,18 +4,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APIInterceptor } from './interceptors/http.interceptor';
+import {
+  APIInterceptor,
+  RefreshTokennterceptor,
+} from './interceptors/http.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { JwtInterceptor, JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
+import { JwtInterceptor, JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
 import { publicModule } from './public/public.module';
 import { AuthGuard } from './shared';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,28 +29,32 @@ import { AuthGuard } from './shared';
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
         useFactory: jwtOptionsFactory,
-        deps: [SessionStore]
-      }
-    })
+        deps: [SessionStore],
+      },
+    }),
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: APIInterceptor,
       multi: true,
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RefreshTokennterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
-
+export class AppModule {}
 
 export function jwtOptionsFactory(sessionStore: SessionStore) {
   return {
     tokenGetter: () => {
-      console.log("jwtOptionsFactory");
+      console.log('jwtOptionsFactory');
       return sessionStore.GetAccessToken();
     },
-    allowedDomains: ["localhost:4200"]
-  }
+    allowedDomains: ['localhost:4200'],
+  };
 }

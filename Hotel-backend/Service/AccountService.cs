@@ -167,7 +167,7 @@ public class AccountService : IAccountService
         var storeRefreshToken = _context.RefreshTokens.FirstOrDefault(x => x.UserId.Equals(appuser.Id) && x.RefreshToken.Equals(refreshToken));
         if (appuser is null || storeRefreshToken is null || storeRefreshToken.ExpiryTime <= DateTime.Now)
         {
-            throw new ValidationException("Invalid client request");
+            throw new UnauthorizedAccessException();
         }
         var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
         var newRefreshToken = _tokenService.GenerateRefreshToken();

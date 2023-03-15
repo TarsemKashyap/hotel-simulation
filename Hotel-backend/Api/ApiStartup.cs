@@ -75,8 +75,12 @@ public static class ApiStartupExtensions
         return Task.CompletedTask;
     }
 
-    private static Task OnAuthFailed(AuthenticationFailedContext arg)
+    private static Task OnAuthFailed(AuthenticationFailedContext context)
     {
+        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+        {
+            context.Response.Headers.Add("token-expired", "true");
+        }
         return Task.CompletedTask;
     }
 

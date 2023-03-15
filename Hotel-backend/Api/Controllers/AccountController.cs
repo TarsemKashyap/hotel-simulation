@@ -36,15 +36,15 @@ public class AccountController : ControllerBase
             LastName = account.LastName,
             Email = account.Email,
             Institue = account.Institue,
-            Password=account.Password
-        
+            Password = account.Password
+
         };
         await _accountService.InstructorAccount(instructor);
         return Ok(instructor);
 
     }
 
-    
+
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest model)
     {
@@ -53,18 +53,25 @@ public class AccountController : ControllerBase
 
     }
 
-    [HttpPost("login"),AllowAnonymous]
+    [HttpPost("login"), AllowAnonymous]
     public async Task<IActionResult> Login(LoginDto login)
     {
         var signInResult = await _accountService.SignAsync(login);
         return Ok(signInResult);
     }
 
-    [HttpPost("token/refresh"),AllowAnonymous]
+    [HttpPost("token/refresh"), AllowAnonymous]
     public async Task<IActionResult> TokenRefresh(TokenApiRequest login)
     {
-        var signInResult = await _accountService.RefreshToken(login.AccessToken, login.RefreshToken);
-        return Ok(signInResult);
+        try
+        {
+            var signInResult = await _accountService.RefreshToken(login.AccessToken, login.RefreshToken);
+            return Ok(signInResult);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("token/revoke")]
