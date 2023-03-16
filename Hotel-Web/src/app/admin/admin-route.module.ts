@@ -3,26 +3,23 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { InstructorComponent } from './instructor/instructor.component';
 
-const OUTLET = "admin-outlet"
 const routes: Routes = [
-
   {
     path: '',
     title: '',
     component: DashboardComponent,
     children: [
-      { path: 'change-password', component: ChangePasswordComponent }
-    ]
+      { path: 'change-password', component: ChangePasswordComponent },
+      { path: 'instructor/create', component: InstructorComponent },
+    ],
   },
 ];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [RouterModule]
-
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class AdminRouteModule { }
+export class AdminRouteModule {}

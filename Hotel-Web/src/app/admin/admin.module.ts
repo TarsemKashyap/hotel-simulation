@@ -10,11 +10,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from '../store';
+import { InstructorComponent } from './instructor/instructor.component';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent, ChangePasswordComponent],
+  declarations: [DashboardComponent, ChangePasswordComponent, InstructorComponent],
   imports: [
     CommonModule,
     AdminRouteModule,

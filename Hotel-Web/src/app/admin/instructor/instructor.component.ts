@@ -5,16 +5,19 @@ import {
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { AccountService } from '../account.service';
-import { Signup } from '../model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import {
+  AccountService,
+  InstructorSignup,
+  Signup,
+} from 'src/app/public/account';
 
 @Component({
-  selector: 'signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css'],
+  selector: 'app-instructor',
+  templateUrl: './instructor.component.html',
+  styleUrls: ['./instructor.component.css'],
 })
-export class SignupComponent {
+export class InstructorComponent {
   form: FormGroup;
   submitted = false;
 
@@ -41,6 +44,7 @@ export class SignupComponent {
           Validators.maxLength(30),
         ],
       ],
+      institute: ['', Validators.required],
     });
   }
 
@@ -53,11 +57,12 @@ export class SignupComponent {
     if (this.form.invalid) {
       return;
     }
-    const sigup: Signup = {
+    const sigup: InstructorSignup = {
       firstName: this.form.value.firstName,
       lastName: this.form.value.lastName,
       email: this.form.value.email,
       password: this.form.value.password,
+      institute: this.form.value.institute
     };
     this.accountService.CreateAccount(sigup).subscribe((x) => {
       console.log('Signup', x);

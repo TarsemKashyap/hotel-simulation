@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoginModel, LoginResponse, Signup } from './model/signup.model';
+import { InstructorSignup, LoginModel, LoginResponse, Signup } from './model/signup.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
@@ -20,8 +20,11 @@ export class AccountService {
     }),
   };
 
-  CreateAccount(signup: Signup): Observable<Signup> {
-    return this.httpClient.post<Signup>('account/instructor', signup);
+  CreateAccount(signup: Signup): Observable<any> {
+    return this.httpClient.post('account/instructor', signup);
+  }
+  CreateAccountInstructor(signup: InstructorSignup): Observable<any> {
+    return this.httpClient.post('account/instructor', signup);
   }
 
   login(login: LoginModel): Observable<LoginResponse> {
