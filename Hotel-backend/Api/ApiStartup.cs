@@ -112,6 +112,7 @@ public static class ApiStartupExtensions
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
     }
 
 
