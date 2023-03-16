@@ -16,5 +16,5 @@ public abstract class AccountDto
 }
 public class InstructorAccountDto : AccountDto
 {
-    public string Institue { get; set; }
+    public string Institute { get; set; }
 }

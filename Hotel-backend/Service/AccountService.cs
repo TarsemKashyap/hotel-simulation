@@ -66,7 +66,7 @@ public class AccountService : IAccountService
             UserName = dto.Email,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            Institue = dto.Institue,
+            Institute = dto.Institute,
             TwoFactorEnabled = false
         };
         var user = await _userManager.FindByNameAsync(dto.Email);
