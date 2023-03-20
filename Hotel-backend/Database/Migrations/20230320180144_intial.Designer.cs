@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20230219185055_intial")]
+    [Migration("20230320180144_intial")]
     partial class intial
     {
         /// <inheritdoc />
@@ -80,9 +80,6 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -93,6 +90,40 @@ namespace Database.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("AppUserRefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiryTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_AppUserRefreshToken_UserId");
+
+                    b.ToTable("AppUserRefreshToken", (string)null);
                 });
 
             modelBuilder.Entity("AppUserRole", b =>
@@ -300,6 +331,25 @@ namespace Database.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MigrationScript", b =>
+                {
+                    b.Property<string>("ScriptId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<DateTime>("ExecutedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValue(new DateTime(2023, 3, 20, 23, 31, 44, 739, DateTimeKind.Local).AddTicks(474));
+
+                    b.HasKey("ScriptId");
+
+                    b.ToTable("__MigrationScript", (string)null);
+                });
+
             modelBuilder.Entity("Month", b =>
                 {
                     b.Property<int>("MonthId")
@@ -329,6 +379,37 @@ namespace Database.Migrations
                         .HasDatabaseName("IX_ClassGroup_ClassID");
 
                     b.ToTable("ClassMonth", (string)null);
+                });
+
+            modelBuilder.Entity("Instructor", b =>
+                {
+                    b.HasBaseType("AppUser");
+
+                    b.Property<string>("Institute")
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Instructor", (string)null);
+                });
+
+            modelBuilder.Entity("Student", b =>
+                {
+                    b.HasBaseType("AppUser");
+
+                    b.Property<string>("Institue")
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("AppUserRefreshToken", b =>
+                {
+                    b.HasOne("AppUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ClassGroup", b =>
@@ -402,6 +483,29 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("Instructor", b =>
+                {
+                    b.HasOne("AppUser", null)
+                        .WithOne()
+                        .HasForeignKey("Instructor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Student", b =>
+                {
+                    b.HasOne("AppUser", null)
+                        .WithOne()
+                        .HasForeignKey("Student", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AppUser", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("ClassSession", b =>

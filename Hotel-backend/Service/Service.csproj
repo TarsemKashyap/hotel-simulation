@@ -6,6 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="mapster" Version="7.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3" />
     <PackageReference Include="sendgrid" Version="9.28.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />

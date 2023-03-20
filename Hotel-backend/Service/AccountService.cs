@@ -21,8 +21,9 @@ public class AccountService : IAccountService
     private readonly HotelDbContext _context;
     private readonly IEmailService _emailService;
     private readonly JwtSettings _jwtSettings;
+    private readonly Smtp _smtp;
 
-    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
+    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings, IEmailService emailService,IOptions<Smtp> smtp)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -31,6 +32,8 @@ public class AccountService : IAccountService
         _context = context;
         _emailService = emailService;
         _jwtSettings = jwtSettings.Value;
+        _smtp=smtp.Value;
+
     }
 
     public async Task CreateAdminAccount()
@@ -190,7 +193,7 @@ public class AccountService : IAccountService
 
     private async Task SendEmailToInstructor(InstructorAccountDto user)
     {
-        string website = Environment.GetEnvironmentVariable("WebAppUrl");
+        string website = _smtp.WebAppUrl;
         MailMessage message = new MailMessage();
         message.To.Add(new MailAddress(user.Email, user.FirstName));
         message.Subject = "Your Hotel Simulation account";

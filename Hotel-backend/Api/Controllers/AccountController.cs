@@ -19,14 +19,14 @@ public class AccountController : ControllerBase
         _accountValidator = accountValidator;
     }
 
-    [HttpPost("admin")]
+    [HttpPost("admin"),AllowAnonymous]
     public async Task<ActionResult> CreateAdmin()
     {
         await _accountService.CreateAdminAccount();
         return Ok();
     }
 
-    [HttpPost("instructor")]
+    [HttpPost("instructor"),AllowAnonymous]
     public async Task<ActionResult> InstructorAccount(InstructorAccountRequest account)
     {
         _accountValidator.ValidateAndThrow(account);

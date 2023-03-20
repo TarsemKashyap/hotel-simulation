@@ -17,9 +17,6 @@ public class ClassSession
     public virtual ICollection<ClassGroup> Groups { get; set; }
     public virtual ICollection<Month> Months { get; set; }
 
-
-
-
 }
 
 public enum ClassStatus

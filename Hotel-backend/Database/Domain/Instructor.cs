@@ -12,6 +12,7 @@ public class InstructorEntityConfig : IEntityTypeConfiguration<Instructor>
     public void Configure(EntityTypeBuilder<Instructor> builder)
     {
         builder.ToTable("Instructor");
+        builder.Property(x=>x.Institute);
 
     }
 

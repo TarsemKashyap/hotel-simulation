@@ -340,7 +340,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 3, 13, 21, 32, 25, 649, DateTimeKind.Local).AddTicks(2639));
+                        .HasDefaultValue(new DateTime(2023, 3, 20, 23, 31, 44, 739, DateTimeKind.Local).AddTicks(474));
 
                     b.HasKey("ScriptId");
 
@@ -382,7 +382,7 @@ namespace Database.Migrations
                 {
                     b.HasBaseType("AppUser");
 
-                    b.Property<string>("Institue")
+                    b.Property<string>("Institute")
                         .HasColumnType("longtext");
 
                     b.ToTable("Instructor", (string)null);

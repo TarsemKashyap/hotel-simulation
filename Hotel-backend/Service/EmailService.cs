@@ -1,6 +1,8 @@
 
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -12,13 +14,15 @@ public interface IEmailService
 
 public class EmailService : IEmailService
 {
-    public EmailService()
-    {
+    private readonly Smtp _smtp;
 
+    public EmailService(IOptions<Smtp> smtp)
+    {
+        _smtp = smtp.Value;
     }
     public async Task<bool> Send(MailMessage mail)
     {
-        var apiKey = System.Environment.GetEnvironmentVariable("SendGridKey");
+        var apiKey = _smtp.WebAppUrl;
         var client = new SendGridClient(apiKey);
         var from = new EmailAddress("info@hotelsimulation.com", "Hotel Simulation");
         var firstToAddress = mail.To[0];

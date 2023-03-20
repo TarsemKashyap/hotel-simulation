@@ -1,4 +1,3 @@
-using Api.Infra;
 using Database;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -8,14 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service;
 using System.Text;
+using Mapster;
+using MapsterMapper;
+using System.Reflection;
 
 namespace Api;
 public static class ApiStartupExtensions
 {
-
-
-
-
 
     public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration _configRoot)
     {
@@ -103,6 +101,7 @@ public static class ApiStartupExtensions
     {
         service.Configure<JwtSettings>(config.GetSection("JwtSettings"));
         service.Configure<ConnectionStrings>(config.GetSection("ConnectionStrings"));
+        service.Configure<Smtp>(config.GetSection("smtp"));
     }
 
 
@@ -113,7 +112,21 @@ public static class ApiStartupExtensions
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IClassSessionService, ClassSessionService>();
+
+
     }
-
-
+    public static void RegisterMapster(this IServiceCollection services)
+    {
+        //var config = new TypeAdapterConfig();
+        // Or
+        var config = TypeAdapterConfig.GlobalSettings;
+        services.AddSingleton(config);
+        config.Scan(Assembly.GetExecutingAssembly());
+        // register the mapper as Singleton service for my application
+        var mapperConfig = new MapsterMapper.Mapper(config);
+        services.AddSingleton<IMapper>(mapperConfig);
+    }
 }
+
+

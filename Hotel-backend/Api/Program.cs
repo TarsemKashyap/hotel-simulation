@@ -2,7 +2,6 @@ using Api;
 using Database;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
 
 const string _policyName = "CorsPolicy";
 
@@ -10,8 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
+builder.Services.AddCorsForApp(_policyName);
 builder.Services.AddControllers();
-builder.Services.AddValidatorsFromAssemblyContaining<AccountDto>();
+builder.Services.AddValidatorsFromAssemblyContaining<AccountDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<InstructorAccountDtoValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -34,8 +35,9 @@ builder.Services.AddIdentity<AppUser, AppUserRole>(options =>
 
 builder.Services.RegisterOptions(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddCorsForApp(_policyName);
+
 builder.Services.RegisterAppServices();
+builder.Services.RegisterMapster();
 
 
 

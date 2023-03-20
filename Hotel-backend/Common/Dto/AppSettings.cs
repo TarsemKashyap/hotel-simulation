@@ -14,3 +14,10 @@ public class JwtSettings
     public string Issuer { get; set; }
     public string Audience { get; set; }
 }
+
+public class Smtp
+{
+    public string SendGridKey { get; set; }
+    public string WebAppUrl { get; set; }
+    
+}
