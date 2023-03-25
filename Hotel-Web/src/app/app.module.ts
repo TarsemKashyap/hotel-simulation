@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
-  APIInterceptor,
   RefreshTokennterceptor,
 } from './interceptors/http.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -14,6 +13,8 @@ import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
 import { publicModule } from './public/public.module';
 import { AuthGuard } from './shared';
+import { SharedModule } from './shared/shared.module';
+import { APIInterceptor } from './interceptors/api.Interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import { AuthGuard } from './shared';
     publicModule,
     MatSnackBarModule,
     AdminModule,
+    SharedModule,
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,

@@ -14,9 +14,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
        // add auth header with jwt if account is logged in and request is to the api url
-       next.handle(request).subscribe(next: (x: number) => console.log('Observer got a next value: ' + x),
-       error: (err: Error) => console.error('Observer got an error: ' + err),
-       complete: () => console.log('Observer got a complete notification'),);
         const isLoggedIn = this.accountService.GetAccessToken();
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (isLoggedIn && isApiUrl) {

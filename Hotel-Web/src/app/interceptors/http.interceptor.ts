@@ -7,22 +7,8 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { AccountService } from '../public/account';
 import { Router } from '@angular/router';
-
-@Injectable()
-export class APIInterceptor implements HttpInterceptor {
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const url = `${environment.apiUrl}/${req.url}`;
-    console.log('Url', url);
-    const apiReq = req.clone({ url: url });
-    return next.handle(apiReq);
-  }
-}
 
 @Injectable()
 export class RefreshTokennterceptor implements HttpInterceptor {

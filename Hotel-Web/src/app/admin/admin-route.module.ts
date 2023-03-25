@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { InstructorComponent } from './instructor/instructor.component';
+import { AddClassComponent } from '../shared/class';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'instructor/create', component: InstructorComponent },
+      { path: 'class/add', component: AddClassComponent },
     ],
   },
 ];
