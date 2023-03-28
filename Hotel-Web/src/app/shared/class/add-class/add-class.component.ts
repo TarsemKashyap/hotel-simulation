@@ -18,6 +18,7 @@ import { ClassService } from '../class.service';
 export class AddClassComponent {
   form: FormGroup;
   submitted = false;
+  classCode = null || '';
 
   constructor(
     private fb: FormBuilder,
@@ -54,12 +55,15 @@ export class AddClassComponent {
       endDate: this.form.value.endDate,
       hotelsCount: this.form.value.hotelsCount,
       roomInEachHotel: this.form.value.roomInEachHotel,
-      currentQuater: this.form.value.currentQuater,
+      currentQuater: 0, //this.form.value.currentQuater,
       code: this.form.value.code,
     };
     this.classService.addClass(sigup).subscribe((x) => {
-      console.log('Signup', x);
-      this._snackBar.open('Instructor Account created');
+      this.classCode=x.code;
+      this._snackBar.open('Class has been created', '', {
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+      });
     });
   }
 

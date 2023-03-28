@@ -25,19 +25,23 @@
               </div>
             </div>
             <div class="mb-6">
+              <div class="flex flex-row">
               <input
                 type="text"
                 matInput
                 [matDatepicker]="picker"
                 placeholder="Start date"
                 formControlName="startDate"
+                (click)="picker.open()"
                 [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"
                 class="input-field"
               />
-                <input matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </div>
               <div
                 *ngIf="submitted && f.startDate.errors"
                 class="invalid-feedback"
@@ -48,14 +52,23 @@
               </div>
             </div>
             <div class="mb-6">
-              <input
-                type="text"
-                placeholder="End date"
-                formControlName="endDate"
-                [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
-                class="input-field"
-              />
-
+              <div class="flex flex-row">
+                <input
+                  type="text"
+                  placeholder="End date"
+                  formControlName="endDate"
+                  matInput
+                  [matDatepicker]="endDatePicker"
+                  [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
+                  (click)="endDatePicker.open()"
+                  class="input-field"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="endDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+              </div>
               <div
                 *ngIf="submitted && f.endDate.errors"
                 class="invalid-feedback"
@@ -93,7 +106,12 @@
                 </div>
               </div>
             </div>
-
+            <div class="mb-6">
+              <h3 class="text-base" *ngIf="classCode">
+                You class code is
+                <span class="text-primary font-bold">{{ classCode }} </span>
+              </h3>
+            </div>
             <div class="mb-10">
               <button
                 type="submit"
