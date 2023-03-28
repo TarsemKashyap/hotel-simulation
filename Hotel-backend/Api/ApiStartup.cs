@@ -128,5 +128,3 @@ public static class ApiStartupExtensions
         services.AddSingleton<IMapper>(mapperConfig);
     }
 }
-
-

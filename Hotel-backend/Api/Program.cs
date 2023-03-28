@@ -61,7 +61,21 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.UseCors(_policyName);
+app.Services.CreateScope();
 //app.MapControllers();;
 app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+if (builder.Configuration.GetValue<bool>("RunMigration"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider
+            .GetRequiredService<HotelDbContext>();
+
+        // Here is the migration executed
+        dbContext.Database.Migrate();
+    }
+}
 app.Run();
+
