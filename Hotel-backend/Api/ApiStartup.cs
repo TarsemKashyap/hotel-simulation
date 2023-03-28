@@ -122,9 +122,11 @@ public static class ApiStartupExtensions
         // Or
         var config = TypeAdapterConfig.GlobalSettings;
         services.AddSingleton(config);
-        config.Scan(Assembly.GetExecutingAssembly());
+        config.Scan(Assembly.GetAssembly(typeof(MappingProfile)));
+        
         // register the mapper as Singleton service for my application
         var mapperConfig = new MapsterMapper.Mapper(config);
-        services.AddSingleton<IMapper>(mapperConfig);
+        services.AddSingleton(mapperConfig);
+        services.AddTransient<IMapper,ServiceMapper>();
     }
 }

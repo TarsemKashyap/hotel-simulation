@@ -23,7 +23,7 @@ public class ClassSessionController : ControllerBase
     public async Task<IActionResult> Create(ClassSessionDto dto)
     {
         _validator.ValidateAndThrow(dto);
-        await _classSessionService.Create(dto);
-        return Ok(dto);
+        var response = await _classSessionService.Create(dto);
+        return Ok(response);
     }
 }

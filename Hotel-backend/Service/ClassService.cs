@@ -17,7 +17,7 @@ using MapsterMapper;
 public interface IClassSessionService
 {
     IEnumerable<ClassSessionDto> ClassList();
-    Task Create(ClassSessionDto classSession);
+    Task<ClassSessionDto> Create(ClassSessionDto classSession);
 }
 
 public class ClassSessionService : IClassSessionService
@@ -30,14 +30,26 @@ public class ClassSessionService : IClassSessionService
         _mapper = mapper;
         _context = context;
     }
-    public async Task Create(ClassSessionDto classSession)
+    public async Task<ClassSessionDto> Create(ClassSessionDto classSession)
     {
+        classSession.CreatedOn = DateTime.Now;
+        classSession.Memo="";
+        classSession.Code = RandomString();
         ClassSession session = _mapper.Map<ClassSessionDto, ClassSession>(classSession);
         _context.ClassSessions.Add(session);
         await _context.SaveChangesAsync();
+        return _mapper.Map<ClassSessionDto>(session);
+
 
     }
 
+    private string RandomString()
+    {
+        Random random = new Random();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, 6)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
     public IEnumerable<ClassSessionDto> ClassList()
     {
         return _context.ClassSessions.ProjectToType<ClassSessionDto>().AsEnumerable();

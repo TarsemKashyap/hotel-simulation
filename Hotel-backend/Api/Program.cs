@@ -61,7 +61,6 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.UseCors(_policyName);
-app.Services.CreateScope();
 //app.MapControllers();;
 app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseEndpoints(endpoints => endpoints.MapControllers());

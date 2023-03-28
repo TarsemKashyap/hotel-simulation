@@ -34,7 +34,7 @@ public class ClassSessionEntityConfig : IEntityTypeConfiguration<ClassSession>
         builder.HasKey(x => x.ClassId);
         builder.HasMany(x => x.Groups);
         builder.Property(x => x.Title).HasMaxLength(300).IsRequired();
-        builder.Property(x => x.Memo).HasMaxLength(300).IsRequired();
+        builder.Property(x => x.Memo).HasMaxLength(300);
         builder.Property(x => x.Code).IsRequired();
         builder.Property(x => x.StartDate).IsRequired();
         builder.Property(x => x.EndDate).IsRequired();
