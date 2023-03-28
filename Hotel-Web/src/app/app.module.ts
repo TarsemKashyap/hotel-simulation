@@ -7,15 +7,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
   RefreshTokennterceptor,
 } from './interceptors/http.interceptor';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { JwtInterceptor, JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
 import { publicModule } from './public/public.module';
-import { AuthGuard } from './shared';
 import { SharedModule } from './shared/shared.module';
-import { APIInterceptor } from './interceptors/api.Interceptor';
-
+import { APIInterceptor } from './interceptors/api.interceptor';
+import { MaterialModule } from './material.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -24,9 +23,9 @@ import { APIInterceptor } from './interceptors/api.Interceptor';
     BrowserAnimationsModule,
     HttpClientModule,
     publicModule,
-    MatSnackBarModule,
     AdminModule,
     SharedModule,
+    MaterialModule,
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
@@ -48,6 +47,7 @@ import { APIInterceptor } from './interceptors/api.Interceptor';
     },
   ],
   bootstrap: [AppComponent],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}
 

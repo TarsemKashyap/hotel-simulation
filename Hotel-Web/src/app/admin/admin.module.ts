@@ -22,7 +22,6 @@ import { InstructorComponent } from './instructor/instructor.component';
     SharedModule,
     ReactiveFormsModule,
     HttpClientModule
-
   ],
   providers: [ChangePasswordService],
   bootstrap: [DashboardComponent]
