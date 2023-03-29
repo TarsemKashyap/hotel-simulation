@@ -14,11 +14,13 @@ public class ClassSessionDto
     public DateTime CreatedOn { get; set; }
     public string Code { get; set; }
 
+    public ClassGroupDto[] Groups { get; set; }
+
 }
 
 public class ClassSessionDtoValidator : AbstractValidator<ClassSessionDto>
 {
-    public ClassSessionDtoValidator()
+    public ClassSessionDtoValidator(IValidator<ClassGroupDto> groupValidator)
     {
         RuleFor(x => x.Title).NotNull().NotEmpty().WithMessage("Class name should not be empty or null");
         RuleFor(x => x.StartDate).NotNull().NotEmpty()
@@ -29,6 +31,8 @@ public class ClassSessionDtoValidator : AbstractValidator<ClassSessionDto>
         RuleFor(x => x.HotelsCount).GreaterThan(0).WithMessage("Hotel count should be greater than 0");
         RuleFor(x => x.RoomInEachHotel).GreaterThan(0).WithMessage("Room in hotel should be 500");
         RuleFor(x => x.CurrentQuater).GreaterThanOrEqualTo(0).WithMessage("Current quarter should not be null");
+        RuleForEach(x => x.Groups).SetValidator(groupValidator);
+
 
     }
 

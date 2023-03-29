@@ -16,6 +16,7 @@ using MapsterMapper;
 
 public interface IClassSessionService
 {
+    Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
     IEnumerable<ClassSessionDto> ClassList();
     Task<ClassSessionDto> Create(ClassSessionDto classSession);
 }
@@ -33,7 +34,7 @@ public class ClassSessionService : IClassSessionService
     public async Task<ClassSessionDto> Create(ClassSessionDto classSession)
     {
         classSession.CreatedOn = DateTime.Now;
-        classSession.Memo="";
+        classSession.Memo = "";
         classSession.Code = RandomString();
         ClassSession session = _mapper.Map<ClassSessionDto, ClassSession>(classSession);
         _context.ClassSessions.Add(session);
@@ -55,4 +56,15 @@ public class ClassSessionService : IClassSessionService
         return _context.ClassSessions.ProjectToType<ClassSessionDto>().AsEnumerable();
     }
 
+    public async Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup)
+    {
+        ClassSession classSession = await _context.ClassSessions.FindAsync(classId);
+        var group = classGroup.Adapt<ClassGroup[]>();
+        foreach (var item in group)
+        {
+            classSession.Groups.Add(item);
+        }
+        await _context.SaveChangesAsync();
+        return classSession.Groups.Adapt<IEnumerable<ClassGroupDto>>();
+    }
 }
