@@ -6,10 +6,8 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace Database.Migrations
 {
-    /// <inheritdoc />
     public partial class intial : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -21,7 +19,7 @@ namespace Database.Migrations
                 {
                     ScriptId = table.Column<string>(type: "varchar(255)", nullable: false),
                     Description = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
-                    ExecutedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2023, 3, 20, 23, 31, 44, 739, DateTimeKind.Local).AddTicks(474))
+                    ExecutedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2023, 3, 30, 23, 17, 49, 82, DateTimeKind.Local).AddTicks(4056))
                 },
                 constraints: table =>
                 {
@@ -79,7 +77,7 @@ namespace Database.Migrations
                     ClassId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
-                    Memo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
+                    Memo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
                     HotelsCount = table.Column<int>(type: "int", nullable: false),
@@ -367,7 +365,6 @@ namespace Database.Migrations
                 column: "ClassId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

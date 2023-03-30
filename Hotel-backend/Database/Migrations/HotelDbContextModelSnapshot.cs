@@ -16,7 +16,7 @@ namespace Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("AppUser", b =>
@@ -87,8 +87,6 @@ namespace Database.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("AppUserRefreshToken", b =>
@@ -202,7 +200,6 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Memo")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
@@ -340,7 +337,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 3, 20, 23, 31, 44, 739, DateTimeKind.Local).AddTicks(474));
+                        .HasDefaultValue(new DateTime(2023, 3, 30, 23, 17, 49, 82, DateTimeKind.Local).AddTicks(4056));
 
                     b.HasKey("ScriptId");
 
