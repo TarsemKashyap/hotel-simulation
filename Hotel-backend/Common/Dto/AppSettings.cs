@@ -21,3 +21,11 @@ public class Smtp
     public string WebAppUrl { get; set; }
     
 }
+
+public class AdminConfig
+{
+    public string UserId { get; set; }
+    public string Password { get; set; }
+    public string Name { get; set; }
+    
+}

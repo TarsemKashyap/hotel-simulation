@@ -22,8 +22,9 @@ public class AccountService : IAccountService
     private readonly IEmailService _emailService;
     private readonly JwtSettings _jwtSettings;
     private readonly Smtp _smtp;
+    private readonly AdminConfig _adminConfig;
 
-    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings, IEmailService emailService,IOptions<Smtp> smtp)
+    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings, IEmailService emailService, IOptions<Smtp> smtp, IOptions<AdminConfig> adminConfig)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -32,7 +33,8 @@ public class AccountService : IAccountService
         _context = context;
         _emailService = emailService;
         _jwtSettings = jwtSettings.Value;
-        _smtp=smtp.Value;
+        _smtp = smtp.Value;
+        _adminConfig = adminConfig.Value;
 
     }
 
@@ -41,7 +43,8 @@ public class AccountService : IAccountService
         //todo: read admin account from App setting
         var appuser = new AppUser
         {
-            UserName = "greatGursoy"
+            UserName = _adminConfig.UserId,
+            FirstName = _adminConfig.Name
         };
         var adminAccount = await _userManager.FindByNameAsync(appuser.UserName);
         if (adminAccount != null)
@@ -49,7 +52,7 @@ public class AccountService : IAccountService
             throw new ValidationException("Admin account already exists");
         }
 
-        var result = await _userManager.CreateAsync(appuser, "12345");
+        var result = await _userManager.CreateAsync(appuser, _adminConfig.Password);
         if (!await _roleManager.RoleExistsAsync(RoleType.Admin))
         {
             await _roleManager.CreateAsync(new AppUserRole(RoleType.Admin));

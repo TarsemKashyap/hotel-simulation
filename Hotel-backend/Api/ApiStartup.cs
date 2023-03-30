@@ -102,6 +102,7 @@ public static class ApiStartupExtensions
         service.Configure<JwtSettings>(config.GetSection("JwtSettings"));
         service.Configure<ConnectionStrings>(config.GetSection("ConnectionStrings"));
         service.Configure<Smtp>(config.GetSection("smtp"));
+        service.Configure<AdminConfig>(config.GetSection("AdminConfig"));
     }
 
 
