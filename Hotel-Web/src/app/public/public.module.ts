@@ -13,7 +13,7 @@ import { publicRoutingModule } from './public-routing.module';
 
 @NgModule({
     imports: [publicRoutingModule, CommonModule, HttpClientModule, ReactiveFormsModule],
-    exports: [HeaderMenuComponent,BannerComponent],
+    exports: [HeaderMenuComponent,BannerComponent,SignupComponent],
     declarations: [HeaderMenuComponent, BannerComponent, HomeComponent, SignupComponent, LoginComponent],
     providers: [AccountService],
     bootstrap: [HomeComponent]
