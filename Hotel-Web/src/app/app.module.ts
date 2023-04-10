@@ -15,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
 import { APIInterceptor } from './interceptors/api.interceptor';
 import { MaterialModule } from './material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -26,6 +27,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     AdminModule,
     SharedModule,
     MaterialModule,
+    AgGridModule,
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,

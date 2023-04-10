@@ -34,7 +34,8 @@ module.exports = {
         primary: "#3056D3",
         secondary: "#13C296",
         "body-color": "#637381",
-        warning: "#FBBF24"
+        warning: "#FBBF24",
+        "primary-light":"#dddddd"
       },
       boxShadow: {
         input: "0px 7px 20px rgba(0, 0, 0, 0.03)",

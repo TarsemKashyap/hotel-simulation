@@ -5,15 +5,19 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { ClassModule } from './class/class.module';
 import {  FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { TextboxEditor } from './editors';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
+    TextboxEditor
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HttpClientModule
+    FormsModule,
+    HttpClientModule,
+    MatIconModule
   ],
   exports: [ClassModule],
   providers: [SessionStore, JwtHelperService]
