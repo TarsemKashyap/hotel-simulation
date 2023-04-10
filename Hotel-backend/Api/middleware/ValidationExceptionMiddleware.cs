@@ -21,7 +21,7 @@ public class ValidationExceptionMiddleware
         }
         catch (FluentValidation.ValidationException ex)
         {
-            var errorDict = ex.Errors.ToDictionary(x => ToCamelCase(x.PropertyName), x => x.ErrorMessage);
+            var errorDict = ex.Errors.Select(x => new {Prop= ToCamelCase(x.PropertyName), Message= x.ErrorMessage});
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsJsonAsync(errorDict);
         }
