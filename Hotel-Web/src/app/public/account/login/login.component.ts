@@ -1,33 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { AccountService } from '../account.service';
 import { LoginModel, Signup } from '../model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   form: FormGroup;
   submitted = false;
+  errorMessage: string | undefined;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router
+  ) {
     this.form = this.createForm();
   }
 
-  ngOnInit(): void {
-
-
-  }
+  ngOnInit(): void {}
 
   private createForm(): FormGroup {
-
     return this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30)]]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(30),
+        ],
+      ],
     });
   }
 
@@ -42,14 +56,17 @@ export class LoginComponent {
     }
     const login: LoginModel = {
       userId: this.form.value.email,
-      password: this.form.value.password
+      password: this.form.value.password,
     };
-    this.accountService.login(login).subscribe(x => {
-      console.log("Signup", x);
-      this.router.navigate(['/', 'admin']);
-
+    this.accountService.login(login).subscribe({
+      next: () => {
+        this.router.navigate(['/', 'admin']);
+      },
+      error: (err) => {
+        this.errorMessage = Object.values<string>(err.error).at(0);
+      },
     });
-
+   
   }
 
   onReset(): void {
