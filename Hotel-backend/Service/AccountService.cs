@@ -220,7 +220,6 @@ public class AccountService : IAccountService
 
     public async Task<IList<InstructorDto>> InstructorList()
     {
-        var users2 =  await _userManager.GetUsersInRoleAsync(RoleType.Instructor);
         var users =  _context.Instructors.ToList();
         return users.Adapt<IList<InstructorDto>>();
 

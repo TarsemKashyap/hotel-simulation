@@ -35,7 +35,7 @@ public class AccountController : ControllerBase
             FirstName = account.FirstName,
             LastName = account.LastName,
             Email = account.Email,
-            Institute = account.institute,
+            Institute = account.Institute,
             Password = account.Password
 
         };

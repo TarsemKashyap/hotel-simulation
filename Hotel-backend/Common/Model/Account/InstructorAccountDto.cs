@@ -3,11 +3,12 @@ using FluentValidation;
 
 public class InstructorDto
 {
+    public Guid UserId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
 
-    public string institute { get; set; }
+    public string Institute { get; set; }
 }
 public class InstructorAccountRequest : InstructorDto
 {

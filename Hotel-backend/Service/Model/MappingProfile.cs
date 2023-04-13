@@ -17,6 +17,7 @@ public class MappingProfile : IRegister
         .Map(dest => dest.FirstName, src => src.FirstName)
         .Map(dest => dest.LastName, src => src.LastName)
         .Map(dest => dest.Email, src => src.Email)
-        .Map(dest => dest.institute, src => src.Institute);
+        .Map(dest => dest.Institute, src => src.Institute)
+        .Map(dest => dest.UserId, src => src.Id);
     }
 }
