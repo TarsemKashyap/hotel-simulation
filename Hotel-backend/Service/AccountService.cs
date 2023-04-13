@@ -136,7 +136,7 @@ public class AccountService : IAccountService
     {
         var user = await _userManager.FindByNameAsync(login.UserId);
         if (user is null)
-            throw new ValidationException("User not found");
+            throw new ValidationException("UserId or password is incorrect");
         var signInResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
         if (!signInResult.Succeeded)
             throw new ValidationException("UserId or password is incorrect");

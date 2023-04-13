@@ -19,12 +19,30 @@ public class ValidationExceptionMiddleware
         {
             await _next(context);
         }
+        catch (ValidationException ex)
+        {
+
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var dict = new Dictionary<string, string> { { "", ex.Message } };
+            await context.Response.WriteAsJsonAsync(dict);
+        }
         catch (FluentValidation.ValidationException ex)
         {
-            var errorDict = ex.Errors.Select(x => new {Prop= ToCamelCase(x.PropertyName), Message= x.ErrorMessage});
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsJsonAsync(errorDict);
+            await context.Response.WriteAsJsonAsync(Message(ex));
         }
+    }
+
+
+    private Dictionary<string, string> Message(FluentValidation.ValidationException ex)
+    {
+        Dictionary<string, string> list = new Dictionary<string, string>();
+        foreach (var item in ex.Errors)
+        {
+            string prop = ToCamelCase(item.PropertyName);
+            list.Add(prop, item.ErrorMessage);
+        }
+        return list;
     }
 
     private string ToCamelCase(string s)

@@ -2,7 +2,9 @@ using Api;
 using Database;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
+using Service;
 using System.Reflection;
 
 const string _policyName = "CorsPolicy";
@@ -65,6 +67,20 @@ app.UseCors(_policyName);
 //app.MapControllers();;
 app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+// create admin account
+using (var scope = app.Services.CreateScope())
+{
+    var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
+    try
+    {
+        accountService.CreateAdminAccount();
+    }
+    catch (System.Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+}
 
 if (builder.Configuration.GetValue<bool>("RunMigration"))
 {
