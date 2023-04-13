@@ -11,19 +11,23 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from '../store';
 import { InstructorComponent } from './instructor/instructor.component';
+import { InstructorListComponent } from './instructor/instructor-list/instructor-list.component';
+import { InstructorService } from './instructor/instructor.service';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent, ChangePasswordComponent, InstructorComponent],
+  declarations: [DashboardComponent, ChangePasswordComponent, InstructorComponent, InstructorListComponent],
   imports: [
     CommonModule,
     AdminRouteModule,
     SharedModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AgGridModule
   ],
-  providers: [ChangePasswordService],
+  providers: [ChangePasswordService,InstructorService],
   bootstrap: [DashboardComponent]
 })
 export class AdminModule { }

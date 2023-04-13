@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { InstructorSignup, LoginModel, LoginResponse, Signup } from './model/signup.model';
+import {
+  InstructorSignup,
+  LoginModel,
+  LoginResponse,
+  Signup,
+} from './model/signup.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
@@ -13,12 +18,6 @@ export class AccountService {
     private httpClient: HttpClient,
     private sessionStore: SessionStore
   ) {}
-
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
 
   CreateAccount(signup: Signup): Observable<any> {
     return this.httpClient.post('account/instructor', signup);
