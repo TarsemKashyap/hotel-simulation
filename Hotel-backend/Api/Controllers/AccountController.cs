@@ -35,13 +35,20 @@ public class AccountController : ControllerBase
             FirstName = account.FirstName,
             LastName = account.LastName,
             Email = account.Email,
-            Institute = account.Institue,
+            Institute = account.institute,
             Password = account.Password
 
         };
         await _accountService.InstructorAccount(instructor);
         return Ok(instructor);
 
+    }
+
+    [HttpGet("instructor/list")]
+    public async Task<ActionResult> InstructorList()
+    {
+        var data = await _accountService.InstructorList();
+        return Ok(data);
     }
 
 

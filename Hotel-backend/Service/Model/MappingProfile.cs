@@ -12,5 +12,11 @@ public class MappingProfile : IRegister
         config.NewConfig<ClassSession, ClassSessionDto>()
         .Map(dest => dest.StartDate, src => src.StartDate.ToDateTime(TimeOnly.MinValue))
         .Map(dest => dest.EndDate, src => src.EndDate.ToDateTime(TimeOnly.MinValue));
+
+        config.NewConfig<Instructor, InstructorDto>().TwoWays()
+        .Map(dest => dest.FirstName, src => src.FirstName)
+        .Map(dest => dest.LastName, src => src.LastName)
+        .Map(dest => dest.Email, src => src.Email)
+        .Map(dest => dest.institute, src => src.Institute);
     }
 }

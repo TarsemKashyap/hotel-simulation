@@ -1,12 +1,16 @@
 using FluentValidation;
 
-public class InstructorAccountRequest
+
+public class InstructorDto
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
 
-    public string Institue { get; set; }
+    public string institute { get; set; }
+}
+public class InstructorAccountRequest : InstructorDto
+{
     public string Password { get; set; }
 }
 

@@ -4,6 +4,8 @@
 using System.Threading.Tasks;
 using Service.Model;
 using Common;
+using System.Collections.Generic;
+
 namespace Service;
 public interface IAccountService
 {
@@ -15,4 +17,6 @@ public interface IAccountService
     Task<string> ResetPasswordSendLink(string email);
     Task<LoginResultDto> SignAsync(LoginDto login);
     Task Revoke(string userId);
+
+    Task<IList<InstructorDto>> InstructorList();
 }

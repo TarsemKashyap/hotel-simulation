@@ -9,7 +9,7 @@ using Service.Model;
 using Database;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
-
+using Mapster;
 namespace Service;
 
 public class AccountService : IAccountService
@@ -73,6 +73,7 @@ public class AccountService : IAccountService
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Institute = dto.Institute,
+            Email=dto.Email,
             TwoFactorEnabled = false
         };
         var user = await _userManager.FindByNameAsync(dto.Email);
@@ -217,4 +218,11 @@ public class AccountService : IAccountService
 
     }
 
+    public async Task<IList<InstructorDto>> InstructorList()
+    {
+        var users2 =  await _userManager.GetUsersInRoleAsync(RoleType.Instructor);
+        var users =  _context.Instructors.ToList();
+        return users.Adapt<IList<InstructorDto>>();
+
+    }
 }
