@@ -1,3 +1,7 @@
 export interface InstructorDto {
-  FirstName: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    institute: string;
 }

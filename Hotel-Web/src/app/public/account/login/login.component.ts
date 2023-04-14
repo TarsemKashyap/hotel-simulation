@@ -66,7 +66,6 @@ export class LoginComponent {
         this.errorMessage = Object.values<string>(err.error).at(0);
       },
     });
-   
   }
 
   onReset(): void {

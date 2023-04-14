@@ -14,20 +14,27 @@ import { InstructorComponent } from './instructor/instructor.component';
 import { InstructorListComponent } from './instructor/instructor-list/instructor-list.component';
 import { InstructorService } from './instructor/instructor.service';
 import { AgGridModule } from 'ag-grid-angular';
-
-
+import { MatTableModule } from '@angular/material/table';
+import { InstructorEditComponent } from './instructor';
 
 @NgModule({
-  declarations: [DashboardComponent, ChangePasswordComponent, InstructorComponent, InstructorListComponent],
+  declarations: [
+    DashboardComponent,
+    ChangePasswordComponent,
+    InstructorComponent,
+    InstructorListComponent,
+    InstructorEditComponent,
+  ],
   imports: [
     CommonModule,
     AdminRouteModule,
     SharedModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AgGridModule
+    AgGridModule,
+    MatTableModule,
   ],
-  providers: [ChangePasswordService,InstructorService],
-  bootstrap: [DashboardComponent]
+  providers: [ChangePasswordService, InstructorService],
+  bootstrap: [DashboardComponent],
 })
-export class AdminModule { }
+export class AdminModule {}

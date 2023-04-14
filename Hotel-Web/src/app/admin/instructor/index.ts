@@ -3,3 +3,4 @@ export { InstructorListComponent } from './instructor-list/instructor-list.compo
 export { InstructorComponent } from './instructor.component';
 export { InstructorDto } from './instructor.model';
 export { InstructorService } from './instructor.service';
+export {InstructorEditComponent} from "./instructor-edit/instructor-edit.component"
