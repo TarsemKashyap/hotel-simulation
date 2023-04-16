@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   InstructorSignup,
+  InstructorUpdate,
   LoginModel,
   LoginResponse,
   Signup,
@@ -9,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
+import { InstructorDto } from 'src/app/admin/instructor';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +24,13 @@ export class AccountService {
   CreateAccount(signup: Signup): Observable<any> {
     return this.httpClient.post('account/instructor', signup);
   }
+
   CreateAccountInstructor(signup: InstructorSignup): Observable<any> {
     return this.httpClient.post('account/instructor', signup);
+  }
+
+  InstructorUpdate(id: string, update: InstructorUpdate): Observable<any> {
+    return this.httpClient.post(`account/instructor/update/${id}`, update);
   }
 
   login(login: LoginModel): Observable<LoginResponse> {
@@ -54,6 +61,12 @@ export class AccountService {
         this.sessionStore.SetRefreshToken(x.refreshToken);
         return true;
       })
+    );
+  }
+
+  getInstructor(userId: string): Observable<InstructorUpdate> {
+    return this.httpClient.get<InstructorUpdate>(
+      `account/instructor/${userId}`
     );
   }
 }

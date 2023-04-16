@@ -6,7 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountService, InstructorSignup } from 'src/app/public/account';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import {
+  AccountService,
+  InstructorSignup,
+  InstructorUpdate,
+} from 'src/app/public/account';
 
 @Component({
   selector: 'app-instructor-edit',
@@ -16,30 +21,28 @@ import { AccountService, InstructorSignup } from 'src/app/public/account';
 export class InstructorEditComponent {
   form: FormGroup;
   submitted = false;
+  userId: string | undefined;
 
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.form = this.createForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.params['id'];
+    this.loadInstructor();
+  }
 
   private createForm(): FormGroup {
     return this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(30),
-        ],
-      ],
       institute: ['', Validators.required],
     });
   }
@@ -48,21 +51,32 @@ export class InstructorEditComponent {
     return this.form.controls;
   }
 
+  private loadInstructor() {
+    this.accountService.getInstructor(this.userId!).subscribe({
+      next: (data: InstructorUpdate) => {
+        this.form.patchValue(data);
+      },
+      error: (err) => {
+        this._snackBar.open(err.error);
+      },
+    });
+  }
+
   onSubmit(): void {
     this.submitted = true;
     if (this.form.invalid) {
       return;
     }
-    const sigup: InstructorSignup = {
+    this.userId = this.route.snapshot.params['id'];
+    const sigup: InstructorUpdate = {
       firstName: this.form.value.firstName,
       lastName: this.form.value.lastName,
       email: this.form.value.email,
-      password: this.form.value.password,
       institute: this.form.value.institute,
     };
-    this.accountService.CreateAccount(sigup).subscribe((x) => {
-      console.log('Signup', x);
-      this._snackBar.open('Instructor Account created');
+    this.accountService.InstructorUpdate(this.userId!, sigup).subscribe((x) => {
+      this.router.navigate(['admin/instructor','list']);
+      this._snackBar.open('Instructor Account successfully updated');
     });
   }
 

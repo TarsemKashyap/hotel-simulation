@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import {
   AccountService,
   InstructorSignup,
@@ -24,7 +25,8 @@ export class InstructorComponent {
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.form = this.createForm();
   }
@@ -62,11 +64,12 @@ export class InstructorComponent {
       lastName: this.form.value.lastName,
       email: this.form.value.email,
       password: this.form.value.password,
-      institute: this.form.value.institute
+      institute: this.form.value.institute,
     };
     this.accountService.CreateAccount(sigup).subscribe((x) => {
       console.log('Signup', x);
       this._snackBar.open('Instructor Account created');
+      this.router.navigate(['admin/instructor', 'list']);
     });
   }
 

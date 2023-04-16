@@ -16,6 +16,8 @@ import { InstructorService } from './instructor/instructor.service';
 import { AgGridModule } from 'ag-grid-angular';
 import { MatTableModule } from '@angular/material/table';
 import { InstructorEditComponent } from './instructor';
+import { MatIconModule } from '@angular/material/icon';
+import { MaterialModule } from '../material.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,7 @@ import { InstructorEditComponent } from './instructor';
     ReactiveFormsModule,
     HttpClientModule,
     AgGridModule,
-    MatTableModule,
+   MaterialModule
   ],
   providers: [ChangePasswordService, InstructorService],
   bootstrap: [DashboardComponent],

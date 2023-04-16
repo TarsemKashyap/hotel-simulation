@@ -12,4 +12,9 @@ export class InstructorService {
   instructorList(): Observable<InstructorDto[]> {
     return this.httpClient.get<InstructorDto[]>('account/instructor/list');
   }
+  deleteUser(userId: string) {
+    return this.httpClient.delete(
+      `account/instructor/${userId}`
+    );
+  }
 }
