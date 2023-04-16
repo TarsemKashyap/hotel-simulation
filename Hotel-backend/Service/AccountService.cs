@@ -73,7 +73,7 @@ public class AccountService : IAccountService
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Institute = dto.Institute,
-            Email=dto.Email,
+            Email = dto.Email,
             TwoFactorEnabled = false
         };
         var user = await _userManager.FindByNameAsync(dto.Email);
@@ -220,8 +220,47 @@ public class AccountService : IAccountService
 
     public async Task<IList<InstructorDto>> InstructorList()
     {
-        var users =  _context.Instructors.ToList();
+        var users = _context.Instructors.ToList();
         return users.Adapt<IList<InstructorDto>>();
+
+    }
+
+    public async Task InstructorUpdate(string userId, InstructorDto dto)
+    {
+        var appUser = _context.Instructors.SingleOrDefault(x => x.Id == userId.ToString());
+        if (appUser == null)
+            throw new ValidationException("User not found for given userId");
+        appUser.FirstName = dto.FirstName;
+        appUser.LastName = dto.LastName;
+        appUser.Email = dto.Email;
+        appUser.Institute = dto.Institute;
+        await _context.SaveChangesAsync();
+    }
+
+    public InstructorDto InstructorById(string userId)
+    {
+        var appUser = _context.Instructors.SingleOrDefault(x => x.Id == userId.ToString());
+        if (appUser == null)
+            throw new ValidationException("User not found for given userId");
+        return appUser.Adapt<InstructorDto>();
+
+    }
+
+    public async Task InstructorDelete(string id)
+    {
+        var instructor = _context.Instructors.SingleOrDefault(x => x.Id == id);
+        if (instructor == null)
+            throw new ValidationException("UserId not valid");
+        var isInstructor = await _userManager.IsInRoleAsync(instructor, RoleType.Instructor);
+        if (!isInstructor)
+            throw new ValidationException("UserId not valid");
+        var result = await _userManager.DeleteAsync(instructor);
+        if (!result.Succeeded)
+        {
+            var messages = result.Errors.Select(x => x.Description).ToArray();
+            throw new ValidationException(messages);
+        }
+
 
     }
 }

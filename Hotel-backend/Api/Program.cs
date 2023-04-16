@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCorsForApp(_policyName);
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<AccountDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<InstructorAccountDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<InstructorSignupValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ClassSessionDtoValidator>();
 
 builder.Services.AddEndpointsApiExplorer();

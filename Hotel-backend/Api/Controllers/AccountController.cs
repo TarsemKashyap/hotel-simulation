@@ -11,12 +11,14 @@ namespace Api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
-    private readonly IValidator<InstructorAccountRequest> _accountValidator;
+    private readonly IValidator<InstructorSignupRequest> _accountValidator;
+    private readonly IValidator<InstructorDto> _instructorDtoValidator;
 
-    public AccountController(IAccountService accountService, IValidator<InstructorAccountRequest> accountValidator)
+    public AccountController(IAccountService accountService, IValidator<InstructorSignupRequest> accountValidator, IValidator<InstructorDto> instructorDtoValidator)
     {
         _accountService = accountService;
         _accountValidator = accountValidator;
+        _instructorDtoValidator = instructorDtoValidator;
     }
 
     [HttpPost("admin"), AllowAnonymous]
@@ -27,7 +29,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("instructor"), AllowAnonymous]
-    public async Task<ActionResult> InstructorAccount(InstructorAccountRequest account)
+    public async Task<ActionResult> InstructorAccount(InstructorSignupRequest account)
     {
         _accountValidator.ValidateAndThrow(account);
         var instructor = new InstructorAccountDto()
@@ -40,6 +42,38 @@ public class AccountController : ControllerBase
 
         };
         await _accountService.InstructorAccount(instructor);
+        return Ok(instructor);
+
+    }
+
+    [HttpPost("instructor/update/{id}")]
+    public async Task<ActionResult> InstructorUpdate(string id, InstructorDto account)
+    {
+        _instructorDtoValidator.ValidateAndThrow(account);
+        var instructor = new InstructorDto()
+        {
+            FirstName = account.FirstName,
+            LastName = account.LastName,
+            Email = account.Email,
+            Institute = account.Institute,
+
+        };
+        await _accountService.InstructorUpdate(id, instructor);
+        return Ok();
+
+    }
+    [HttpDelete("instructor/{id}")]
+    public async Task<ActionResult> InstructorDelete(string id)
+    {
+        await _accountService.InstructorDelete(id);
+        return Ok();
+
+    }
+
+    [HttpGet("instructor/{id}")]
+    public ActionResult InstructorUpdate(string id)
+    {
+        var instructor = _accountService.InstructorById(id);
         return Ok(instructor);
 
     }
