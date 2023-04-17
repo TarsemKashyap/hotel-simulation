@@ -6,10 +6,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Routes } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
+import { ClassListComponent } from './class-list/class-list.component';
 
 @NgModule({
-  declarations: [AddClassComponent],
-  imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule,AgGridModule],
+  declarations: [AddClassComponent, ClassListComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    AgGridModule,
+  ],
   providers: [ClassService],
 })
 export class ClassModule {}
@@ -17,4 +23,5 @@ export class ClassModule {}
 export const classRoute: Routes = [
   { path: 'class/add', component: AddClassComponent },
   { path: 'class/edit/:id', component: AddClassComponent },
+  { path: 'class/list', component: ClassListComponent },
 ];

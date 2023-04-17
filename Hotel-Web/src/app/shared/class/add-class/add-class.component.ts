@@ -23,7 +23,6 @@ export class AddClassComponent {
   submitted = false;
   classCode = null || '';
 
- 
   constructor(
     private fb: FormBuilder,
     private classService: ClassService,
@@ -73,8 +72,8 @@ export class AddClassComponent {
     if (this.form.invalid) {
       return;
     }
-   const groups= (<Array<any>>this.form.value.groups).map((x, i) => {
-      var data: ClassGroup = { serial: i + 1, name: x.name,balance:1 };
+    const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
+      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 };
       return data;
     });
     const sigup: ClassSession = {
@@ -86,14 +85,19 @@ export class AddClassComponent {
       currentQuater: 0, //this.form.value.currentQuater,
       code: this.form.value.code,
       groups: groups,
+      createdBy: '',
     };
     console.log('Group', { sigup });
     this.classService.addClass(sigup).subscribe((x) => {
       this.classCode = x.code;
-      this._snackBar.open(`Class has been created. Class Code is ${x.code}`, '', {
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-      });
+      this._snackBar.open(
+        `Class has been created. Class Code is ${x.code}`,
+        '',
+        {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        }
+      );
     });
   }
 
@@ -101,5 +105,4 @@ export class AddClassComponent {
     this.submitted = false;
     this.form.reset();
   }
-
 }

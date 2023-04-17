@@ -6,6 +6,7 @@ export interface ClassSession {
   roomInEachHotel: number;
   currentQuater: number;
   code: string;
+  createdBy:string;
   groups:ClassGroup[]
 }
 

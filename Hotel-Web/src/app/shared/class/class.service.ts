@@ -14,4 +14,8 @@ export class ClassService {
   addClass(classSession: ClassSession): Observable<any> {
     return this.httpClient.post('class', classSession);
   }
+
+  list(): Observable<ClassSession[]> {
+    return this.httpClient.get<ClassSession[]>('class/list');
+  }
 }
