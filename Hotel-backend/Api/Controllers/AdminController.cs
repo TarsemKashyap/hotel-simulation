@@ -15,6 +15,7 @@ public abstract class AbstractBaseController : ControllerBase
 {
 
     public string LoggedUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+    public bool IsAdmin => User.FindFirstValue(ClaimTypes.Role) == RoleType.Admin;
 
 }
 

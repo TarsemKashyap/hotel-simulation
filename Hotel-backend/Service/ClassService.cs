@@ -13,12 +13,14 @@ using System.Net.Mail;
 namespace Service;
 using Mapster;
 using MapsterMapper;
+using System.Linq.Expressions;
 
 public interface IClassSessionService
 {
     Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
     IEnumerable<ClassSessionDto> ClassList();
     Task<ClassSessionDto> Create(ClassSessionDto classSession);
+    IEnumerable<ClassSessionDto> List(string instructorId = null);
 }
 
 public class ClassSessionService : IClassSessionService
@@ -68,9 +70,16 @@ public class ClassSessionService : IClassSessionService
         return classSession.Groups.Adapt<IEnumerable<ClassGroupDto>>();
     }
 
-    public async Task<IList<ClassDetailsDto>> List(string instructorId)
+    public IEnumerable<ClassSessionDto> List(string instructorId = null)
     {
-        return new List<ClassDetailsDto>();
+        IQueryable<ClassSession> query = _context.ClassSessions;
+        if (!string.IsNullOrEmpty(instructorId))
+        {
+            query = query.Where(x => x.CreatedBy == instructorId);
+        }
+
+        return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
+
     }
 
 }

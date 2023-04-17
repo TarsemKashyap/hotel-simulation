@@ -41,4 +41,14 @@ public class ClassSessionController : AbstractBaseController
         return Ok(clasGroupResult);
 
     }
+
+    [HttpGet("list")]
+    public IActionResult ClassList()
+    {
+        string instructorId = IsAdmin ? null : LoggedUserId;
+        var clasGroupResult = _classSessionService.List(instructorId);
+        return Ok(clasGroupResult);
+
+    }
+
 }
