@@ -25,9 +25,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<MigrationScript> MigrationScripts { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        //  builder.ApplyConfiguration(new AppUserEntityConfig());
-        // builder.ApplyConfiguration(new ClassSessionEntityConfig());
-        //  builder.ApplyConfiguration(new ClassGroupEntityConfig());
+       
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(), t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
 
         base.OnModelCreating(builder);

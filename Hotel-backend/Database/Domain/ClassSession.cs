@@ -14,6 +14,8 @@ public class ClassSession
     public ClassStatus Status { get; set; }
     public DateTime CreatedOn { get; set; }
     public string Code { get; set; }
+
+    public string CreatedBy { get; set; }
     public virtual ICollection<ClassGroup> Groups { get; set; }
     public virtual ICollection<Month> Months { get; set; }
 
@@ -42,7 +44,8 @@ public class ClassSessionEntityConfig : IEntityTypeConfiguration<ClassSession>
         builder.Property(x => x.RoomInEachHotel).IsRequired();
         builder.Property(x => x.CurrentQuater).IsRequired();
         builder.Property(x => x.Status).IsRequired().HasConversion<string>();
-        builder.Property(x => x.CreatedOn).IsRequired();
+        builder.Property(x => x.CreatedBy).HasMaxLength(100).IsRequired();
+
 
     }
 

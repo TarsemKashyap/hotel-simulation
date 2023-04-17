@@ -9,7 +9,7 @@ namespace Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("class")]
-public class ClassSessionController : ControllerBase
+public class ClassSessionController : AbstractBaseController
 {
     private readonly IValidator<ClassSessionDto> _validator;
     private readonly IValidator<ClassGroupDto> _classGroupValidator;
@@ -25,6 +25,7 @@ public class ClassSessionController : ControllerBase
     public async Task<IActionResult> Create(ClassSessionDto dto)
     {
         _validator.ValidateAndThrow(dto);
+        dto.CreatedBy = LoggedUserId;
         var response = await _classSessionService.Create(dto);
         return Ok(response);
     }

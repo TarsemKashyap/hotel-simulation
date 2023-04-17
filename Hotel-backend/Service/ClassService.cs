@@ -67,4 +67,10 @@ public class ClassSessionService : IClassSessionService
         await _context.SaveChangesAsync();
         return classSession.Groups.Adapt<IEnumerable<ClassGroupDto>>();
     }
+
+    public async Task<IList<ClassDetailsDto>> List(string instructorId)
+    {
+        return new List<ClassDetailsDto>();
+    }
+
 }

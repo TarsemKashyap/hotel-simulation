@@ -8,6 +8,7 @@ public class ClassGroup
     public int Serial { get; set; }
     public string Name { get; set; }
     public decimal Balance { get; set; }
+
     public virtual ClassSession Class { get; set; }
 
 }
