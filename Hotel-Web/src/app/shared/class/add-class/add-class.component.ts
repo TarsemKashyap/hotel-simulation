@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+  import {
+    AbstractControl,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassSession } from '..';
 import { ClassService } from '../class.service';
@@ -42,6 +42,7 @@ export class AddClassComponent {
       hotelsCount: [4, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
       groups: this.fb.array([this.createItem()]),
+      
     });
   }
 

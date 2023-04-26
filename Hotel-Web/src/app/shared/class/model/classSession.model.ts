@@ -16,3 +16,8 @@ export interface ClassGroup {
   name: string;
   balance:number
 }
+
+export interface ClassSessionUpdate extends ClassSession {
+  added:ClassGroup[],
+  removed: ClassGroup[]
+}

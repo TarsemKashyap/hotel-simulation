@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClassService } from '../class.service';
 import { ColDef } from 'ag-grid-community';
 import { ClassSession } from '../model/classSession.model';
+import { ActionRendererComponent } from '../action-renderer/action-renderer.component';
 
 @Component({
   selector: 'app-class-list',
@@ -16,6 +17,7 @@ export class ClassListComponent implements OnInit {
     { field: 'endDate' },
     { field: 'createdBy' },
     { field: 'createdOn' },
+    { field: 'action', cellRenderer: ActionRendererComponent }
   ];
  defaultColDef: ColDef = {
     flex: 1,

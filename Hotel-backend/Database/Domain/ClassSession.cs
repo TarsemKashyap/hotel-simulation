@@ -6,8 +6,8 @@ public class ClassSession
     public int ClassId { get; set; }
     public string Title { get; set; }
     public string Memo { get; set; }
-    public DateOnly StartDate { get; set; }
-    public DateOnly EndDate { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
     public int HotelsCount { get; set; }
     public int RoomInEachHotel { get; set; }
     public int CurrentQuater { get; set; }

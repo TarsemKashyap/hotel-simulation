@@ -13,6 +13,8 @@ using System.Net.Mail;
 namespace Service;
 using Mapster;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq.Expressions;
 
 public interface IClassSessionService
@@ -21,6 +23,8 @@ public interface IClassSessionService
     IEnumerable<ClassSessionDto> ClassList();
     Task<ClassSessionDto> Create(ClassSessionDto classSession);
     IEnumerable<ClassSessionDto> List(string instructorId = null);
+    Task<ClassSessionUpdateDto> GetById(int classId);
+    Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
 }
 
 public class ClassSessionService : IClassSessionService
@@ -45,7 +49,25 @@ public class ClassSessionService : IClassSessionService
 
 
     }
+    public async Task<ClassSessionDto> Update(int classId, ClassSessionUpdateDto classSession)
+    {
+        var appUser = _context.ClassSessions.SingleOrDefault(x => x.ClassId == classId);
+        foreach (var item in classSession.Removed)
+        {
+            var classGroup = item.Adapt<ClassGroup>();
+            appUser.Groups.Remove(classGroup);
+        }
+        foreach (var item in classSession.Added)
+        {
+            var classGroup = item.Adapt<ClassGroup>();
+            appUser.Groups.Add(classGroup);
+        }
+        appUser.Adapt(classSession);
+        _context.ClassSessions.Update(appUser);
+        await _context.SaveChangesAsync();
+        return _mapper.Map<ClassSessionDto>(appUser);
 
+    }
     private string RandomString()
     {
         Random random = new Random();
@@ -82,4 +104,14 @@ public class ClassSessionService : IClassSessionService
 
     }
 
+    public async Task<ClassSessionUpdateDto> GetById(int classId)
+    {
+        var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);
+        ;
+        if (appUser == null)
+            throw new ValidationException("class not found for given classId");
+        return appUser.Adapt<ClassSessionUpdateDto>();
+    }
+
+ 
 }
