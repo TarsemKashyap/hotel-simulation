@@ -25,6 +25,7 @@ public interface IClassSessionService
     IEnumerable<ClassSessionDto> List(string instructorId = null);
     Task<ClassSessionUpdateDto> GetById(int classId);
     Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
+    Task DeleteId(int classId);
 }
 
 public class ClassSessionService : IClassSessionService
@@ -51,21 +52,36 @@ public class ClassSessionService : IClassSessionService
     }
     public async Task<ClassSessionDto> Update(int classId, ClassSessionUpdateDto classSession)
     {
-        var appUser = _context.ClassSessions.SingleOrDefault(x => x.ClassId == classId);
-        foreach (var item in classSession.Removed)
+        var appUser =  _context.ClassSessions.Include(x=>x.Groups).SingleOrDefault(x => x.ClassId == classId);
+        if (appUser != null)
         {
-            var classGroup = item.Adapt<ClassGroup>();
-            appUser.Groups.Remove(classGroup);
-        }
-        foreach (var item in classSession.Added)
-        {
-            var classGroup = item.Adapt<ClassGroup>();
-            appUser.Groups.Add(classGroup);
+            foreach (var item in appUser.Groups)
+            {
+                if (item.Serial == classSession.Groups[0].Serial)
+                {
+                    _context.ClassGroups.Update(item);
+                }
+                else if (classSession.Groups[0].Serial != item.Serial )
+                {
+                    _context.ClassGroups.Remove(item);
+                }
+                else if (appUser.Groups.Any())
+                {
+                    _context.ClassGroups.Add(item);
+                }
+            }
         }
         appUser.Adapt(classSession);
-        _context.ClassSessions.Update(appUser);
+
+        appUser.CurrentQuater = classSession.CurrentQuater;
+        appUser.CreatedOn = DateTime.Now;
+        appUser.Title = classSession.Title;
+        appUser.Code = classSession.Code;
+        appUser.CurrentQuater = classSession.CurrentQuater;
+        appUser.HotelsCount = classSession.HotelsCount;
+        var result = _context.ClassSessions.Update(appUser);
         await _context.SaveChangesAsync();
-        return _mapper.Map<ClassSessionDto>(appUser);
+        return _mapper.Map<ClassSessionDto>(result);
 
     }
     private string RandomString()
@@ -113,5 +129,14 @@ public class ClassSessionService : IClassSessionService
         return appUser.Adapt<ClassSessionUpdateDto>();
     }
 
- 
+    public async Task DeleteId(int classId)
+    {
+        var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);
+        if(appUser !=null)
+        {
+            var data = _context.ClassSessions.Remove(appUser);
+            await _context.SaveChangesAsync();
+        }
+    }
+
 }

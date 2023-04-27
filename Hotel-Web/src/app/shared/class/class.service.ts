@@ -26,6 +26,12 @@ export class ClassService {
   }
 
   classUpdate(id: any, update: ClassSession): Observable<any> {
-    return this.httpClient.post(`class/update/${id}`, update);
+    return this.httpClient.post(`class/editClass/${id}`, update);
+  }
+
+    deleteClass(classId: number) {
+    return this.httpClient.delete(
+      `class/delete/${classId}`
+    );
   }
 }

@@ -62,6 +62,7 @@ export class AddClassComponent {
 
   addGroup($event: Event, index: number): void {
     this.groups.push(this.createItem());
+    
   }
 
   removeGroup($event: Event, index: number): void {
@@ -74,7 +75,7 @@ export class AddClassComponent {
       return;
     }
     const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
-      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 };
+      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 ,action: 1};
       return data;
     });
     const sigup: ClassSession = {

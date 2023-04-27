@@ -14,8 +14,17 @@ export interface ClassGroup {
   groupId?: number;
   serial: number;
   name: string;
-  balance:number
+  balance:number;
+  action: Action
 }
+
+export enum Action {
+  Updated = 0,
+  Added = 1,
+  Removed = 2
+}
+
+
 
 export interface ClassSessionUpdate extends ClassSession {
   added:ClassGroup[],

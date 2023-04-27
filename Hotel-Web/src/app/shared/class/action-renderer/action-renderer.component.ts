@@ -3,6 +3,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
+import { ConfirmDialogComponent, ConfirmDialogModel } from '../../dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClassService } from '../class.service';
 
 @Component({
   selector: 'app-action-renderer',
@@ -10,8 +14,8 @@ import { ICellRendererParams } from 'ag-grid-community';
   <span>
     <span>{{ cellValue }}</span
     >&nbsp;
-    <button (click)="edit()">Edit</button>
-    <button (click)="delete()">delete</button>
+    <span (click)="edit()" class="material-icons">edit</span>
+    <span (click)="delete()" class="material-icons">delete</span>
   </span>
 `
 })
@@ -23,6 +27,9 @@ export class ActionRendererComponent implements ICellRendererAngularComp{
   constructor(
     private router: Router,
     private activatedRouter : ActivatedRoute,
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar,
+    private classService: ClassService,
   ) {}
 
 
@@ -41,15 +48,34 @@ refresh(params: ICellRendererParams) {
 }
 
 edit() {
-    this.router.navigate([`class/edit/${1}`]);
+    this.router.navigate([`class/edit/${this.params?.data.classId}`]);
 }
 
 delete() {
-  alert(`${this.cellValue} medals won!`);
+  const dialogData = new ConfirmDialogModel(
+    'Delete',
+    'Are you sure to delete?'
+  );
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    minWidth: '400px',
+    minHeight: '200px',
+    data: dialogData,
+  });
+  dialogRef.afterClosed().subscribe((x) => {
+    if (x) {
+      this.classService.deleteClass(this.params?.data.classId).subscribe({
+        next: () => {
+          window.location.reload();
+        },
+        error: (err) => {
+          this.snackBar.open('Error while deleting class.');
+        },
+      });
+    }
+  });
 }
 
 getValueToDisplay(params: ICellRendererParams) {
-  debugger
   return params.valueFormatted ? params.valueFormatted : params.value;
 }
 }

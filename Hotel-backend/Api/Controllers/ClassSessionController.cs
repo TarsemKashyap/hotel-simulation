@@ -50,12 +50,20 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
-    [HttpPost("update/{id}")]
-    public async Task<IActionResult> Update(int id, ClassSessionUpdateDto account)
+    [HttpPost("editClass/{id}")]
+    public async Task<IActionResult> ClassUpdate(int id, ClassSessionUpdateDto account)
     {
         // _validator.ValidateAndThrow(account);
         var response = await _classSessionService.Update(id, account);
         return Ok(response);
+
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<ActionResult> ClassDelete(int id)
+    {
+        await _classSessionService.DeleteId(id);
+        return Ok();
 
     }
 

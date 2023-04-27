@@ -11,7 +11,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassSession } from '..';
 import { ClassService } from '../class.service';
-import { ClassGroup } from '../model/classSession.model';
+import { Action, ClassGroup } from '../model/classSession.model';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-class-edit',
@@ -23,6 +23,7 @@ export class ClassEditComponent {
   submitted = false;
   classCode = null || '';
   classId: number | undefined;
+  data: ClassSession | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -46,16 +47,17 @@ export class ClassEditComponent {
       endDate: ['', Validators.required],
       hotelsCount: [4, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
-      added: this.fb.array([this.createItem()]),
-      removed: this.fb.array([this.createItem()]),
-      groups: this.fb.array([this.createItem()])
+      groups: this.fb.array([])
     });
   }
 
 
-  createItem() {
+  createItem(value: ClassGroup) {
     return new FormGroup({
-      name: new FormControl('', Validators.required),
+      name: new FormControl(value.name, Validators.required),
+      groupId: new FormControl(value.groupId, Validators.required),
+      serial: new FormControl(value.serial, Validators.required),
+      action: new FormControl(value.action)
     });
   }
 
@@ -72,20 +74,35 @@ export class ClassEditComponent {
   }
 
   get groups(): FormArray {
-    return <FormArray>this.form.get('groups');
+   
+    const groups = <FormArray>this.form.get('groups');
+    console.log("GroupControls", groups.controls.map(x => x.value));
+    return groups;
   }
+
+
+
   addGroup($event: Event, index: number): void {
-    this.added.push(this.createItem());
+    const data: ClassGroup = { name: "", serial: this.data!.groups.length + 1, balance: 0, action: Action.Added };
+    this.groups.push(this.createItem(data));
+    this.data!.groups.push(data);
+
   }
-  
+
   removeGroup($event: Event, index: number): void {
-    this.removed.removeAt(index);
+    this.data!.groups[index].action = Action.Removed;
+    this.groups.patchValue(this.data!.groups.filter(x=>x.action!=Action.Removed));
   }
 
   private loadClass() {
     this.classService.getClass(this.classId!).subscribe({
       next: (data: ClassSession) => {
-        this.form.patchValue(data);
+        this.data = data;
+        this.form.patchValue(this.data);
+        for (let item of this.data.groups) {
+          this.groups.push(this.createItem(item));
+
+        }
       },
       error: (err) => {
         this._snackBar.open(err.error);
@@ -95,9 +112,10 @@ export class ClassEditComponent {
 
   onSubmit(): void {
     this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
+    const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
+      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1, action: x.action };
+      return data;
+    });
     this.classId = this.route.snapshot.params['id'];
     const updateClass: ClassSession = {
       title: this.form.value.title,
@@ -106,13 +124,18 @@ export class ClassEditComponent {
       hotelsCount: this.form.value.hotelsCount,
       roomInEachHotel: this.form.value.roomInEachHotel,
       currentQuater: this.form.value.currentQuater,
-      code: this.form.value.code,
+      code: this.form.value.code && this.form.value.code == undefined && this.form.value.code == null ? this.form.value.code : '',
       createdBy: '',
-      groups: []
+      groups: groups
     };
     this.classService.classUpdate(this.classId!, updateClass).subscribe((x) => {
-      this.router.navigate(['admin/class','list']);
+      this.router.navigate(['admin/class', 'list']);
       this._snackBar.open('Class successfully updated');
     });
+  }
+
+  onReset(): void {
+    this.submitted = false;
+    this.form.reset();
   }
 }
