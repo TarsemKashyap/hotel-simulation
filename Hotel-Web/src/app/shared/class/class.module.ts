@@ -9,6 +9,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ClassListComponent } from './class-list/class-list.component';
 import { ActionRendererComponent } from './action-renderer/action-renderer.component';
 import { ClassEditComponent } from './class-edit/class-edit.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent],
@@ -17,6 +18,7 @@ import { ClassEditComponent } from './class-edit/class-edit.component';
     ReactiveFormsModule,
     MatDatepickerModule,
     AgGridModule,
+    MatIconModule
   ],
   providers: [ClassService],
 })

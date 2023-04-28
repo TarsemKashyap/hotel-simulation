@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { InstructorEditComponent } from './instructor';
 import { MatIconModule } from '@angular/material/icon';
 import { MaterialModule } from '../material.module';
+import { ClassListComponent } from '../shared/class/class-list/class-list.component';
 
 @NgModule({
   declarations: [

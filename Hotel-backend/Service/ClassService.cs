@@ -53,30 +53,10 @@ public class ClassSessionService : IClassSessionService
     public async Task<ClassSessionDto> Update(int classId, ClassSessionUpdateDto classSession)
     {
         var appUser =  _context.ClassSessions.Include(x=>x.Groups).SingleOrDefault(x => x.ClassId == classId);
-        if (appUser != null)
-        {
-            foreach (var item in appUser.Groups)
-            {
-                if (item.Serial == classSession.Groups[0].Serial)
-                {
-                    _context.ClassGroups.Update(item);
-                }
-                else if (classSession.Groups[0].Serial != item.Serial )
-                {
-                    _context.ClassGroups.Remove(item);
-                }
-                else if (appUser.Groups.Any())
-                {
-                    _context.ClassGroups.Add(item);
-                }
-            }
-        }
-        appUser.Adapt(classSession);
+        //appUser.Adapt(classSession);
 
         appUser.CurrentQuater = classSession.CurrentQuater;
-        appUser.CreatedOn = DateTime.Now;
         appUser.Title = classSession.Title;
-        appUser.Code = classSession.Code;
         appUser.CurrentQuater = classSession.CurrentQuater;
         appUser.HotelsCount = classSession.HotelsCount;
         var result = _context.ClassSessions.Update(appUser);
@@ -115,8 +95,27 @@ public class ClassSessionService : IClassSessionService
         {
             query = query.Where(x => x.CreatedBy == instructorId);
         }
+        var result = query
+        .Join(
+            _context.AppUsers,
+            session => session.CreatedBy,
+            user => user.Id,
+            (session, user) => new { Session = session, User = user })
+        .OrderByDescending(x => x.Session.CreatedOn)
+        .Select(x => new ClassSessionDto
+        {
+            StartDate = x.Session.StartDate,
+            EndDate = x.Session.EndDate,
+            ClassId = x.Session.ClassId,
+            Title = x.Session.Title,
+            CreatedBy = x.User.FirstName,
+            CreatedOn = x.Session.CreatedOn,
+            Code = x.Session.Code,
+        })
+        .ToList();
 
-        return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
+        return result;
+        //return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
 
     }
 
