@@ -46,7 +46,7 @@ export class InstructorListComponent {
 
   editClick(row: InstructorDto) {
     console.log(row);
-    this.router.navigate([`instructor/edit/${row.userId}`]);
+    this.router.navigate([`instructor/edit/${row.id}`]);
   }
 
   deleteRow(row: InstructorDto) {
@@ -61,7 +61,7 @@ export class InstructorListComponent {
     });
     dialogRef.afterClosed().subscribe((x) => {
       if (x) {
-        this.instructorService.deleteUser(row.userId).subscribe({
+        this.instructorService.deleteUser(row.id).subscribe({
           next: () => {
             window.location.reload();
           },
@@ -71,5 +71,9 @@ export class InstructorListComponent {
         });
       }
     });
+  }
+
+  add() {
+    this.router.navigate(['instructor/create'])
   }
 }

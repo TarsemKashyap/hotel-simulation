@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassSession } from '..';
 import { ClassService } from '../class.service';
 import { ClassGroup } from '../model/classSession.model';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-class',
@@ -27,7 +28,9 @@ export class AddClassComponent {
     private fb: FormBuilder,
     private classService: ClassService,
     private _snackBar: MatSnackBar,
-    private http: HttpClient
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.form = this.createForm();
   }
@@ -92,14 +95,16 @@ export class AddClassComponent {
     console.log('Group', { sigup });
     this.classService.addClass(sigup).subscribe((x) => {
       this.classCode = x.code;
-      this._snackBar.open(
-        `Class has been created. Class Code is ${x.code}`,
-        '',
-        {
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        }
-      );
+      this.router.navigate(['admin/class', 'list']);
+      this._snackBar.open('Class Created successfully');
+      // this._snackBar.open(
+      //   `Class has been created. Class Code is ${x.code}`,
+      //   '',
+      //   {
+      //     horizontalPosition: 'right',
+      //     verticalPosition: 'top',
+      //   }
+      // );
     });
   }
 

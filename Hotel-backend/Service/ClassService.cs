@@ -108,7 +108,7 @@ public class ClassSessionService : IClassSessionService
             EndDate = x.Session.EndDate,
             ClassId = x.Session.ClassId,
             Title = x.Session.Title,
-            CreatedBy = x.User.FirstName,
+            CreatedBy = $"{x.User.FirstName} {x.User.LastName}",
             CreatedOn = x.Session.CreatedOn,
             Code = x.Session.Code,
         })

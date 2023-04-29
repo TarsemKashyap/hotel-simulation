@@ -10,7 +10,7 @@
       >
     </div>
     <nav class="text-white text-base font-semibold pt-3">
-      <a
+      <!-- <a
         routerLink="change-password"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
@@ -18,25 +18,25 @@
           <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
         </button>
         Change Password
-      </a>
+      </a> -->
 
-      <a
+      <!-- <a
         routerLink="instructor/create"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
         <button>
-          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="add"></mat-icon>
+          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
         </button>
         Instructor Create
-      </a>
+      </a> -->
       <a
         routerLink="instructor/list"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
         <button>
-          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="streetview"></mat-icon>
+          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
         </button>
-        View Instructors
+        Instructors
       </a>
       <a
         routerLink="class/list"
@@ -66,6 +66,15 @@
       </button>
         Passdue Users
       </a>
+      <a
+      routerLink="change-password"
+      class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+    >
+      <button>
+        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
+      </button>
+      Change Password
+    </a>
     </nav>
   </aside>
 
@@ -79,7 +88,8 @@
         >
           <img src="https://source.unsplash.com/uJ8LNVCBjFQ/400x400" />
         </button>
-        <div class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
+        <div class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16" style="display: none
+        ;">
           <a href="#" class="block px-4 py-2 account-link hover:text-white"
             >Account</a
           >

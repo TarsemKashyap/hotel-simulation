@@ -50,7 +50,6 @@ export class ClassListComponent implements OnInit {
  
 
   add() {
-    debugger
     this.router.navigate(['class/add'])
   }
 }

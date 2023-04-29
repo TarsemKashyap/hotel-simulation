@@ -10,14 +10,7 @@ import { ClassService } from '../class.service';
 
 @Component({
   selector: 'app-action-renderer',
-  template: `
-  <span>
-    <span>{{ cellValue }}</span
-    >&nbsp;
-    <span (click)="edit()" class="material-icons">edit</span>
-    <span (click)="delete()" class="material-icons">delete</span>
-  </span>
-`
+  templateUrl: './action-renderer.component.html'
 })
 export class ActionRendererComponent implements ICellRendererAngularComp{
   public cellValue!: string;
