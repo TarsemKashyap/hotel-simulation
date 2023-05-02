@@ -27,6 +27,5 @@ export enum Action {
 
 
 export interface ClassSessionUpdate extends ClassSession {
-  added:ClassGroup[],
-  removed: ClassGroup[]
+
 }

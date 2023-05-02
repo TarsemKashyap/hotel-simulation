@@ -13,17 +13,18 @@ import { ClassSession } from '..';
 import { ClassService } from '../class.service';
 import { Action, ClassGroup } from '../model/classSession.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-class-edit',
   templateUrl: './class-edit.component.html',
-  styleUrls: ['./class-edit.component.css']
+  styleUrls: ['./class-edit.component.css'],
 })
 export class ClassEditComponent {
   form: FormGroup;
   submitted = false;
   classCode = null || '';
   classId: number | undefined;
-  data: ClassSession | undefined;
+  removedGroups: ClassGroup[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -47,17 +48,16 @@ export class ClassEditComponent {
       endDate: ['', Validators.required],
       hotelsCount: [4, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
-      groups: this.fb.array([])
+      groups: this.fb.array([]),
     });
   }
-
 
   createItem(value: ClassGroup) {
     return new FormGroup({
       name: new FormControl(value.name, Validators.required),
-      groupId: new FormControl(value.groupId, Validators.required),
+      groupId: new FormControl(value.groupId),
       serial: new FormControl(value.serial, Validators.required),
-      action: new FormControl(value.action)
+      action: new FormControl(value.action || Action.Updated),
     });
   }
 
@@ -65,43 +65,38 @@ export class ClassEditComponent {
     return this.form.controls;
   }
 
-  get added(): FormArray {
-    return <FormArray>this.form.get('added');
-  }
-
-  get removed(): FormArray {
-    return <FormArray>this.form.get('removed');
-  }
-
   get groups(): FormArray {
-   
-    const groups = <FormArray>this.form.get('groups');
-    console.log("GroupControls", groups.controls.map(x => x.value));
-    return groups;
+    return <FormArray>this.form.get('groups');
   }
-
-
 
   addGroup($event: Event, index: number): void {
-    const data: ClassGroup = { name: "", serial: this.data!.groups.length + 1, balance: 0, action: Action.Added };
+    const data: ClassGroup = {
+      groupId: undefined,
+      name: '',
+      serial: this.groups.length + 1,
+      balance: 0,
+      action: Action.Added,
+    };
     this.groups.push(this.createItem(data));
-    this.data!.groups.push(data);
-
   }
 
   removeGroup($event: Event, index: number): void {
-    this.data!.groups[index].action = Action.Removed;
-    this.groups.patchValue(this.data!.groups.filter(x=>x.action!=Action.Removed));
+    const classGroup: ClassGroup = this.groups.controls[index].value;
+    this.groups.removeAt(index);
+    Object.assign(classGroup, { action: Action.Removed });
+    console.log('ClassGroup removed', classGroup);
+    //only add which are saved on database
+    if (classGroup.groupId) {
+      this.removedGroups.push(classGroup);
+    }
   }
 
   private loadClass() {
     this.classService.getClass(this.classId!).subscribe({
       next: (data: ClassSession) => {
-        this.data = data;
-        this.form.patchValue(this.data);
-        for (let item of this.data.groups) {
+        this.form.patchValue(data);
+        for (let item of data.groups) {
           this.groups.push(this.createItem(item));
-
         }
       },
       error: (err) => {
@@ -112,10 +107,22 @@ export class ClassEditComponent {
 
   onSubmit(): void {
     this.submitted = true;
-    const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
-      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1, action: x.action };
-      return data;
-    });
+    if (this.form.invalid) {
+      return;
+    }
+    const updatedGroup = (<Array<any>>this.form.value.groups).map(
+      (x: ClassGroup, i) => {
+        var data: ClassGroup = {
+          serial: i + 1,
+          name: x.name,
+          balance: 1,
+          action: x.action,
+          groupId: x.groupId,
+        };
+        return data;
+      }
+    );
+    const groups = updatedGroup.concat(this.removedGroups);
     this.classId = this.route.snapshot.params['id'];
     const updateClass: ClassSession = {
       title: this.form.value.title,
@@ -124,13 +131,13 @@ export class ClassEditComponent {
       hotelsCount: this.form.value.hotelsCount,
       roomInEachHotel: this.form.value.roomInEachHotel,
       currentQuater: this.form.value.currentQuater,
-      code: this.form.value.code && this.form.value.code == undefined && this.form.value.code == null ? this.form.value.code : '',
+      code: '',
       createdBy: '',
-      groups: groups
+      groups: groups,
     };
     this.classService.classUpdate(this.classId!, updateClass).subscribe((x) => {
       this.router.navigate(['admin/class', 'list']);
-      this._snackBar.open('Class successfully updated');
+      this._snackBar.open('Class updated successfully');
     });
   }
 

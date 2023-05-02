@@ -16,8 +16,8 @@ public class ClassSession
     public string Code { get; set; }
 
     public string CreatedBy { get; set; }
-    public virtual ICollection<ClassGroup> Groups { get; set; }
-    public virtual ICollection<Month> Months { get; set; }
+    public virtual List<ClassGroup> Groups { get; set; }
+    public virtual List<Month> Months { get; set; }
 
 }
 

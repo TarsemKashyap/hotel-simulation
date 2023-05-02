@@ -1,10 +1,17 @@
 using FluentValidation;
 public class ClassGroupDto
 {
-    public int GroupId { get; set; }
+    public int? GroupId { get; set; }
     public int Serial { get; set; }
     public string Name { get; set; }
     public decimal Balance { get; set; }
+    public ActionOnRecord Action { get; set; }
+}
+
+
+public enum ActionOnRecord
+{
+    Updated = 0, Added = 1, Removed = 2
 }
 
 public class ClassGroupDtoValidator : AbstractValidator<ClassGroupDto>
