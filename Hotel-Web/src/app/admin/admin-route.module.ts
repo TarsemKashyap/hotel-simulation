@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { classRoute } from '../shared/class/class.module';
 import { InstructorComponent, InstructorEditComponent, InstructorListComponent } from './instructor';
+import { canActivateHome } from '../shared/auth.gurad';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'instructor/edit/:id', component: InstructorEditComponent },
       ...classRoute
     ],
+    canActivate: [canActivateHome],
   },
 ];
 

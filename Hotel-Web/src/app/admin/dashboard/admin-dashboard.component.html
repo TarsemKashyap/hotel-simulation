@@ -10,40 +10,50 @@
       >
     </div>
     <nav class="text-white text-base font-semibold pt-3">
-      <a
+      <!-- <a
         routerLink="change-password"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fas fa-sticky-note mr-3"></i>
+        <button>
+          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
+        </button>
         Change Password
-      </a>
+      </a> -->
 
-      <a
+      <!-- <a
         routerLink="instructor/create"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fa-duotone fa-key mr-3"></i>
+        <button>
+          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
+        </button>
         Instructor Create
-      </a>
+      </a> -->
       <a
         routerLink="instructor/list"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fa-duotone fa-key mr-3"></i>
-        View Instructors
+        <button>
+          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
+        </button>
+        Instructors
       </a>
       <a
-        routerLink="class/add"
+        routerLink="class/list"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fas fa-table mr-3"></i>
+      <button>
+        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="class"></mat-icon>
+      </button>
         Classes
       </a>
       <a
         href="forms.html"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fas fa-align-left mr-3"></i>
+      <button>
+        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="payment"></mat-icon>
+      </button>
         Manage Payment
       </a>
 
@@ -51,9 +61,20 @@
         href="calendar.html"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-        <i class="fas fa-calendar mr-3"></i>
+      <button>
+        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="payment"></mat-icon>
+      </button>
         Passdue Users
       </a>
+      <a
+      routerLink="change-password"
+      class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+    >
+      <button>
+        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
+      </button>
+      Change Password
+    </a>
     </nav>
   </aside>
 
@@ -67,7 +88,8 @@
         >
           <img src="https://source.unsplash.com/uJ8LNVCBjFQ/400x400" />
         </button>
-        <div class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
+        <div class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16" style="display: none
+        ;">
           <a href="#" class="block px-4 py-2 account-link hover:text-white"
             >Account</a
           >

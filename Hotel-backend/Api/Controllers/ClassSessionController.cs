@@ -42,6 +42,31 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var appUser = await _classSessionService.GetById(id);
+        return Ok(appUser);
+
+    }
+
+    [HttpPost("editClass/{id}")]
+    public async Task<IActionResult> ClassUpdate(int id, ClassSessionUpdateDto account)
+    {
+        // _validator.ValidateAndThrow(account);
+        var response = await _classSessionService.Update(id, account);
+        return Ok(response);
+
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<ActionResult> ClassDelete(int id)
+    {
+        await _classSessionService.DeleteId(id);
+        return Ok();
+
+    }
+
     [HttpGet("list")]
     public IActionResult ClassList()
     {

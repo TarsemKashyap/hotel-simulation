@@ -13,6 +13,9 @@ using System.Net.Mail;
 namespace Service;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq.Expressions;
 
 public interface IClassSessionService
@@ -21,6 +24,9 @@ public interface IClassSessionService
     IEnumerable<ClassSessionDto> ClassList();
     Task<ClassSessionDto> Create(ClassSessionDto classSession);
     IEnumerable<ClassSessionDto> List(string instructorId = null);
+    Task<ClassSessionUpdateDto> GetById(int classId);
+    Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
+    Task DeleteId(int classId);
 }
 
 public class ClassSessionService : IClassSessionService
@@ -45,7 +51,44 @@ public class ClassSessionService : IClassSessionService
 
 
     }
+    public async Task<ClassSessionDto> Update(int classId, ClassSessionUpdateDto classSession)
+    {
+        var classSessionEntity = _context.ClassSessions.Include(x => x.Groups).SingleOrDefault(x => x.ClassId == classId);
 
+        var groups = classSession.Groups.ToLookup(x => x.Action);
+        var newlyAdded = groups[ActionOnRecord.Added];
+        var removedItems = groups[ActionOnRecord.Removed].Select(x => x.GroupId);
+        var updated = groups[ActionOnRecord.Updated];
+
+
+        classSessionEntity.Groups.RemoveAll(x => removedItems.Contains(x.GroupId));
+
+
+        foreach (var removed in newlyAdded)
+        {
+            var group = removed.Adapt<ClassGroup>();
+            classSessionEntity.Groups.Add(group);
+        }
+
+
+        foreach (var removed in updated)
+        {
+
+            int index = classSessionEntity.Groups.FindIndex(x => x.GroupId == removed.GroupId);
+            var group = removed.Adapt<ClassGroup>();
+            classSessionEntity.Groups[index] = group;
+
+        }
+
+        classSessionEntity.CurrentQuater = classSession.CurrentQuater;
+        classSessionEntity.Title = classSession.Title;
+        classSessionEntity.CurrentQuater = classSession.CurrentQuater;
+        classSessionEntity.HotelsCount = classSession.HotelsCount;
+        var result = _context.ClassSessions.Update(classSessionEntity);
+        await _context.SaveChangesAsync();
+        return _mapper.Map<ClassSessionDto>(result);
+
+    }
     private string RandomString()
     {
         Random random = new Random();
@@ -77,9 +120,47 @@ public class ClassSessionService : IClassSessionService
         {
             query = query.Where(x => x.CreatedBy == instructorId);
         }
+        var result = query
+        .Join(
+            _context.AppUsers,
+            session => session.CreatedBy,
+            user => user.Id,
+            (session, user) => new { Session = session, User = user })
+        .OrderByDescending(x => x.Session.CreatedOn)
+        .Select(x => new ClassSessionDto
+        {
+            StartDate = x.Session.StartDate,
+            EndDate = x.Session.EndDate,
+            ClassId = x.Session.ClassId,
+            Title = x.Session.Title,
+            CreatedBy = $"{x.User.FirstName} {x.User.LastName}",
+            CreatedOn = x.Session.CreatedOn,
+            Code = x.Session.Code,
+        })
+        .ToList();
 
-        return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
+        return result;
+        //return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
 
+    }
+
+    public async Task<ClassSessionUpdateDto> GetById(int classId)
+    {
+        var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);
+        ;
+        if (appUser == null)
+            throw new ValidationException("class not found for given classId");
+        return appUser.Adapt<ClassSessionUpdateDto>();
+    }
+
+    public async Task DeleteId(int classId)
+    {
+        var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);
+        if (appUser != null)
+        {
+            var data = _context.ClassSessions.Remove(appUser);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }

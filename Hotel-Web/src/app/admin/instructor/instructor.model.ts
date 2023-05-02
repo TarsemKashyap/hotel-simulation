@@ -1,5 +1,5 @@
 export interface InstructorDto {
-    userId: string;
+    id: string;
     firstName: string;
     lastName: string;
     email: string;

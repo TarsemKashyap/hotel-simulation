@@ -18,6 +18,11 @@ public class ClassSessionDto
     public ClassGroupDto[] Groups { get; set; }
 
 }
+ public class ClassSessionUpdateDto : ClassSessionDto
+{
+    public ClassGroupDto[] Added { get; set; }
+    public ClassGroupDto[] Removed { get; set; }
+}
 
 public class ClassSessionDtoValidator : AbstractValidator<ClassSessionDto>
 {

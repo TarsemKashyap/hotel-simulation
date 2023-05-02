@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+  import {
+    AbstractControl,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassSession } from '..';
 import { ClassService } from '../class.service';
 import { ClassGroup } from '../model/classSession.model';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-class',
@@ -27,7 +28,9 @@ export class AddClassComponent {
     private fb: FormBuilder,
     private classService: ClassService,
     private _snackBar: MatSnackBar,
-    private http: HttpClient
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.form = this.createForm();
   }
@@ -42,6 +45,7 @@ export class AddClassComponent {
       hotelsCount: [4, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
       groups: this.fb.array([this.createItem()]),
+      
     });
   }
 
@@ -61,6 +65,7 @@ export class AddClassComponent {
 
   addGroup($event: Event, index: number): void {
     this.groups.push(this.createItem());
+    
   }
 
   removeGroup($event: Event, index: number): void {
@@ -73,7 +78,7 @@ export class AddClassComponent {
       return;
     }
     const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
-      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 };
+      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 ,action: 1};
       return data;
     });
     const sigup: ClassSession = {
@@ -90,14 +95,16 @@ export class AddClassComponent {
     console.log('Group', { sigup });
     this.classService.addClass(sigup).subscribe((x) => {
       this.classCode = x.code;
-      this._snackBar.open(
-        `Class has been created. Class Code is ${x.code}`,
-        '',
-        {
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        }
-      );
+      this.router.navigate(['admin/class', 'list']);
+      this._snackBar.open('Class Created successfully');
+      // this._snackBar.open(
+      //   `Class has been created. Class Code is ${x.code}`,
+      //   '',
+      //   {
+      //     horizontalPosition: 'right',
+      //     verticalPosition: 'top',
+      //   }
+      // );
     });
   }
 
