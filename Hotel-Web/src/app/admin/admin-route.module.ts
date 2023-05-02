@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: 'Paypal/paypal-initiated-page/:id', component: PaypalInitiatedPageComponent },
       ...classRoute
     ],
-    canActivate: [canActivateHome],
+    //canActivate: [canActivateHome],
   },
 ];
 
