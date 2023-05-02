@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Reflection;
+using Database.Domain;
 
 namespace Database;
 public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
@@ -23,6 +24,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<Month> Months { get; set; }
     public DbSet<AppUserRefreshToken> RefreshTokens {get;set;}
     public DbSet<MigrationScript> MigrationScripts { get; set; }
+    public DbSet<StudentSignupTemp> StudentSignupTemp { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
        

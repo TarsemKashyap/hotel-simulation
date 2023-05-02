@@ -1,0 +1,64 @@
+<!-- ====== Forms Section Start -->
+<section class="bg-[#F4F7FF] py-14 lg:py-20">
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4">
+                <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white py-14 px-8 text-center sm:px-12 md:px-[60px]"
+                    data-wow-delay=".15s">
+                    <div class="mb-10 text-center">
+                        <a href="javascript:void(0)" class="mx-auto logo inline-block max-w-[160px]">
+                            <img src="assets/images/logo/blue-logo.png" alt="logo" />
+                        </a>
+                    </div>
+                    <section>
+                        <ul class="custom_table mb-8">
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">First name</div>
+                                    <label class="text-right">{{data?.firstName}}</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Last name</div>
+                                    <label class="text-right">{{data?.lastName}}</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Email</div>
+                                    <label class="text-right">{{data?.email}}</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Class Code</div>
+                                    <label class="text-right">{{data?.classCode}}</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Institue</div>
+                                    <label class="text-right">{{data?.institute}}</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    <form  action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="address_override" value="1">
+                        <input type="hidden" name="cmd" value="_s-xclick" />
+                        <input type="hidden" name="hosted_button_id" value="W24G24CGREZ2L" />
+                        <input type="hidden" name="first_name" [value]="data?.firstName" />
+                        <input type="hidden" name="last_name" [value]="data?.lastName" />
+                        <input type="hidden" name="email" [value]="data?.firstName" />
+                        <input type="hidden" name="custom" [value]="data?.reference" />
+                        <input type="hidden" name="return" value="http://localhost:4200/complete" />
+                        <input type="image" name="submit" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"  alt="PayPal - The safer, easier way to pay online!" />
+                        <img alt="" border="0"  src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== Forms Section End -->

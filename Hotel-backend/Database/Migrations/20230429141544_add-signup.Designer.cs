@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230429141544_add-signup")]
+    partial class addsignup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,12 +232,12 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Domain.StudentSignupTemp", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
 
                     b.Property<string>("ClassCode")
                         .IsRequired()
@@ -273,12 +275,8 @@ namespace Database.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("RawTransactionResponse")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Reference")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("Reference")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("TransactionId")
                         .HasColumnType("longtext");
@@ -402,7 +400,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 4, 30, 20, 50, 49, 245, DateTimeKind.Local).AddTicks(4758));
+                        .HasDefaultValue(new DateTime(2023, 4, 29, 19, 45, 43, 951, DateTimeKind.Local).AddTicks(168));
 
                     b.HasKey("ScriptId");
 

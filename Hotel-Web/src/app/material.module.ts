@@ -48,6 +48,7 @@ import {CdkMenuModule} from '@angular/cdk/menu';
 import {DialogModule} from '@angular/cdk/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 
+
 @NgModule({
   exports: [
     A11yModule,
@@ -99,6 +100,7 @@ import { AgGridModule } from 'ag-grid-angular';
     ScrollingModule,
     DialogModule,
     AgGridModule
+
   ]
 })
 export class MaterialModule {}

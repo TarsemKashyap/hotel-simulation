@@ -5,9 +5,10 @@ import {
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { AccountService } from '../account.service';
-import { Signup } from '../model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { StudentsignupService } from './studentsignup.service';
+import { StudentSignup } from '../model/studentSignup.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'signup',
@@ -20,8 +21,9 @@ export class SignupComponent {
 
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountService,
-    private _snackBar: MatSnackBar
+    private studentsignupService: StudentsignupService,
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.form = this.createForm();
   }
@@ -33,14 +35,8 @@ export class SignupComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(30),
-        ],
-      ],
+      ClassCode: ['', Validators.required],
+      Institute: ['', Validators.required]
     });
   }
 
@@ -53,15 +49,18 @@ export class SignupComponent {
     if (this.form.invalid) {
       return;
     }
-    const sigup: Signup = {
+    const sigup: StudentSignup = {
       firstName: this.form.value.firstName,
       lastName: this.form.value.lastName,
       email: this.form.value.email,
-      password: this.form.value.password,
+      classCode: this.form.value.ClassCode,
+      institute: this.form.value.Institute,
     };
-    this.accountService.CreateAccount(sigup).subscribe((x) => {
+    this.studentsignupService.RegisterAccount(sigup).subscribe((x) => {
+      debugger
       console.log('Signup', x);
-      this._snackBar.open('Instructor Account created');
+      this.router.navigate([`Paypal/paypal-initiated-page/${x.id}`])
+      this._snackBar.open('Student SignUp Successfully');
     });
   }
 

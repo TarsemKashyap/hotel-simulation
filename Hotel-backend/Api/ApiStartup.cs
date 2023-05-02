@@ -114,6 +114,7 @@ public static class ApiStartupExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IClassSessionService, ClassSessionService>();
+        services.AddScoped<IStudentSignupTempService, StudentSignupTempService>();
 
 
     }
