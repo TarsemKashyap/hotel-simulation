@@ -24,6 +24,7 @@ namespace Database.Domain
         public PaymentStatus PaymentStatus { get; set; }
         public string PaymentFailureReason { get; set; }
         public string RawTransactionResponse { get; set; }
+        public bool IsSignupComplete { get; set; }
     }
 
     public enum PaymentStatus
@@ -32,6 +33,7 @@ namespace Database.Domain
         Success = 1,
         Failed = 2
     }
+
 
     public class StudentSignupTempEntityConfig : IEntityTypeConfiguration<StudentSignupTemp>
     {
@@ -51,6 +53,7 @@ namespace Database.Domain
             builder.Property(x => x.PaymentDate);
             builder.Property(x => x.PaymentStatus).HasDefaultValue(PaymentStatus.NotStarted);
             builder.Property(x => x.PaymentFailureReason);
+            builder.Property(x => x.IsSignupComplete).HasDefaultValue(false);
 
 
         }

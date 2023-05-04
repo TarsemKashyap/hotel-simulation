@@ -41,17 +41,24 @@
                             </div>
                         </div>
                         <div class="mb-6">
-                            <input type="text" required="true" placeholder="Institute" formControlName="Institute"
+                            <input type="text" required="true" placeholder="institute" formControlName="institute"
                                 class="input-field" />
-                            <div *ngIf="submitted && f.Institute.errors" class="invalid-feedback">
-                                <div *ngIf="f.Institute.errors.required">Institute is required</div>
+                            <div *ngIf="submitted && f.institute.errors" class="invalid-feedback">
+                                <div *ngIf="f.institute.errors.required">Institute is required</div>
                             </div>
                         </div>
                         <div class="mb-6">
-                            <input type="text" required="true" placeholder="Class Code" formControlName="ClassCode"
+                            <input type="text" required="true" placeholder="class Code" formControlName="classCode"
                                 class="input-field" />
-                            <div *ngIf="submitted && f.ClassCode.errors" class="invalid-feedback">
-                                <div *ngIf="f.ClassCode.errors.required">Class Code is required</div>
+                            <div *ngIf="submitted && f.classCode.errors" class="invalid-feedback">
+                                <div *ngIf="f.classCode.errors.required">Class Code is required</div>
+                            </div>
+                        </div>
+                        <div *ngIf="referenceId" class="mb-6">
+                            <input type="password" required="true" placeholder="Password" formControlName="password"
+                                class="input-field" />
+                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                <div *ngIf="f.password.errors.required">Password is required</div>
                             </div>
                         </div>
                         <div class="mb-1 float-left">

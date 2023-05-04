@@ -10,6 +10,8 @@ using Database;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using Mapster;
+using Common.Dto;
+
 namespace Service;
 
 public class AccountService : IAccountService
@@ -87,6 +89,30 @@ public class AccountService : IAccountService
             await CreateRoleifNotExist(RoleType.Instructor);
             await _userManager.AddToRoleAsync(appuser, RoleType.Instructor);
             await SendEmailToInstructor(dto);
+        }
+    }
+
+    public async Task StudentAccount(StudentSignupDto dto)
+    {
+        var appuser = new Student
+        {
+            UserName = dto.Email,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            TwoFactorEnabled = false
+        };
+        var user = await _userManager.FindByNameAsync(dto.Email);
+        if (user != null)
+        {
+            throw new ValidationException("User with {0} this email already exist", dto.Email);
+        }
+        var result = await _userManager.CreateAsync(appuser, dto.Password);
+        if (result.Succeeded)
+        {
+            await CreateRoleifNotExist(RoleType.Student);
+            await _userManager.AddToRoleAsync(appuser, RoleType.Student);
+            //await SendEmailToInstructor(dto);
         }
     }
 

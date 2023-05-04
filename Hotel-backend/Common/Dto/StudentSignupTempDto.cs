@@ -23,13 +23,22 @@ namespace Common.Dto
         public PaymentStatus PaymentStatus { get; set; }
         public string PaymentFailureReason { get; set; }
         public string RawTransactionResponse { get; set; }
+        public SignupStatus SignupStatus { get; set; }
     }
+
+
 
     public enum PaymentStatus
     {
         NotStarted = 0,
         Success = 1,
         Failed = 2
+    }
+
+    public enum SignupStatus
+    {
+        NotStarted = 0,
+        Success = 1,
     }
 
     public class StudentSignupTempDtoValidator : AbstractValidator<StudentSignupTempDto>

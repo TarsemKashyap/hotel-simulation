@@ -14,13 +14,18 @@ namespace Api.Controllers
         private readonly IValidator<StudentSignupTempDto> _validator;
         private readonly IStudentSignupTempService _studentSignupTempService;
         private readonly IClassSessionService _classSessionService;
+        private readonly IAccountService _accountService;
+        private readonly IValidator<StudentSignupDto> _accountValidator;
         public StudentSignupController(IStudentSignupTempService studentSignupTempService,
             IValidator<StudentSignupTempDto> validator,
-            IClassSessionService classSessionService)
+            IClassSessionService classSessionService,
+            IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
         {
             _validator = validator;
             _studentSignupTempService = studentSignupTempService;
             _classSessionService = classSessionService;
+            _accountService = accountService;
+            _accountValidator = accountValidator;
         }
 
         [HttpPost("studentsignup"), AllowAnonymous]
@@ -31,14 +36,14 @@ namespace Api.Controllers
                 _validator.ValidateAndThrow(dto);
                 var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == dto.ClassCode);
 
-                if (record == null)
+                if (record != null)
                 {
                     var response = await _studentSignupTempService.Create(dto);
                     return Ok(response);
                 }
                 else
                 {
-                    return BadRequest("Invalid class code");
+                    throw new Service.ValidationException("Invalid Class Code");
                 }
             }
             catch (Exception ex)
@@ -59,7 +64,32 @@ namespace Api.Controllers
         [HttpPost("paymentCheck"), AllowAnonymous]
         public async Task<IActionResult> PaymentStatus(PaymentTransactionDto paymentTransactionDto)
         {
-            return Ok("Payment transaction processed successfully.");
+            return Ok();
+        }
+        [HttpGet("{referenceId}"), AllowAnonymous]
+        public async Task<IActionResult> GetByReferenceId(string referenceId)
+        {
+            var signupUser = await _studentSignupTempService.GetByReferenceId(referenceId);
+            return Ok(signupUser);
+
+        }
+
+        [HttpPost("student"), AllowAnonymous]
+        public async Task<ActionResult> StudentSignup(StudentSignupDto account)
+        {
+            _accountValidator.ValidateAndThrow(account);
+            var student = new StudentSignupDto()
+            {
+                FirstName = account.FirstName,
+                LastName = account.LastName,
+                Email = account.Email,
+                Password = account.Password,
+                ClassCode = account.ClassCode
+
+            };
+            await _accountService.StudentAccount(student);
+            return Ok(student);
+
         }
     }
 }

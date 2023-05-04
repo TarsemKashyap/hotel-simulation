@@ -27,7 +27,6 @@ export class PaypalInitiatedPageComponent {
     this.studentId = this.route.snapshot.params['id'];
     this.loadStudentData();
   }
- //Paymenttransaction
 
   private loadStudentData() {
     this.studentsignupService.getStudentData(this.studentId!).subscribe({
