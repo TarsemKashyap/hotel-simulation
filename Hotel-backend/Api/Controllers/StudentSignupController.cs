@@ -31,25 +31,20 @@ namespace Api.Controllers
         [HttpPost("studentsignup"), AllowAnonymous]
         public async Task<IActionResult> Create(StudentSignupTempDto dto)
         {
-            try
-            {
-                _validator.ValidateAndThrow(dto);
-                var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == dto.ClassCode);
 
-                if (record != null)
-                {
-                    var response = await _studentSignupTempService.Create(dto);
-                    return Ok(response);
-                }
-                else
-                {
-                    throw new Service.ValidationException("Invalid Class Code");
-                }
-            }
-            catch (Exception ex)
+            _validator.ValidateAndThrow(dto);
+            var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == dto.ClassCode);
+
+            if (record != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                var response = await _studentSignupTempService.Create(dto);
+                return Ok(response);
             }
+            else
+            {
+                throw new Service.ValidationException("Invalid Class Code");
+            }
+
         }
 
         [HttpGet("signup/{id}"), AllowAnonymous]
@@ -78,17 +73,26 @@ namespace Api.Controllers
         public async Task<ActionResult> StudentSignup(StudentSignupDto account)
         {
             _accountValidator.ValidateAndThrow(account);
-            var student = new StudentSignupDto()
+            var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == account.ClassCode);
+            if (record != null)
             {
-                FirstName = account.FirstName,
-                LastName = account.LastName,
-                Email = account.Email,
-                Password = account.Password,
-                ClassCode = account.ClassCode
+                var student = new StudentSignupDto()
+                {
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    Email = account.Email,
+                    Password = account.Password,
+                    ClassCode = account.ClassCode,
+                    Reference = account.Reference,
 
-            };
-            await _accountService.StudentAccount(student);
-            return Ok(student);
+                };
+                await _accountService.StudentAccount(student);
+                return Ok(student);
+            }
+            else
+            {
+                throw new Service.ValidationException("Invalid Class Code");
+            }
 
         }
     }

@@ -1,3 +1,4 @@
+using Database.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -18,6 +19,7 @@ public class ClassSession
     public string CreatedBy { get; set; }
     public virtual List<ClassGroup> Groups { get; set; }
     public virtual List<Month> Months { get; set; }
+    public virtual List<StudentClassMapping> StudentClassMappings { get; set; }
 
 }
 

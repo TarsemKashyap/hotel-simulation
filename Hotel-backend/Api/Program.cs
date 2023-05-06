@@ -1,4 +1,5 @@
 using Api;
+using Api.Validators;
 using Common.Dto;
 using Database;
 using FluentValidation;
@@ -19,8 +20,9 @@ builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<AccountDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<InstructorSignupValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ClassSessionDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<StudentSignupTempDtoValidator>();
-
+//builder.Services.AddValidatorsFromAssemblyContaining<StudentSignupTempDtoValidator>();
+builder.Services.AddTransient<IValidator<StudentSignupTempDto>, StudentSignupTempDtoValidator>();
+builder.Services.AddTransient<IValidator<StudentSignupDto>, StudentSignupValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

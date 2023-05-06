@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import {
   FormGroup,
   FormBuilder,
@@ -27,12 +30,12 @@ export class SignupComponent {
     private _snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
+    private http: HttpClient
   ) {
     this.form = this.createForm();
   }
 
   ngOnInit(): void {
-    debugger
     this.route.queryParams.subscribe(params => {
       this.referenceId = params['id'];
       if(this.referenceId) {
@@ -71,13 +74,47 @@ export class SignupComponent {
       reference: this.referenceId!
     };
     if(!this.referenceId) {
-      this.studentsignupService.RegisterAccount(sigup).subscribe((x) => {
+      this.studentsignupService.RegisterAccount(sigup).pipe(
+      catchError((error) => {
+        const errorMessage = error.message;
+        if(error.status === 400)
+        {
+          const errorResponse = error.error;
+          this.form.controls.firstName.setErrors({ apiError: errorResponse.firstName });
+          this.form.controls.lastName.setErrors({ apiError: errorResponse.lastName });
+          this.form.controls.email.setErrors({ apiError: errorResponse.email });
+          this.form.controls.classCode.setErrors({ apiError: errorResponse.classCode });
+          this.form.controls.institute.setErrors({ apiError: errorResponse.institute });
+        } else {
+          this.form.setErrors({ apiError: errorMessage });
+        }
+        return of();
+      })
+      ).subscribe((x) => {
         this.router.navigate([`Paypal/paypal-initiated-page/${x.id}`])
         this._snackBar.open('Student SignUp Successfully');
       });
     }
   else{
-    this.studentsignupService.StudentAccount(sigup).subscribe((x) => {
+    this.studentsignupService.StudentAccount(sigup).pipe(
+      catchError((error) => {
+        const errorMessage = error.message;
+        if(error.status === 400)
+        {
+          const errorResponse = error.error;
+          this.form.controls.firstName.setErrors({ apiError: errorResponse.firstName });
+          this.form.controls.lastName.setErrors({ apiError: errorResponse.lastName });
+          this.form.controls.email.setErrors({ apiError: errorResponse.email });
+          this.form.controls.classCode.setErrors({ apiError: errorResponse.classCode });
+          this.form.controls.institute.setErrors({ apiError: errorResponse.institute });
+          this.form.controls.password.setErrors({ apiError: errorResponse.password });
+        } else {
+          this.form.setErrors({ apiError: errorMessage });
+        }
+        return of();
+      })
+      )
+    .subscribe((x) => {
       this._snackBar.open('Student SignUp Successfully');
       this.router.navigate(['login']);
     });
@@ -86,10 +123,8 @@ export class SignupComponent {
 
 
   private loadStudentData() {
-    debugger
     this.studentsignupService.getStudent(this.referenceId!).subscribe({
       next: (data: StudentPaymentSignUp) => {
-        debugger
         this.form.patchValue(data);
       },
       error: (err) => {
