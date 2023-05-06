@@ -24,6 +24,9 @@ namespace Database.Domain
         public PaymentStatus PaymentStatus { get; set; }
         public string PaymentFailureReason { get; set; }
         public string RawTransactionResponse { get; set; }
+        public int quantity { get; set; }
+
+        public int quantityleft { get; set; }
         public bool IsSignupComplete { get; set; }
     }
 
@@ -53,6 +56,8 @@ namespace Database.Domain
             builder.Property(x => x.PaymentDate);
             builder.Property(x => x.PaymentStatus).HasDefaultValue(PaymentStatus.NotStarted);
             builder.Property(x => x.PaymentFailureReason);
+            builder.Property(x => x.quantity);
+            builder.Property(x => x.quantityleft);
             builder.Property(x => x.IsSignupComplete).HasDefaultValue(false);
 
 
