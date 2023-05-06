@@ -23,6 +23,9 @@ namespace Common.Dto
         public PaymentStatus PaymentStatus { get; set; }
         public string PaymentFailureReason { get; set; }
         public string RawTransactionResponse { get; set; }
+        public int quantity { get; set; }
+
+        public int quantityleft { get; set; }
     }
 
     public enum PaymentStatus

@@ -15,6 +15,12 @@ public class JwtSettings
     public string Audience { get; set; }
 }
 
+public class PaymentConfig
+{
+    public string authToken { get; set; }
+    public string sandBoxUrl { get; set; }
+}
+
 public class Smtp
 {
     public string SendGridKey { get; set; }

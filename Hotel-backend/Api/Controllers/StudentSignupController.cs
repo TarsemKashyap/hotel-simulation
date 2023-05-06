@@ -2,7 +2,13 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Service;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Net.Mail;
+using System.Net;
+using Microsoft.Extensions.Options;
+using Mysqlx;
 
 namespace Api.Controllers
 {
@@ -14,13 +20,22 @@ namespace Api.Controllers
         private readonly IValidator<StudentSignupTempDto> _validator;
         private readonly IStudentSignupTempService _studentSignupTempService;
         private readonly IClassSessionService _classSessionService;
+        private readonly IEmailService _emailService;
+        private readonly PaymentConfig _PaymentConfig;
+        private readonly IPaymentService _paymentService;
         public StudentSignupController(IStudentSignupTempService studentSignupTempService,
             IValidator<StudentSignupTempDto> validator,
-            IClassSessionService classSessionService)
+            IClassSessionService classSessionService,
+            IEmailService emailService,
+            IOptions<PaymentConfig>  paymentConfig,
+            IPaymentService paymentService)
         {
             _validator = validator;
             _studentSignupTempService = studentSignupTempService;
             _classSessionService = classSessionService;
+            _emailService = emailService;
+            _PaymentConfig = paymentConfig.Value;
+            _paymentService = paymentService;
         }
 
         [HttpPost("studentsignup"), AllowAnonymous]
@@ -59,7 +74,9 @@ namespace Api.Controllers
         [HttpPost("paymentCheck"), AllowAnonymous]
         public async Task<IActionResult> PaymentStatus(PaymentTransactionDto paymentTransactionDto)
         {
-            return Ok("Payment transaction processed successfully.");
+           var result = await _paymentService.PaymentCheck(paymentTransactionDto);
+           return Ok();
+
         }
     }
 }

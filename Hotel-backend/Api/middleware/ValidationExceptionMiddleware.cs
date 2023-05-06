@@ -1,4 +1,5 @@
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Service;
 using System.Globalization;
@@ -30,6 +31,12 @@ public class ValidationExceptionMiddleware
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsJsonAsync(Message(ex));
+        }
+        catch (Exception ex)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var dict = new Dictionary<string, string> { { "", ex.Message } };
+            await context.Response.WriteAsJsonAsync(dict);
         }
     }
 
