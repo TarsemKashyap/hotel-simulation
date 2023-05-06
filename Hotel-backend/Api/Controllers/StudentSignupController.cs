@@ -65,6 +65,10 @@ namespace Api.Controllers
         public async Task<IActionResult> GetByReferenceId(string referenceId)
         {
             var signupUser = await _studentSignupTempService.GetByReferenceId(referenceId);
+            if (signupUser.IsSignupComplete == true)
+            {
+                throw new Service.ValidationException("Account already has been created");
+            }
             return Ok(signupUser);
 
         }
@@ -73,26 +77,19 @@ namespace Api.Controllers
         public async Task<ActionResult> StudentSignup(StudentSignupDto account)
         {
             _accountValidator.ValidateAndThrow(account);
-            var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == account.ClassCode);
-            if (record != null)
+            var student = new StudentSignupDto()
             {
-                var student = new StudentSignupDto()
-                {
-                    FirstName = account.FirstName,
-                    LastName = account.LastName,
-                    Email = account.Email,
-                    Password = account.Password,
-                    ClassCode = account.ClassCode,
-                    Reference = account.Reference,
+                FirstName = account.FirstName,
+                LastName = account.LastName,
+                Email = account.Email,
+                Password = account.Password,
+                ClassCode = account.ClassCode,
+                Reference = account.Reference,
 
-                };
-                await _accountService.StudentAccount(student);
-                return Ok(student);
-            }
-            else
-            {
-                throw new Service.ValidationException("Invalid Class Code");
-            }
+            };
+            await _accountService.StudentAccount(student);
+            return Ok(student);
+
 
         }
     }

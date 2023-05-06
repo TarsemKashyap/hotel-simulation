@@ -5,7 +5,6 @@ import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { classRoute } from '../shared/class/class.module';
 import { InstructorComponent, InstructorEditComponent, InstructorListComponent } from './instructor';
-import { PaypalInitiatedPageComponent } from '../public/account/PayPal/paypal-initiated-page/paypal-initiated-page.component';
 import { canActivateHome } from '../shared/auth.gurad';
 
 const routes: Routes = [
@@ -18,7 +17,6 @@ const routes: Routes = [
       { path: 'instructor/create', component: InstructorComponent },
       { path: 'instructor/list', component: InstructorListComponent },
       { path: 'instructor/edit/:id', component: InstructorEditComponent },
-      { path: 'Paypal/paypal-initiated-page/:id', component: PaypalInitiatedPageComponent },
       ...classRoute
     ],
     //canActivate: [canActivateHome],

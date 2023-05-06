@@ -1,4 +1,4 @@
 export * from './login/login.component'
-export * from './signup/signup.component'
+export * from '../student/signup/signup.component'
 export * from "./account.service"
-export * from "./model/signup.model"
+export * from "../student/model/signup.model"
