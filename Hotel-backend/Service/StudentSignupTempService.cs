@@ -52,9 +52,9 @@ namespace Service
 
                 StudentSignupTemp signup = _mapper.Map<StudentSignupTempDto, StudentSignupTemp>(studentSignupTemp);
                 
-                //Entry<signup>(studentSignupTemp).State = EntityState.Detached;
+                //En(studentSignupTemp).State = EntityState.Detached;
                 _context.Entry(signup).State = EntityState.Detached;
-                //var result = _context.StudentSignupTemp.Update(signup);
+                var result = _context.Set<StudentSignupTemp>().Update(signup);
 
                 await _context.SaveChangesAsync();
                 return _mapper.Map<StudentSignupTempDto>(signup);
@@ -69,10 +69,10 @@ namespace Service
 
         public async Task<StudentSignupTempDto> GetByRefrence(string refrenceId)
         {
-            var studentSignup = _context.StudentSignupTemp.FirstOrDefault(x => x.Reference == refrenceId);
-            ;
+            var studentSignup = _context.StudentSignupTemp.Where(x => x.Reference == refrenceId).AsNoTracking().SingleOrDefault();
+            
             if (studentSignup == null)
-                throw new ValidationException("student not found for given student Id");
+                throw new ValidationException("student not found for given student Refrence");
             return studentSignup.Adapt<StudentSignupTempDto>();
         }
 

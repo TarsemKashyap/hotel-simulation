@@ -435,7 +435,7 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
                         .HasDefaultValue(new DateTime(2023, 5, 3, 21, 43, 9, 531, DateTimeKind.Local).AddTicks(6018));
-                        .HasDefaultValue(new DateTime(2023, 5, 5, 21, 24, 50, 981, DateTimeKind.Local).AddTicks(99));
+                        //.HasDefaultValue(new DateTime(2023, 5, 5, 21, 24, 50, 981, DateTimeKind.Local).AddTicks(99));
 
                     b.HasKey("ScriptId");
 
