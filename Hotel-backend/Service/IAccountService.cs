@@ -6,6 +6,7 @@ using Service.Model;
 using Common;
 using System.Collections.Generic;
 using System;
+using Common.Dto;
 
 namespace Service;
 public interface IAccountService
@@ -22,4 +23,5 @@ public interface IAccountService
     Task Revoke(string userId);
     Task<IList<InstructorDto>> InstructorList();
     Task InstructorDelete(string id);
+    Task StudentAccount(StudentSignupDto dto);
 }

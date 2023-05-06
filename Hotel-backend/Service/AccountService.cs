@@ -10,6 +10,11 @@ using Database;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using Mapster;
+using Common.Dto;
+using Microsoft.EntityFrameworkCore;
+using Database.Domain;
+using MapsterMapper;
+
 namespace Service;
 
 public class AccountService : IAccountService
@@ -24,7 +29,10 @@ public class AccountService : IAccountService
     private readonly Smtp _smtp;
     private readonly AdminConfig _adminConfig;
 
-    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings, IEmailService emailService, IOptions<Smtp> smtp, IOptions<AdminConfig> adminConfig)
+    public AccountService(UserManager<AppUser> userManager, RoleManager<AppUserRole> roleManager,
+        IConfiguration configuration, SignInManager<AppUser> signInManager,
+        ITokenService tokenService, HotelDbContext context, IOptions<JwtSettings> jwtSettings,
+        IEmailService emailService, IOptions<Smtp> smtp, IOptions<AdminConfig> adminConfig)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -35,7 +43,6 @@ public class AccountService : IAccountService
         _jwtSettings = jwtSettings.Value;
         _smtp = smtp.Value;
         _adminConfig = adminConfig.Value;
-
     }
 
     public async Task CreateAdminAccount()
@@ -87,6 +94,39 @@ public class AccountService : IAccountService
             await CreateRoleifNotExist(RoleType.Instructor);
             await _userManager.AddToRoleAsync(appuser, RoleType.Instructor);
             await SendEmailToInstructor(dto);
+        }
+    }
+
+    public async Task StudentAccount(StudentSignupDto dto)
+    {
+        var appuser = new Student
+        {
+            UserName = dto.Email,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            TwoFactorEnabled = false
+        };
+        var user = await _userManager.FindByNameAsync(dto.Email);
+        if (user != null)
+        {
+            throw new ValidationException("User with {0} this email already exist", dto.Email);
+        }
+        var result = await _userManager.CreateAsync(appuser, dto.Password);
+        if (result.Succeeded)
+        {
+            StudentClassMapping studemtMapping = new StudentClassMapping()
+            {
+                StudentId = appuser.Id,
+                ClassId = _context.ClassSessions.Where(c => c.Code == dto.ClassCode).Select(c => c.ClassId).FirstOrDefault()
+            };
+            _context.StudentClassMapping.Add(studemtMapping);
+            _context.SaveChanges();
+            var studentSignupTemp = _context.StudentSignupTemp.FirstOrDefault(x => x.Reference == dto.Reference);
+            studentSignupTemp.IsSignupComplete = true;
+            await _context.SaveChangesAsync();
+            await CreateRoleifNotExist(RoleType.Student);
+            await _userManager.AddToRoleAsync(appuser, RoleType.Student);
         }
     }
 

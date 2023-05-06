@@ -11,7 +11,6 @@ export const appRoutes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'signup', component: SignupComponent },
     { path: 'payment/complete', component: CompleteComponent },
-    { path: 'signup/:id', component: SignupComponent },
 ];
 
 @NgModule({

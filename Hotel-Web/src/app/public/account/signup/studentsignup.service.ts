@@ -25,4 +25,14 @@ export class StudentsignupService {
   PaymentTransaction(paymentTransaction: PaymentTransaction): Observable<any> {
     return this.httpClient.post('signup/paymentCheck', paymentTransaction);
   }
+
+  getStudent(referenceId: string): Observable<any> {
+    return this.httpClient.get<StudentSignup[]>(
+      `signup/${referenceId}`
+    );
+  }
+
+  StudentAccount(signup: StudentSignup): Observable<any> {
+    return this.httpClient.post('signup/student', signup);
+  }
 }

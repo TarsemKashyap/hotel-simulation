@@ -14,7 +14,9 @@
                     </div>
                     <form [formGroup]="form" (ngSubmit)="onSubmit()">
                         <div class="mb-6">
-
+                            <div *ngIf="form.errors && form.errors.apiError">
+                                {{ form.errors.apiError }}
+                              </div>
                             <input type="text" placeholder="First name" formControlName="firstName"
                                 [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" class="input-field" />
 
@@ -22,6 +24,9 @@
                                 <div *ngIf="f.firstName.errors.required">First name is required</div>
                             </div>
 
+                            <div *ngIf="form.controls.firstName.hasError('apiError')">
+                                {{ form.controls.firstName.getError('apiError') }}
+                              </div>
                         </div>
                         <div class="mb-6">
 
@@ -32,26 +37,48 @@
                                 <div *ngIf="f.lastName.errors.required">Last name is required</div>
                             </div>
 
+                            <div *ngIf="form.controls.lastName.hasError('apiError')">
+                                {{ form.controls.lastName.getError('apiError') }}
+                              </div>
+
                         </div>
                         <div class="mb-6">
                             <input type="email" placeholder="Email" formControlName="email" class="input-field" />
                             <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                                 <div *ngIf="f.email.errors.required">Email is required</div>
-                                <div *ngIf="f.email.errors.email">Email is not valid</div>
                             </div>
+                            <div *ngIf="form.controls.email.hasError('apiError')">
+                                {{ form.controls.email.getError('apiError') }}
+                              </div>
                         </div>
                         <div class="mb-6">
-                            <input type="text" required="true" placeholder="Institute" formControlName="Institute"
+                            <input type="text" required="true" placeholder="institute" formControlName="institute"
                                 class="input-field" />
-                            <div *ngIf="submitted && f.Institute.errors" class="invalid-feedback">
-                                <div *ngIf="f.Institute.errors.required">Institute is required</div>
+                            <div *ngIf="submitted && f.institute.errors" class="invalid-feedback">
+                                <div *ngIf="f.institute.errors.required">Institute is required</div>
                             </div>
+                            <div *ngIf="form.controls.institute.hasError('apiError')">
+                                {{ form.controls.institute.getError('apiError') }}
+                              </div>
                         </div>
                         <div class="mb-6">
-                            <input type="text" required="true" placeholder="Class Code" formControlName="ClassCode"
+                            <input type="text" required="true" placeholder="class Code" formControlName="classCode"
                                 class="input-field" />
-                            <div *ngIf="submitted && f.ClassCode.errors" class="invalid-feedback">
-                                <div *ngIf="f.ClassCode.errors.required">Class Code is required</div>
+                            <div *ngIf="submitted && f.classCode.errors" class="invalid-feedback">
+                                <div *ngIf="f.classCode.errors.required">Class Code is required</div>
+                            </div>
+                            <div *ngIf="form.controls.email.hasError('apiError')">
+                                {{ form.controls.email.getError('apiError') }}
+                              </div>
+                              <div *ngIf="form.controls.classCode.hasError('apiError')">
+                                {{ form.controls.classCode.getError('apiError') }}
+                              </div>
+                        </div>
+                        <div *ngIf="referenceId" class="mb-6">
+                            <input type="password" required="true" placeholder="Password" formControlName="password"
+                                class="input-field" />
+                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                <div *ngIf="f.password.errors.required">Password is required</div>
                             </div>
                         </div>
                         <div class="mb-1 float-left">

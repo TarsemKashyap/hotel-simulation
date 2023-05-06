@@ -21,6 +21,7 @@ namespace Service
         Task<StudentSignupTempDto> GetById(Guid studentId);
 
         Task<StudentSignupTempDto> GetByRefrence(string refrenceId);
+        Task<StudentSignupTempDto> GetByReferenceId(string referenceId);
     }
     public class StudentSignupTempService: IStudentSignupTempService
     {
@@ -34,7 +35,6 @@ namespace Service
         public async Task<StudentSignupTempDto> Create(StudentSignupTempDto studentSignupTemp)
         {
             studentSignupTemp.CreatedDate = DateTime.Now;
-            studentSignupTemp.PaymentDate = DateTime.Now;
             studentSignupTemp.Reference = Guid.NewGuid().ToString("N");
             StudentSignupTemp signup = _mapper.Map<StudentSignupTempDto, StudentSignupTemp>(studentSignupTemp);
             _context.StudentSignupTemp.Add(signup);
@@ -82,6 +82,15 @@ namespace Service
             ;
             if (studentSignup == null)
                 throw new ValidationException("student not found for given student Id");
+            return studentSignup.Adapt<StudentSignupTempDto>();
+        }
+
+        public async Task<StudentSignupTempDto> GetByReferenceId(string referenceId)
+        {
+            var studentSignup = _context.StudentSignupTemp.FirstOrDefault(x => x.Reference == referenceId);
+            ;
+            if (studentSignup == null)
+                throw new ValidationException("student not found for given student referenceId");
             return studentSignup.Adapt<StudentSignupTempDto>();
         }
     }

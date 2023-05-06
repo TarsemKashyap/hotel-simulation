@@ -41,7 +41,7 @@ namespace Common.Dto
         public string Quantity { get; set; }
         public string Receiver_id { get; set; }
         public string Shipping { get; set; }
-         public string Txn_type { get; set; }
+        public string Txn_type { get; set; }
         public string Verify_sign { get; set; }
         public string Address_zip { get; set; }
 

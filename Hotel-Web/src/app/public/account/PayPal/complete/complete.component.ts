@@ -67,11 +67,11 @@ export class CompleteComponent {
   
 
   paymentTransaction() {
+    debugger
     this.studentsignupService.PaymentTransaction(this.paymentTrasa! ).subscribe((x) => {
       if(this.paymentTrasa?.custom)
       {
-        // this.router.navigate(['Signup'/${row.id}]);
-        // this.router.navigate([`instructor/edit/${row.id}`]);
+       this.router.navigate(['signup'], {queryParams : {id: this.paymentTrasa?.custom}});
       }
     });
   }

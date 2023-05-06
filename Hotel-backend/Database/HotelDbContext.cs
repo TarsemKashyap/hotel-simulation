@@ -25,6 +25,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<AppUserRefreshToken> RefreshTokens {get;set;}
     public DbSet<MigrationScript> MigrationScripts { get; set; }
     public DbSet<StudentSignupTemp> StudentSignupTemp { get; set; }
+    public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
        
