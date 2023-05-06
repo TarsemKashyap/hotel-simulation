@@ -30,8 +30,8 @@ namespace Api.Controllers
             IClassSessionService classSessionService,
             IEmailService emailService,
             IOptions<PaymentConfig>  paymentConfig,
-            IPaymentService paymentService)
-       IAccountService accountService, IValidator<StudentSignupDto> accountValidator
+            IPaymentService paymentService,
+       IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
       
         {
             _validator = validator;
