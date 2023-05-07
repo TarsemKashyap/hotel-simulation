@@ -10,12 +10,12 @@ import {
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
-import { publicModule } from './public/public.module';
 import { SharedModule } from './shared/shared.module';
 import { APIInterceptor } from './interceptors/api.interceptor';
 import { MaterialModule } from './material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
+import { publicModule } from './public/public.module';
 
 @NgModule({
   declarations: [AppComponent],

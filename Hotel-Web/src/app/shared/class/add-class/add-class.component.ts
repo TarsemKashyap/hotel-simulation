@@ -23,6 +23,7 @@ export class AddClassComponent {
   form: FormGroup;
   submitted = false;
   classCode = null || '';
+  hotelCount = 4;
 
   constructor(
     private fb: FormBuilder,
@@ -42,11 +43,22 @@ export class AddClassComponent {
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      hotelsCount: [4, Validators.required],
+      hotelsCount: [this.hotelCount, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
-      groups: this.fb.array([this.createItem()]),
+      groups: this.fb.array(this.createGroups()),
       
     });
+  }
+
+  createGroups() {
+    const groups: FormGroup[] = [];
+    for (let index = 0; index < this.hotelCount; index++) {
+      let hotelGroup =  new FormGroup({
+        name: new FormControl(`Group ${index+1}`, Validators.required),
+      });
+      groups.push(hotelGroup);
+    }
+    return groups;
   }
 
   get groups(): FormArray {

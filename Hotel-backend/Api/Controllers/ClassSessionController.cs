@@ -53,7 +53,7 @@ public class ClassSessionController : AbstractBaseController
     [HttpPost("editClass/{id}")]
     public async Task<IActionResult> ClassUpdate(int id, ClassSessionUpdateDto account)
     {
-        // _validator.ValidateAndThrow(account);
+        _validator.ValidateAndThrow(account);
         var response = await _classSessionService.Update(id, account);
         return Ok(response);
 

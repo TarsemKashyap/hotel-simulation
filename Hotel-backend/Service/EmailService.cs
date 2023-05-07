@@ -22,7 +22,7 @@ public class EmailService : IEmailService
     }
     public async Task<bool> Send(MailMessage mail)
     {
-        var apiKey = _smtp.WebAppUrl;
+        var apiKey = _smtp.SendGridKey;
         var client = new SendGridClient(apiKey);
         var from = new EmailAddress("info@hotelsimulation.com", "Hotel Simulation");
         var firstToAddress = mail.To[0];

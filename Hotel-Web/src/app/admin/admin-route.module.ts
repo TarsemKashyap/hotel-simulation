@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'instructor/edit/:id', component: InstructorEditComponent },
       ...classRoute
     ],
-    canActivate: [canActivateHome],
+    //canActivate: [canActivateHome],
   },
 ];
 

@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230503161309_EditStudentSignup")]
+    partial class EditStudentSignup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,27 +230,6 @@ namespace Database.Migrations
                     b.ToTable("Class", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Domain.StudentClassMapping", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentClassMapping");
-                });
-
             modelBuilder.Entity("Database.Domain.StudentSignupTemp", b =>
                 {
                     b.Property<Guid>("Id")
@@ -277,11 +258,6 @@ namespace Database.Migrations
                     b.Property<string>("Institute")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("IsSignupComplete")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -435,7 +411,6 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
                         .HasDefaultValue(new DateTime(2023, 5, 3, 21, 43, 9, 531, DateTimeKind.Local).AddTicks(6018));
-                        //.HasDefaultValue(new DateTime(2023, 5, 5, 21, 24, 50, 981, DateTimeKind.Local).AddTicks(99));
 
                     b.HasKey("ScriptId");
 
@@ -513,23 +488,6 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("Database.Domain.StudentClassMapping", b =>
-                {
-                    b.HasOne("ClassSession", "Class")
-                        .WithMany("StudentClassMappings")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Student", "Student")
-                        .WithMany("StudentClassMappings")
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -622,13 +580,6 @@ namespace Database.Migrations
                     b.Navigation("Groups");
 
                     b.Navigation("Months");
-
-                    b.Navigation("StudentClassMappings");
-                });
-
-            modelBuilder.Entity("Student", b =>
-                {
-                    b.Navigation("StudentClassMappings");
                 });
 #pragma warning restore 612, 618
         }

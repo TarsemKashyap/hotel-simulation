@@ -13,9 +13,7 @@ using System.Net.Mail;
 namespace Service;
 using Mapster;
 using MapsterMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq.Expressions;
 
 public interface IClassSessionService
@@ -143,6 +141,7 @@ public class ClassSessionService : IClassSessionService
         //return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
 
     }
+
 
     public async Task<ClassSessionUpdateDto> GetById(int classId)
     {

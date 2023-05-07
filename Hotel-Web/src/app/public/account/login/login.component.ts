@@ -6,7 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { AccountService } from '../account.service';
-import { LoginModel, Signup } from '../model/signup.model';
+import { LoginModel, Signup } from '../../student/model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';

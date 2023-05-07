@@ -103,17 +103,17 @@ public static class ApiStartupExtensions
         service.Configure<ConnectionStrings>(config.GetSection("ConnectionStrings"));
         service.Configure<Smtp>(config.GetSection("smtp"));
         service.Configure<AdminConfig>(config.GetSection("AdminConfig"));
+        service.Configure<PaymentConfig>(config.GetSection("PaymentConfig"));
     }
-
-
-
-
+        
     public static void RegisterAppServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IClassSessionService, ClassSessionService>();
+        services.AddScoped<IStudentSignupTempService, StudentSignupTempService>();
+        services.AddScoped<IPaymentService, PaymentService>();
 
 
     }

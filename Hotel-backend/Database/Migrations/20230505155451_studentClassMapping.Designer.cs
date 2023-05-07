@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230505155451_studentClassMapping")]
+    partial class studentClassMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,12 +311,6 @@ namespace Database.Migrations
                     b.Property<string>("TransactionId")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("quantityleft")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("StudentSignupTemp", (string)null);
@@ -434,8 +430,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 5, 3, 21, 43, 9, 531, DateTimeKind.Local).AddTicks(6018));
-                        //.HasDefaultValue(new DateTime(2023, 5, 5, 21, 24, 50, 981, DateTimeKind.Local).AddTicks(99));
+                        .HasDefaultValue(new DateTime(2023, 5, 5, 21, 24, 50, 981, DateTimeKind.Local).AddTicks(99));
 
                     b.HasKey("ScriptId");
 
