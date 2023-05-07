@@ -9,9 +9,9 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { StudentsignupService } from './studentsignup.service';
 import { StudentPaymentSignUp, StudentSignup } from '../model/studentSignup.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StudentsignupService } from './studentsignup.service';
 
 @Component({
   selector: 'signup',
@@ -45,7 +45,6 @@ export class SignupComponent {
   }
 
   private createForm(): FormGroup {
-    debugger
     return this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -70,7 +69,12 @@ export class SignupComponent {
   }
 
   onSubmit(): void {
-    debugger
+    Object.keys(this.form.controls).forEach(key => {
+      const controlErrors = this.form.get(key)?.errors;
+      if (controlErrors != null) {
+        this.form.get(key)?.setErrors(null);
+      }
+    });
     this.submitted = true;
     if (this.form.invalid) {
       return;
@@ -85,10 +89,9 @@ export class SignupComponent {
       reference: this.referenceId!
     };
     if(!this.referenceId) {
-      debugger
-      this.studentsignupService.RegisterAccount(sigup).subscribe({ next:(x)=>{this.router.navigate([`Payment/payment-initiated-page/${x.id}`])
+      this.studentsignupService.RegisterAccount(sigup).subscribe({ next:(x: { id: any; })=>{this.router.navigate([`Payment/payment-initiated-page/${x.id}`])
       this._snackBar.open('Student SignUp Successfully');},
-      error:(error)=>{
+      error:(error: { message: any; status: number; error: any; })=>{
         const errorMessage = error.message;
         if(error.status === 400)
         {
@@ -106,9 +109,9 @@ export class SignupComponent {
     })
     }
   else{
-    this.studentsignupService.StudentAccount(sigup).subscribe({ next:(x)=>{this._snackBar.open('Student SignUp Successfully'),
+    this.studentsignupService.StudentAccount(sigup).subscribe({ next:(x: any)=>{this._snackBar.open('Student SignUp Successfully'),
     this.router.navigate(['login'])},
-    error:(error)=>{
+    error:(error: { message: any; status: number; error: any; })=>{
       const errorMessage = error.message;
       if(error.status === 400)
       {
@@ -134,7 +137,7 @@ export class SignupComponent {
       next: (data: StudentPaymentSignUp) => {
         this.form.patchValue(data);
       },
-      error: (error) => {
+      error: (error: { status: number; }) => {
         if(error.status === 400)
         {
           this.router.navigate(['login'])
