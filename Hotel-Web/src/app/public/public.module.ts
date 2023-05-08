@@ -10,17 +10,16 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
 import { HomeComponent } from './home/home.component';
 import { publicRoutingModule } from './public-routing.module';
 import { MatTableModule } from '@angular/material/table';
-import { PaypalInitiatedPageComponent } from './account/PayPal/paypal-initiated-page/paypal-initiated-page.component';
-import { CompleteComponent } from './account/PayPal/complete/complete.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { CompleteComponent, PaymentInitiatedPageComponent } from './student';
 
 
 @NgModule({
     imports: [publicRoutingModule, CommonModule, HttpClientModule, ReactiveFormsModule, MatTableModule, MatInputModule, MatFormFieldModule, MatCardModule],
     exports: [HeaderMenuComponent,BannerComponent,SignupComponent],
-    declarations: [HeaderMenuComponent, BannerComponent, HomeComponent, SignupComponent, LoginComponent, PaypalInitiatedPageComponent, CompleteComponent],
+    declarations: [HeaderMenuComponent, BannerComponent, HomeComponent, SignupComponent, LoginComponent, PaymentInitiatedPageComponent, CompleteComponent],
     providers: [AccountService],
     bootstrap: [HomeComponent]
 })

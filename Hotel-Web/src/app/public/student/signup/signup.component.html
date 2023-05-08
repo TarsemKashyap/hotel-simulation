@@ -67,10 +67,7 @@
                             <div *ngIf="submitted && f.classCode.errors" class="invalid-feedback">
                                 <div *ngIf="f.classCode.errors.required">Class Code is required</div>
                             </div>
-                            <div *ngIf="form.controls.email.hasError('apiError')">
-                                {{ form.controls.email.getError('apiError') }}
-                              </div>
-                              <div *ngIf="form.controls.classCode.hasError('apiError')">
+                            <div *ngIf="form.controls.classCode.hasError('apiError')">
                                 {{ form.controls.classCode.getError('apiError') }}
                               </div>
                         </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StudentSignup } from '../model/studentSignup.model';
 import { Observable, throwError } from 'rxjs';
+import { StudentSignup } from '../model/studentSignup.model';
 import { PaymentTransaction } from '../model/PaymentTransaction.model';
 
 @Injectable({

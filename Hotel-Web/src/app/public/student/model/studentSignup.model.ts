@@ -5,7 +5,6 @@ export interface StudentSignup {
     classCode: string;
     email: string;
     password: string;
-    reference: string;
 }
 
 export interface StudentPaymentSignUp extends StudentSignup {

@@ -6,12 +6,12 @@ import { StudentsignupService } from '../../signup/studentsignup.service';
 import { StudentPaymentSignUp, StudentSignup } from '../../model/studentSignup.model';
 
 @Component({
-  selector: 'app-paypal-initiated-page',
-  templateUrl: './paypal-initiated-page.component.html',
-styleUrls: ['./paypal-initiated-page.component.css'],
+  selector: 'app-payment-initiated-page',
+  templateUrl: './payment-initiated-page.component.html',
+styleUrls: ['./payment-initiated-page.component.css'],
 
 })
-export class PaypalInitiatedPageComponent {
+export class PaymentInitiatedPageComponent {
   studentId: number | undefined;
   data: StudentPaymentSignUp| undefined;
 

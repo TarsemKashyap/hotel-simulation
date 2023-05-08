@@ -13,10 +13,7 @@ using System.Net.Mail;
 namespace Service;
 using Mapster;
 using MapsterMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Org.BouncyCastle.Asn1.Mozilla;
 using System.Linq.Expressions;
 
 public interface IClassSessionService

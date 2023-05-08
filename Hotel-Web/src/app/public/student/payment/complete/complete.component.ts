@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { StudentsignupService } from '../../signup/studentsignup.service';
 import { PaymentTransaction } from '../../model/PaymentTransaction.model';
+import { StudentsignupService } from '../../signup/studentsignup.service';
 
 @Component({
   selector: 'app-complete',

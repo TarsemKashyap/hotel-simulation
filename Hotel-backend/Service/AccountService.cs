@@ -115,6 +115,8 @@ public class AccountService : IAccountService
         var result = await _userManager.CreateAsync(appuser, dto.Password);
         if (result.Succeeded)
         {
+            await CreateRoleifNotExist(RoleType.Student);
+            await _userManager.AddToRoleAsync(appuser, RoleType.Student);
             StudentClassMapping studemtMapping = new StudentClassMapping()
             {
                 StudentId = appuser.Id,
@@ -125,8 +127,6 @@ public class AccountService : IAccountService
             var studentSignupTemp = _context.StudentSignupTemp.FirstOrDefault(x => x.Reference == dto.Reference);
             studentSignupTemp.IsSignupComplete = true;
             await _context.SaveChangesAsync();
-            await CreateRoleifNotExist(RoleType.Student);
-            await _userManager.AddToRoleAsync(appuser, RoleType.Student);
         }
     }
 

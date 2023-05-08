@@ -5,7 +5,7 @@ import {
   LoginModel,
   LoginResponse,
   Signup,
-} from './model/signup.model';
+} from '../student/model/signup.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
