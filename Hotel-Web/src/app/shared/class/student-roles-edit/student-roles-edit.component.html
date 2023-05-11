@@ -1,0 +1,63 @@
+<!-- ====== Forms Section Start -->
+<section class="bg-[#F4F7FF] py-14 lg:py-20">
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4">
+                <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white py-14 px-8 text-center sm:px-12 md:px-[60px]"
+                    data-wow-delay=".15s">
+                    <div class="mb-10 text-center">
+                        <a href="javascript:void(0)" class="mx-auto logo inline-block max-w-[160px]">
+                            <img src="assets/images/logo/blue-logo.png" alt="logo" />
+                        </a>
+                    </div>
+                    <section>
+                        <ul class="custom_table mb-8">
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">First name</div>
+                                     <input class="text-right" [(ngModel)]="row.firstName">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Last name</div>
+                                    <input class="text-right" [(ngModel)]="row.lastName">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Student Roles</div>
+                                    <label class="text-right"> <mat-form-field appearance="fill" class="col-md-2">
+                                        <mat-label>Roles</mat-label>
+                                        <mat-select formControlName="selectedColors" multiple>
+                                          <mat-option *ngFor="let role of roles" [value]="role">{{role.roleName}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="grid grid-cols-2 border p-4">
+                                    <div class="text-left">Student Groups</div>
+                                    <label class="text-right"><mat-form-field appearance="fill" class="col-md-2">
+                                        <mat-label>Group</mat-label>
+                                        <mat-select  formControlName="selectedGroup">
+                                            <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="add_btn">
+                                    <input type="submit" value="Save" (click)="Save()"
+                                    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
+                                  </div>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== Forms Section End -->
+

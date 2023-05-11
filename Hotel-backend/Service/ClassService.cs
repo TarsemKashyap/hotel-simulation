@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
 namespace Service;
+
+using Common.Dto;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,7 @@ public interface IClassSessionService
     Task<ClassSessionUpdateDto> GetById(int classId);
     Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
     Task DeleteId(int classId);
+    Task<IList<ClassGroupDto>> StudentGroupList();
 }
 
 public class ClassSessionService : IClassSessionService
@@ -98,7 +101,12 @@ public class ClassSessionService : IClassSessionService
     {
         return _context.ClassSessions.ProjectToType<ClassSessionDto>().AsEnumerable();
     }
+    public  async Task<IList<ClassGroupDto>> StudentGroupList()
+    {
+        var users = _context.ClassGroups.ToList();
+        return users.Adapt<IList<ClassGroupDto>>();
 
+    }
     public async Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup)
     {
         ClassSession classSession = await _context.ClassSessions.FindAsync(classId);

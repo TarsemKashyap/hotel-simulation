@@ -28,7 +28,7 @@ export class ClassListComponent implements OnInit {
     { field: 'createdBy' },
     { field: 'createdOn', cellRenderer: (params: { value: string | number | Date; }) =>
     this.datePipe.transform(params.value, 'dd-MM-yyyy'), },
-    { field: 'action', cellRenderer: ActionRendererComponent }
+    { field: 'action', cellRenderer: ActionRendererComponent,cellRendererParams:{name:'rishu', distt:['mansa,bareta']} }
   ];
  defaultColDef: ColDef = {
     flex: 1,

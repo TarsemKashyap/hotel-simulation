@@ -4,6 +4,9 @@ import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
 import { ClassSession } from '.';
+import { StudentList } from './model/studentList.model';
+import { InstructorDto } from 'src/app/admin/instructor';
+import { StudentGroupList, StudentRoles } from './model/Roles';
 
 @Injectable({
   providedIn: 'root',
@@ -33,5 +36,23 @@ export class ClassService {
     return this.httpClient.delete(
       `class/delete/${classId}`
     );
+  }
+
+  studentClassMappingList(classId:any): Observable<StudentList[]> {
+    return this.httpClient.get<StudentList[]>(`roleMapping/studentlist/${classId}`);
+  }
+
+  getStudentData(id: string): Observable<any> {
+    return this.httpClient.get<StudentList[]>(
+      `roleMapping/student/${id}`
+    );
+  }
+
+  Roleslist(): Observable<StudentRoles[]> {
+    return this.httpClient.get<StudentRoles[]>('roleMapping/list');
+  }
+
+  Grouplist(): Observable<StudentGroupList[]> {
+    return this.httpClient.get<StudentGroupList[]>('roleMapping/studentGroups');
   }
 }

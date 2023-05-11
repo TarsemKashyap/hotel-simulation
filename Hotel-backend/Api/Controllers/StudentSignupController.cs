@@ -32,7 +32,6 @@ namespace Api.Controllers
             IOptions<PaymentConfig>  paymentConfig,
             IPaymentService paymentService,
        IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
-      
         {
             _validator = validator;
             _studentSignupTempService = studentSignupTempService;
@@ -77,7 +76,6 @@ namespace Api.Controllers
         {
            var result = await _paymentService.PaymentCheck(paymentTransactionDto);
            return Ok();
-            
         }
         [HttpGet("{referenceId}"), AllowAnonymous]
         public async Task<IActionResult> GetByReferenceId(string referenceId)

@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507152207_studentRoleMapping-table")]
+    partial class studentRoleMappingtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,34 +254,6 @@ namespace Database.Migrations
                     b.ToTable("StudentClassMapping");
                 });
 
-            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("varchar(300)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StudentRoleMapping", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleName = "Revenue Manager"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RoleName = "Room Manager"
-                        });
-                });
-
             modelBuilder.Entity("Database.Domain.StudentSignupTemp", b =>
                 {
                     b.Property<Guid>("Id")
@@ -465,7 +439,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 5, 11, 20, 27, 49, 62, DateTimeKind.Local).AddTicks(9517));
+                        .HasDefaultValue(new DateTime(2023, 5, 7, 20, 52, 7, 32, DateTimeKind.Local).AddTicks(2677));
 
                     b.HasKey("ScriptId");
 
