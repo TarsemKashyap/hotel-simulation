@@ -19,6 +19,7 @@ public class PaymentConfig
 {
     public string authToken { get; set; }
     public string sandBoxUrl { get; set; }
+    public string webUrl { get; set; }
 }
 
 public class Smtp

@@ -10,10 +10,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Service;
 using Mysqlx;
+using Common.Model;
+using System.Reflection.Metadata;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Policy;
+using System.Security.Principal;
 
 public interface IPaymentService
     {
-        Task<bool> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
+        Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
     }
 
 
@@ -30,7 +35,7 @@ public class PaymentService : IPaymentService
         _emailService = emailService;
     }
 
-    public async Task<bool> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
+    public async Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
     {
         ServicePointManager.Expect100Continue = true;
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -59,30 +64,12 @@ public class PaymentService : IPaymentService
         strResponse = stIn.ReadToEnd();
         stIn.Close();
 
-        // If response was SUCCESS, parse response string and
-        //output details
+        
         if (strResponse.Substring(0, 7) == "SUCCESS")
         {
-            //return Ok();
-            ///If success fully then inser the transaction ID to database
-            // LabelTitle.Text = "Order Confirmation";
-            //LabelTitle.Text = strResponse;
-            // LiteralMessage.Text = "Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account. The transaction ID will be emailed to you as well for your records.";
-
-            //split response into string array using whitespace
-            //as delimiter
+            
             String[] StringArray = strResponse.Split();
 
-            // NOTE:
-            /*
-            * loop is set to start at 1 rather than 0 because first
-            string in array will be single word SUCCESS or FAIL
-            and there is no splitting of this...so we will skip the
-            first string and go to the next.
-            */
-
-            // use split to split array we already have
-            // using "=" as delimiter
             int i;
             for (i = 1; i < StringArray.Length - 1; i++)
             {
@@ -114,9 +101,7 @@ public class PaymentService : IPaymentService
                         itemName = sValue;
                         break;
 
-                    //for shopping cart payments the
-                    //item_name vars are numbered to reflect
-                    //a multi-item purchase.
+                   
                     case "item_name1":
                         item_name1 = sValue;
                         break;
@@ -130,52 +115,51 @@ public class PaymentService : IPaymentService
                         break;
                 }
             }
+            string toEmail = payerEmail.Replace("%40", "@");
             var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
             signupUser.PaymentDate = DateTime.Now;
             signupUser.TransactionId = paymentTransactionDto.Tx;
             signupUser.quantity = Convert.ToInt16(quantity);
             signupUser.quantityleft = Convert.ToInt16(quantity);
+            signupUser.Email = toEmail;
+            signupUser.RawTransactionResponse = strResponse;
             var response = await _studentSignupTempService.Update(signupUser);
-
-            ////send email 
-            // string fromEmail = "info@hotelsimulation.com";
-            string toEmail = payerEmail.Replace("%40", "@");
-
+            string signUpUrl = _PaymentConfig.webUrl + "/signup?id=" + paymentTransactionDto.Custom;
             MailMessage message = new MailMessage();
             message.To.Add(new MailAddress(toEmail, fname));
             message.Subject = "Hotel Simulation Payment Transaction ID";
             message.IsBodyHtml = true;
-            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>http://hotelsimulation.com/Account/Register.aspx</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
+
+            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>"+ signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
             try
             {
                 await _emailService.Send(message);
             }
             catch (Exception ex)
             {
-                //  LiteralOrderDetails.Text = ex.ToString();
+                
             }
         }
 
         else if (strResponse.Substring(0, 4) == "FAIL")
         {
-            throw new System.ComponentModel.DataAnnotations.ValidationException(strResponse + ". " + "Your Payment Failed!");
-            // if response is FAIL, print it to screen
-            //Response.Write(strResponse);
-            // LabelTitle.Text = strResponse + ". " + "Your Payment Failed!";
-            //LiteralMessage.Text = "<p>Your Payment Failed!</p>";
-            //paymentIDTableAdapter payA = new paymentIDTableAdapter();
-
-            //if (payA.ScalarCheckExist("4B445058YN007393B")==null)
-            //{ LabelTitle.Text = "Not Exist"; }
+            return new PaymentResponse
+            {
+                Message = strResponse + ". " + "Your Payment Failed!",
+                status = false
+            };
+            
+            
         }
 
         else
         {
-            // some unexpected response??? -  log it
-            // for investigation later.
-
         }
-        return true;
+        return new PaymentResponse
+        {
+            Message = "Thank you for your payment.The transaction has been completed successfully.Please use the transaction ID below to register a new account.        The transaction ID will be emailed to you as well for your records.",
+            status = true
+        };
     }
 }
 

@@ -11,7 +11,8 @@ import { StudentsignupService } from '../../signup/studentsignup.service';
 export class CompleteComponent {
   queryParams: any;
   paymentTrasa :   PaymentTransaction | undefined;
-  
+  isPaymentDone : boolean = false;
+  responseMessage : string = "";
   constructor(
     private route: ActivatedRoute,
     private studentsignupService: StudentsignupService,
@@ -65,13 +66,16 @@ export class CompleteComponent {
       });
   }
   
+  openSignUp() {
+   
+    this.router.navigate(['signup'], {queryParams : {id: this.paymentTrasa?.custom}});
+  }
 
   paymentTransaction() {
-    this.studentsignupService.PaymentTransaction(this.paymentTrasa! ).subscribe((x) => {
-      if(this.paymentTrasa?.custom)
-      {
-       this.router.navigate(['signup'], {queryParams : {id: this.paymentTrasa?.custom}});
-      }
+   
+    this.studentsignupService.PaymentTransaction(this.paymentTrasa! ).subscribe((result) => {
+      this.responseMessage = result.message;
+      this.isPaymentDone = result.data.paymnentStatus; 
     });
   }
  

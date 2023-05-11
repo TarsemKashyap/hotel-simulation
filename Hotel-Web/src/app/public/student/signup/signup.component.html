@@ -14,7 +14,7 @@
                     </div>
                     <form [formGroup]="form" (ngSubmit)="onSubmit()">
                         <div class="mb-6">
-                            <div *ngIf="form.errors && form.errors.apiError" class="invalid-feedback">
+                            <div *ngIf="form.errors && form.errors.apiError">
                                 {{ form.errors.apiError }}
                               </div>
                             <input type="text" placeholder="First name" formControlName="firstName"
@@ -24,7 +24,7 @@
                                 <div *ngIf="f.firstName.errors.required">First name is required</div>
                             </div>
 
-                            <div *ngIf="form.controls.firstName.hasError('apiError')" class="invalid-feedback">
+                            <div *ngIf="form.controls.firstName.hasError('apiError')">
                                 {{ form.controls.firstName.getError('apiError') }}
                               </div>
                         </div>
@@ -37,7 +37,7 @@
                                 <div *ngIf="f.lastName.errors.required">Last name is required</div>
                             </div>
 
-                            <div *ngIf="form.controls.lastName.hasError('apiError')" class="invalid-feedback">
+                            <div *ngIf="form.controls.lastName.hasError('apiError')">
                                 {{ form.controls.lastName.getError('apiError') }}
                               </div>
 
@@ -47,7 +47,7 @@
                             <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                                 <div *ngIf="f.email.errors.required">Email is required</div>
                             </div>
-                            <div *ngIf="form.controls.email.hasError('apiError')" class="invalid-feedback">
+                            <div *ngIf="form.controls.email.hasError('apiError')">
                                 {{ form.controls.email.getError('apiError') }}
                               </div>
                         </div>
@@ -57,7 +57,7 @@
                             <div *ngIf="submitted && f.institute.errors" class="invalid-feedback">
                                 <div *ngIf="f.institute.errors.required">Institute is required</div>
                             </div>
-                            <div *ngIf="form.controls.institute.hasError('apiError')" class="invalid-feedback">
+                            <div *ngIf="form.controls.institute.hasError('apiError')">
                                 {{ form.controls.institute.getError('apiError') }}
                               </div>
                         </div>
@@ -67,7 +67,7 @@
                             <div *ngIf="submitted && f.classCode.errors" class="invalid-feedback">
                                 <div *ngIf="f.classCode.errors.required">Class Code is required</div>
                             </div>
-                            <div *ngIf="form.controls.classCode.hasError('apiError')" class="invalid-feedback">
+                            <div *ngIf="form.controls.classCode.hasError('apiError')">
                                 {{ form.controls.classCode.getError('apiError') }}
                               </div>
                         </div>
