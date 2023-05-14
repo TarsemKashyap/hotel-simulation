@@ -47,7 +47,7 @@ public class ValidationExceptionMiddleware
         foreach (var item in ex.Errors)
         {
             string prop = ToCamelCase(item.PropertyName);
-            list.Add(prop, item.ErrorMessage);
+            list.TryAdd(prop, item.ErrorMessage);
         }
         return list;
     }
