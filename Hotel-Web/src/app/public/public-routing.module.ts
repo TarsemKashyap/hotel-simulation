@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'signup', component: SignupComponent },
     { path: 'payment/complete', component: CompleteComponent },
-    { path: 'Payment/payment-initiated-page/:id', component: PaymentInitiatedPageComponent },
+    { path: 'payment/payment-initiated/:id', component: PaymentInitiatedPageComponent },
 
 ];
 
