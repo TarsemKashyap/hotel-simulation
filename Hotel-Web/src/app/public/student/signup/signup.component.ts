@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, debounceTime } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   FormGroup,
@@ -10,8 +10,12 @@ import {
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { StudentsignupService } from './studentsignup.service';
-import { StudentPaymentSignUp, StudentSignup } from '../model/studentSignup.model';
+import {
+  StudentPaymentSignUp,
+  StudentSignup,
+} from '../model/studentSignup.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BadReqeustResponse } from 'src/app/shared/badRequest';
 
 @Component({
   selector: 'signup',
@@ -22,7 +26,7 @@ export class SignupComponent {
   form: FormGroup;
   submitted = false;
   referenceId: string | undefined;
-  data: StudentPaymentSignUp| undefined;
+  data: StudentPaymentSignUp | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -36,41 +40,48 @@ export class SignupComponent {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.referenceId = params['id'];
-      if(this.referenceId) {
+      if (this.referenceId) {
         this.loadStudentData();
       }
+    });
+
+    this.f['classCode'].valueChanges.pipe(debounceTime(500)).subscribe((x) => {
+      this.f['classCode'].setErrors(null);
     });
   }
 
   private createForm(): FormGroup {
-    debugger
+    debugger;
     return this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       classCode: ['', Validators.required],
       institute: ['', Validators.required],
-      password: this.referenceId ? ['', this.getPasswordValidators()] : ['']
+      password: this.referenceId ? ['', this.getPasswordValidators()] : [''],
     });
   }
 
   private getPasswordValidators() {
-    const validators = [Validators.minLength(8), Validators.maxLength(20),Validators.required];
+    const validators = [
+      Validators.minLength(8),
+      Validators.maxLength(20),
+      Validators.required,
+    ];
     if (this.referenceId) {
       validators.push(Validators.required);
     }
     return validators;
   }
 
-
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
 
   onSubmit(): void {
-    debugger
+    debugger;
     this.submitted = true;
     if (this.form.invalid) {
       return;
@@ -81,53 +92,44 @@ export class SignupComponent {
       email: this.form.value.email,
       classCode: this.form.value.classCode,
       institute: this.form.value.institute,
-      password : this.form.value.password,
-      reference: this.referenceId!
+      password: this.form.value.password,
+      reference: this.referenceId!,
     };
-    if(!this.referenceId) {
-      debugger
-      this.studentsignupService.RegisterAccount(sigup).subscribe({ next:(x)=>{this.router.navigate([`Payment/payment-initiated-page/${x.id}`])
-      this._snackBar.open('Student SignUp Successfully');},
-      error:(error)=>{
-        const errorMessage = error.message;
-        if(error.status === 400)
-        {
-          const errorResponse = error.error;
-          this.form.controls.firstName.setErrors({ apiError: errorResponse.firstName });
-          this.form.controls.lastName.setErrors({ apiError: errorResponse.lastName });
-          this.form.controls.email.setErrors({ apiError: errorResponse.email });
-          this.form.controls.classCode.setErrors({ apiError: errorResponse.classCode });
-          this.form.controls.institute.setErrors({ apiError: errorResponse.institute });
-        } else {
-          this.form.setErrors({ apiError: errorMessage });
-        }
-        return of();
-      } 
-    })
+    if (!this.referenceId) {
+      this.registerStudent(sigup);
+    } else {
+      this.studentAccount(sigup);
     }
-  else{
-    this.studentsignupService.StudentAccount(sigup).subscribe({ next:(x)=>{this._snackBar.open('Student SignUp Successfully'),
-    this.router.navigate(['login'])},
-    error:(error)=>{
-      const errorMessage = error.message;
-      if(error.status === 400)
-      {
-        const errorResponse = error.error;
-        this.form.controls.firstName.setErrors({ apiError: errorResponse.firstName });
-        this.form.controls.lastName.setErrors({ apiError: errorResponse.lastName });
-        this.form.controls.email.setErrors({ apiError: errorResponse.email });
-        this.form.controls.classCode.setErrors({ apiError: errorResponse.classCode });
-        this.form.controls.institute.setErrors({ apiError: errorResponse.institute });
-        this.form.controls.password.setErrors({ apiError: errorResponse.password });
-      } else {
-        this.form.setErrors({ apiError: errorMessage });
-      }
-      return of();
-    } 
-  })
-  }
   }
 
+  private registerStudent(sigup: StudentPaymentSignUp) {
+    this.studentsignupService.RegisterAccount(sigup).subscribe({
+      next: (x: { id: any }) => {
+        this.router.navigate([`payment/payment-initiated/${x.id}`]);
+        this._snackBar.open('Student SignUp Successfully');
+      },
+      error: (msg) => this.handleApiError(msg),
+    });
+  }
+
+  private handleApiError(errorResponse: any) {
+    if (errorResponse.status === 400) {
+      const errorMessage = errorResponse.error as BadReqeustResponse;
+      for (const [field, error] of Object.entries(errorMessage)) {
+        this.form.controls[field].setErrors({ apiError: error });
+      }
+    }
+  }
+
+  private studentAccount(sigup: StudentPaymentSignUp) {
+    this.studentsignupService.StudentAccount(sigup).subscribe({
+      next: (x: any) => {
+        this._snackBar.open('Student SignUp Successfully'),
+          this.router.navigate(['login']);
+      },
+      error: (msg) => this.handleApiError(msg),
+    });
+  }
 
   private loadStudentData() {
     this.studentsignupService.getStudent(this.referenceId!).subscribe({
@@ -135,9 +137,8 @@ export class SignupComponent {
         this.form.patchValue(data);
       },
       error: (error) => {
-        if(error.status === 400)
-        {
-          this.router.navigate(['login'])
+        if (error.status === 400) {
+          this.router.navigate(['login']);
         }
       },
     });
