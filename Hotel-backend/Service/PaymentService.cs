@@ -17,9 +17,9 @@ using System.Security.Policy;
 using System.Security.Principal;
 
 public interface IPaymentService
-    {
-        Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
-    }
+{
+    Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
+}
 
 
 public class PaymentService : IPaymentService
@@ -28,7 +28,7 @@ public class PaymentService : IPaymentService
     private readonly IStudentSignupTempService _studentSignupTempService;
     private readonly IEmailService _emailService;
 
-    public PaymentService(IOptions<PaymentConfig> paymentConfig , IStudentSignupTempService studentSignupTempService, IEmailService emailService)
+    public PaymentService(IOptions<PaymentConfig> paymentConfig, IStudentSignupTempService studentSignupTempService, IEmailService emailService)
     {
         _PaymentConfig = paymentConfig.Value;
         _studentSignupTempService = studentSignupTempService;
@@ -64,10 +64,10 @@ public class PaymentService : IPaymentService
         strResponse = stIn.ReadToEnd();
         stIn.Close();
 
-        
+
         if (strResponse.Substring(0, 7) == "SUCCESS")
         {
-            
+
             String[] StringArray = strResponse.Split();
 
             int i;
@@ -101,7 +101,7 @@ public class PaymentService : IPaymentService
                         itemName = sValue;
                         break;
 
-                   
+
                     case "item_name1":
                         item_name1 = sValue;
                         break;
@@ -130,14 +130,14 @@ public class PaymentService : IPaymentService
             message.Subject = "Hotel Simulation Payment Transaction ID";
             message.IsBodyHtml = true;
 
-            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>"+ signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
+            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>" + signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
             try
             {
                 await _emailService.Send(message);
             }
             catch (Exception ex)
             {
-                
+
             }
         }
 
@@ -148,8 +148,8 @@ public class PaymentService : IPaymentService
                 Message = strResponse + ". " + "Your Payment Failed!",
                 status = false
             };
-            
-            
+
+
         }
 
         else
@@ -157,7 +157,9 @@ public class PaymentService : IPaymentService
         }
         return new PaymentResponse
         {
-            Message = "Thank you for your payment.The transaction has been completed successfully.Please use the transaction ID below to register a new account.        The transaction ID will be emailed to you as well for your records.",
+            Message = @"Thank you for your payment. 
+                        Transaction has been completed successfully.Please use the transaction ID below to register a new account.        
+                    The transaction ID will be email to you as well for your records.",
             status = true
         };
     }
