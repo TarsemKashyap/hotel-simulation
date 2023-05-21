@@ -7,7 +7,10 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 import { GridActionComponent } from '../grid-action/grid-action.component';
-import { ConfirmDialogComponent, ConfirmDialogModel } from '../../dialog/confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogModel,
+} from '../../dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -19,25 +22,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ClassListComponent implements OnInit {
   private datePipe = new DatePipe('en-US');
 
-  actions: RowAction[] = [
-    {
-      placeHolder: 'edit',
-      mode: 'icon',
-      onClick: this.onEditCallback(),
-      hide: () => false,
-    },
-    {
-      placeHolder: 'delete',
-      mode: 'icon',
-      cssClass:'text-red-500  hover:text-primary',
-      onClick: this.onDeleteback(),
-      hide: () => false,
-    },
-  ];
-  public rowData = [
-    { startdate: '2023-04-26T18:30:00', enddate: '2023-04-27T18:30:00' },
-    { startdate: '2023-04-28T12:00:00', enddate: '2023-04-29T12:00:00' },
-  ];
   columnDefs: ColDef[] = [
     { field: 'code' },
     { field: 'title' },
@@ -60,7 +44,23 @@ export class ClassListComponent implements OnInit {
     {
       field: 'action',
       cellRenderer: GridActionComponent,
-      cellRendererParams: { actions: this.actions } as GridActionParmas,
+      cellRendererParams: {
+        actions: [
+          {
+            placeHolder: 'edit',
+            mode: 'icon',
+            onClick: this.onEditCallback(),
+            hide: () => false,
+          },
+          {
+            placeHolder: 'delete',
+            mode: 'icon',
+            cssClass: 'text-red-500  hover:text-primary',
+            onClick: this.onDeleteback(),
+            hide: () => false,
+          },
+        ] as RowAction[],
+      } as GridActionParmas,
     },
   ];
   defaultColDef: ColDef = {
@@ -73,11 +73,12 @@ export class ClassListComponent implements OnInit {
 
   $rows: ClassSession[] = [];
 
-  constructor(private classService: ClassService, private router: Router,
-    private activatedRouter: ActivatedRoute,
+  constructor(
+    private classService: ClassService,
+    private router: Router,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar,
-    ) {}
+    public snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.classService.list().subscribe((x) => {
@@ -91,11 +92,9 @@ export class ClassListComponent implements OnInit {
 
   onEditCallback() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
-      console.log("Edit Class",row);
+      console.log('Edit Class', row);
       this.router.navigate([`class/edit/${row.data?.classId}`]);
     };
-
-    
   }
 
   onDeleteback() {
@@ -122,12 +121,5 @@ export class ClassListComponent implements OnInit {
         }
       });
     };
-    
-  }
-
-
-
-  delete() {
-   
   }
 }
