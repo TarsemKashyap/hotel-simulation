@@ -4,9 +4,12 @@ import { ColDef, IRowNode, RowNode } from 'ag-grid-community';
 import { ClassSession } from '../model/classSession.model';
 import { ActionRendererComponent } from '../action-renderer/action-renderer.component';
 import { DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 import { GridActionComponent } from '../grid-action/grid-action.component';
+import { ConfirmDialogComponent, ConfirmDialogModel } from '../../dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-class-list',
@@ -70,7 +73,11 @@ export class ClassListComponent implements OnInit {
 
   $rows: ClassSession[] = [];
 
-  constructor(private classService: ClassService, private router: Router) {}
+  constructor(private classService: ClassService, private router: Router,
+    private activatedRouter: ActivatedRoute,
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar,
+    ) {}
 
   ngOnInit(): void {
     this.classService.list().subscribe((x) => {
@@ -83,14 +90,44 @@ export class ClassListComponent implements OnInit {
   }
 
   onEditCallback() {
-    return ($event: Event, row: IRowNode<any>) => {
-      console.log('class list row click', { $event, row });
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      console.log("Edit Class",row);
+      this.router.navigate([`class/edit/${row.data?.classId}`]);
     };
+
+    
   }
 
   onDeleteback() {
-    return ($event: Event, row: IRowNode<any>) => {
-      console.log('class on delete row click', { $event, row });
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      const dialogData = new ConfirmDialogModel(
+        'Delete',
+        'Are you sure to delete?'
+      );
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        minWidth: '400px',
+        minHeight: '200px',
+        data: dialogData,
+      });
+      dialogRef.afterClosed().subscribe((x) => {
+        if (x) {
+          this.classService.deleteClass(row.data!.classId!).subscribe({
+            next: () => {
+              window.location.reload();
+            },
+            error: (err) => {
+              this.snackBar.open('Error while deleting class.');
+            },
+          });
+        }
+      });
     };
+    
+  }
+
+
+
+  delete() {
+   
   }
 }

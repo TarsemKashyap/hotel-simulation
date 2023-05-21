@@ -8,6 +8,7 @@ export interface ClassSession {
   code: string;
   createdBy:string;
   groups:ClassGroup[]
+  classId?:number;
 }
 
 export interface ClassGroup {
