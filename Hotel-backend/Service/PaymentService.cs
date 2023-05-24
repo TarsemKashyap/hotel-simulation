@@ -37,96 +37,18 @@ public class PaymentService : IPaymentService
 
     public async Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
     {
-        ServicePointManager.Expect100Continue = true;
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-        String authToken, query, strResponse;
-        String sKey, sValue, fname = "", lname, mc_gross, itemName, Pmtcurrency, quantity = "", payerEmail = "", item_name1;
-
-        authToken = _PaymentConfig.authToken;
-
-        query = "cmd=_notify-synch&tx=" + paymentTransactionDto.Tx + "&at=" + authToken;
-
-        // Create the request back
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(_PaymentConfig.sandBoxUrl);
-
-        // Set values for the request back
-        req.Method = "POST";
-        req.ContentType = "application/x-www-form-urlencoded";
-        req.ContentLength = query.Length;
-
-        // Write the request back IPN strings
-        StreamWriter stOut = new StreamWriter(req.GetRequestStream(), System.Text.Encoding.ASCII);
-        stOut.Write(query);
-        stOut.Close();
-
-        // Do the request to PayPal and get the response
-        StreamReader stIn = new StreamReader(req.GetResponse().GetResponseStream());
-        strResponse = stIn.ReadToEnd();
-        stIn.Close();
-
-
-        if (strResponse.Substring(0, 7) == "SUCCESS")
-        {
-
-            String[] StringArray = strResponse.Split();
-
-            int i;
-            for (i = 1; i < StringArray.Length - 1; i++)
-            {
-                String[] StringArray1 = StringArray[i].Split('=');
-
-                sKey = StringArray1[0];
-                sValue = StringArray1[1];
-
-                // set string vars to hold variable names using a switch
-                switch (sKey)
-                {
-                    case "first_name":
-                        fname = sValue;
-                        break;
-
-                    case "last_name":
-                        lname = sValue;
-                        break;
-
-                    case "payer_email":
-                        payerEmail = sValue;
-                        break;
-
-                    case "mc_gross":
-                        mc_gross = sValue;
-                        break;
-
-                    case "item_name":
-                        itemName = sValue;
-                        break;
-
-
-                    case "item_name1":
-                        item_name1 = sValue;
-                        break;
-
-                    case "mc_currency":
-                        Pmtcurrency = sValue;
-                        break;
-
-                    case "quantity":
-                        quantity = sValue;
-                        break;
-                }
-            }
-            string toEmail = payerEmail.Replace("%40", "@");
+            string toEmail = paymentTransactionDto.Payer_email;
             var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
             signupUser.PaymentDate = DateTime.Now;
             signupUser.TransactionId = paymentTransactionDto.Tx;
-            signupUser.quantity = Convert.ToInt16(quantity);
-            signupUser.quantityleft = Convert.ToInt16(quantity);
+          //  signupUser.quantity = Convert.ToInt16(quantity);
+         //   signupUser.quantityleft = Convert.ToInt16(quantity);
             signupUser.Email = toEmail;
-            signupUser.RawTransactionResponse = strResponse;
+         
             var response = await _studentSignupTempService.Update(signupUser);
             string signUpUrl = _PaymentConfig.webUrl + "/signup?id=" + paymentTransactionDto.Custom;
             MailMessage message = new MailMessage();
-            message.To.Add(new MailAddress(toEmail, fname));
+            message.To.Add(new MailAddress(toEmail, paymentTransactionDto.First_name));
             message.Subject = "Hotel Simulation Payment Transaction ID";
             message.IsBodyHtml = true;
 
@@ -137,29 +59,16 @@ public class PaymentService : IPaymentService
             }
             catch (Exception ex)
             {
-
-            }
-        }
-
-        else if (strResponse.Substring(0, 4) == "FAIL")
-        {
             return new PaymentResponse
             {
-                Message = strResponse + ". " + "Your Payment Failed!",
+                Message = ex.Message,
                 status = false
             };
-
-
         }
-
-        else
-        {
-        }
+        
         return new PaymentResponse
         {
-            Message = @"Thank you for your payment. 
-                        Transaction has been completed successfully.Please use the transaction ID below to register a new account.        
-                    The transaction ID will be email to you as well for your records.",
+            Message = "Done",
             status = true
         };
     }

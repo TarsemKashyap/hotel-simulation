@@ -10,41 +10,47 @@
                             <img src="assets/images/logo/blue-logo.png" alt="logo" />
                         </a>
                     </div>
-                    <section>
+                    <ng-container *ngIf="isPaymentDone">
+                        <p class="text-base"> {{responseMessage}} <ng-container *ngIf="isPaymentApprove"> <a style="cursor: pointer;color: blue;" (click)="openSignUp()">Continue to Sign Up</a></ng-container></p> 
+                    </ng-container>
+                    <ng-container *ngIf="!isPaymentDone">
+                    <section >
                         <ul class="custom_table mb-8">
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">First name</div>
-                                    <label class="text-right">{{data?.firstName}}</label>
+                                    <label class="text-right">{{studentPaymentDtls?.firstName}}</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">Last name</div>
-                                    <label class="text-right">{{data?.lastName}}</label>
+                                    <label class="text-right">{{studentPaymentDtls?.lastName}}</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">Email</div>
-                                    <label class="text-right">{{data?.email}}</label>
+                                    <label class="text-right">{{studentPaymentDtls?.email}}</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">Class Code</div>
-                                    <label class="text-right">{{data?.classCode}}</label>
+                                    <label class="text-right">{{studentPaymentDtls?.classCode}}</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">Institue</div>
-                                    <label class="text-right">{{data?.institute}}</label>
+                                    <label class="text-right">{{studentPaymentDtls?.institute}}</label>
                                 </div>
                             </li>
                         </ul>
                     </section>
-                    <form  action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <ngx-paypal [config]="payPalConfig" ></ngx-paypal>
+                    </ng-container>
+                    <!-- <form  action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
                         <input type="hidden" name="address_override" value="1">
                         <input type="hidden" name="cmd" value="_s-xclick" />
                         <input type="hidden" name="hosted_button_id" value="9MAWKYA599LCY" />
@@ -55,7 +61,7 @@
                         <input type="hidden" name="return" value="http://localhost:4200/complete" />
                         <input type="image" name="submit" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"  alt="PayPal - The safer, easier way to pay online!" />
                         <img alt="" border="0"  src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                    </form>
+                    </form> -->
                 </div>
             </div>
         </div>

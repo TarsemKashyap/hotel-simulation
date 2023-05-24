@@ -5,8 +5,10 @@ export interface StudentSignup {
     classCode: string;
     email: string;
     password: string;
+    totalAmount: string;
 }
 
 export interface StudentPaymentSignUp extends StudentSignup {
     reference: string;
+   
 }

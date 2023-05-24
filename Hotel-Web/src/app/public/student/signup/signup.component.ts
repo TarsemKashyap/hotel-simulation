@@ -94,6 +94,7 @@ export class SignupComponent {
       institute: this.form.value.institute,
       password: this.form.value.password,
       reference: this.referenceId!,
+      totalAmount:'',
     };
     if (!this.referenceId) {
       this.registerStudent(sigup);

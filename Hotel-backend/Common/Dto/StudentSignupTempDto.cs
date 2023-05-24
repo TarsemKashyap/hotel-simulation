@@ -28,6 +28,8 @@ namespace Common.Dto
         public int quantityleft { get; set; }
         public SignupStatus SignupStatus { get; set; }
         public bool IsSignupComplete { get; set; }
+
+        public string TotalAmount { get; set; }
     }
 
 
