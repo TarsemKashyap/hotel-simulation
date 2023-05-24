@@ -8,7 +8,7 @@ import {
   IPayPalConfig,
   ICreateOrderRequest 
 } from 'ngx-paypal';
-import { PaymentTransaction } from '../../model/PaymentTransaction.model';
+import { PaymentStatus, PaymentTransaction } from '../../model/PaymentTransaction.model';
 
 @Component({
   selector: 'app-payment-initiated-page',
@@ -58,7 +58,6 @@ export class PaymentInitiatedPageComponent {
                 amount: {
                     currency_code: 'USD',
                     value: this.studentPaymentDtls?.totalAmount,
-                    
                 },
                 items: []
             }]
@@ -70,7 +69,7 @@ export class PaymentInitiatedPageComponent {
             fundingicons:true
         },
         onApprove: (data, actions) => {
-            console.log('onApprove - transaction was approved, but not authorized', data, actions);
+            console.log('onApprove - transaction was approved, but not authorized', data, actions.order.get());
             // actions.order.get().then(details => {
             //     console.log('onApprove - you can get full order details inside onApprove: ', details);
             // });
@@ -78,11 +77,19 @@ export class PaymentInitiatedPageComponent {
         },
         onClientAuthorization: (data) => {
             console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+            var _amount = data.purchase_units[0].amount.value.toString();
             this.paypalTransaction = new PaymentTransaction;
             this.paypalTransaction.first_name = data.payer.name?.given_name;
             this.paypalTransaction.payer_email = data.payer.email_address;
             this.paypalTransaction.tx = data.id;
             this.paypalTransaction.custom =   this.studentPaymentDtls?.reference;
+            if(data.status == "COMPLETED") {
+              this.paypalTransaction.payment_status =   PaymentStatus.COMPLETED;
+            } else {
+              this.paypalTransaction.payment_status =   PaymentStatus.Failed;
+            }
+            this.paypalTransaction.RawTransactionResponse = JSON.stringify(data);
+            this.paypalTransaction.amount =   _amount;
             this.studentsignupService.PaymentTransaction(this.paypalTransaction! ).subscribe((result) => {
               if (result.data.paymnentStatus == true) {
                 this.isPaymentDone = true;

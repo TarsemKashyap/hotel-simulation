@@ -37,7 +37,7 @@ namespace Common.Dto
     public enum PaymentStatus
     {
         NotStarted = 0,
-        Success = 1,
+        COMPLETED = 1,
         Failed = 2
     }
 

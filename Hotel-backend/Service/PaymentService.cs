@@ -37,35 +37,38 @@ public class PaymentService : IPaymentService
 
     public async Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
     {
-            string toEmail = paymentTransactionDto.Payer_email;
-            var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
-            signupUser.PaymentDate = DateTime.Now;
-            signupUser.TransactionId = paymentTransactionDto.Tx;
-          //  signupUser.quantity = Convert.ToInt16(quantity);
-         //   signupUser.quantityleft = Convert.ToInt16(quantity);
-            signupUser.Email = toEmail;
-         
-            var response = await _studentSignupTempService.Update(signupUser);
-            string signUpUrl = _PaymentConfig.webUrl + "/signup?id=" + paymentTransactionDto.Custom;
-            MailMessage message = new MailMessage();
-            message.To.Add(new MailAddress(toEmail, paymentTransactionDto.First_name));
-            message.Subject = "Hotel Simulation Payment Transaction ID";
-            message.IsBodyHtml = true;
+        string toEmail = paymentTransactionDto.Payer_email;
+        var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
+        signupUser.PaymentDate = DateTime.Now;
+        signupUser.TransactionId = paymentTransactionDto.Tx;
+        signupUser.Amount = Convert.ToDecimal(paymentTransactionDto.Amount);
+        signupUser.PaymentStatus = paymentTransactionDto.Payment_status;
+        //  signupUser.quantity = Convert.ToInt16(quantity);
+        //   signupUser.quantityleft = Convert.ToInt16(quantity);
+        signupUser.RawTransactionResponse = paymentTransactionDto.RawTransactionResponse;
+        signupUser.Email = toEmail;
 
-            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>" + signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
-            try
-            {
-                await _emailService.Send(message);
-            }
-            catch (Exception ex)
-            {
+        var response = await _studentSignupTempService.Update(signupUser);
+        string signUpUrl = _PaymentConfig.webUrl + "/signup?id=" + paymentTransactionDto.Custom;
+        MailMessage message = new MailMessage();
+        message.To.Add(new MailAddress(toEmail, paymentTransactionDto.First_name));
+        message.Subject = "Hotel Simulation Payment Transaction ID";
+        message.IsBodyHtml = true;
+
+        message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>" + signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
+        try
+        {
+            await _emailService.Send(message);
+        }
+        catch (Exception ex)
+        {
             return new PaymentResponse
             {
                 Message = ex.Message,
                 status = false
             };
         }
-        
+
         return new PaymentResponse
         {
             Message = "Done",

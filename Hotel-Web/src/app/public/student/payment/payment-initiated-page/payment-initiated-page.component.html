@@ -11,7 +11,8 @@
                         </a>
                     </div>
                     <ng-container *ngIf="isPaymentDone">
-                        <p class="text-base"> {{responseMessage}} <ng-container *ngIf="isPaymentApprove"> <a style="cursor: pointer;color: blue;" (click)="openSignUp()">Continue to Sign Up</a></ng-container></p> 
+                        <p class="text-base"> {{responseMessage}} <ng-container *ngIf="isPaymentApprove"> <br/><br/>
+                            <button class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" (click)="openSignUp()">Continue to Sign Up</button></ng-container></p> 
                     </ng-container>
                     <ng-container *ngIf="!isPaymentDone">
                     <section >
