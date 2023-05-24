@@ -116,6 +116,8 @@ public static class ApiStartupExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IStudentClassMappingService, StudentClassMappingService>();
         services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
+        services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
+
 
 
     }

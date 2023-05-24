@@ -18,17 +18,17 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-public interface IClassSessionService
-{
-    Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
-    IEnumerable<ClassSessionDto> ClassList();
-    Task<ClassSessionDto> Create(ClassSessionDto classSession);
-    IEnumerable<ClassSessionDto> List(string instructorId = null);
-    Task<ClassSessionUpdateDto> GetById(int classId);
-    Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
-    Task DeleteId(int classId);
-    Task<IList<ClassGroupDto>> StudentGroupList();
-}
+    public interface IClassSessionService
+    {
+        Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
+        IEnumerable<ClassSessionDto> ClassList();
+        Task<ClassSessionDto> Create(ClassSessionDto classSession);
+        IEnumerable<ClassSessionDto> List(string instructorId = null);
+        Task<ClassSessionUpdateDto> GetById(int classId);
+        Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
+        Task DeleteId(int classId);
+        Task<IList<ClassGroupDto>> StudentGroupList();
+    }
 
 public class ClassSessionService : IClassSessionService
 {

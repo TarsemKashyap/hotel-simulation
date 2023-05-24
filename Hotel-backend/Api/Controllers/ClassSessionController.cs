@@ -15,7 +15,9 @@ public class ClassSessionController : AbstractBaseController
     private readonly IValidator<ClassGroupDto> _classGroupValidator;
     private readonly IClassSessionService _classSessionService;
 
-    public ClassSessionController(IValidator<ClassSessionDto> validator, IValidator<ClassGroupDto> classGroupValidator, IClassSessionService classSessionService)
+
+    public ClassSessionController(IValidator<ClassSessionDto> validator, IValidator<ClassGroupDto> classGroupValidator,
+        IClassSessionService classSessionService)
     {
         _validator = validator;
         _classGroupValidator = classGroupValidator;
@@ -75,5 +77,7 @@ public class ClassSessionController : AbstractBaseController
         return Ok(clasGroupResult);
 
     }
+
+   
 
 }

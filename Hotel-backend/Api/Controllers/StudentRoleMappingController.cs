@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Service;
 
 namespace Api.Controllers
@@ -12,12 +13,17 @@ namespace Api.Controllers
         private readonly IStudentRolesMappingService _studentRolesMappingService;
         private readonly IStudentClassMappingService _studentClassMappingService;
         private readonly IClassSessionService _classSessionService;
+        private readonly IStudentGroupMappingService _studentGroupMappingService;
+
         public StudentRoleMappingController(IStudentRolesMappingService studentRolesMappingService,
-            IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService)
+            IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService,
+            IStudentGroupMappingService studentGroupMappingService)
         {
             _studentRolesMappingService = studentRolesMappingService;
             _studentClassMappingService = studentClassMappingService;
             _classSessionService = classSessionService;
+            _studentGroupMappingService = studentGroupMappingService;
+
         }
         [HttpGet("list")]
         public async Task<ActionResult> StudentRoleList()
@@ -27,7 +33,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("studentlist/{classId}")]
-        public IActionResult StudentListByClassId(int classId)
+        public async Task<ActionResult> StudentListByClassId(int classId)
         {
             var studentListByClassId = _studentClassMappingService.List(classId);
             return Ok(studentListByClassId);
@@ -45,6 +51,12 @@ namespace Api.Controllers
         {
             var StudentData = await _classSessionService.StudentGroupList();
             return Ok(StudentData);
+        }
+        [HttpPost()]
+        public async Task<ActionResult> UpsertStudentData(StudentGroupMappingDto studentGroupMappingDto)
+        {
+            var studentMapping = await _studentGroupMappingService.UpsertStudentData(studentGroupMappingDto);
+            return Ok(studentMapping);
         }
     }
 }

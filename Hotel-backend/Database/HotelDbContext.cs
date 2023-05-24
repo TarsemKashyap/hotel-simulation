@@ -27,13 +27,16 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<MigrationScript> MigrationScripts { get; set; }
     public DbSet<StudentSignupTemp> StudentSignupTemp { get; set; }
     public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
+    public DbSet<StudentRoles> StudentRoles { get; set; }
+    public DbSet<StudentGroupMapping> StudentGroupMapping { get; set; }
     public DbSet<StudentRoleMapping> StudentRoleMapping { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(), t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
-        builder.Entity<StudentRoleMapping>().HasData(
-          new StudentRoleMapping { Id = 1, RoleName = "Revenue Manager" },
-          new StudentRoleMapping { Id = 2, RoleName = "Room Manager" }
+        builder.Entity<StudentRoles>().HasData(
+          new StudentRoles { Id = 1, RoleName = "Revenue Manager" },
+          new StudentRoles { Id = 2, RoleName = "Room Manager" }
       );
         base.OnModelCreating(builder);
     }

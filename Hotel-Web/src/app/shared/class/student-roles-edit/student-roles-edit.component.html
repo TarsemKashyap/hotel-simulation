@@ -26,32 +26,40 @@
                             </li>
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
-                                    <div class="text-left">Student Roles</div>
-                                    <label class="text-right"> <mat-form-field appearance="fill" class="col-md-2">
-                                        <mat-label>Roles</mat-label>
-                                        <mat-select formControlName="selectedColors" multiple>
-                                          <mat-option *ngFor="let role of roles" [value]="role">{{role.roleName}}</mat-option>
-                                        </mat-select>
-                                      </mat-form-field></label>
+                                  <div class="text-left">Student Roles</div>
+                                  <label class="text-right">
+                                    <mat-form-field appearance="fill" class="col-md-2">
+                                      <mat-label>Roles</mat-label>
+                                      <mat-select [(ngModel)]="selectedRoles" multiple>
+                                        <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.roleName }}</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </label>
                                 </div>
-                            </li>
-                            <li>
+                              </li>
+                              <li>
                                 <div class="grid grid-cols-2 border p-4">
-                                    <div class="text-left">Student Groups</div>
-                                    <label class="text-right"><mat-form-field appearance="fill" class="col-md-2">
-                                        <mat-label>Group</mat-label>
-                                        <mat-select  formControlName="selectedGroup">
-                                            <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field></label>
+                                  <div class="text-left">Student Groups</div>
+                                  <label class="text-right">
+                                    <mat-form-field appearance="fill" class="col-md-2">
+                                      <mat-label>Group</mat-label>
+                                      <mat-select [(ngModel)]="selectedGroup">
+                                        <mat-option *ngFor="let group of groups" [value]="group.groupId">{{ group.name }}</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </label>
                                 </div>
-                            </li>
+                              </li>
                             <li>
                                 <div class="add_btn">
-                                    <input type="submit" value="Save" (click)="Save()"
-                                    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
-                                  </div>
-                            </li>
+                                  <input
+                                    type="submit"
+                                    value="Save"
+                                    (click)="Save()"
+                                    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+                                  />
+                                </div>
+                              </li>
                         </ul>
                     </section>
                 </div>

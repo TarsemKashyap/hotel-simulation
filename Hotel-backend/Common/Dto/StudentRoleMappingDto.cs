@@ -11,6 +11,7 @@ namespace Common.Dto
     {
         public int Id { get; set; }
         public string RoleName { get; set; }
+        public ActionOnRecord Action { get; set; }
     }
 
     public class StudentRoleMappingDtoValidator : AbstractValidator<StudentRoleMappingDto>

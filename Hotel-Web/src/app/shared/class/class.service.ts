@@ -7,11 +7,13 @@ import { ClassSession } from '.';
 import { StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
 import { StudentGroupList, StudentRoles } from './model/Roles';
+import { StudentGroupRoles } from './model/StudentRoles';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassService {
+  apiUrl: any;
   constructor(private httpClient: HttpClient) {}
 
   addClass(classSession: ClassSession): Observable<any> {
@@ -54,5 +56,9 @@ export class ClassService {
 
   Grouplist(): Observable<StudentGroupList[]> {
     return this.httpClient.get<StudentGroupList[]>('roleMapping/studentGroups');
+  }
+
+  AddRoles(roles: StudentGroupRoles): Observable<any> {
+    return this.httpClient.post('roleMapping', roles);
   }
 }

@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520070801_studentgroupmapping-table")]
+    partial class studentgroupmappingtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,18 +260,22 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClassGroupGroupId")
-                        .HasColumnType("int");
-
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("StudentRoleMappingId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassGroupGroupId");
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentRoleMappingId");
 
                     b.ToTable("StudentGroupMapping");
                 });
@@ -487,7 +493,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 5, 22, 20, 1, 14, 167, DateTimeKind.Local).AddTicks(8823));
+                        .HasDefaultValue(new DateTime(2023, 5, 20, 12, 38, 0, 914, DateTimeKind.Local).AddTicks(857));
 
                     b.HasKey("ScriptId");
 
@@ -586,9 +592,23 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Domain.StudentGroupMapping", b =>
                 {
-                    b.HasOne("ClassGroup", null)
+                    b.HasOne("ClassGroup", "ClassGroup")
                         .WithMany("StudentGroupMapping")
-                        .HasForeignKey("ClassGroupGroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Student", "Student")
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("Database.Domain.StudentRoleMapping", null)
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentRoleMappingId");
+
+                    b.Navigation("ClassGroup");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -690,9 +710,16 @@ namespace Database.Migrations
                     b.Navigation("StudentClassMappings");
                 });
 
+            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
+                {
+                    b.Navigation("StudentGroupMapping");
+                });
+
             modelBuilder.Entity("Student", b =>
                 {
                     b.Navigation("StudentClassMappings");
+
+                    b.Navigation("StudentGroupMapping");
                 });
 #pragma warning restore 612, 618
         }

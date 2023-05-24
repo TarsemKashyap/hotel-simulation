@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230521102456_change-type")]
+    partial class changetype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,11 +267,18 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("StudentRoleMappingId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClassGroupGroupId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentRoleMappingId");
 
                     b.ToTable("StudentGroupMapping");
                 });
@@ -487,7 +496,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 5, 22, 20, 1, 14, 167, DateTimeKind.Local).AddTicks(8823));
+                        .HasDefaultValue(new DateTime(2023, 5, 21, 15, 54, 56, 365, DateTimeKind.Local).AddTicks(7102));
 
                     b.HasKey("ScriptId");
 
@@ -589,6 +598,14 @@ namespace Database.Migrations
                     b.HasOne("ClassGroup", null)
                         .WithMany("StudentGroupMapping")
                         .HasForeignKey("ClassGroupGroupId");
+
+                    b.HasOne("Student", null)
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("Database.Domain.StudentRoleMapping", null)
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentRoleMappingId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -690,9 +707,16 @@ namespace Database.Migrations
                     b.Navigation("StudentClassMappings");
                 });
 
+            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
+                {
+                    b.Navigation("StudentGroupMapping");
+                });
+
             modelBuilder.Entity("Student", b =>
                 {
                     b.Navigation("StudentClassMappings");
+
+                    b.Navigation("StudentGroupMapping");
                 });
 #pragma warning restore 612, 618
         }
