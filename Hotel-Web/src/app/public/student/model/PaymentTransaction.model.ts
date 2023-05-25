@@ -3,7 +3,7 @@ export class PaymentTransaction {
     st : string | undefined;
     tx : string | undefined;
     cc: string | undefined;
-    amt? : number | undefined;
+    amount : string | undefined;
     cm: string | undefined;
     payer_email :string | undefined;
     payer_id : string | undefined;
@@ -26,7 +26,7 @@ export class PaymentTransaction {
     payment_date : string| undefined;
     payment_fee : number | undefined;
     payment_gross : string | undefined;
-    payment_status : string | undefined;
+    payment_status : PaymentStatus | undefined;
     payment_type : string | undefined;  
     protection_eligibility : string | undefined;
     quantity : string | undefined;
@@ -35,4 +35,11 @@ export class PaymentTransaction {
     txn_type : string | undefined;
     verify_sign : string | undefined;
     address_zip : string | undefined;
+    RawTransactionResponse : string | undefined;
 }
+
+export enum PaymentStatus {
+    NotStarted = 0,
+    COMPLETED = 1,
+    Failed = 2
+  }

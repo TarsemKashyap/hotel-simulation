@@ -28,6 +28,8 @@ namespace Common.Dto
         public int quantityleft { get; set; }
         public SignupStatus SignupStatus { get; set; }
         public bool IsSignupComplete { get; set; }
+
+        public string TotalAmount { get; set; }
     }
 
 
@@ -35,7 +37,7 @@ namespace Common.Dto
     public enum PaymentStatus
     {
         NotStarted = 0,
-        Success = 1,
+        COMPLETED = 1,
         Failed = 2
     }
 

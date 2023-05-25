@@ -14,10 +14,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { CompleteComponent, PaymentInitiatedPageComponent } from './student';
-
+import { NgxPayPalModule } from 'ngx-paypal';
 
 @NgModule({
-    imports: [publicRoutingModule, CommonModule, HttpClientModule, ReactiveFormsModule, MatTableModule, MatInputModule, MatFormFieldModule, MatCardModule],
+    imports: [publicRoutingModule, CommonModule, HttpClientModule, ReactiveFormsModule, MatTableModule, MatInputModule, MatFormFieldModule, MatCardModule,NgxPayPalModule],
     exports: [HeaderMenuComponent,BannerComponent,SignupComponent],
     declarations: [HeaderMenuComponent, BannerComponent, HomeComponent, SignupComponent, LoginComponent, PaymentInitiatedPageComponent, CompleteComponent],
     providers: [AccountService],

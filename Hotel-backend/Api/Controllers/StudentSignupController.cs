@@ -51,7 +51,7 @@ namespace Api.Controllers
         [HttpPost("studentsignup"), AllowAnonymous]
         public async Task<IActionResult> Create(StudentSignupTempDto dto)
         {
-
+           
             _validator.ValidateAndThrow(dto);
             var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == dto.ClassCode);
 
@@ -72,6 +72,9 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var signupUser = await _studentSignupTempService.GetById(id);
+            var _amount = Decimal.Parse(_PaymentConfig.Amount);
+            var _percentTaxRate = Decimal.Parse(_PaymentConfig.TaxRate) / 100;
+            signupUser.TotalAmount = (_amount + (_amount * _percentTaxRate)).ToString("#.##");
             return Ok(signupUser);
 
         }

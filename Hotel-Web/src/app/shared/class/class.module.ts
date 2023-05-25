@@ -10,9 +10,10 @@ import { ClassListComponent } from './class-list/class-list.component';
 import { ActionRendererComponent } from './action-renderer/action-renderer.component';
 import { ClassEditComponent } from './class-edit/class-edit.component';
 import { MatIconModule } from '@angular/material/icon';
+import { GridActionComponent } from './grid-action/grid-action.component';
 
 @NgModule({
-  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent],
+  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, GridActionComponent, ClassEditComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
