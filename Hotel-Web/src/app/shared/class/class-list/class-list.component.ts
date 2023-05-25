@@ -23,7 +23,14 @@ export class ClassListComponent implements OnInit {
   private datePipe = new DatePipe('en-US');
 
   columnDefs: ColDef[] = [
-    { field: 'code' },
+    {
+      field: 'code',
+      tooltipValueGetter:()=>"Click to copy code",
+      onCellClicked: (event) => {
+        navigator.clipboard.writeText(event.value);
+        this.snackBar.open(`class code ${event.value} copied.`)
+      },
+    },
     { field: 'title' },
     {
       field: 'startDate',
