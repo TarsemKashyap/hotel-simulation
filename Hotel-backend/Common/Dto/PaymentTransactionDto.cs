@@ -12,7 +12,7 @@ namespace Common.Dto
         public string St { get; set; }
         public string Tx { get; set; }
         public string Cc { get; set; }
-        public int Amt { get; set; }
+        public string Amount { get; set; }
         public string Cm { get; set; }
         public string Payer_email { get; set; }
         public string Payer_id { get; set; }
@@ -35,7 +35,7 @@ namespace Common.Dto
         public string Payment_date { get; set; }
         public string Payment_fee { get; set; }
         public int Payment_gross { get; set; }
-        public string Payment_status { get; set; }
+        public PaymentStatus Payment_status { get; set; }
         public string Payment_type { get; set; }
         public string Protection_eligibility { get; set; }
         public string Quantity { get; set; }
@@ -44,6 +44,7 @@ namespace Common.Dto
         public string Txn_type { get; set; }
         public string Verify_sign { get; set; }
         public string Address_zip { get; set; }
+        public string RawTransactionResponse { get; set; }
 
     }
 }

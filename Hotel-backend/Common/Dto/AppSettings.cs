@@ -20,6 +20,10 @@ public class PaymentConfig
     public string authToken { get; set; }
     public string sandBoxUrl { get; set; }
     public string webUrl { get; set; }
+
+    public string Amount { get; set; }
+
+    public string TaxRate { get; set; }
 }
 
 public class Smtp

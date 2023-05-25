@@ -32,7 +32,7 @@ export class CompleteComponent {
           this.paymentTrasa.address_state = params['address_state'];
           this.paymentTrasa.address_state = params['address_street'];
           this.paymentTrasa.address_zip = params['address_zip'];
-          this.paymentTrasa.amt = parseInt(params.amt);
+         // this.paymentTrasa.amount = parseInt(params.amt);
           this.paymentTrasa.cc = params['cc'];
           this.paymentTrasa.first_name = params['first_name'];
           this.paymentTrasa.handling_amount = params['handling_amount'];
