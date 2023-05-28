@@ -27,7 +27,7 @@ export class ClassListComponent implements OnInit {
       field: 'code',
       tooltipValueGetter:()=>"Click to copy code",
       onCellClicked: (event) => {
-        navigator.clipboard.writeText(event.value);
+       this.copyToClipboard(event.value);
         this.snackBar.open(`class code ${event.value} copied.`)
       },
     },
@@ -128,5 +128,19 @@ export class ClassListComponent implements OnInit {
         }
       });
     };
+  }
+
+  copyToClipboard(val:string){
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 }
