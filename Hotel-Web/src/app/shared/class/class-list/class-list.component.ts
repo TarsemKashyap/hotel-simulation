@@ -13,6 +13,7 @@ import {
 } from '../../dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Utility } from '../../utility';
 
 @Component({
   selector: 'app-class-list',
@@ -27,7 +28,7 @@ export class ClassListComponent implements OnInit {
       field: 'code',
       tooltipValueGetter:()=>"Click to copy code",
       onCellClicked: (event) => {
-       this.copyToClipboard(event.value);
+        Utility.copyToClipboard(event.value);
         this.snackBar.open(`class code ${event.value} copied.`)
       },
     },
@@ -130,17 +131,5 @@ export class ClassListComponent implements OnInit {
     };
   }
 
-  copyToClipboard(val:string){
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = val;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-  }
+  
 }
