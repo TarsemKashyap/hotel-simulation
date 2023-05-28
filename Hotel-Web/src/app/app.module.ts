@@ -15,6 +15,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { publicModule } from './public/public.module';
 import { StudentModule } from './student';
+import { InstructorModule } from './instructor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +27,7 @@ import { StudentModule } from './student';
     publicModule,
     AdminModule,
     StudentModule,
+    InstructorModule,
     SharedModule,
     MaterialModule,
     AgGridModule,
