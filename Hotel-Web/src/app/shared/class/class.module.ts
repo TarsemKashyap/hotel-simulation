@@ -11,6 +11,7 @@ import { ActionRendererComponent } from './action-renderer/action-renderer.compo
 import { ClassEditComponent } from './class-edit/class-edit.component';
 import { MatIconModule } from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import { GridActionComponent } from './grid-action/grid-action.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { MatTableModule } from '@angular/material/table';
 import { StudentRolesEditComponent } from './student-roles-edit/student-roles-edit.component';
@@ -19,7 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
-  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent, StudentListComponent, StudentRolesEditComponent],
+  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent, StudentListComponent, StudentRolesEditComponent,GridActionComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

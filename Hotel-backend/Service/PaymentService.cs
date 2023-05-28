@@ -10,11 +10,16 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Service;
 using Mysqlx;
+using Common.Model;
+using System.Reflection.Metadata;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Policy;
+using System.Security.Principal;
 
 public interface IPaymentService
-    {
-        Task<bool> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
-    }
+{
+    Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto);
+}
 
 
 public class PaymentService : IPaymentService
@@ -23,159 +28,52 @@ public class PaymentService : IPaymentService
     private readonly IStudentSignupTempService _studentSignupTempService;
     private readonly IEmailService _emailService;
 
-    public PaymentService(IOptions<PaymentConfig> paymentConfig , IStudentSignupTempService studentSignupTempService, IEmailService emailService)
+    public PaymentService(IOptions<PaymentConfig> paymentConfig, IStudentSignupTempService studentSignupTempService, IEmailService emailService)
     {
         _PaymentConfig = paymentConfig.Value;
         _studentSignupTempService = studentSignupTempService;
         _emailService = emailService;
     }
 
-    public async Task<bool> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
+    public async Task<PaymentResponse> PaymentCheck(PaymentTransactionDto paymentTransactionDto)
     {
-        ServicePointManager.Expect100Continue = true;
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-        String authToken, query, strResponse;
-        String sKey, sValue, fname = "", lname, mc_gross, itemName, Pmtcurrency, quantity = "", payerEmail = "", item_name1;
+        string toEmail = paymentTransactionDto.Payer_email;
+        var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
+        signupUser.PaymentDate = DateTime.Now;
+        signupUser.TransactionId = paymentTransactionDto.Tx;
+        signupUser.Amount = Convert.ToDecimal(paymentTransactionDto.Amount);
+        signupUser.PaymentStatus = paymentTransactionDto.Payment_status;
+        //  signupUser.quantity = Convert.ToInt16(quantity);
+        //   signupUser.quantityleft = Convert.ToInt16(quantity);
+        signupUser.RawTransactionResponse = paymentTransactionDto.RawTransactionResponse;
+        signupUser.Email = toEmail;
 
-        authToken = _PaymentConfig.authToken;
+        var response = await _studentSignupTempService.Update(signupUser);
+        string signUpUrl = _PaymentConfig.webUrl + "/signup?id=" + paymentTransactionDto.Custom;
+        MailMessage message = new MailMessage();
+        message.To.Add(new MailAddress(toEmail, paymentTransactionDto.First_name));
+        message.Subject = "Hotel Simulation Payment Transaction ID";
+        message.IsBodyHtml = true;
 
-        query = "cmd=_notify-synch&tx=" + paymentTransactionDto.Tx + "&at=" + authToken;
-
-        // Create the request back
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(_PaymentConfig.sandBoxUrl);
-
-        // Set values for the request back
-        req.Method = "POST";
-        req.ContentType = "application/x-www-form-urlencoded";
-        req.ContentLength = query.Length;
-
-        // Write the request back IPN strings
-        StreamWriter stOut = new StreamWriter(req.GetRequestStream(), System.Text.Encoding.ASCII);
-        stOut.Write(query);
-        stOut.Close();
-
-        // Do the request to PayPal and get the response
-        StreamReader stIn = new StreamReader(req.GetResponse().GetResponseStream());
-        strResponse = stIn.ReadToEnd();
-        stIn.Close();
-
-        // If response was SUCCESS, parse response string and
-        //output details
-        if (strResponse.Substring(0, 7) == "SUCCESS")
+        message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>" + signUpUrl + "</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
+        try
         {
-            //return Ok();
-            ///If success fully then inser the transaction ID to database
-            // LabelTitle.Text = "Order Confirmation";
-            //LabelTitle.Text = strResponse;
-            // LiteralMessage.Text = "Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account. The transaction ID will be emailed to you as well for your records.";
-
-            //split response into string array using whitespace
-            //as delimiter
-            String[] StringArray = strResponse.Split();
-
-            // NOTE:
-            /*
-            * loop is set to start at 1 rather than 0 because first
-            string in array will be single word SUCCESS or FAIL
-            and there is no splitting of this...so we will skip the
-            first string and go to the next.
-            */
-
-            // use split to split array we already have
-            // using "=" as delimiter
-            int i;
-            for (i = 1; i < StringArray.Length - 1; i++)
+            await _emailService.Send(message);
+        }
+        catch (Exception ex)
+        {
+            return new PaymentResponse
             {
-                String[] StringArray1 = StringArray[i].Split('=');
-
-                sKey = StringArray1[0];
-                sValue = StringArray1[1];
-
-                // set string vars to hold variable names using a switch
-                switch (sKey)
-                {
-                    case "first_name":
-                        fname = sValue;
-                        break;
-
-                    case "last_name":
-                        lname = sValue;
-                        break;
-
-                    case "payer_email":
-                        payerEmail = sValue;
-                        break;
-
-                    case "mc_gross":
-                        mc_gross = sValue;
-                        break;
-
-                    case "item_name":
-                        itemName = sValue;
-                        break;
-
-                    //for shopping cart payments the
-                    //item_name vars are numbered to reflect
-                    //a multi-item purchase.
-                    case "item_name1":
-                        item_name1 = sValue;
-                        break;
-
-                    case "mc_currency":
-                        Pmtcurrency = sValue;
-                        break;
-
-                    case "quantity":
-                        quantity = sValue;
-                        break;
-                }
-            }
-            var signupUser = await _studentSignupTempService.GetByRefrence(paymentTransactionDto.Custom);
-            signupUser.PaymentDate = DateTime.Now;
-            signupUser.TransactionId = paymentTransactionDto.Tx;
-            signupUser.quantity = Convert.ToInt16(quantity);
-            signupUser.quantityleft = Convert.ToInt16(quantity);
-            var response = await _studentSignupTempService.Update(signupUser);
-
-            ////send email 
-            // string fromEmail = "info@hotelsimulation.com";
-            string toEmail = payerEmail.Replace("%40", "@");
-
-            MailMessage message = new MailMessage();
-            message.To.Add(new MailAddress(toEmail, fname));
-            message.Subject = "Hotel Simulation Payment Transaction ID";
-            message.IsBodyHtml = true;
-            message.Body = "<p>Dear user,</p><p>Thank you for your payment. The transaction has been completed successfully. Please use the transaction ID below to register a new account at <a>http://hotelsimulation.com/Account/Register.aspx</a>.</p> <p>" + paymentTransactionDto.Tx + "</p><p>Sincerely,<br/> Hotel Business Management Training Simulation</p>";
-            try
-            {
-                await _emailService.Send(message);
-            }
-            catch (Exception ex)
-            {
-                //  LiteralOrderDetails.Text = ex.ToString();
-            }
+                Message = ex.Message,
+                status = false
+            };
         }
 
-        else if (strResponse.Substring(0, 4) == "FAIL")
+        return new PaymentResponse
         {
-            throw new System.ComponentModel.DataAnnotations.ValidationException(strResponse + ". " + "Your Payment Failed!");
-            // if response is FAIL, print it to screen
-            //Response.Write(strResponse);
-            // LabelTitle.Text = strResponse + ". " + "Your Payment Failed!";
-            //LiteralMessage.Text = "<p>Your Payment Failed!</p>";
-            //paymentIDTableAdapter payA = new paymentIDTableAdapter();
-
-            //if (payA.ScalarCheckExist("4B445058YN007393B")==null)
-            //{ LabelTitle.Text = "Not Exist"; }
-        }
-
-        else
-        {
-            // some unexpected response??? -  log it
-            // for investigation later.
-
-        }
-        return true;
+            Message = "Done",
+            status = true
+        };
     }
 }
 

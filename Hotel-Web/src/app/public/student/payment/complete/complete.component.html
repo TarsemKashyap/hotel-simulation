@@ -1,1 +1,15 @@
-<p>complete works!</p>
+<!-- ====== Forms Section Start -->
+<header-menu></header-menu>
+<banner title="Payment Status"></banner>
+<section class="bg-[#F4F7FF] py-14 lg:py-20">
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4">
+                <ng-container *ngIf="responseMessage != ''">
+                    <p class="text-base"> {{responseMessage}} <ng-container *ngIf="isPaymentDone"> <a style="cursor: pointer;color: blue;" (click)="openSignUp()">Continue to Sign Up</a></ng-container></p> 
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+</section>

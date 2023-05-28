@@ -9,6 +9,8 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Mysqlx;
+using Newtonsoft.Json;
+using Common.Model;
 
 namespace Api.Controllers
 {
@@ -23,7 +25,7 @@ namespace Api.Controllers
         private readonly IEmailService _emailService;
         private readonly PaymentConfig _PaymentConfig;
         private readonly IPaymentService _paymentService;
-         private readonly IAccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly IValidator<StudentSignupDto> _accountValidator;
         public StudentSignupController(IStudentSignupTempService studentSignupTempService,
             IValidator<StudentSignupTempDto> validator,
@@ -31,7 +33,9 @@ namespace Api.Controllers
             IEmailService emailService,
             IOptions<PaymentConfig>  paymentConfig,
             IPaymentService paymentService,
-       IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
+            IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
+
+      
         {
             _validator = validator;
             _studentSignupTempService = studentSignupTempService;
@@ -46,7 +50,7 @@ namespace Api.Controllers
         [HttpPost("studentsignup"), AllowAnonymous]
         public async Task<IActionResult> Create(StudentSignupTempDto dto)
         {
-
+           
             _validator.ValidateAndThrow(dto);
             var record = _classSessionService.ClassList().FirstOrDefault(r => r.Code == dto.ClassCode);
 
@@ -57,6 +61,7 @@ namespace Api.Controllers
             }
             else
             {
+               
                 throw new Service.ValidationException("Invalid Class Code");
             }
 
@@ -66,6 +71,9 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var signupUser = await _studentSignupTempService.GetById(id);
+            var _amount = Decimal.Parse(_PaymentConfig.Amount);
+            var _percentTaxRate = Decimal.Parse(_PaymentConfig.TaxRate) / 100;
+            signupUser.TotalAmount = (_amount + (_amount * _percentTaxRate)).ToString("#.##");
             return Ok(signupUser);
 
         }
@@ -74,8 +82,20 @@ namespace Api.Controllers
         [HttpPost("paymentCheck"), AllowAnonymous]
         public async Task<IActionResult> PaymentStatus(PaymentTransactionDto paymentTransactionDto)
         {
-           var result = await _paymentService.PaymentCheck(paymentTransactionDto);
-           return Ok();
+            var result = await _paymentService.PaymentCheck(paymentTransactionDto);
+            var PageResult = ApiResponse.CreateResponse(result.Message, new
+            {
+                paymnentStatus = result.status
+            });
+            if (result.status)
+            {
+                return Ok(PageResult);
+            } else
+            {
+                return Ok(PageResult);
+            }
+
+
         }
         [HttpGet("{referenceId}"), AllowAnonymous]
         public async Task<IActionResult> GetByReferenceId(string referenceId)

@@ -47,7 +47,7 @@ export class ClassEditComponent {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       hotelsCount: [4, Validators.required],
-      roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
+      roomInEachHotel: [{ value: 500}, Validators.required],
       groups: this.fb.array([]),
     });
   }
@@ -58,6 +58,7 @@ export class ClassEditComponent {
       groupId: new FormControl(value.groupId),
       serial: new FormControl(value.serial, Validators.required),
       action: new FormControl(value.action || Action.Updated),
+      balance: new FormControl(value.balance),
     });
   }
 

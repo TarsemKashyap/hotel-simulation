@@ -19,7 +19,7 @@ namespace Database.Domain
     {
         public void Configure(EntityTypeBuilder<StudentRoles> builder)
         {
-            builder.ToTable("StudentRoleMapping");
+            builder.ToTable("StudentRoles");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.RoleName).HasMaxLength(300).IsRequired();
             builder.HasMany(x => x.StudentRoleMappings);

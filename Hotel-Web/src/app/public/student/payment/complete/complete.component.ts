@@ -11,7 +11,8 @@ import { StudentsignupService } from '../../signup/studentsignup.service';
 export class CompleteComponent {
   queryParams: any;
   paymentTrasa :   PaymentTransaction | undefined;
-  
+  isPaymentDone : boolean = false;
+  responseMessage : string = "";
   constructor(
     private route: ActivatedRoute,
     private studentsignupService: StudentsignupService,
@@ -31,7 +32,7 @@ export class CompleteComponent {
           this.paymentTrasa.address_state = params['address_state'];
           this.paymentTrasa.address_state = params['address_street'];
           this.paymentTrasa.address_zip = params['address_zip'];
-          this.paymentTrasa.amt = parseInt(params.amt);
+         // this.paymentTrasa.amount = parseInt(params.amt);
           this.paymentTrasa.cc = params['cc'];
           this.paymentTrasa.first_name = params['first_name'];
           this.paymentTrasa.handling_amount = params['handling_amount'];
@@ -65,13 +66,16 @@ export class CompleteComponent {
       });
   }
   
+  openSignUp() {
+   
+    this.router.navigate(['signup'], {queryParams : {id: this.paymentTrasa?.custom}});
+  }
 
   paymentTransaction() {
-    this.studentsignupService.PaymentTransaction(this.paymentTrasa! ).subscribe((x) => {
-      if(this.paymentTrasa?.custom)
-      {
-       this.router.navigate(['signup'], {queryParams : {id: this.paymentTrasa?.custom}});
-      }
+   
+    this.studentsignupService.PaymentTransaction(this.paymentTrasa! ).subscribe((result) => {
+      this.responseMessage = result.message;
+      this.isPaymentDone = result.data.paymnentStatus; 
     });
   }
  
