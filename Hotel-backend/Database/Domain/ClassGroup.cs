@@ -12,6 +12,7 @@ public class ClassGroup
 
     public virtual ClassSession Class { get; set; }
     public virtual List<StudentGroupMapping> StudentGroupMapping { get; set; }
+    public virtual List<StudentClassMapping> StudentClassMappings { get; set; }
 
 }
 
