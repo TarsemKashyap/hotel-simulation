@@ -15,7 +15,7 @@ namespace Service
 {
     public interface IStudentGroupMappingService
     {
-        Task<StudentGroupMapping> UpsertStudentData(StudentGroupMappingDto studentGroupMappingDto);
+        Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto studentRoleMappingDto);
     }
     public class StudentGroupMappingService : IStudentGroupMappingService
     {
@@ -26,42 +26,10 @@ namespace Service
             _mapper = mapper;
             _context = context;
         }
-        public async Task<StudentGroupMapping> UpsertStudentData(StudentGroupMappingDto studentGroupMappingDto)
-        {/*
-            var existingMapping = await _context.StudentGroupMapping
-                .SingleOrDefaultAsync(x => x.StudentId == studentGroupMappingDto.StudentId;
-
-            if (existingMapping != null)
-            {
-                // Update existing roles
-                existingMapping.RoleIds.Clear();
-                existingMapping.RoleIds.AddRange(studentGroupMappingDto.RoleIds.Select(role => new StudentRoleMapping
-                {
-                    Id = role
-                }));
-
-                await _context.SaveChangesAsync();
-
-                return existingMapping;
-            }
-            else
-            {
-                // Insert new mapping with roles
-                var newMapping = new StudentGroupMapping
-                {
-                    StudentId = studentGroupMappingDto.studentId,
-                    GroupId = studentGroupMappingDto.GroupId,
-                    RoleIds = studentGroupMappingDto.RoleIds.Select(role => new StudentRoleMapping
-                    {
-                        Id = role
-                    }).ToList()
-                };
-
-                _context.StudentGroupMapping.Add(newMapping);
-                await _context.SaveChangesAsync();*/
-
-                return null;
-            }
+        public async Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto studentRoleMappingDto)
+        {
+            return null;
         }
     }
+}
 

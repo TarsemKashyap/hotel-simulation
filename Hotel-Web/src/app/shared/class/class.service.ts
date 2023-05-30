@@ -7,7 +7,7 @@ import { ClassSession } from '.';
 import { StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
 import { StudentGroupList, StudentRoles } from './model/Roles';
-import { StudentGroupRoles } from './model/StudentRoles';
+import { StudentRolesMapping } from './model/StudentRoles';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +58,7 @@ export class ClassService {
     return this.httpClient.get<StudentGroupList[]>('roleMapping/studentGroups');
   }
 
-  AddRoles(roles: StudentGroupRoles): Observable<any> {
+  AddRoles(roles: StudentRolesMapping): Observable<any> {
     return this.httpClient.post('roleMapping', roles);
   }
 }

@@ -22,7 +22,7 @@ namespace Database.Domain
             builder.ToTable("StudentRoles");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.RoleName).HasMaxLength(300).IsRequired();
-            builder.HasMany(x => x.StudentRoleMappings);
+            //builder.HasMany(x => x.StudentRoleMappings);
         }
     }
 }

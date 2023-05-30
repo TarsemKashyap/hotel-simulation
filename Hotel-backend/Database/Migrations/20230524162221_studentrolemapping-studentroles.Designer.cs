@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20230522143114_remove-stdid")]
-    partial class removestdid
+    [Migration("20230524162221_studentrolemapping-studentroles")]
+    partial class studentrolemappingstudentroles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -239,9 +239,6 @@ namespace Database.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("StudentId")
                         .HasColumnType("varchar(255)");
 
@@ -276,7 +273,7 @@ namespace Database.Migrations
                     b.ToTable("StudentGroupMapping");
                 });
 
-            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
+            modelBuilder.Entity("Database.Domain.StudentRoles", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -289,7 +286,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StudentRoleMapping", (string)null);
+                    b.ToTable("StudentRoles", (string)null);
 
                     b.HasData(
                         new
@@ -489,7 +486,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 5, 22, 20, 1, 14, 167, DateTimeKind.Local).AddTicks(8823));
+                        .HasDefaultValue(new DateTime(2023, 5, 24, 21, 52, 21, 288, DateTimeKind.Local).AddTicks(180));
 
                     b.HasKey("ScriptId");
 
@@ -525,6 +522,28 @@ namespace Database.Migrations
                         .HasDatabaseName("IX_ClassGroup_ClassID");
 
                     b.ToTable("ClassMonth", (string)null);
+                });
+
+            modelBuilder.Entity("StudentRoleMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentRoleMapping", (string)null);
                 });
 
             modelBuilder.Entity("Instructor", b =>
@@ -655,6 +674,23 @@ namespace Database.Migrations
                     b.Navigation("Class");
                 });
 
+            modelBuilder.Entity("StudentRoleMapping", b =>
+                {
+                    b.HasOne("Database.Domain.StudentRoles", "StudentRoles")
+                        .WithMany("StudentRoleMappings")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Student", "Student")
+                        .WithMany("StudentRoleMapping")
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("StudentRoles");
+                });
+
             modelBuilder.Entity("Instructor", b =>
                 {
                     b.HasOne("AppUser", null)
@@ -692,9 +728,16 @@ namespace Database.Migrations
                     b.Navigation("StudentClassMappings");
                 });
 
+            modelBuilder.Entity("Database.Domain.StudentRoles", b =>
+                {
+                    b.Navigation("StudentRoleMappings");
+                });
+
             modelBuilder.Entity("Student", b =>
                 {
                     b.Navigation("StudentClassMappings");
+
+                    b.Navigation("StudentRoleMapping");
                 });
 #pragma warning restore 612, 618
         }

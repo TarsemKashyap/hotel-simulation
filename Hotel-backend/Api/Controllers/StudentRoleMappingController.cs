@@ -53,7 +53,7 @@ namespace Api.Controllers
             return Ok(StudentData);
         }
         [HttpPost()]
-        public async Task<ActionResult> UpsertStudentData(StudentGroupMappingDto studentGroupMappingDto)
+        public async Task<ActionResult> UpsertStudentData(StudentRoleMappingDto studentGroupMappingDto)
         {
             var studentMapping = await _studentGroupMappingService.UpsertStudentData(studentGroupMappingDto);
             return Ok(studentMapping);

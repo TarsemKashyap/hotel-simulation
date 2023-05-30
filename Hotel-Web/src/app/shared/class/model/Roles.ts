@@ -1,5 +1,5 @@
 export interface StudentRoles {
-    id : string;
+    id : number;
     roleName : string;
   }
 

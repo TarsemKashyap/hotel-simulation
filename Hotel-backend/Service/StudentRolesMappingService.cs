@@ -12,7 +12,7 @@ namespace Service
 {
     public interface IStudentRolesMappingService
     {
-        Task<IList<StudentRoleMappingDto>> StudentRolesList();
+        Task<IList<Common.Dto.StudentRoleMappingDto>> StudentRolesList();
     }
     public class StudentRolesMappingService : IStudentRolesMappingService
     {
@@ -25,10 +25,10 @@ namespace Service
             _context = context;
         }
 
-        public async Task<IList<StudentRoleMappingDto>> StudentRolesList()
+        public async Task<IList<Common.Dto.StudentRoleMappingDto>> StudentRolesList()
         {
-            var users = _context.StudentRoleMapping.ToList();
-            return users.Adapt<IList<StudentRoleMappingDto>>();
+            var users = _context.StudentRoles.ToList();
+            return users.Adapt<IList<Common.Dto.StudentRoleMappingDto>>();
 
         }
     }

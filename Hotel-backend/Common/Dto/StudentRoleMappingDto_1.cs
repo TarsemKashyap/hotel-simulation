@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class StudentGroupMappingDto
+public class StudentRoleMappingDto
 {
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
     public int GroupId { get; set; }
     public StudentRoleMappingDto[] Roles { get; set; }
 
 }
 
-public class StudentGroupMappingDtooValidator : AbstractValidator<StudentGroupMappingDto>
+public class StudentGroupMappingDtooValidator : AbstractValidator<StudentRoleMappingDto>
 {
     public StudentGroupMappingDtooValidator()
     {

@@ -1,7 +1,7 @@
 import { StudentRoles } from "./Roles";
 
-export interface StudentGroupRoles {
+export interface StudentRolesMapping {
     studentId: string;
     GroupId: number;
-    roleIds: StudentRoles[];
+    Roles: any;
   }
