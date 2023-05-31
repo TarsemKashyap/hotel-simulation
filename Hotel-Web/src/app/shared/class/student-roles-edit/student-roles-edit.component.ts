@@ -60,13 +60,11 @@ export class StudentRolesEditComponent {
 
 
   Save() {
-  debugger
   const studentId = this.row.id;
   const groupId = this.selectedGroup;
   const roleIds = this.selectedRoles.map(role => {
     return { roleId: role }; // Construct an object with roleId property
   });
-  console.log("role",this.selectedRoles)
   const studentAssignRoles: StudentRolesMapping = {
     studentId: studentId,
     GroupId: groupId,

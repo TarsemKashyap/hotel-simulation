@@ -12,28 +12,32 @@
                     </div>
                     <section>
                         <ul class="custom_table mb-8">
-                            <li>
-                                <div class="grid grid-cols-2 border p-4">
-                                    <div class="text-left">First name</div>
-                                     <input class="text-right" [(ngModel)]="row.firstName">
-                                </div>
-                            </li>
-                            <li>
+                          <li>
+                            <div class="grid grid-cols-2 border p-4">
+                                <div class="text-left">Full name</div>
+                                <div class="text-right">{{ row.firstName }} {{ row.lastName }}</div>
+                            </div>
+                        </li>
+                          
+                            <!-- <li>
                                 <div class="grid grid-cols-2 border p-4">
                                     <div class="text-left">Last name</div>
                                     <input class="text-right" [(ngModel)]="row.lastName">
                                 </div>
-                            </li>
+                            </li> -->
                             <li>
                                 <div class="grid grid-cols-2 border p-4">
                                   <div class="text-left">Student Roles</div>
                                   <label class="text-right">
-                                    <mat-form-field appearance="fill" class="col-md-2">
-                                      <mat-label>Roles</mat-label>
-                                      <mat-select [(ngModel)]="selectedRoles" multiple>
-                                        <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.roleName }}</mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
+                                    <div class="w-100 dropdown_wrappetr">
+                                      <mat-form-field appearance="fill" class="col-md-2">
+                                        <mat-label>Roles</mat-label>
+                                        <mat-select [(ngModel)]="selectedRoles" multiple>
+                                          <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.roleName }}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    
                                   </label>
                                 </div>
                               </li>
@@ -41,17 +45,19 @@
                                 <div class="grid grid-cols-2 border p-4">
                                   <div class="text-left">Student Groups</div>
                                   <label class="text-right">
-                                    <mat-form-field appearance="fill" class="col-md-2">
-                                      <mat-label>Group</mat-label>
-                                      <mat-select [(ngModel)]="selectedGroup">
-                                        <mat-option *ngFor="let group of groups" [value]="group.groupId">{{ group.name }}</mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
+                                    <div class="dropdown_wrappetr">
+                                      <mat-form-field appearance="fill" class="col-md-2">
+                                        <mat-label>Group</mat-label>
+                                        <mat-select [(ngModel)]="selectedGroup">
+                                          <mat-option *ngFor="let group of groups" [value]="group.groupId">{{ group.name }}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
                                   </label>
                                 </div>
                               </li>
                             <li>
-                                <div class="add_btn">
+                                <div class="add_btn mt-3">
                                   <input
                                     type="submit"
                                     value="Save"

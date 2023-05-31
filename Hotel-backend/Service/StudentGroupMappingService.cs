@@ -41,7 +41,7 @@ namespace Service
                     })
                     .ToList();
 
-                classSessionEntity.AddRange(added);
+                 classSessionEntity.AddRange(added);
 
                 var groupId = new StudentClassMapping
                 {
