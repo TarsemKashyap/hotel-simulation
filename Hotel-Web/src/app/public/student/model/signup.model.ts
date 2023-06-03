@@ -25,3 +25,9 @@ export interface InstructorSignup extends Signup {
 export interface InstructorUpdate extends Person {
   institute: string;
 }
+
+export enum AppRoles {
+  Student="Student",
+  Admin="Admin",
+  Instructor="Instructor"
+}

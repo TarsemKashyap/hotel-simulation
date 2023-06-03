@@ -4,9 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {
-  RefreshTokennterceptor,
-} from './interceptors/http.interceptor';
+import { RefreshTokennterceptor } from './interceptors/http.interceptor';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SessionStore } from './store/session.store';
 import { AdminModule } from './admin';
@@ -16,6 +14,8 @@ import { MaterialModule } from './material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { publicModule } from './public/public.module';
+import { StudentModule } from './student';
+import { InstructorModule } from './instructor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +26,8 @@ import { publicModule } from './public/public.module';
     HttpClientModule,
     publicModule,
     AdminModule,
+    StudentModule,
+    InstructorModule,
     SharedModule,
     MaterialModule,
     AgGridModule,
@@ -50,7 +52,7 @@ import { publicModule } from './public/public.module';
     },
   ],
   bootstrap: [AppComponent],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}
 

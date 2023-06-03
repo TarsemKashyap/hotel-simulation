@@ -6,7 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { AccountService } from '../account.service';
-import { LoginModel, Signup } from '../../student/model/signup.model';
+import { AppRoles, LoginModel, Signup } from '../../student/model/signup.model';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -59,8 +59,16 @@ export class LoginComponent {
       password: this.form.value.password,
     };
     this.accountService.login(login).subscribe({
-      next: () => {
-        this.router.navigate(['/', 'admin']);
+      next: (data) => {
+        if (data.roles.indexOf(AppRoles.Admin)>-1) {
+          this.router.navigate(['/', 'admin']);
+        }
+       else if (data.roles.indexOf(AppRoles.Student)>-1) {
+          this.router.navigate(['/', 'student']);
+        }
+        else if (data.roles.indexOf(AppRoles.Instructor)>-1) {
+          this.router.navigate(['/', 'Instructor']);
+        }
       },
       error: (err) => {
         this.errorMessage = Object.values<string>(err.error).at(0);
