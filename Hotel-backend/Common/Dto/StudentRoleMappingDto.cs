@@ -11,7 +11,6 @@ namespace Common.Dto
     {
         public int Id { get; set; }
         public string RoleName { get; set; }
-        public ActionOnRecord Action { get; set; }
     }
 
     public class StudentRoleMappingDtoValidator : AbstractValidator<StudentRoleMappingDto>
@@ -20,7 +19,6 @@ namespace Common.Dto
         {
             RuleFor(x => x.Id).NotNull().NotEmpty();
             RuleFor(x => x.RoleName).NotNull().NotEmpty();
-
         }
     }
 }

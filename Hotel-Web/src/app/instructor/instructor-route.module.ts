@@ -9,7 +9,7 @@ import { ClassListComponent } from '../shared/class/class-list/class-list.compon
 
 const routes: Routes = [
   {
-    path: 'instructor',
+    path: '',
     title: '',
     component: InstructorDashboard,
     children: [

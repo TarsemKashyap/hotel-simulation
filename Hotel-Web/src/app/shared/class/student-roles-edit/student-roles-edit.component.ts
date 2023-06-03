@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { StudentGroupList, StudentRoles } from '../model/Roles';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { StudentRolesMapping } from '../model/StudentRoles';
+import { StudentRoleGroupAssign } from '../model/StudentRoles';
 
 @Component({
   selector: 'app-student-roles-edit',
@@ -17,7 +17,7 @@ export class StudentRolesEditComponent {
   studentId: string | undefined;
   data: StudentList| undefined;
   roles: StudentRoles[] = [];
-  selectedRoles: StudentRoles[] = [];
+  selectedRoles: number[] = [];
   selectedGroup: any;
   myForm!: FormGroup;
   groups: StudentGroupList[] = [];
@@ -62,13 +62,10 @@ export class StudentRolesEditComponent {
   Save() {
   const studentId = this.row.studentId;
   const groupId = this.selectedGroup;
-  const roleIds = this.selectedRoles.map(role => {
-    return { roleId: role }; // Construct an object with roleId property
-  });
-  const studentAssignRoles: StudentRolesMapping = {
+  const studentAssignRoles: StudentRoleGroupAssign = {
     studentId: studentId,
     GroupId: groupId,
-    Roles: roleIds
+    Roles: this.selectedRoles
   };
     this.classService.AddRoles(studentAssignRoles).subscribe(response => {
       console.log('API response:', response);

@@ -7,20 +7,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class StudentRoleMappingDto
+public class StudentRoleGroupAssign
 {
     public string StudentId { get; set; }
     public int GroupId { get; set; }
-    public int roleId { get; set; }
-
-    public StudentRoleMappingDto[] Roles { get; set; }
+    public int[] Roles { get; set; }
 
 }
 
-public class StudentGroupMappingDtooValidator : AbstractValidator<StudentRoleMappingDto>
+public class StudentRoleGroupAssignValidator : AbstractValidator<StudentRoleGroupAssign>
 {
-    public StudentGroupMappingDtooValidator()
+    public StudentRoleGroupAssignValidator()
     {
-
+        RuleFor(x => x.GroupId).NotEqual(0);
     }
 }

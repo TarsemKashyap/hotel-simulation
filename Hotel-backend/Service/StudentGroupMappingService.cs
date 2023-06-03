@@ -16,7 +16,7 @@ namespace Service
 {
     public interface IStudentGroupMappingService
     {
-        Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto studentRoleMappingDto);
+        Task<StudentRoleGroupAssign> UpsertStudentData(StudentRoleGroupAssign studentRoleMappingDto);
     }
     public class StudentGroupMappingService : IStudentGroupMappingService
     {
@@ -27,7 +27,7 @@ namespace Service
             _mapper = mapper;
             _context = context;
         }
-        public async Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto newRole)
+        public async Task<StudentRoleGroupAssign> UpsertStudentData(StudentRoleGroupAssign newRole)
         {
 
 
@@ -39,36 +39,33 @@ namespace Service
             await _context.SaveChangesAsync();
             if (!roleMapping.Any())
             {
-                var newRoles = newRole.Roles.Select(x => new StudentRoleMapping { RoleId = x.roleId, StudentId = newRole.StudentId });
+                var newRoles = newRole.Roles.Select(x => new StudentRoleMapping { RoleId = x, StudentId = newRole.StudentId });
                 _context.StudentRoleMapping.AddRange(newRoles);
                 await _context.SaveChangesAsync();
-                return newRoles.Adapt<StudentRoleMappingDto>();
+                return newRoles.Adapt<StudentRoleGroupAssign>();
             }
 
 
 
             // add new role
 
-            var uiRoles = newRole.Roles.Select(x => x.roleId);
             var dbRoles = roleMapping.Select(x => x.RoleId);
 
-            var newRolesToAdd = uiRoles.Except(dbRoles);
+            var newRolesToAdd = newRole.Roles.Except(dbRoles);
 
-            var addnewRoleObject = newRole.Roles.Where(x => newRolesToAdd.Contains(x.roleId)).
-                Select(x => new StudentRoleMapping { RoleId = x.roleId, StudentId = newRole.StudentId });
+            var addnewRoleObject = newRole.Roles.Where(x => newRolesToAdd.Contains(x)).
+                Select(x => new StudentRoleMapping { RoleId = x, StudentId = newRole.StudentId });
 
             _context.StudentRoleMapping.AddRange(addnewRoleObject);
             await _context.SaveChangesAsync();
 
             // remove roles
 
-            var dbRolesAfterUpdate = (await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId && !uiRoles.Contains(x.RoleId)).ToListAsync());
+            var dbRolesAfterUpdate = (await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId && !newRole.Roles.Contains(x.RoleId)).ToListAsync());
 
 
             _context.StudentRoleMapping.RemoveRange(dbRolesAfterUpdate);
             await _context.SaveChangesAsync();
-
-
 
 
             return newRole;

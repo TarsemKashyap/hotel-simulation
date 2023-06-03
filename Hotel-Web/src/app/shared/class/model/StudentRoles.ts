@@ -1,7 +1,6 @@
-import { StudentRoles } from "./Roles";
 
-export interface StudentRolesMapping {
+export interface StudentRoleGroupAssign {
     studentId: string;
     GroupId: number;
-    Roles: any;
+    Roles: number[];
   }
