@@ -9,12 +9,12 @@ import { ClassListComponent } from '../shared/class/class-list/class-list.compon
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'instructor',
     title: '',
     component: InstructorDashboard,
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'manage-class', component: ClassListComponent },
+      { path: 'class/manage-class', component: ClassListComponent },
     ],
     //canActivate: [canActivateHome],
   },

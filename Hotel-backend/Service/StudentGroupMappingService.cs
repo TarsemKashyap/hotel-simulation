@@ -5,6 +5,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,51 +27,51 @@ namespace Service
             _mapper = mapper;
             _context = context;
         }
-        public async Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto studentRoleMappingDto)
+        public async Task<StudentRoleMappingDto> UpsertStudentData(StudentRoleMappingDto newRole)
         {
-            var classSessionEntity = _context.StudentRoleMapping.Where(x => x.StudentId == studentRoleMappingDto.StudentId).ToList();
 
-            if (classSessionEntity.Count == 0)
+
+            var roleMapping = await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId).ToListAsync();
+
+            var classSession = await _context.StudentClassMapping.FirstOrDefaultAsync(x => x.StudentId == newRole.StudentId);
+            classSession.GroupId = newRole.GroupId;
+            _context.StudentClassMapping.Update(classSession);
+            await _context.SaveChangesAsync();
+            if (!roleMapping.Any())
             {
-                var added = studentRoleMappingDto.Roles
-                    .Where(x => !classSessionEntity.Any(y => y.RoleId == x.roleId))
-                    .Select(x => new StudentRoleMapping
-                    {
-                        RoleId = x.roleId,
-                        StudentId = studentRoleMappingDto.StudentId,
-                    })
-                    .ToList();
-
-                 classSessionEntity.AddRange(added);
-
-                var groupId = new StudentClassMapping
-                {
-                    StudentId = studentRoleMappingDto.StudentId,
-                    GroupId = studentRoleMappingDto.GroupId,
-                };
-
-                var existClassMapping = _context.StudentClassMapping.FirstOrDefault(x => x.StudentId == studentRoleMappingDto.StudentId);
-                if (existClassMapping != null)
-                {
-                    existClassMapping.GroupId = studentRoleMappingDto.GroupId;
-                    _context.StudentClassMapping.Update(existClassMapping);
-                }
-                /*else
-                {
-                    _context.StudentClassMapping.Add(groupId);
-                }*/
-
+                var newRoles = newRole.Roles.Select(x => new StudentRoleMapping { RoleId = x.roleId, StudentId = newRole.StudentId });
+                _context.StudentRoleMapping.AddRange(newRoles);
                 await _context.SaveChangesAsync();
-
-                var deleteItems = classSessionEntity
-                    .Where(x => !studentRoleMappingDto.Roles.Any(r => r.roleId == x.RoleId))
-                    .ToList();
-
-                _context.StudentRoleMapping.RemoveRange(deleteItems);
-                await _context.SaveChangesAsync();
+                return newRoles.Adapt<StudentRoleMappingDto>();
             }
 
-            return studentRoleMappingDto;
+
+
+            // add new role
+
+            var uiRoles = newRole.Roles.Select(x => x.roleId);
+            var dbRoles = roleMapping.Select(x => x.RoleId);
+
+            var newRolesToAdd = uiRoles.Except(dbRoles);
+
+            var addnewRoleObject = newRole.Roles.Where(x => newRolesToAdd.Contains(x.roleId)).
+                Select(x => new StudentRoleMapping { RoleId = x.roleId, StudentId = newRole.StudentId });
+
+            _context.StudentRoleMapping.AddRange(addnewRoleObject);
+            await _context.SaveChangesAsync();
+
+            // remove roles
+
+            var dbRolesAfterUpdate = (await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId && !uiRoles.Contains(x.RoleId)).ToListAsync());
+
+
+            _context.StudentRoleMapping.RemoveRange(dbRolesAfterUpdate);
+            await _context.SaveChangesAsync();
+
+
+
+
+            return newRole;
         }
 
     }

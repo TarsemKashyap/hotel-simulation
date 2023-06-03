@@ -67,7 +67,7 @@ export class LoginComponent {
           this.router.navigate(['/', 'student']);
         }
         else if (data.roles.indexOf(AppRoles.Instructor)>-1) {
-          this.router.navigate(['/', 'Instructor']);
+          this.router.navigate(['/', 'instructor']);
         }
       },
       error: (err) => {

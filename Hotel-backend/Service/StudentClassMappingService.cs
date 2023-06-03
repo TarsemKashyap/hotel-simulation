@@ -42,7 +42,8 @@ namespace Service
                     LastName = x.Student.LastName,  
                     Email = x.Student.Email,
                     ClassCode = x.Class.Code,
-                    Institute = x.Student.Institue
+                    Institute = x.Student.Institue,
+                    StudentId = x.StudentId
                     // add any other properties you want to include in the DTO
                 })
                 .ToList();
