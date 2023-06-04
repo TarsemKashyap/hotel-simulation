@@ -100,7 +100,7 @@ namespace Service
                     //////Insert Goal template for new month
                     ////////////////////////////////
                     ///
-                    //objFunMonth.CreateGoal(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateGoal(_context, monthID, currentQuarter, numberOfHotels);
                     ///////////////////////////////////////////////////////////////////
                     ///////////Insert sold room by channel table template for new month
                     ///////////////////////////////////////////////////////////////////
