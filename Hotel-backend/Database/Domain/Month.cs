@@ -10,6 +10,7 @@ public class Month
     public bool IsComplete { get; set; }
     public int ConfigId { get; set; }
     public virtual ClassSession Class { get; set; }
+    public virtual List<MarketingDecision> MarketingDecision { get; set; }
 
 
 }

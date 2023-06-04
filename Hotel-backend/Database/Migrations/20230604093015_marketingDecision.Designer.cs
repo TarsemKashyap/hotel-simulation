@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604093015_marketingDecision")]
+    partial class marketingDecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,25 +147,6 @@ namespace Database.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Attribute", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AttributeName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Attribute", (string)null);
                 });
 
             modelBuilder.Entity("ClassGroup", b =>
@@ -339,21 +322,6 @@ namespace Database.Migrations
                     b.ToTable("StudentSignupTemp", (string)null);
                 });
 
-            modelBuilder.Entity("DistributionChannels", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Channel")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DistributionChannels", (string)null);
-                });
-
             modelBuilder.Entity("MarketingDecision", b =>
                 {
                     b.Property<int>("ID")
@@ -395,21 +363,6 @@ namespace Database.Migrations
                     b.HasIndex("MonthID");
 
                     b.ToTable("MarketingDecision", (string)null);
-                });
-
-            modelBuilder.Entity("MarketingTechniques", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Techniques")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("MarketingTechniques", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -562,28 +515,6 @@ namespace Database.Migrations
                         .HasDatabaseName("IX_ClassGroup_ClassID");
 
                     b.ToTable("ClassMonth", (string)null);
-                });
-
-            modelBuilder.Entity("Segment", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SegmentName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Segment", (string)null);
                 });
 
             modelBuilder.Entity("Instructor", b =>

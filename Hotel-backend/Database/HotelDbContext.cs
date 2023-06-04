@@ -26,6 +26,11 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<MigrationScript> MigrationScripts { get; set; }
     public DbSet<StudentSignupTemp> StudentSignupTemp { get; set; }
     public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
+    public DbSet<Attribute> Attribute { get; set; }
+    public DbSet<Segment> Segment { get; set; }
+    public DbSet<MarketingTechniques> MarketingTechniques { get; set; }
+    public DbSet<DistributionChannels> DistributionChannels { get; set; }
+    public DbSet<MarketingDecision> MarketingDecision { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
        
