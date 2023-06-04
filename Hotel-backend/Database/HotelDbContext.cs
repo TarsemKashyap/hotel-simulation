@@ -22,7 +22,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<ClassSession> ClassSessions { get; set; }
     public DbSet<ClassGroup> ClassGroups { get; set; }
     public DbSet<Month> Months { get; set; }
-    public DbSet<AppUserRefreshToken> RefreshTokens {get;set;}
+    public DbSet<AppUserRefreshToken> RefreshTokens { get; set; }
     public DbSet<MigrationScript> MigrationScripts { get; set; }
     public DbSet<StudentSignupTemp> StudentSignupTemp { get; set; }
     public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
@@ -36,10 +36,13 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<RoomAllocation> RoomAllocation { get; set; }
     public DbSet<CustomerRawRating> CustomerRawRating { get; set; }
     public DbSet<WeightedAttributeRating> WeightedAttributeRating { get; set; }
+    public DbSet<IncomeState> IncomeState { get; set; }
+
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-       
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(), t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
 
         base.OnModelCreating(builder);
