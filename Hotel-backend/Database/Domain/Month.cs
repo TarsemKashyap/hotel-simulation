@@ -11,6 +11,7 @@ public class Month
     public int ConfigId { get; set; }
     public virtual ClassSession Class { get; set; }
     public virtual List<MarketingDecision> MarketingDecision { get; set; }
+    public virtual List<PriceDecision> PriceDecision { get; set; }
 
 
 }
