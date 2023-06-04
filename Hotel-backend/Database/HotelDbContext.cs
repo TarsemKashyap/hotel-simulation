@@ -37,6 +37,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<CustomerRawRating> CustomerRawRating { get; set; }
     public DbSet<WeightedAttributeRating> WeightedAttributeRating { get; set; }
     public DbSet<IncomeState> IncomeState { get; set; }
+    public DbSet<Goal> Goal { get; set; }
 
 
 

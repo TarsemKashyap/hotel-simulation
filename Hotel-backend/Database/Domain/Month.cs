@@ -17,6 +17,7 @@ public class Month
     public virtual List<CustomerRawRating> CustomerRawRating { get; set; }
     public virtual List<WeightedAttributeRating> WeightedAttributeRating { get; set; }
     public virtual List<IncomeState> IncomeState { get; set; }
+    public virtual List<Goal> Goal { get; set; }
 
 
 }
