@@ -14,6 +14,7 @@ public class Month
     public virtual List<PriceDecision> PriceDecision { get; set; }
     public virtual List<AttributeDecision> AttributeDecision { get; set; }
     public virtual List<RoomAllocation> RoomAllocation { get; set; }
+    public virtual List<CustomerRawRating> CustomerRawRating { get; set; }
 
 
 }

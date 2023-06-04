@@ -34,6 +34,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<PriceDecision> PriceDecision { get; set; }
     public DbSet<AttributeDecision> AttributeDecision { get; set; }
     public DbSet<RoomAllocation> RoomAllocation { get; set; }
+    public DbSet<CustomerRawRating> CustomerRawRating { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
