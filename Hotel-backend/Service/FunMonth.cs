@@ -484,6 +484,8 @@ namespace Service
             }
             return 1;
         }
+        
+
         public int CreateRoomAllocation1(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
             int index = 1;
@@ -531,6 +533,7 @@ namespace Service
             }
             return 1;
         }
+        */
         public int CreateRoomAllocation(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
             // Pending For RoomAllocation Value 
@@ -552,6 +555,7 @@ namespace Service
             }
             return 1;
         }
+        /*
         public int CreateCustomerRawRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
             int index = 1;

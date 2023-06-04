@@ -63,7 +63,7 @@ namespace Service
                     if (currentQuarter == 0)
                     {
 
-                        //objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
+                        objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
 
 
                     }
@@ -72,7 +72,7 @@ namespace Service
                         // Pending Work 
                     }
 
-                   // objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
+                   objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
 
                     //objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
 
