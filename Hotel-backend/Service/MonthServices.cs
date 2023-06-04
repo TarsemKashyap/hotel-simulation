@@ -80,7 +80,7 @@ namespace Service
                     /////Create Weighted Attribute Table for New Quarter
                     /////////////////////////////////////////////////
 
-                    // objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
 
 
                     ////////////////////////////////////////////////
@@ -90,7 +90,7 @@ namespace Service
 
                     if (currentQuarter == 0)
                     {
-                        // objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
+                         objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
                     }
                     else
                     {
