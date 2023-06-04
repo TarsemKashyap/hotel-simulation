@@ -13,6 +13,7 @@ public class Month
     public virtual List<MarketingDecision> MarketingDecision { get; set; }
     public virtual List<PriceDecision> PriceDecision { get; set; }
     public virtual List<AttributeDecision> AttributeDecision { get; set; }
+    public virtual List<RoomAllocation> RoomAllocation { get; set; }
 
 
 }
