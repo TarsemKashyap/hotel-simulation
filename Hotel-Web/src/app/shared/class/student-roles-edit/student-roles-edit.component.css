@@ -1,0 +1,13 @@
+.mat-form-field.mat-form-field-multiple .mat-select {
+  border-color: red;
+}
+
+.mat-form-field.mat-form-field-multiple .mat-select-trigger {
+  color: red;
+}
+
+
+.dropdown_wrappetr .mat-mdc-form-field{
+  display: block !important;
+  width: 100% !important;
+  }

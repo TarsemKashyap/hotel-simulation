@@ -35,7 +35,6 @@ namespace Api.Controllers
             IPaymentService paymentService,
             IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
 
-
       
         {
             _validator = validator;

@@ -1,0 +1,51 @@
+<button mat-button [matMenuTriggerFor]="menu">Menu</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>Item 1</button>
+  <button mat-menu-item>Item 2</button>
+</mat-menu>
+
+<div class="mat-elevation-z8">
+    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>First Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Last name</th>
+          <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="email">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="institute">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Institute</th>
+            <td mat-cell *matCellDef="let element">{{ element.institute }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="classCode">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>ClassCode</th>
+            <td mat-cell *matCellDef="let element">{{ element.classCode }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>ClassName</th>
+            <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <button (click)="editClick(row)">
+                Manage Roles
+                <!-- <mat-icon class="text-gray-500  hover:text-primary" matRipple (click)="editClick(row)"></mat-icon> -->
+              </button>
+            </td>
+          </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+  </div>

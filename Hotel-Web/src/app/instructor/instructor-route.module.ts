@@ -14,7 +14,7 @@ const routes: Routes = [
     component: InstructorDashboard,
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'manage-class', component: ClassListComponent },
+      { path: 'class/manage-class', component: ClassListComponent },
     ],
     //canActivate: [canActivateHome],
   },

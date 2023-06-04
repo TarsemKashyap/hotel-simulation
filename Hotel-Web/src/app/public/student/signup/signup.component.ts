@@ -9,13 +9,13 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { StudentsignupService } from './studentsignup.service';
 import {
   StudentPaymentSignUp,
   StudentSignup,
 } from '../model/studentSignup.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BadReqeustResponse } from 'src/app/shared/badRequest';
+import { StudentsignupService } from './studentsignup.service';
 
 @Component({
   selector: 'signup',
@@ -53,7 +53,6 @@ export class SignupComponent {
   }
 
   private createForm(): FormGroup {
-    debugger;
     return this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -81,7 +80,7 @@ export class SignupComponent {
   }
 
   onSubmit(): void {
-    debugger;
+  
     this.submitted = true;
     if (this.form.invalid) {
       return;
@@ -97,7 +96,7 @@ export class SignupComponent {
       totalAmount:'',
     };
     if (!this.referenceId) {
-      this.registerStudent(sigup);
+     this.registerStudent(sigup);
     } else {
       this.studentAccount(sigup);
     }
@@ -137,7 +136,7 @@ export class SignupComponent {
       next: (data: StudentPaymentSignUp) => {
         this.form.patchValue(data);
       },
-      error: (error) => {
+      error: (error: { status: number; }) => {
         if (error.status === 400) {
           this.router.navigate(['login']);
         }

@@ -69,7 +69,6 @@ namespace Service
         public async Task<StudentSignupTempDto> GetByRefrence(string refrenceId)
         {
             var studentSignup = _context.StudentSignupTemp.Where(x => x.Reference == refrenceId).AsNoTracking().SingleOrDefault();
-            
             if (studentSignup == null)
                 throw new ValidationException("student not found for given student Refrence");
             return studentSignup.Adapt<StudentSignupTempDto>();

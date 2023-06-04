@@ -146,4 +146,8 @@ export class ClassEditComponent {
     this.submitted = false;
     this.form.reset();
   }
+
+  studentList() {
+    this.router.navigate(['class/student-list', this.classId]);
+  }
 }

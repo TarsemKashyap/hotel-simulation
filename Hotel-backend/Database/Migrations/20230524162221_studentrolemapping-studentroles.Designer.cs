@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230524162221_studentrolemapping-studentroles")]
+    partial class studentrolemappingstudentroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,17 +239,12 @@ namespace Database.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("StudentId")
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("StudentId");
 
@@ -300,27 +297,7 @@ namespace Database.Migrations
                         new
                         {
                             Id = 2,
-                            RoleName = "Retail and Operations Manager"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoleName = "F&B Manager"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RoleName = "General Manager"
-                        },
-                        new
-                        {
-                            Id = 5,
                             RoleName = "Room Manager"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            RoleName = "Marketing Manager"
                         });
                 });
 
@@ -509,7 +486,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 6, 3, 11, 31, 57, 427, DateTimeKind.Local).AddTicks(2799));
+                        .HasDefaultValue(new DateTime(2023, 5, 24, 21, 52, 21, 288, DateTimeKind.Local).AddTicks(180));
 
                     b.HasKey("ScriptId");
 
@@ -619,18 +596,11 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClassGroup", "ClassGroup")
-                        .WithMany("StudentClassMappings")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Student", "Student")
                         .WithMany("StudentClassMappings")
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Class");
-
-                    b.Navigation("ClassGroup");
 
                     b.Navigation("Student");
                 });
@@ -746,8 +716,6 @@ namespace Database.Migrations
 
             modelBuilder.Entity("ClassGroup", b =>
                 {
-                    b.Navigation("StudentClassMappings");
-
                     b.Navigation("StudentGroupMapping");
                 });
 

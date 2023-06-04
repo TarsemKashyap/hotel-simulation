@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520070801_studentgroupmapping-table")]
+    partial class studentgroupmappingtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,7 +239,7 @@ namespace Database.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
@@ -246,8 +248,6 @@ namespace Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("StudentId");
 
@@ -260,23 +260,27 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClassGroupGroupId")
-                        .HasColumnType("int");
-
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("StudentRoleMappingId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassGroupGroupId");
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentRoleMappingId");
 
                     b.ToTable("StudentGroupMapping");
                 });
 
-            modelBuilder.Entity("Database.Domain.StudentRoles", b =>
+            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -289,7 +293,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StudentRoles", (string)null);
+                    b.ToTable("StudentRoleMapping", (string)null);
 
                     b.HasData(
                         new
@@ -300,27 +304,7 @@ namespace Database.Migrations
                         new
                         {
                             Id = 2,
-                            RoleName = "Retail and Operations Manager"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoleName = "F&B Manager"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RoleName = "General Manager"
-                        },
-                        new
-                        {
-                            Id = 5,
                             RoleName = "Room Manager"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            RoleName = "Marketing Manager"
                         });
                 });
 
@@ -509,7 +493,7 @@ namespace Database.Migrations
                     b.Property<DateTime>("ExecutedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2023, 6, 3, 11, 31, 57, 427, DateTimeKind.Local).AddTicks(2799));
+                        .HasDefaultValue(new DateTime(2023, 5, 20, 12, 38, 0, 914, DateTimeKind.Local).AddTicks(857));
 
                     b.HasKey("ScriptId");
 
@@ -545,28 +529,6 @@ namespace Database.Migrations
                         .HasDatabaseName("IX_ClassGroup_ClassID");
 
                     b.ToTable("ClassMonth", (string)null);
-                });
-
-            modelBuilder.Entity("StudentRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentRoleMapping", (string)null);
                 });
 
             modelBuilder.Entity("Instructor", b =>
@@ -619,27 +581,34 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClassGroup", "ClassGroup")
-                        .WithMany("StudentClassMappings")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Student", "Student")
                         .WithMany("StudentClassMappings")
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Class");
 
-                    b.Navigation("ClassGroup");
-
                     b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Database.Domain.StudentGroupMapping", b =>
                 {
-                    b.HasOne("ClassGroup", null)
+                    b.HasOne("ClassGroup", "ClassGroup")
                         .WithMany("StudentGroupMapping")
-                        .HasForeignKey("ClassGroupGroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Student", "Student")
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("Database.Domain.StudentRoleMapping", null)
+                        .WithMany("StudentGroupMapping")
+                        .HasForeignKey("StudentRoleMappingId");
+
+                    b.Navigation("ClassGroup");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -704,23 +673,6 @@ namespace Database.Migrations
                     b.Navigation("Class");
                 });
 
-            modelBuilder.Entity("StudentRoleMapping", b =>
-                {
-                    b.HasOne("Database.Domain.StudentRoles", "StudentRoles")
-                        .WithMany("StudentRoleMappings")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Student", "Student")
-                        .WithMany("StudentRoleMapping")
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("StudentRoles");
-                });
-
             modelBuilder.Entity("Instructor", b =>
                 {
                     b.HasOne("AppUser", null)
@@ -746,8 +698,6 @@ namespace Database.Migrations
 
             modelBuilder.Entity("ClassGroup", b =>
                 {
-                    b.Navigation("StudentClassMappings");
-
                     b.Navigation("StudentGroupMapping");
                 });
 
@@ -760,16 +710,16 @@ namespace Database.Migrations
                     b.Navigation("StudentClassMappings");
                 });
 
-            modelBuilder.Entity("Database.Domain.StudentRoles", b =>
+            modelBuilder.Entity("Database.Domain.StudentRoleMapping", b =>
                 {
-                    b.Navigation("StudentRoleMappings");
+                    b.Navigation("StudentGroupMapping");
                 });
 
             modelBuilder.Entity("Student", b =>
                 {
                     b.Navigation("StudentClassMappings");
 
-                    b.Navigation("StudentRoleMapping");
+                    b.Navigation("StudentGroupMapping");
                 });
 #pragma warning restore 612, 618
         }
