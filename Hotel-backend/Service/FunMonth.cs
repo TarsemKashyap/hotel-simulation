@@ -706,7 +706,7 @@ namespace Service
                   }
                   return 1;
               }
-        /*
+      
             public int CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
             {
                 int index = 1;
@@ -835,7 +835,7 @@ namespace Service
                 }
                 return 1;
             }
-            */
+           
         public int UpdateMonth(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 

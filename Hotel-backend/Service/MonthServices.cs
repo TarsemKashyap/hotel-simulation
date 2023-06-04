@@ -105,10 +105,10 @@ namespace Service
                     ///////////Insert sold room by channel table template for new month
                     ///////////////////////////////////////////////////////////////////
                     ///
-                   // objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
                     if (currentQuarter == 0)
                     {
-                        //objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
+                        objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
                     }
                     else
                     {

@@ -38,6 +38,8 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<WeightedAttributeRating> WeightedAttributeRating { get; set; }
     public DbSet<IncomeState> IncomeState { get; set; }
     public DbSet<Goal> Goal { get; set; }
+    public DbSet<BalanceSheet> BalanceSheet { get; set; }
+    public DbSet<SoldRoomByChannel> SoldRoomByChannel { get; set; }
 
 
 
