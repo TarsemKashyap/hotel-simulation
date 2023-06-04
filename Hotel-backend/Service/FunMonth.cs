@@ -396,6 +396,7 @@ namespace Service
             }
             return 1;
         }
+        */
         public int CreateAttributeDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
@@ -427,6 +428,7 @@ namespace Service
             }
             return 1;
         }
+        /*
         public int CreateAttributeDecision1(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
