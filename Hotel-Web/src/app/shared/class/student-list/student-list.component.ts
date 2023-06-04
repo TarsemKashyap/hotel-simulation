@@ -48,4 +48,8 @@ export class StudentListComponent {
     });
     
   }
+
+  classEdit() {
+    this.router.navigate([`class/edit/${this.classId}`]);
+  }
 }

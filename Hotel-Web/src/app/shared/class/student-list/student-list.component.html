@@ -1,7 +1,6 @@
-<button mat-button [matMenuTriggerFor]="menu">Menu</button>
-<mat-menu #menu="matMenu">
-  <button mat-menu-item>Item 1</button>
-  <button mat-menu-item>Item 2</button>
+<button class="align-right" mat-button [matMenuTriggerFor]="afterMenu">After</button>
+<mat-menu #afterMenu="matMenu" xPosition="before">
+  <button (click)="classEdit()" style="font-size: 10px;" mat-menu-item>Class Overview</button>
 </mat-menu>
 
 <div class="mat-elevation-z8">

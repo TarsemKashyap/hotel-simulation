@@ -51,7 +51,6 @@ namespace Service
                 studentSignupTemp.PaymentDate = DateTime.Now;
 
                 StudentSignupTemp signup = _mapper.Map<StudentSignupTempDto, StudentSignupTemp>(studentSignupTemp);
-                
                 _context.Entry(signup).State = EntityState.Detached;
                 var result = _context.Set<StudentSignupTemp>().Update(signup);
 

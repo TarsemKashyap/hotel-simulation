@@ -65,7 +65,6 @@ namespace Api.Controllers
         {
             var studentAssignRole = await _studentGroupMappingService.GetById(studentId);
             return Ok(studentAssignRole);
-
         }
     }
 }

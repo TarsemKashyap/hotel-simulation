@@ -6,6 +6,7 @@ import { canActivateHome } from '../shared/auth.gurad';
 import { ChangePasswordComponent } from '../admin';
 import { InstructorDashboard } from './dashboard/instructor-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
+import { AddRemovedClassComponent } from '../shared/class/add-removed-class/add-removed-class.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'class/manage-class', component: ClassListComponent },
+      { path: 'class/add-change-class', component: AddRemovedClassComponent },
     ],
     //canActivate: [canActivateHome],
   },

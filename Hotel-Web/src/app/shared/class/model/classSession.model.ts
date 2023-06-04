@@ -25,7 +25,9 @@ export enum Action {
   Removed = 2
 }
 
-
+export interface ClassMapping {
+  title : string;
+}
 
 export interface ClassSessionUpdate extends ClassSession {
 

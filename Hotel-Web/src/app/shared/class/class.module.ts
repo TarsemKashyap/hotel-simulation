@@ -17,10 +17,11 @@ import { MatTableModule } from '@angular/material/table';
 import { StudentRolesEditComponent } from './student-roles-edit/student-roles-edit.component';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatSelectModule } from '@angular/material/select';
+import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.component';
 
 
 @NgModule({
-  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent, StudentListComponent, StudentRolesEditComponent,GridActionComponent],
+  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent, StudentListComponent, StudentRolesEditComponent,GridActionComponent, AddRemovedClassComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
