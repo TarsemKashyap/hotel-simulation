@@ -57,7 +57,7 @@ namespace Service
 
 
                     objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    //objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
 
 
                     if (currentQuarter == 0)

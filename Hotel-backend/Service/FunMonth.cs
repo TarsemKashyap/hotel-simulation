@@ -217,7 +217,7 @@ namespace Service
 
             return 1;
         }
-        /*
+
         public async Task<int> CreatePriceDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
@@ -257,6 +257,7 @@ namespace Service
             }
             return 1;
         }
+        /*
         public int CreatePriceDecision1(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
             int index = 1;
