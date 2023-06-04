@@ -17,6 +17,7 @@ namespace Service
     public interface IStudentGroupMappingService
     {
         Task<StudentRoleGroupAssign> UpsertStudentData(StudentRoleGroupAssign studentRoleMappingDto);
+        Task<List<StudentRoleGroupAssign>> GetById(string id);
     }
     public class StudentGroupMappingService : IStudentGroupMappingService
     {
@@ -70,6 +71,21 @@ namespace Service
 
             return newRole;
         }
+
+        public async Task<List<StudentRoleGroupAssign>> GetById(string id)
+        {
+            var appUsers = await _context.StudentRoleMapping
+                .Where(x => x.StudentId == id)
+                .ToListAsync();
+
+            if (appUsers == null || appUsers.Count == 0)
+                throw new ValidationException("student not found for given id");
+
+            var mappedAppUsers = appUsers.Adapt<List<StudentRoleGroupAssign>>();
+
+            return mappedAppUsers;
+        }
+
 
     }
 }

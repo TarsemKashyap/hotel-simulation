@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
     public interface IStudentRolesMappingService
     {
-        Task<IList<Common.Dto.StudentRoleMappingDto>> StudentRolesList();
+        Task<StudentRoleGroupRequest> StudentRolesList(string studentId, int classId);
     }
     public class StudentRolesMappingService : IStudentRolesMappingService
     {
@@ -25,10 +27,22 @@ namespace Service
             _context = context;
         }
 
-        public async Task<IList<Common.Dto.StudentRoleMappingDto>> StudentRolesList()
+        public async Task<StudentRoleGroupRequest> StudentRolesList(string studentId, int classId)
         {
-            var users = _context.StudentRoles.ToList();
-            return users.Adapt<IList<Common.Dto.StudentRoleMappingDto>>();
+            var roles = _context.StudentRoles.ProjectToType<StudentRoleDto>().ToList();
+            var groups = _context.ClassGroups.Where(x => x.ClassId == classId).ProjectToType<ClassGroupDto>().ToList();
+            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Select(x => x.RoleId).ToList();
+            var selectedGrupid = _context.StudentClassMapping.FirstOrDefault(x => x.StudentId == studentId);
+
+            var request = new StudentRoleGroupRequest
+            {
+                StudentRole = roles,
+                ClassGroups = groups,
+                SelectedRoles = roles.Where(x => selectedRoles.Contains(x.Id)).ToList(),
+                SelectedGroup = groups.FirstOrDefault(x => x.GroupId == selectedGrupid.GroupId)
+            };
+
+            return request;
 
         }
     }

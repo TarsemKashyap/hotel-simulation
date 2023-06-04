@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    public class StudentRoleMappingDto
+    public class StudentRoleDto
     {
         public int Id { get; set; }
         public string RoleName { get; set; }
     }
 
-    public class StudentRoleMappingDtoValidator : AbstractValidator<StudentRoleMappingDto>
+    public class StudentRoleMappingDtoValidator : AbstractValidator<StudentRoleDto>
     {
         public StudentRoleMappingDtoValidator()
         {

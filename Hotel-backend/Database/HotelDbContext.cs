@@ -20,6 +20,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
 
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
+    public DbSet<Student> Students { get; set; }
     public DbSet<ClassSession> ClassSessions { get; set; }
     public DbSet<ClassGroup> ClassGroups { get; set; }
     public DbSet<Month> Months { get; set; }

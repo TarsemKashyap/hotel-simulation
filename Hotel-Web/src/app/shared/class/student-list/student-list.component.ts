@@ -41,11 +41,10 @@ export class StudentListComponent {
   }
 
   editClick(row: StudentList) {
-    debugger
     const dialogRef = this.dialog.open(StudentRolesEditComponent, {
-      minWidth: '400px',
-      minHeight: '200px',
-      data: row
+      minWidth: '300px',
+      minHeight: '100px',
+      data: Object.assign({},row,{classId:this.classId})
     });
     
   }

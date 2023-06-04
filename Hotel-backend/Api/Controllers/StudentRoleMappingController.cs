@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Service;
@@ -25,10 +26,10 @@ namespace Api.Controllers
             _studentGroupMappingService = studentGroupMappingService;
 
         }
-        [HttpGet("list")]
-        public async Task<ActionResult> StudentRoleList()
+        [HttpPost("list")]
+        public async Task<ActionResult> StudentRoleList(StudentAssignmentRequestParam parms)
         {
-            var studentRoleResult = await _studentRolesMappingService.StudentRolesList();
+            var studentRoleResult = await _studentRolesMappingService.StudentRolesList(parms.StudentId, parms.ClassId);
             return Ok(studentRoleResult);
         }
 
@@ -57,6 +58,14 @@ namespace Api.Controllers
         {
             var studentMapping = await _studentGroupMappingService.UpsertStudentData(studentGroupMappingDto);
             return Ok(studentMapping);
+        }
+
+        [HttpGet("{studentId}")]
+        public async Task<ActionResult> GetById(string studentId)
+        {
+            var studentAssignRole = await _studentGroupMappingService.GetById(studentId);
+            return Ok(studentAssignRole);
+
         }
     }
 }

@@ -6,7 +6,7 @@ import { SessionStore } from 'src/app/store';
 import { ClassSession } from '.';
 import { StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
-import { StudentGroupList, StudentRoles } from './model/Roles';
+import { StudentGroupList, StudentRoleGroupRequest, StudentRoles } from './model/Roles';
 import { StudentRoleGroupAssign } from './model/StudentRoles';
 
 @Injectable({
@@ -50,8 +50,8 @@ export class ClassService {
     );
   }
 
-  Roleslist(): Observable<StudentRoles[]> {
-    return this.httpClient.get<StudentRoles[]>('roleMapping/list');
+  Roleslist(req:{studentId : string, classId : number}): Observable<StudentRoleGroupRequest> {
+    return this.httpClient.post<StudentRoleGroupRequest>('roleMapping/list',req);
   }
 
   Grouplist(): Observable<StudentGroupList[]> {
@@ -60,5 +60,11 @@ export class ClassService {
 
   AddRoles(roles: StudentRoleGroupAssign): Observable<any> {
     return this.httpClient.post('roleMapping', roles);
+  }
+
+  getRoles(studentId: string): Observable<any> {
+    return this.httpClient.get<StudentRoleGroupAssign[]>(
+      `roleMapping/${studentId}`
+    );
   }
 }

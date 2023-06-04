@@ -12,6 +12,7 @@ public class StudentRoleGroupAssign
     public string StudentId { get; set; }
     public int GroupId { get; set; }
     public int[] Roles { get; set; }
+    public int RoleId { get; set; }
 
 }
 
