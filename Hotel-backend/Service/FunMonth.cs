@@ -555,14 +555,14 @@ namespace Service
             }
             return 1;
         }
-        /*
+
         public int CreateCustomerRawRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
-            int index = 1;
-            int groupID = index;
+
+
             List<SegmentDto> lstSegment = GetSegment(context);
             List<AttributeDto> lstAttribute = GetAttribute(context);
-            while (index < noOfHotels + 1)
+            for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var attributeRow in lstAttribute)
                 {
@@ -570,270 +570,271 @@ namespace Service
                     {
 
                         IQueryable<CustomerRawRating> query = context.CustomerRawRating;
-                        var obj1 = new CustomerRawRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = groupID, Attribute = attributeRow.AttributeName, Segment = segmentRow.SegmentName, RawRating = 0 };
+                        var obj1 = new CustomerRawRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = i, Attribute = attributeRow.AttributeName, Segment = segmentRow.SegmentName, RawRating = 0 };
                         context.CustomerRawRating.Add(obj1);
                         int status = context.SaveChanges();
                     }
                 }
-                index++;
+
             }
 
 
 
             return 1;
         }
-        public int CreateWeightedAttributeRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
-        {
+        /*
+      public int CreateWeightedAttributeRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+      {
 
-            List<SegmentDto> lstSegment = GetSegment(context);
-            // List<AttributeDto> lstAttribute = GetAttribute(context);
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
-            {
-                foreach (var segmentRow in lstSegment)
-                {
-
-
-                    var obj1 = new WeightedAttributeRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = groupID, Segment = segmentRow.SegmentName, CustomerRating = 0, ActualDemand = 0 };
-                    context.WeightedAttributeRating.Add(obj1);
-                    int status = context.SaveChanges();
-                }
-                index++;
-            }
-            return 1;
-        }
-        public int CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
-        {
-
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
-            {
-
-                var obj1 = new IncomeState()
-                {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter + 1,
-                    GroupID = groupID,
-                    Room1 = 814530,
-                    FoodB = 485585,
-                    FoodB1 = 1000000,
-                    FoodB2 = 1000000,
-                    FoodB3 = 1000000,
-                    FoodB4 = 1000000,
-                    FoodB5 = 1000000,
-                    Other = 1000000,
-                    Other1 = 1000000,
-                    Other2 = 1000000,
-                    Other3 = 1000000,
-                    Other4 = 1000000,
-                    Other5 = 1000000,
-                    Other6 = 1000000,
-                    Rent = 1000000,
-                    TotReven = 1000000,
-                    Room = 1000000,
-                    Food2B = 1000000,
-                    Other7 = 1000000,
-                    TotDeptIncom = 1000000,
-                    UndisExpens1 = 1000000,
-                    UndisExpens2 = 1000000,
-                    UndisExpens3 = 1000000,
-                    UndisExpens4 = 1000000,
-                    UndisExpens5 = 1000000,
-                    UndisExpens6 = 1000000,
-                    GrossProfit = 1000000,
-                    MgtFee = 1000000,
-                    IncomBfCharg = 1000000,
-                    Property = 1000000,
-                    Insurance = 1000000,
-                    PropDepreciationerty = 1000000,
-                    TotCharg = 1000000,
-                    NetIncomBfTAX = 1000000,
-                    Replace = 1000000,
-                    AjstNetIncom = 1000000,
-                    IncomTAX = 1000000,
-                    NetIncom = 1000000
-                };
-                context.IncomeState.Add(obj1);
-                int status = context.SaveChanges();
-
-                index++;
-            }
-            return 1;
-        }
-
-        public int CreateGoal(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
-        {
+          List<SegmentDto> lstSegment = GetSegment(context);
+          // List<AttributeDto> lstAttribute = GetAttribute(context);
+          int index = 1;
+          int groupID = index;
+          while (index < noOfHotels + 1)
+          {
+              foreach (var segmentRow in lstSegment)
+              {
 
 
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
-            {
-                IQueryable<Goal> query = context.Goal;
-                var obj1 = new Goal()
-                {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter + 1,
-                    GroupID = groupID,
-                    OccupancyM = 0,
-                    OccupancyY = 0,
-                    RoomRevenM = 0,
-                    RoomRevenY = 0,
-                    TotalRevenM = 0,
-                    TotalRevenY = 0,
-                    ShareRevenM = 0,
-                    ShareRevenY = 0,
-                    ShareRoomM = 0,
-                    ShareRoomY = 0,
-                    RevparM = 0,
-                    RevparY = 0,
-                    ADRM = 0,
-                    ADRY = 0,
-                    YieldMgtM = 0,
-                    YieldMgtY = 0,
-                    MgtEfficiencyM = 0,
-                    MgtEfficiencyY = 0,
-                    ProfitMarginM = 0,
-                    ProfitMarginY = 0
-                };
-                context.Goal.Add(obj1);
-                int status = context.SaveChanges();
+                  var obj1 = new WeightedAttributeRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = groupID, Segment = segmentRow.SegmentName, CustomerRating = 0, ActualDemand = 0 };
+                  context.WeightedAttributeRating.Add(obj1);
+                  int status = context.SaveChanges();
+              }
+              index++;
+          }
+          return 1;
+      }
+      public int CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+      {
 
-                index++;
-            }
-            return 1;
-        }
-        public int CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
-        {
-            int index = 1;
-            int groupID = index;
+          int index = 1;
+          int groupID = index;
+          while (index < noOfHotels + 1)
+          {
 
-            int i = 1;
-            string segmentName = null;
-            string channelName = null;
-            bool weekdayIndicator = true;
+              var obj1 = new IncomeState()
+              {
+                  MonthID = monthID,
+                  QuarterNo = currentQuarter + 1,
+                  GroupID = groupID,
+                  Room1 = 814530,
+                  FoodB = 485585,
+                  FoodB1 = 1000000,
+                  FoodB2 = 1000000,
+                  FoodB3 = 1000000,
+                  FoodB4 = 1000000,
+                  FoodB5 = 1000000,
+                  Other = 1000000,
+                  Other1 = 1000000,
+                  Other2 = 1000000,
+                  Other3 = 1000000,
+                  Other4 = 1000000,
+                  Other5 = 1000000,
+                  Other6 = 1000000,
+                  Rent = 1000000,
+                  TotReven = 1000000,
+                  Room = 1000000,
+                  Food2B = 1000000,
+                  Other7 = 1000000,
+                  TotDeptIncom = 1000000,
+                  UndisExpens1 = 1000000,
+                  UndisExpens2 = 1000000,
+                  UndisExpens3 = 1000000,
+                  UndisExpens4 = 1000000,
+                  UndisExpens5 = 1000000,
+                  UndisExpens6 = 1000000,
+                  GrossProfit = 1000000,
+                  MgtFee = 1000000,
+                  IncomBfCharg = 1000000,
+                  Property = 1000000,
+                  Insurance = 1000000,
+                  PropDepreciationerty = 1000000,
+                  TotCharg = 1000000,
+                  NetIncomBfTAX = 1000000,
+                  Replace = 1000000,
+                  AjstNetIncom = 1000000,
+                  IncomTAX = 1000000,
+                  NetIncom = 1000000
+              };
+              context.IncomeState.Add(obj1);
+              int status = context.SaveChanges();
 
-            while (i < noOfHotels + 1)
-            {
-                for (int j = 1; j <= 8; j++)
-                {
-                    for (int k = 1; k <= 4; k++)
-                    {
-                        for (int w = 0; w <= 1; w++)
-                        {
-                            if (j == 1)
-                                segmentName = "Business";
-                            if (j == 2)
-                                segmentName = "Small Business";
-                            if (j == 3)
-                                segmentName = "Corporate contract";
-                            if (j == 4)
-                                segmentName = "Families";
-                            if (j == 5)
-                                segmentName = "Afluent Mature Travelers";
-                            if (j == 6)
-                                segmentName = "International leisure travelers";
-                            if (j == 7)
-                                segmentName = "Corporate/Business Meetings";
-                            if (j == 8)
-                                segmentName = "Association Meetings";
-                            if (k == 1)
-                                channelName = "Direct";
-                            if (k == 2)
-                                channelName = "Travel Agent";
-                            if (k == 3)
-                                channelName = "Online Travel Agent";
-                            if (k == 4)
-                                channelName = "Opaque";
-                            if (w == 0)
-                                weekdayIndicator = false;
-                            if (w == 1)
-                                weekdayIndicator = true;
+              index++;
+          }
+          return 1;
+      }
 
-                            var obj1 = new SoldRoomByChannel()
-                            {
-                                MonthID = monthID,
-                                QuarterNo = currentQuarter + 1,
-                                GroupID = groupID,
-                                Segment = segmentName,
-                                Channel = channelName,
-                                Weekday = weekdayIndicator,
-                                SoldRoom = 0,
-                                Revenue = 0,
-                                Cost = 0
-
-                            };
-                            context.SoldRoomByChannel.Add(obj1);
-                            int status = context.SaveChanges();
-
-                        }
-                    }
-                }
-                ////Go to next group
-                i++;
-            }
-            return 1;
-        }
-
-        public int CreateBalanceSheet(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
-        {
+      public int CreateGoal(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+      {
 
 
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
-            {
+          int index = 1;
+          int groupID = index;
+          while (index < noOfHotels + 1)
+          {
+              IQueryable<Goal> query = context.Goal;
+              var obj1 = new Goal()
+              {
+                  MonthID = monthID,
+                  QuarterNo = currentQuarter + 1,
+                  GroupID = groupID,
+                  OccupancyM = 0,
+                  OccupancyY = 0,
+                  RoomRevenM = 0,
+                  RoomRevenY = 0,
+                  TotalRevenM = 0,
+                  TotalRevenY = 0,
+                  ShareRevenM = 0,
+                  ShareRevenY = 0,
+                  ShareRoomM = 0,
+                  ShareRoomY = 0,
+                  RevparM = 0,
+                  RevparY = 0,
+                  ADRM = 0,
+                  ADRY = 0,
+                  YieldMgtM = 0,
+                  YieldMgtY = 0,
+                  MgtEfficiencyM = 0,
+                  MgtEfficiencyY = 0,
+                  ProfitMarginM = 0,
+                  ProfitMarginY = 0
+              };
+              context.Goal.Add(obj1);
+              int status = context.SaveChanges();
+
+              index++;
+          }
+          return 1;
+      }
+      public int CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+      {
+          int index = 1;
+          int groupID = index;
+
+          int i = 1;
+          string segmentName = null;
+          string channelName = null;
+          bool weekdayIndicator = true;
+
+          while (i < noOfHotels + 1)
+          {
+              for (int j = 1; j <= 8; j++)
+              {
+                  for (int k = 1; k <= 4; k++)
+                  {
+                      for (int w = 0; w <= 1; w++)
+                      {
+                          if (j == 1)
+                              segmentName = "Business";
+                          if (j == 2)
+                              segmentName = "Small Business";
+                          if (j == 3)
+                              segmentName = "Corporate contract";
+                          if (j == 4)
+                              segmentName = "Families";
+                          if (j == 5)
+                              segmentName = "Afluent Mature Travelers";
+                          if (j == 6)
+                              segmentName = "International leisure travelers";
+                          if (j == 7)
+                              segmentName = "Corporate/Business Meetings";
+                          if (j == 8)
+                              segmentName = "Association Meetings";
+                          if (k == 1)
+                              channelName = "Direct";
+                          if (k == 2)
+                              channelName = "Travel Agent";
+                          if (k == 3)
+                              channelName = "Online Travel Agent";
+                          if (k == 4)
+                              channelName = "Opaque";
+                          if (w == 0)
+                              weekdayIndicator = false;
+                          if (w == 1)
+                              weekdayIndicator = true;
+
+                          var obj1 = new SoldRoomByChannel()
+                          {
+                              MonthID = monthID,
+                              QuarterNo = currentQuarter + 1,
+                              GroupID = groupID,
+                              Segment = segmentName,
+                              Channel = channelName,
+                              Weekday = weekdayIndicator,
+                              SoldRoom = 0,
+                              Revenue = 0,
+                              Cost = 0
+
+                          };
+                          context.SoldRoomByChannel.Add(obj1);
+                          int status = context.SaveChanges();
+
+                      }
+                  }
+              }
+              ////Go to next group
+              i++;
+          }
+          return 1;
+      }
+
+      public int CreateBalanceSheet(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+      {
 
 
-                var obj1 = new BalanceSheet()
-                {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter,
-                    GroupID = groupID,
-                    Cash = 1000000,
-                    AcctReceivable = 400000,
-                    Inventories = 500000,
-                    TotCurrentAsset = 1888000,
-                    NetPrptyEquip = 45335000,
-                    TotAsset = 52223000,
-                    TotCurrentLiab = 0,
-                    LongDebt = 40000000,
-                    LongDebtPay = 0,
-                    ShortDebt = 0,
-                    ShortDebtPay = 0,
-                    TotLiab = 40896010,
-                    RetainedEarn = 1326990
-                };
-                var obj2 = new BalanceSheet()
-                {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter + 1,
-                    GroupID = groupID,
-                    Cash = 1000000,
-                    AcctReceivable = 400000,
-                    Inventories = 500000,
-                    TotCurrentAsset = 1888000,
-                    NetPrptyEquip = 45335000,
-                    TotAsset = 52223000,
-                    TotCurrentLiab = 0,
-                    LongDebt = 40000000,
-                    LongDebtPay = 0,
-                    ShortDebt = 0,
-                    ShortDebtPay = 0,
-                    TotLiab = 40896010,
-                    RetainedEarn = 1326990
-                };
-                context.BalanceSheet.Add(obj1);
-                context.BalanceSheet.Add(obj2);
-                int status = context.SaveChanges();
+          int index = 1;
+          int groupID = index;
+          while (index < noOfHotels + 1)
+          {
 
-                index++;
-            }
-            return 1;
-        }
-        */
+
+              var obj1 = new BalanceSheet()
+              {
+                  MonthID = monthID,
+                  QuarterNo = currentQuarter,
+                  GroupID = groupID,
+                  Cash = 1000000,
+                  AcctReceivable = 400000,
+                  Inventories = 500000,
+                  TotCurrentAsset = 1888000,
+                  NetPrptyEquip = 45335000,
+                  TotAsset = 52223000,
+                  TotCurrentLiab = 0,
+                  LongDebt = 40000000,
+                  LongDebtPay = 0,
+                  ShortDebt = 0,
+                  ShortDebtPay = 0,
+                  TotLiab = 40896010,
+                  RetainedEarn = 1326990
+              };
+              var obj2 = new BalanceSheet()
+              {
+                  MonthID = monthID,
+                  QuarterNo = currentQuarter + 1,
+                  GroupID = groupID,
+                  Cash = 1000000,
+                  AcctReceivable = 400000,
+                  Inventories = 500000,
+                  TotCurrentAsset = 1888000,
+                  NetPrptyEquip = 45335000,
+                  TotAsset = 52223000,
+                  TotCurrentLiab = 0,
+                  LongDebt = 40000000,
+                  LongDebtPay = 0,
+                  ShortDebt = 0,
+                  ShortDebtPay = 0,
+                  TotLiab = 40896010,
+                  RetainedEarn = 1326990
+              };
+              context.BalanceSheet.Add(obj1);
+              context.BalanceSheet.Add(obj2);
+              int status = context.SaveChanges();
+
+              index++;
+          }
+          return 1;
+      }
+      */
         public int UpdateMonth(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 

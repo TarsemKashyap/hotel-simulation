@@ -39,7 +39,7 @@ namespace Service
         {
             FunMonth objFunMonth = new FunMonth();
             ResponseData resObj = new ResponseData();
-            int marketPercentage =Convert.ToInt16(month.TotalMarket);
+            int marketPercentage = Convert.ToInt16(month.TotalMarket);
             int classID = month.ClassId;
             ClassSessionDto classDetail = objFunMonth.GetClassDetailsById(classID, _context);
             int currentQuarter = classDetail.CurrentQuater;
@@ -51,7 +51,7 @@ namespace Service
             {
                 if (currentQuarter == 0)
                 {
-                 //   objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
+                    //   objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
                     resObj.Message = "A new month has been created.";
                     int index = 1;
 
@@ -72,15 +72,15 @@ namespace Service
                         // Pending Work 
                     }
 
-                   objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
 
-                    //objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
 
                     //////////////////////////////////////////////////
                     /////Create Weighted Attribute Table for New Quarter
                     /////////////////////////////////////////////////
 
-                   // objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
+                    // objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
 
 
                     ////////////////////////////////////////////////
@@ -90,7 +90,7 @@ namespace Service
 
                     if (currentQuarter == 0)
                     {
-                       // objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
+                        // objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
                     }
                     else
                     {
