@@ -7,26 +7,29 @@ import { ClassService } from '../class.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { GridActionComponent } from '../grid-action/grid-action.component';
+import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 
 @Component({
   selector: 'app-add-removed-class',
   templateUrl: './add-removed-class.component.html',
-  styleUrls: ['./add-removed-class.component.css']
+  styleUrls: ['./add-removed-class.component.css'],
 })
 export class AddRemovedClassComponent {
+ 
   private datePipe = new DatePipe('en-US');
-  isDefault : any;
-  Titles : ClassSession [] = [];
-  selectedTitle : ClassSession | undefined;
+  isDefault: any;
+  Titles: ClassSession[] = [];
+  selectedTitle: ClassSession | undefined;
   myForm!: FormGroup;
   columnDefs: ColDef[] = [
     {
       field: 'code',
-      tooltipValueGetter:()=>"Click to copy code",
+      tooltipValueGetter: () => 'Click to copy code',
       onCellClicked: (event) => {
         Utility.copyToClipboard(event.value);
-        console.log("code",event.value)
-        this.snackBar.open(`class code ${event.value} copied.`)
+        console.log('code', event.value);
+        this.snackBar.open(`class code ${event.value} copied.`);
       },
     },
     { field: 'title' },
@@ -42,15 +45,28 @@ export class AddRemovedClassComponent {
     },
     { field: 'createdBy' },
     {
+      field: 'action',
+      headerName:'Set as default',
+      cellRenderer: GridActionComponent,
+      cellRendererParams: {
+        actions: [
+          {
+            placeHolder: 'visibility',
+            mode: 'icon',
+            cssClass: 'hover:text-primary',
+            onClick: this.setAsDefault(),
+            hide: () => false,
+          },
+         
+        ] as RowAction[],
+      } as GridActionParmas,
+    },
+    {
       field: 'isDefault',
       headerName: 'Select as Default',
       onCellClicked: (event) => {
-        this.isDefault = true;
-        this.classService.isDefaultUpdate({isDefault: this.isDefault }).subscribe((data) => {
-          this.snackBar.open('isDefault set succesfully')
-        })
-      }
-      
+       
+      },
     },
   ];
   defaultColDef: ColDef = {
@@ -66,37 +82,32 @@ export class AddRemovedClassComponent {
   constructor(
     private classService: ClassService,
     private router: Router,
-    public snackBar: MatSnackBar,
-    private formBuilder: FormBuilder,
-  ) {
-    this.myForm = this.formBuilder.group({
-      selectedTitle: "",
-    });
-  }
+    public snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
-    this.classService.Instructorlist().subscribe((x) => {
-      this.$rows = x;
+    this.classService.studentByclass().subscribe((x) => {
+      this.$rows = x.selectedClasses;
+      this.Titles = x.availableClasses;
     });
-    this.studentRoles();
-  }
-
-  private studentRoles() {
-    this.classService
-      .ClassTitlelist()
-      .subscribe((data) => {
-      this.Titles = data;
-      });
   }
 
   Save() {
-    debugger
-    const title = this.selectedTitle?.title;
-    const studentAssignRoles: ClassMapping = {
-      title: title!
-    };
-    this.classService.SaveClass(studentAssignRoles).subscribe((response) => {
-      this.snackBar.open("Student Assign Class Saved Successfully")
+    if (!this.selectedTitle) {
+      return;
+    }
+    this.classService.SaveClass(this.selectedTitle).subscribe((response) => {
+      this.snackBar.open('Student Assign Class Saved Successfully');
     });
+  }
+  setAsDefault(): ($event: Event, row: any) => void {
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      this.classService
+      .setAsDefault(row.data!)
+      .subscribe((data) => {
+        this.snackBar.open('isDefault set succesfully');
+      });
+    };
+        
   }
 }

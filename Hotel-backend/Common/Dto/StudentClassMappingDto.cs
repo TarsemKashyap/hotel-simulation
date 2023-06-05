@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
+
+    public class AddRemoveClassDto
+    {
+        public IEnumerable<ClassSessionDto> SelectedClasses { get; set; }
+        public IEnumerable<ClassSessionDto> AvailableClasses { get; set; }
+
+    }
+
     public class StudentClassMappingDto
     {
         public Guid Id { get; set; }
@@ -22,6 +30,7 @@ namespace Common.Dto
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsDefault { get; set; }
+
 
     }
 }

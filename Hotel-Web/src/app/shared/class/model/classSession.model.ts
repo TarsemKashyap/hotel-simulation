@@ -6,29 +6,32 @@ export interface ClassSession {
   roomInEachHotel: number;
   currentQuater: number;
   code: string;
-  createdBy:string;
-  groups:ClassGroup[]
-  classId?:number;
+  createdBy: string;
+  groups: ClassGroup[];
+  classId?: number;
 }
 
 export interface ClassGroup {
   groupId?: number;
   serial: number;
   name: string;
-  balance:number;
-  action: Action
+  balance: number;
+  action: Action;
 }
 
 export enum Action {
   Updated = 0,
   Added = 1,
-  Removed = 2
+  Removed = 2,
 }
 
 export interface ClassMapping {
-  title : string;
+  title: string;
 }
 
-export interface ClassSessionUpdate extends ClassSession {
+export interface ClassSessionUpdate extends ClassSession {}
 
+export interface AddRemoveClassDto {
+  selectedClasses: Array<ClassSession>;
+  availableClasses: Array<ClassSession>;
 }

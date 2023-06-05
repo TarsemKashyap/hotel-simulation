@@ -9,7 +9,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("studentClassMapping")]
-    //[Authorize]
+    [Authorize]
     public class StudentClassMappingController : AbstractBaseController
     {
         private readonly IStudentClassMappingService _studentClassMappingService;
@@ -19,29 +19,30 @@ namespace Api.Controllers
         }
 
 
-        [HttpGet("studentlist"), AllowAnonymous]
+        [HttpGet("studentlist")]
         public async Task<ActionResult> StudentListByClassId()
         {
-            //var userId = LoggedUserId;
-            var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
-            var studentListByClassId = _studentClassMappingService.StudentList(userId);
+            var studentListByClassId = await _studentClassMappingService.ClassesByStudent(LoggedUserId);
             return Ok(studentListByClassId);
         }
 
         [HttpPost("studentClassUpdate")]
-        public async Task<IActionResult> UpdateIsDefault(StudentClassMappingDto studentClassMappingDto)
+        public async Task<IActionResult> UpdateIsDefault(ClassSessionDto studentClassMappingDto)
         {
-           // var userId = LoggedUserId;
-            var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
-            var studentData =await _studentClassMappingService.IsDefaultUpdate(userId, studentClassMappingDto.IsDefault);
-            return Ok(studentData);
+            StudentClassMappingDto dto = new StudentClassMappingDto()
+            {
+                StudentId = LoggedUserId,
+                ClassId = studentClassMappingDto.ClassId
+            };
+            await _studentClassMappingService.IsDefaultUpdate(LoggedUserId, dto);
+            return Ok();
         }
 
         [HttpGet("studentClasslist"), AllowAnonymous]
         public async Task<ActionResult> StudentClassList()
         {
-            // var userId = LoggedUserId;
-            var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
+            var userId = LoggedUserId;
+            //  var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
             var studentListByClassId = _studentClassMappingService.GetMissingClassList();
             return Ok(studentListByClassId);
         }
@@ -49,8 +50,8 @@ namespace Api.Controllers
         [HttpPost("studentClassAssign")]
         public async Task<IActionResult> studentClassAssign(StudentClassMappingDto studentClassMappingDto)
         {
-           // var userId = LoggedUserId;
-            var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
+            var userId = LoggedUserId;
+            // var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
             studentClassMappingDto.StudentId = userId;
             var studentData = await _studentClassMappingService.StudentAssignClass(studentClassMappingDto);
             return Ok(studentData);

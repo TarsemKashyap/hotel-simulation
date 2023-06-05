@@ -16,11 +16,13 @@ namespace Service
 {
     public interface IStudentClassMappingService
     {
+
+        Task<AddRemoveClassDto> ClassesByStudent(string studentId);
         IEnumerable<StudentClassMappingDto> List(int ClassId);
         Task<StudentClassMappingDto> GetById(Guid studentId);
         IEnumerable<StudentClassMappingDto> StudentList(string studentId);
         IEnumerable<StudentClassMappingDto> GetMissingClassList();
-        Task<StudentClassMappingDto> IsDefaultUpdate(string studentId, bool isDefault);
+        Task IsDefaultUpdate(string studentId, StudentClassMappingDto dto);
         Task<StudentClassMappingDto> StudentAssignClass(StudentClassMappingDto classSession);
     }
     public class StudentClassMappingService : IStudentClassMappingService
@@ -58,16 +60,13 @@ namespace Service
         {
             var studentList = _context.StudentClassMapping
                 .Include(x => x.Class)
-                .Include(x => x.Student)
                 .Where(x => x.StudentId == studentId)
                 .Select(x => new StudentClassMappingDto
                 {
                     Code = x.Class.Code,
                     Title = x.Class.Title,
-                    CreatedBy = $"{x.Student.FirstName} {x.Student.LastName}",
                     StartDate = x.Class.StartDate,
                     EndDate = x.Class.EndDate
-                    // add any other properties you want to include in the DTO
                 })
                 .ToList();
 
@@ -92,24 +91,19 @@ namespace Service
 
             return studentSignupDto;
         }
-        public async Task<StudentClassMappingDto> IsDefaultUpdate(string studentId, bool isDefault)
+        public async Task IsDefaultUpdate(string studentId, StudentClassMappingDto dto)
         {
-            var studentData = await _context.StudentClassMapping.FirstOrDefaultAsync(x => x.StudentId == studentId);
+            var studentData = await _context.StudentClassMapping.Where(x => x.StudentId == studentId).ToListAsync();
 
-            if (studentData != null)
+            var targetClassId = studentData.FindIndex(x => x.ClassId == dto.ClassId);
+
+            foreach (var item in studentData)
             {
-                studentData.isDefault = isDefault;
-                await _context.SaveChangesAsync();
+                item.isDefault = false;
             }
-
-            // Mapping the entity to the DTO class
-            var studentDto = new StudentClassMappingDto
-            {
-                StudentId = studentData.StudentId,
-                IsDefault = studentData.isDefault
-            };
-
-            return studentDto;
+            studentData[targetClassId].isDefault = true;
+            _context.StudentClassMapping.UpdateRange(studentData);
+            _context.SaveChanges();
         }
 
         public IEnumerable<StudentClassMappingDto> GetMissingClassList()
@@ -142,7 +136,19 @@ namespace Service
 
         }
 
+        public async Task<AddRemoveClassDto> ClassesByStudent(string studentId)
+        {
+            var selectedClass = await _context.StudentClassMapping.Include(x => x.Class).Where(x => x.StudentId == studentId).Select(x => x.Class).ToListAsync();
 
+            var selectedClassIds = selectedClass.Select(x => x.ClassId);
+            List<ClassSession> availableClasses = await _context.ClassSessions.Where(x => !selectedClassIds.Contains(x.ClassId)).ToListAsync();
+
+            return new AddRemoveClassDto
+            {
+                SelectedClasses = selectedClass.Adapt<IEnumerable<ClassSessionDto>>(),
+                AvailableClasses = availableClasses.Adapt<IEnumerable<ClassSessionDto>>(),
+            };
+        }
     }
 
 }
