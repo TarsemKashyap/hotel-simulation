@@ -56,33 +56,15 @@ namespace Service
                     int index = 1;
 
 
-                    objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
-
-
-                    if (currentQuarter == 0)
-                    {
-
-                        objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
-
-
-                    }
-                    if (currentQuarter > 0)
-                    {
-                        // Pending Work 
-                    }
-
+                    await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
+                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
                     objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
-
                     objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
-
                     //////////////////////////////////////////////////
                     /////Create Weighted Attribute Table for New Quarter
                     /////////////////////////////////////////////////
-
                     objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
-
-
                     ////////////////////////////////////////////////
                     /////Insert income Statement template for new month
                     ///////////////////////////////////////////////
@@ -90,7 +72,7 @@ namespace Service
 
                     if (currentQuarter == 0)
                     {
-                         objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
+                        objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
                     }
                     else
                     {
@@ -113,7 +95,13 @@ namespace Service
                     else
                     {
                     }
+                    objFunMonth.UpdateClassQuarter(_context,classID,currentQuarter);
                 }
+                else
+                {
+
+                }
+
             }
             resObj.Message = "Month Create";
             resObj.StatusCode = 200;

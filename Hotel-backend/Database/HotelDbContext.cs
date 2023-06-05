@@ -40,6 +40,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<Goal> Goal { get; set; }
     public DbSet<BalanceSheet> BalanceSheet { get; set; }
     public DbSet<SoldRoomByChannel> SoldRoomByChannel { get; set; }
+    public DbSet<AttributeMaxCapitalOperationConfig> AttributeMaxCapitalOperationConfig { get; set; }
 
 
 
