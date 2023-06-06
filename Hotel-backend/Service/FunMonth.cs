@@ -12,6 +12,8 @@ using Mapster;
 using ZstdNet;
 using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI;
+using Org.BouncyCastle.Asn1.Cms;
+using Mysqlx.Expr;
 //using EFCore.BulkExtensions;
 
 namespace Service
@@ -40,7 +42,7 @@ namespace Service
         public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket)
         {
             IQueryable<Month> query = context.Months;
-            var obj = new Month() { ClassId = classID, Sequence = currentQuarter + 1, TotalMarket = totalMarket, ConfigId = 0, IsComplete = false };
+            var obj = new Month() { ClassId = classID, Sequence = currentQuarter + 1, TotalMarket = totalMarket, ConfigId = 1, IsComplete = false };
             context.Months.Add(obj);
             int status = context.SaveChanges();
             int monthID = obj.MonthId;
@@ -407,7 +409,8 @@ namespace Service
                 foreach (var item in lstAttribute)
                 {
                     int groupID = i;
-                    int accumuCapital = 0;
+                    var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
+                    decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
 
                     var obj1 = new AttributeDecision()
                     {
@@ -415,7 +418,7 @@ namespace Service
                         QuarterNo = currentQuarter + 1,
                         GroupID = groupID,
                         Attribute = item.AttributeName,
-                        AccumulatedCapital = accumuCapital,
+                        AccumulatedCapital = (int)accumuCapital,
                         NewCapital = 5000,
                         OperationBudget = 14000,
                         LaborBudget = 19700,
@@ -855,8 +858,8 @@ namespace Service
             var result = query.Select(x => new AttributeDto
             {
 
-                //ID = x.ID,
-                //AttributeName = x.AttributeName
+                ID = x.ID,
+                AttributeName = x.AttributeName
 
             }).ToList();
 
@@ -909,10 +912,112 @@ namespace Service
             return result;
 
         }
-        public decimal ScalarQueryInitialCapitalInvest(int monthID, int currentQuarter, string AttributeName)
-
+        public decimal ScalarQueryInitialCapitalInvestAttributeConfig(HotelDbContext context, int monthID, int currentQuarter, string AttributeName)
         {
-            return 0;
+            string newAttr = AttributeName.Trim();
+            var data = (from a in context.AttributeMaxCapitalOperationConfig
+                        join m in context.Months on a.ConfigID equals m.ConfigId // x.MonthId == monthID)
+                        join c in context.ClassSessions on m.ClassId equals c.ClassId
+                        where m.MonthId == monthID && c.CurrentQuater == currentQuarter && a.Attribute == newAttr
+                        select new
+                        {
+                            initialCapital = a.InitialCapital,
+                            //MonthID = m.MonthId,
+                            //CurrentQuarter = c.CurrentQuater,
+                            //AttributeName = a.Attribute
+                        }
+
+                     ).ToList();
+            decimal sindleRow = 0;
+            if (data != null)
+            {
+                sindleRow = data[0].initialCapital;//data.Where(x => x.MonthID == monthID && x.CurrentQuarter == currentQuarter && x.AttributeName.Contains(newAttr));
+            }
+
+
+            return Convert.ToDecimal(sindleRow);
+        }
+        public MarketingDecisionDto GetDataBySingleRowMarketingDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string marketingTechniques, string segment)
+        {
+            var mkt = (from md in context.MarketingDecision
+                       where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
+                       && md.MarketingTechniques == marketingTechniques && md.Segment == segment
+                       select new
+                       {
+                           ActualDemand = md.ActualDemand,
+                           Confirmed = md.Confirmed,
+                           GroupID = md.GroupID,
+                           LaborSpending = md.LaborSpending,
+                           MarketingTechniques = md.MarketingTechniques,
+                           QuarterNo = md.QuarterNo,
+                           Segment = md.Segment,
+                           MonthID = md.MonthID,
+                           Spending = md.Spending
+                       }).ToList();
+            MarketingDecisionDto obj = new MarketingDecisionDto();
+            obj.ActualDemand = mkt[0].ActualDemand;
+            obj.Confirmed = mkt[0].Confirmed;
+            obj.GroupID = mkt[0].GroupID;
+            obj.LaborSpending = mkt[0].LaborSpending;
+            obj.MarketingTechniques = mkt[0].MarketingTechniques;
+            obj.QuarterNo = mkt[0].QuarterNo;
+            obj.Segment = mkt[0].Segment;
+            obj.MonthID = mkt[0].MonthID;
+            obj.Spending = mkt[0].Spending;
+
+            return obj;
+        }
+        public AttributeDecisionDto GetDataBySingleRowAttributeDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string attributeName)
+        {
+            var mkt = (from md in context.AttributeDecision
+                       where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
+                       && md.Attribute == attributeName.Trim()
+                       select new
+                       {
+                           AccumulatedCapital = md.AccumulatedCapital,
+                           Attribute = md.Attribute,
+                           Confirmed = md.Confirmed,
+                           GroupID = md.GroupID,
+                           LaborBudget = md.LaborBudget,
+                           NewCapital = md.NewCapital,
+                           OperationBudget = md.OperationBudget,
+                           QuarterForecast = md.QuarterForecast,
+                           QuarterNo = md.QuarterNo,
+                           MonthID = md.MonthID
+                       }).ToList();
+            AttributeDecisionDto obj = new AttributeDecisionDto();
+            if (mkt != null)
+            {
+
+                obj.AccumulatedCapital = mkt[0].AccumulatedCapital;
+                obj.Attribute = mkt[0].Attribute;
+                obj.GroupID = mkt[0].GroupID;
+                obj.LaborBudget = mkt[0].LaborBudget;
+                obj.NewCapital = mkt[0].NewCapital;
+                obj.QuarterNo = mkt[0].QuarterNo;
+                obj.OperationBudget = mkt[0].OperationBudget;
+                obj.MonthID = mkt[0].MonthID;
+                obj.QuarterForecast = mkt[0].QuarterForecast;
+            }
+            return obj;
+        }
+        public decimal ScalarDepreciRateMonthlyAttributeConfig(HotelDbContext context, int monthID, int currentQuarter, string AttributeName)
+        {
+            /*SELECT              attributeMaxCapitalOperationConfig.depreciationYearly / 12 AS Expr1
+FROM                  quarterlyMarket CROSS JOIN
+                                attributeMaxCapitalOperationConfig
+WHERE              (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (attributeMaxCapitalOperationConfig.attribute = @attribute)*/
+            var attrConf = (from m in context.Months
+                            join c in context.ClassSessions on m.ClassId equals c.ClassId
+                            join a in context.AttributeMaxCapitalOperationConfig on m.ConfigId equals a.ConfigID
+                            where m.MonthId == monthID && c.CurrentQuater == currentQuarter && a.Attribute == AttributeName
+                            select new
+                            {
+                                Expr1 = a.DepreciationYearly / 12
+                            }).ToList();
+
+            decimal Expr1 = attrConf[0].Expr1;
+            return Expr1;
         }
     }
 }
