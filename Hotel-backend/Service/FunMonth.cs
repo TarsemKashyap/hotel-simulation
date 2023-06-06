@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI;
 using Org.BouncyCastle.Asn1.Cms;
 using Mysqlx.Expr;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 //using EFCore.BulkExtensions;
 
 namespace Service
@@ -183,6 +184,7 @@ namespace Service
 
                         var data = lstmarketingTechniques.Select(mktTech =>
                         {
+                            MarketDecisionPriceList obj = GetMarketDecisionPriceList(mktTech.Techniques.Trim(), segment.SegmentName.Trim());
                             return new MarketingDecision()
                             {
                                 // ID = Random.Shared.Next(100),
@@ -191,9 +193,9 @@ namespace Service
                                 GroupID = groupID,
                                 MarketingTechniques = mktTech.Techniques,
                                 Segment = segment.SegmentName,
-                                Spending = 3300,
-                                LaborSpending = 1400,
-                                ActualDemand = 0,
+                                Spending = (int)obj.Spending,
+                                LaborSpending = (int)obj.LaborSpending,
+                                ActualDemand = (int)obj.ActualDemand,
                                 Confirmed = false
                             };
                         }).ToList();
@@ -233,11 +235,13 @@ namespace Service
 
             for (int i = 1; i <= noOfHotels; i++)
             {
-
+                int index = 1;
                 foreach (SegmentDto segment in lstSegment)
                 {
                     foreach (DistributionChannelsDto channel in lstChannel)
                     {
+
+                        PriceDecisionPriceList obj = GetPriceDecisionPriceList(channel.Channel.Trim(), segment.SegmentName.Trim(), index);
                         context.PriceDecision.Add(new PriceDecision
                         {
                             MonthID = monthID,
@@ -246,16 +250,18 @@ namespace Service
                             Weekday = true,
                             DistributionChannel = channel.Channel,
                             Segment = segment.SegmentName,
-                            Price = 200,
-                            ActualDemand = 1,
+                            Price = (int)obj.Price,
+                            ActualDemand = (int)obj.ActualDemand,
                             Confirmed = false
                         });
-                        int sat = await context.SaveChangesAsync();
+                        //int sat = await context.SaveChangesAsync();
                         // context.PriceDecision.Add(obj1);
+                        index++;
                     }
+
                 }
 
-                //  context.SaveChanges();
+                context.SaveChanges();
 
             }
             return 1;
@@ -955,16 +961,18 @@ namespace Service
                            Spending = md.Spending
                        }).ToList();
             MarketingDecisionDto obj = new MarketingDecisionDto();
-            obj.ActualDemand = mkt[0].ActualDemand;
-            obj.Confirmed = mkt[0].Confirmed;
-            obj.GroupID = mkt[0].GroupID;
-            obj.LaborSpending = mkt[0].LaborSpending;
-            obj.MarketingTechniques = mkt[0].MarketingTechniques;
-            obj.QuarterNo = mkt[0].QuarterNo;
-            obj.Segment = mkt[0].Segment;
-            obj.MonthID = mkt[0].MonthID;
-            obj.Spending = mkt[0].Spending;
-
+            if (obj != null)
+            {
+                obj.ActualDemand = mkt[0].ActualDemand;
+                obj.Confirmed = mkt[0].Confirmed;
+                obj.GroupID = mkt[0].GroupID;
+                obj.LaborSpending = mkt[0].LaborSpending;
+                obj.MarketingTechniques = mkt[0].MarketingTechniques;
+                obj.QuarterNo = mkt[0].QuarterNo;
+                obj.Segment = mkt[0].Segment;
+                obj.MonthID = mkt[0].MonthID;
+                obj.Spending = mkt[0].Spending;
+            }
             return obj;
         }
         public AttributeDecisionDto GetDataBySingleRowAttributeDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string attributeName)
@@ -986,7 +994,7 @@ namespace Service
                            MonthID = md.MonthID
                        }).ToList();
             AttributeDecisionDto obj = new AttributeDecisionDto();
-            if (mkt != null)
+            if (mkt.Count > 0)
             {
 
                 obj.AccumulatedCapital = mkt[0].AccumulatedCapital;
@@ -1003,10 +1011,6 @@ namespace Service
         }
         public decimal ScalarDepreciRateMonthlyAttributeConfig(HotelDbContext context, int monthID, int currentQuarter, string AttributeName)
         {
-            /*SELECT              attributeMaxCapitalOperationConfig.depreciationYearly / 12 AS Expr1
-FROM                  quarterlyMarket CROSS JOIN
-                                attributeMaxCapitalOperationConfig
-WHERE              (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (attributeMaxCapitalOperationConfig.attribute = @attribute)*/
             var attrConf = (from m in context.Months
                             join c in context.ClassSessions on m.ClassId equals c.ClassId
                             join a in context.AttributeMaxCapitalOperationConfig on m.ConfigId equals a.ConfigID
@@ -1019,5 +1023,40 @@ WHERE              (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket
             decimal Expr1 = attrConf[0].Expr1;
             return Expr1;
         }
+        public MarketDecisionPriceList GetMarketDecisionPriceList(string marketingTech, string segment)
+        {
+            PriceListCreated objPC = new PriceListCreated();
+            var plist = objPC.MarketDecisionPriceList().Where(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim()).ToList();
+
+            MarketDecisionPriceList obj = new MarketDecisionPriceList();
+            obj.ActualDemand = plist[0].ActualDemand;
+            obj.LaborSpending = plist[0].LaborSpending;
+            obj.Spending = plist[0].Spending;
+
+
+
+            return obj;
+        }
+
+        public PriceDecisionPriceList GetPriceDecisionPriceList(string distributionChannel, string segment, int index)
+        {
+            PriceListCreated objPC = new PriceListCreated();
+            var plist = objPC.PriceDecisionPriceList().Where(x => x.DistributionChannel == distributionChannel.Trim() && x.Segment == segment.Trim()).ToList();
+
+            PriceDecisionPriceList obj = new PriceDecisionPriceList();
+            if (index < 32)
+            {
+                obj.ActualDemand = plist[0].ActualDemand;
+                obj.Price = plist[0].Price;
+            }
+            else
+            {
+                obj.ActualDemand = plist[1].ActualDemand;
+                obj.Price = plist[1].Price;
+            }
+            return obj;
+        }
+
+
     }
 }
