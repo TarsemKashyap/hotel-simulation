@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 public class AttributeMaxCapitalOperationConfig
 {
+    public int ID { get; set; }
     public int ConfigID { get; set; }
     public string Attribute { get; set; }
     public decimal MaxNewCapital { get; set; }
@@ -28,7 +29,9 @@ public class AttributeMaxCapitalOperationConfigEntityConfig : IEntityTypeConfigu
     public void Configure(EntityTypeBuilder<AttributeMaxCapitalOperationConfig> builder)
     {
         builder.ToTable("AttributeMaxCapitalOperationConfig");
-        builder.HasKey(x => x.ConfigID);
+        builder.HasKey(x => x.ID);
+        builder.Property(x => x.ID).IsRequired().ValueGeneratedOnAdd();
+        builder.Property(x => x.ConfigID);
         builder.Property(x => x.ConfigID).IsRequired();
         builder.Property(x => x.Attribute);
         builder.Property(x => x.MaxNewCapital);

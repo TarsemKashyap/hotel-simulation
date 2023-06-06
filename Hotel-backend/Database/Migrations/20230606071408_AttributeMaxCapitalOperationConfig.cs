@@ -13,8 +13,9 @@ namespace Database.Migrations
                 name: "AttributeMaxCapitalOperationConfig",
                 columns: table => new
                 {
-                    ConfigID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ConfigID = table.Column<int>(type: "int", nullable: false),
                     Attribute = table.Column<string>(type: "longtext", nullable: true),
                     MaxNewCapital = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     NewCapitalPortion = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -28,7 +29,7 @@ namespace Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttributeMaxCapitalOperationConfig", x => x.ConfigID);
+                    table.PrimaryKey("PK_AttributeMaxCapitalOperationConfig", x => x.ID);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
         }

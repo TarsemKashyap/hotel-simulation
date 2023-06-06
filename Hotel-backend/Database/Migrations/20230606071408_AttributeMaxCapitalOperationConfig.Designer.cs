@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20230605151753_AttributeMaxCapitalOperationConfig")]
+    [Migration("20230606071408_AttributeMaxCapitalOperationConfig")]
     partial class AttributeMaxCapitalOperationConfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,12 +215,15 @@ namespace Database.Migrations
 
             modelBuilder.Entity("AttributeMaxCapitalOperationConfig", b =>
                 {
-                    b.Property<int>("ConfigID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("Attribute")
                         .HasColumnType("longtext");
+
+                    b.Property<int>("ConfigID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("DepreciationYearly")
                         .HasColumnType("decimal(18,2)");
@@ -249,7 +252,7 @@ namespace Database.Migrations
                     b.Property<decimal>("PreLaborPercent")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ConfigID");
+                    b.HasKey("ID");
 
                     b.ToTable("AttributeMaxCapitalOperationConfig", (string)null);
                 });
