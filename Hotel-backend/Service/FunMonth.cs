@@ -417,7 +417,7 @@ namespace Service
                     int groupID = i;
                     var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
                     decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
-
+                    AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
                     var obj1 = new AttributeDecision()
                     {
                         MonthID = monthID,
@@ -425,9 +425,9 @@ namespace Service
                         GroupID = groupID,
                         Attribute = item.AttributeName,
                         AccumulatedCapital = (int)accumuCapital,
-                        NewCapital = 5000,
-                        OperationBudget = 14000,
-                        LaborBudget = 19700,
+                        NewCapital = AttPlist.NewCapital,
+                        OperationBudget = AttPlist.OperationBudget,
+                        LaborBudget = AttPlist.LaborBudget,
                         Confirmed = false,
                         QuarterForecast = currentQuarter
                     };
@@ -555,8 +555,22 @@ namespace Service
             {
                 foreach (var item in lstSegment)
                 {
-                    int accumuCapital = 0;
-                    var obj1 = new RoomAllocation() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = i, Weekday = true, Segment = item.SegmentName, RoomsAllocated = 1632, ActualDemand = 0, RoomsSold = 0, Confirmed = false, Revenue = 0, QuarterForecast = currentQuarter };
+
+                    RoomAllocationPriceList RmPList = GetRoomAllocationPriceList(item.SegmentName.Trim());
+                    var obj1 = new RoomAllocation()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter + 1,
+                        GroupID = i,
+                        Weekday = true,
+                        Segment = item.SegmentName,
+                        RoomsAllocated = RmPList.RoomsAllocated,
+                        ActualDemand = RmPList.ActualDemand,
+                        RoomsSold = RmPList.RoomsSold,
+                        Confirmed = false,
+                        Revenue = RmPList.Revenue,
+                        QuarterForecast = currentQuarter
+                    };
                     context.RoomAllocation.Add(obj1);
                 }
                 int status = context.SaveChanges();
@@ -1057,6 +1071,47 @@ namespace Service
             return obj;
         }
 
+        public AttributeDecisionPriceList GetAttributeDecisionPriceList(string AttributeName)
+        {
+            PriceListCreated objPC = new PriceListCreated();
+            var plist = objPC.AttributeDecisionPriceList().Where(x => x.Attribute == AttributeName.Trim()).ToList();
+
+            AttributeDecisionPriceList obj = new AttributeDecisionPriceList();
+
+            obj.AccumulatedCapital = plist[0].AccumulatedCapital;
+            obj.NewCapital = plist[0].NewCapital;
+
+            obj.OperationBudget = plist[0].OperationBudget;
+            obj.LaborBudget = plist[0].LaborBudget;
+            obj.QuarterForecast = plist[0].QuarterForecast;
+
+            return obj;
+        }
+        public RoomAllocationPriceList GetRoomAllocationPriceList(string SegmentName)
+        {
+            PriceListCreated objPC = new PriceListCreated();
+            var plist = objPC.RoomAllocationPriceList().Where(x => x.Segment == SegmentName.Trim()).ToList();
+
+            RoomAllocationPriceList obj = new RoomAllocationPriceList();
+
+            obj.RoomsAllocated = plist[0].RoomsAllocated;
+            obj.ActualDemand = plist[0].ActualDemand;
+
+            obj.RoomsSold = plist[1].RoomsSold;
+            obj.Revenue = plist[1].Revenue;
+            obj.QuarterForecast = plist[1].QuarterForecast;
+
+            return obj;
+
+        }
+        public IncomeState GetDataBySingleRowIncomeState(HotelDbContext context, int MonthID, int groupID, int currentQuarter)
+        {
+            var data = context.IncomeState.Where(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter)
+                    .ToList();
+            IncomeState obj= new IncomeState();
+            obj.TotReven = data[0].TotReven;
+            return obj;
+        }
 
     }
 }

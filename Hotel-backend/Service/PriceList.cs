@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Asn1.Cms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -26,6 +27,26 @@ public class PriceDecisionPriceList
     public string Segment { get; set; }
     public decimal Price { get; set; }
     public decimal ActualDemand { get; set; }
+
+}
+public class AttributeDecisionPriceList
+{
+    public string Attribute { get; set; }
+    public int AccumulatedCapital { get; set; }
+    public int NewCapital { get; set; }
+    public int OperationBudget { get; set; }
+    public int LaborBudget { get; set; }
+    public int QuarterForecast { get; set; }
+
+}
+public class RoomAllocationPriceList
+{
+    public string Segment { get; set; }
+    public int RoomsAllocated { get; set; }
+    public int ActualDemand { get; set; }
+    public int RoomsSold { get; set; }
+    public int Revenue { get; set; }
+    public int QuarterForecast { get; set; }
 
 }
 
@@ -140,6 +161,58 @@ public class PriceListCreated
         new PriceDecisionPriceList { DistributionChannel = "Opaque", Segment = "International leisure travelers", Price = 175, ActualDemand = 0},
         new PriceDecisionPriceList { DistributionChannel = "Opaque", Segment = "Corporate/Business Meetings", Price = 165, ActualDemand = 0},
         new PriceDecisionPriceList { DistributionChannel = "Opaque", Segment = "Association Meetings", Price = 175, ActualDemand = 0}
+
+    };
+        return list;
+    }
+    public List<AttributeDecisionPriceList> AttributeDecisionPriceList()
+    {
+        var list = new List<AttributeDecisionPriceList>
+        {
+        new AttributeDecisionPriceList {  Attribute = "Spa", AccumulatedCapital = 0, NewCapital = 5000, OperationBudget = 14000, LaborBudget = 19700, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Fitness Center", AccumulatedCapital = 0, NewCapital = 1200, OperationBudget = 5500, LaborBudget = 3100, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Business Center", AccumulatedCapital = 0, NewCapital = 800, OperationBudget = 5500, LaborBudget = 3100, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Golf Course", AccumulatedCapital = 0, NewCapital = 32000, OperationBudget = 16000, LaborBudget = 31500, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Other Recreation Facilities - Pools, game rooms, tennis courts, ect", AccumulatedCapital = 0, NewCapital = 6000, OperationBudget = 8300, LaborBudget = 15700, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Management/Sales Attention", AccumulatedCapital = 0, NewCapital = 4000, OperationBudget = 6200, LaborBudget = 3900, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Resturants", AccumulatedCapital = 0, NewCapital = 10000, OperationBudget = 56000, LaborBudget = 111600, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Bars", AccumulatedCapital = 0, NewCapital = 5000, OperationBudget = 28000, LaborBudget = 55800, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Room Service", AccumulatedCapital = 0, NewCapital = 1000, OperationBudget = 14000, LaborBudget = 11100, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Banquet & Catering", AccumulatedCapital = 0, NewCapital = 1000, OperationBudget = 35000, LaborBudget = 40200, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Meeting Rooms", AccumulatedCapital = 0, NewCapital = 3000, OperationBudget = 7000, LaborBudget = 4400, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Entertainment", AccumulatedCapital = 0, NewCapital = 500, OperationBudget = 2800, LaborBudget = 5500, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Courtesy(FB)", AccumulatedCapital = 0, NewCapital = 500, OperationBudget = 12500, LaborBudget = 6500, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Guest Rooms", AccumulatedCapital = 0, NewCapital = 48000, OperationBudget = 8800, LaborBudget = 15000, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Reservations", AccumulatedCapital = 0, NewCapital = 5000, OperationBudget = 13000, LaborBudget = 9000, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Guest Check in/Guest Check out", AccumulatedCapital = 0, NewCapital = 4000, OperationBudget = 18000, LaborBudget = 31600, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Concierge", AccumulatedCapital = 0, NewCapital = 1000, OperationBudget = 9000, LaborBudget = 6000, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Housekeeping", AccumulatedCapital = 0, NewCapital = 5000, OperationBudget = 40000, LaborBudget = 88900, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Maintanence and security", AccumulatedCapital = 0, NewCapital = 4000, OperationBudget = 28500, LaborBudget = 31800, QuarterForecast =0},
+        new AttributeDecisionPriceList {  Attribute = "Courtesy (Rooms)", AccumulatedCapital = 0, NewCapital = 72000, OperationBudget = 12200, LaborBudget = 13600, QuarterForecast =0},
+
+    };
+        return list;
+    }
+    public List<RoomAllocationPriceList> RoomAllocationPriceList()
+    {
+        var list = new List<RoomAllocationPriceList> {
+
+        new RoomAllocationPriceList { Segment= "Business",                          RoomsAllocated= 1632,   ActualDemand= 0,RoomsSold= 0,    Revenue= 0, QuarterForecast=0 },
+        new RoomAllocationPriceList { Segment=  "Small Business",                   RoomsAllocated=1530,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate contract",               RoomsAllocated=1717,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Families",                         RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",         RoomsAllocated=544,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "International leisure travelers",  RoomsAllocated=901,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",      RoomsAllocated=1445,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Association Meetings",             RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Business",                         RoomsAllocated=180,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Small Business",                   RoomsAllocated=276,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate contract",               RoomsAllocated=96,      ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Families",                         RoomsAllocated=1452,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",         RoomsAllocated=1272,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "International leisure travelers",  RoomsAllocated=912,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",      RoomsAllocated=360,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Association Meetings",             RoomsAllocated = 1452, ActualDemand = 0, RoomsSold = 0, Revenue = 0, QuarterForecast  = 0 }
 
     };
         return list;

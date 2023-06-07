@@ -49,7 +49,7 @@ namespace Service
             // Change If Condition As Requirment 
             if (monthID > 0)
             {
-               // if (currentQuarter == 0)
+                // if (currentQuarter == 0)
                 {
                     //   objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
                     resObj.Message = "A new month has been created.";
@@ -88,16 +88,16 @@ namespace Service
                     ///////////////////////////////////////////////////////////////////
                     ///
                     objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
-                    if (currentQuarter == 0)
-                    {
-                        objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
-                    }
-                    else
-                    {
-                    }
+                    //if (currentQuarter == 0)
+                    //{
+                    objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
+                    //}
+                    //else
+                    //{
+                    //}
                     objFunMonth.UpdateClassQuarter(_context, classID, currentQuarter);
                 }
-              //  else
+                //  else
                 {
 
                 }
