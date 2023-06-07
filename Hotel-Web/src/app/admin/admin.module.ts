@@ -19,6 +19,7 @@ import { InstructorEditComponent } from './instructor';
 import { MatIconModule } from '@angular/material/icon';
 import { MaterialModule } from '../material.module';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
+import{CreateMonthComponent} from '../admin/instructor/create-month/create-month.component';
 
 @NgModule({
   declarations: [
@@ -27,12 +28,14 @@ import { ClassListComponent } from '../shared/class/class-list/class-list.compon
     InstructorComponent,
     InstructorListComponent,
     InstructorEditComponent,
+    CreateMonthComponent
   ],
   imports: [
     CommonModule,
     AdminRouteModule,
     SharedModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     AgGridModule,
    MaterialModule

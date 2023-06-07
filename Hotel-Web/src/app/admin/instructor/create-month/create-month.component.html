@@ -1,0 +1,94 @@
+
+
+<h2>
+    Previous 
+    Months
+</h2>
+<table id="monthGrd">
+    <tr>
+        <th>
+            Month
+        </th>
+        <th>
+            Monthly Market
+        </th>
+        <th>
+            Quarter No
+        </th>
+        <th>
+            Configuration
+        </th>
+        <th>
+            Completed
+        </th>
+    </tr>
+    <tr  *ngFor="let month of quarterlyMarketList">
+        <td>{{ month.sessionID }}</td>
+        <td>{{ month.totalMarket }}</td>
+        <td>{{month.quarterNo}}</td>
+        <td>{{ month.configID }}</td>
+        <td>{{ month.completed }}</td>
+        
+    </tr>
+    </table>
+    <div style="margin-top: 12px;margin-bottom: 10px;">
+    <h2>Finalize The Current Month</h2>
+    <p>
+        You can't create new month before finalizing current 
+        month. Be careful, once 
+        you finalize current month, it is not allowed to rollback. You can only review 
+        finalized months.
+        <br />
+        <button ID="FinalizeButton" Text="Finalize Now" class="button" >Finalize Now</button>
+    </p>
+    </div>
+    <table id="monthGrd">
+        <tr>
+            <th  >
+                <h2>Create A New Month</h2>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td >
+                Month Number
+            </td>
+            <td >
+                <span ID="QuarterNoLabel"  Text="">{{currentQuarter}}</span>
+            </td>
+            
+        </tr>
+        <tr>
+            <td >
+                Average Expected Market Occupancy Percentage
+            </td>
+            <td >
+                <input type="text" ID="MarketTextBox" [(ngModel)]="MarketTextBox"><span>%</span>
+
+            </td>
+            
+        </tr>
+        <tr>
+            <td >
+                Configuration
+            </td>
+            <td >
+                <span ID="ConfigurationLabel"  >{{configId}}</span>
+            </td>
+            
+        </tr>
+        <tr>
+            <td >
+                Message
+            </td>
+            <td >
+                <span ID="MessageLabel" runat="server" Text="">Test Message </span>
+            </td>
+            <td >
+               
+                <button ID="NewQuarterButton" class="button" (click)="CreateNewQuarter()" >Create a New Month</button>
+                    
+            </td>
+        </tr>
+    </table>

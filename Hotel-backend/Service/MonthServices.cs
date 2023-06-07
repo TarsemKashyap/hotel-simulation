@@ -53,8 +53,6 @@ namespace Service
                 {
                     //   objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
                     resObj.Message = "A new month has been created.";
-                    int index = 1;
-
 
                     await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
                     await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
@@ -70,14 +68,8 @@ namespace Service
                     ///////////////////////////////////////////////
                     ///
 
-                    //if (currentQuarter == 0)
-                    {
-                        objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
-                    }
-                    // else
-                    {
-                        //Pending Work
-                    }
+                    objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
+
                     /////////////////////////////////
                     //////Insert Goal template for new month
                     ////////////////////////////////
@@ -88,19 +80,12 @@ namespace Service
                     ///////////////////////////////////////////////////////////////////
                     ///
                     objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
-                    //if (currentQuarter == 0)
-                    //{
+
                     objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
-                    //}
-                    //else
-                    //{
-                    //}
+
                     objFunMonth.UpdateClassQuarter(_context, classID, currentQuarter);
                 }
-                //  else
-                {
 
-                }
 
             }
             resObj.Message = "Month Create";
