@@ -9,25 +9,28 @@
         <th>
             Month
         </th>
-        <th>
-            Monthly Market
-        </th>
+        <th>ClassID</th>
         <th>
             Quarter No
         </th>
         <th>
-            Configuration
+            Monthly Market
         </th>
         <th>
             Completed
         </th>
+        <th>
+            Configuration
+        </th>
+        
     </tr>
-    <tr  *ngFor="let month of quarterlyMarketList">
-        <td>{{ month.sessionID }}</td>
-        <td>{{ month.totalMarket }}</td>
-        <td>{{month.quarterNo}}</td>
-        <td>{{ month.configID }}</td>
-        <td>{{ month.completed }}</td>
+    <tr  *ngFor="let month of monthList">
+        <td>{{ month.monthId }}</td>
+        <td>{{month.classId}}</td>
+        <td>{{ month.sequence }}</td>
+        <td>{{month.totalMarket}}</td>
+        <td>{{ month.isComplete }}</td>
+        <td>{{ month.configId }}</td>
         
     </tr>
     </table>
@@ -87,7 +90,7 @@
             </td>
             <td >
                
-                <button ID="NewQuarterButton" class="button" (click)="CreateNewQuarter()" >Create a New Month</button>
+                <button ID="NewQuarterButton" class="button" (click)="CreateNewMonth()" >Create a New Month</button>
                     
             </td>
         </tr>

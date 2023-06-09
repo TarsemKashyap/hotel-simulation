@@ -2,10 +2,12 @@
 using Database;
 using Database.Migrations;
 using MapsterMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Service
@@ -19,6 +21,8 @@ namespace Service
         Task<MonthDto> GetById(int sessionId);
         Task<MonthDto> Update(int id, MonthDto account);
         Task DeleteId(int sessionId);
+        Task<ClassSessionDto> GetClassInfoById(int classId);
+        Task<MonthDto> GetMonthInfoById(int classId, int quarterNo);
     }
     public class MonthServices : IMonthService
     {
@@ -88,9 +92,11 @@ namespace Service
 
 
             }
+            string strjson = "{ monthID:" + monthID + "}";
+            var jobj = JsonConvert.DeserializeObject<MonthDto>(strjson)!;
             resObj.Message = "Month Create";
             resObj.StatusCode = 200;
-            resObj.Data = "{monthID:" + monthID + "}";
+            resObj.Data = jobj;
             return resObj;
 
         }
@@ -105,6 +111,71 @@ namespace Service
             throw new NotImplementedException();
         }
 
+        public async Task<ClassSessionDto> GetClassInfoById(int classId)
+        {
+            IQueryable<ClassSession> query = _context.ClassSessions.Where(x => x.ClassId == classId);
+            var result = query.Select(x => new ClassSessionDto
+            {
+                ClassId = x.ClassId,
+                Title = x.Title,
+                Memo = x.Memo,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                HotelsCount = x.HotelsCount,
+                RoomInEachHotel = x.RoomInEachHotel,
+                CurrentQuater = x.CurrentQuater,
+                CreatedOn = x.CreatedOn,
+                Code = x.Code,
+                CreatedBy = x.CreatedBy,
+                Status = x.Status.ToString(),
+
+
+            }).ToList();
+            ClassSessionDto obj = new ClassSessionDto();
+            if (result.Count > 0)
+            {
+                obj.ClassId = classId;
+                obj.Title = result[0].Title;
+                obj.Memo = result[0].Memo;
+                obj.StartDate = result[0].StartDate;
+                obj.EndDate = result[0].EndDate;
+                obj.HotelsCount = result[0].HotelsCount;
+                obj.RoomInEachHotel = result[0].RoomInEachHotel;
+                obj.CurrentQuater = result[0].CurrentQuater;
+                obj.CreatedOn = result[0].CreatedOn;
+                obj.Code = result[0].Code;
+                obj.CreatedBy = result[0].CreatedBy;
+                obj.Status = result[0].Status.ToString();
+            }
+            return obj;
+
+        }
+
+        public async Task<MonthDto> GetMonthInfoById(int classId, int quarterNo)
+        {
+            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId && x.Sequence == quarterNo);
+            var result = query.Select(x => new MonthDto
+            {
+                MonthId = x.MonthId,
+                ClassId = x.ClassId,
+                Sequence = x.Sequence,
+                TotalMarket = x.TotalMarket,
+                ConfigId = x.ConfigId,
+                IsComplete = x.IsComplete
+            }).ToList();
+            MonthDto obj = new MonthDto();
+            if (result.Count > 0)
+            {
+                obj.MonthId = result[0].MonthId;
+                obj.ClassId = result[0].ClassId;
+                obj.Sequence = result[0].Sequence;
+                obj.TotalMarket = result[0].TotalMarket;
+                obj.ConfigId = result[0].ConfigId;
+                obj.IsComplete = result[0].IsComplete;
+            }
+            return obj;
+        }
+
         public IEnumerable<MonthDto> List(string monthId = null)
         {
             IQueryable<Month> query = _context.Months;
@@ -115,7 +186,11 @@ namespace Service
             var result = query.Select(x => new MonthDto
             {
                 MonthId = x.MonthId,
-                ClassId = x.ClassId
+                ClassId = x.ClassId,
+                Sequence = x.Sequence,
+                TotalMarket = x.TotalMarket,
+                ConfigId = x.ConfigId,
+                IsComplete = x.IsComplete
             });
 
             return result.AsEnumerable();

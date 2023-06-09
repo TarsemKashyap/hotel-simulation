@@ -28,7 +28,7 @@ namespace Api.Controllers
         {
             //_validator.ValidateAndThrow(dto);
             // dto.CreatedBy = LoggedUserId;
-           
+
 
             var response = await _monthService.Create(dto);
             return Ok(response);
@@ -81,6 +81,24 @@ namespace Api.Controllers
             // string instructorId = IsAdmin ? null : LoggedUserId;
 
             var MonthResult = _monthService.List();
+            return Ok(MonthResult);
+
+        }
+        [HttpGet("classInfo/{classId}")]
+        public async Task<ClassSessionDto> ClassInfo(int classId)
+        {
+            // string instructorId = IsAdmin ? null : LoggedUserId;
+
+            ClassSessionDto MonthResult = await _monthService.GetClassInfoById(classId);
+            return MonthResult;
+
+        }
+        [HttpGet("monthInfo/{classId}/{quarterNo}")]
+        public IActionResult MonthInfo(int classId, int quarterNo)
+        {
+            // string instructorId = IsAdmin ? null : LoggedUserId;
+
+            var MonthResult = _monthService.GetMonthInfoById(classId, quarterNo);
             return Ok(MonthResult);
 
         }

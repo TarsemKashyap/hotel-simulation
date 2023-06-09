@@ -13,12 +13,14 @@ public class ClassSessionDto
     public int CurrentQuater { get; set; }
     public DateTime CreatedOn { get; set; }
     public string Code { get; set; }
-    public string CreatedBy {get;set;}
+    public string CreatedBy { get; set; }
+    public string Status { get; set; }
 
     public ClassGroupDto[] Groups { get; set; }
 
 }
- public class ClassSessionUpdateDto : ClassSessionDto
+
+public class ClassSessionUpdateDto : ClassSessionDto
 {
     public ClassGroupDto[] Added { get; set; }
     public ClassGroupDto[] Removed { get; set; }

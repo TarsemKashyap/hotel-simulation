@@ -6,3 +6,17 @@ export interface MonthDto {
     isComplete: string;
     configId:string
 }
+export interface ClassDto {
+    classId 		:string;
+    	title 			:string;
+    	memo 			:string;
+     	startDate 		:string;
+     	endDate 		:string;
+    	hotelsCount 	:string;
+    	roomInEachHotel :string;
+    	currentQuater 	:string;
+     	createdOn 		:string;
+    	code 			:string;
+    	createdBy 		:string;
+    	status 			:string;
+}
