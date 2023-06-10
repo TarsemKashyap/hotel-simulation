@@ -1,8 +1,7 @@
 <h1 class="text-3xl text-black pb-0">Manage Class</h1>
 <mat-form-field class="align-right">
   <mat-label>
-    <i *ngIf="Titles.length"> 
-      Select class</i>
+    <i *ngIf="Titles.length"> Select class</i>
     <i *ngIf="!Titles.length"> No class available</i>
   </mat-label>
   <mat-select [(ngModel)]="selectedTitle" name="selectedTitle">

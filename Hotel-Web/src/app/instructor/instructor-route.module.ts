@@ -16,7 +16,6 @@ const routes: Routes = [
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'class/manage-class', component: ClassListComponent },
-      { path: 'class/add-change-class', component: AddRemovedClassComponent },
     ],
     //canActivate: [canActivateHome],
   },
