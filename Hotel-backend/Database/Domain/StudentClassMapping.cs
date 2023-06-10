@@ -30,7 +30,7 @@ namespace Database.Domain
             builder.HasOne(x => x.Student).WithMany(x => x.StudentClassMappings).HasForeignKey(x => x.StudentId);
             builder.HasOne(x => x.ClassGroup).WithMany(x => x.StudentClassMappings).HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.SetNull).IsRequired(false);
             builder.Property(x => x.isDefault);
-            ;
+            
         }
 
     }

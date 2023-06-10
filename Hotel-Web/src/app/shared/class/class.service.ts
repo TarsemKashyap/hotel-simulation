@@ -69,6 +69,34 @@ export class ClassService {
     );
   }
 
+  studentClassMappingList(classId:any): Observable<StudentList[]> {
+    return this.httpClient.get<StudentList[]>(`roleMapping/studentlist/${classId}`);
+  }
+
+  getStudentData(id: string): Observable<any> {
+    return this.httpClient.get<StudentList[]>(
+      `roleMapping/student/${id}`
+    );
+  }
+
+  Roleslist(req:{studentId : string, classId : number}): Observable<StudentRoleGroupRequest> {
+    return this.httpClient.post<StudentRoleGroupRequest>('roleMapping/list',req);
+  }
+
+  Grouplist(): Observable<StudentGroupList[]> {
+    return this.httpClient.get<StudentGroupList[]>('roleMapping/studentGroups');
+  }
+
+  AddRoles(roles: StudentRoleGroupAssign): Observable<any> {
+    return this.httpClient.post('roleMapping', roles);
+  }
+
+  getRoles(studentId: string): Observable<any> {
+    return this.httpClient.get<StudentRoleGroupAssign[]>(
+      `roleMapping/${studentId}`
+    );
+  }
+
   studentByclass(): Observable<AddRemoveClassDto> {
     return this.httpClient.get<AddRemoveClassDto>('studentClassMapping/studentlist');
   }
