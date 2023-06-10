@@ -8,6 +8,7 @@ import { StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
 import { StudentGroupList, StudentRoleGroupRequest, StudentRoles } from './model/Roles';
 import { StudentRoleGroupAssign } from './model/StudentRoles';
+import { AddRemoveClassDto, ClassMapping } from './model/classSession.model';
 
 @Injectable({
   providedIn: 'root',
@@ -66,5 +67,21 @@ export class ClassService {
     return this.httpClient.get<StudentRoleGroupAssign[]>(
       `roleMapping/${studentId}`
     );
+  }
+
+  studentByclass(): Observable<AddRemoveClassDto> {
+    return this.httpClient.get<AddRemoveClassDto>('studentClassMapping/studentlist');
+  }
+
+  setAsDefault(req:ClassSession): Observable<any> {
+    return this.httpClient.post<ClassSession>('studentClassMapping/studentClassUpdate',req);
+  }
+
+  ClassTitlelist(): Observable<any> {
+    return this.httpClient.get<ClassSession[]>('studentClassMapping/studentClasslist');
+  }
+
+  SaveClass(classSession: ClassMapping): Observable<any> {
+    return this.httpClient.post('studentClassMapping/studentClassAssign', classSession);
   }
 }

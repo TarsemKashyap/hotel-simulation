@@ -14,6 +14,7 @@ namespace Database.Domain
         public int ClassId { get; set; }
         public string StudentId { get; set; }
         public int? GroupId { get; set; }
+        public bool isDefault { get; set; }
         public virtual Student Student { get; set; }
         public virtual ClassSession Class { get; set; }
         public virtual ClassGroup ClassGroup { get; set; }
@@ -28,7 +29,8 @@ namespace Database.Domain
             builder.HasOne(x => x.Class).WithMany(x => x.StudentClassMappings).HasForeignKey(x => x.ClassId);
             builder.HasOne(x => x.Student).WithMany(x => x.StudentClassMappings).HasForeignKey(x => x.StudentId);
             builder.HasOne(x => x.ClassGroup).WithMany(x => x.StudentClassMappings).HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.SetNull).IsRequired(false);
-            ;
+            builder.Property(x => x.isDefault);
+            
         }
 
     }

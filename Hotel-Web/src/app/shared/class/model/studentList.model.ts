@@ -3,7 +3,7 @@ export interface StudentList {
     FirstName: string;
     LastName: string;
     Title: string;
-    ClassCode: string;
+    GroupName: string;
     Email: string;
     Institute: string;
   }

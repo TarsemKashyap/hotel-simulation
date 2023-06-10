@@ -43,14 +43,17 @@ export class StudentRolesEditComponent {
   }
 
   ngOnInit(): void {
+    debugger
     this.studentId = this.route.snapshot.params['id'];
     this.studentRoles();
   }
 
   private studentRoles() {
+    debugger
     this.classService
       .Roleslist({ studentId: this.row.studentId, classId: this.row.classId })
       .subscribe((data) => {
+        debugger
         this.selectedRoles = data.selectedRoles;
         this.selectedGroup = data.selectedGroup;
         this.groups = data.classGroups;
