@@ -27,7 +27,8 @@ public enum ClassStatus
 {
     S = 0,
     I = 1,
-    T = 2
+    T = 2,
+    A = 3
 }
 
 public class ClassSessionEntityConfig : IEntityTypeConfiguration<ClassSession>

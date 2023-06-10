@@ -94,19 +94,39 @@ namespace Api.Controllers
 
         }
         [HttpGet("monthInfo/{classId}/{quarterNo}")]
-        public IActionResult MonthInfo(int classId, int quarterNo)
+        public Task<MonthDto> MonthInfo(int classId, int quarterNo)
         {
             // string instructorId = IsAdmin ? null : LoggedUserId;
 
             var MonthResult = _monthService.GetMonthInfoById(classId, quarterNo);
-            return Ok(MonthResult);
+            return MonthResult;
 
         }
 
+        [HttpPost("UpdateMonthCompletedStatus")]
+        public async Task<bool> UpdateMonthCompletedStatus(MonthDto dto)
+        {
+            //_validator.ValidateAndThrow(dto);
+            // dto.CreatedBy = LoggedUserId;
 
 
+            var response = await _monthService.updateMonthCompletedStatus(dto);
+            return response;
+            //return Ok("OK");
+        }
+        //UpdateClassStatus
+
+        [HttpPost("UpdateClassStatus")]
+        public async Task<bool> UpdateClassStatus(ClassSessionDto dto)
+        {
+            //_validator.ValidateAndThrow(dto);
+            // dto.CreatedBy = LoggedUserId;
 
 
+            var response = await _monthService.UpdateClassStatus(dto);
+            return response;
+
+        }
 
 
 

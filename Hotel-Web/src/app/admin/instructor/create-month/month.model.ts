@@ -3,7 +3,7 @@ export interface MonthDto {
     classId: string;
     sequence: string;
     totalMarket: string;
-    isComplete: string;
+    isComplete: boolean;
     configId:string
 }
 export interface ClassDto {

@@ -42,7 +42,7 @@
         you finalize current month, it is not allowed to rollback. You can only review 
         finalized months.
         <br />
-        <button ID="FinalizeButton" Text="Finalize Now" class="button" >Finalize Now</button>
+        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="button" [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">Finalize Now</button>
     </p>
     </div>
     <table id="monthGrd">
@@ -58,17 +58,17 @@
                 Month Number
             </td>
             <td >
-                <span ID="QuarterNoLabel"  Text="">{{currentQuarter}}</span>
+                <span ID="QuarterNoLabel"  Text="">{{QuarterNoLabel}}</span>
             </td>
             
         </tr>
         <tr>
             <td >
-                Average Expected Market Occupancy Percentage
+                Average Expected Market Occupancy Percentage<span style="color: red;"> *</span>
             </td>
             <td >
-                <input type="text" ID="MarketTextBox" [(ngModel)]="MarketTextBox"><span>%</span>
-
+                <input type="number" ID="MarketTextBox" [(ngModel)]="MarketTextBox" required><span style="margin-left: 5px;">%</span>
+<span id="ErrorMsg" [hidden]="!isError" style="color: red;">Enter Number Value </span>
             </td>
             
         </tr>
@@ -86,11 +86,11 @@
                 Message
             </td>
             <td >
-                <span ID="MessageLabel" runat="server" Text="">Test Message </span>
+                <span ID="MessageLabel" runat="server" Text="">{{MessageLabel}}</span>
             </td>
             <td >
                
-                <button ID="NewQuarterButton" class="button" (click)="CreateNewMonth()" >Create a New Month</button>
+                <button ID="NewQuarterButton" type="button" class="button" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >Create a New Month</button>
                     
             </td>
         </tr>

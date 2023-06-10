@@ -2,6 +2,7 @@
 using Database;
 using Database.Migrations;
 using MapsterMapper;
+using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace Service
         Task DeleteId(int sessionId);
         Task<ClassSessionDto> GetClassInfoById(int classId);
         Task<MonthDto> GetMonthInfoById(int classId, int quarterNo);
+        Task<Boolean> updateMonthCompletedStatus(MonthDto mdt);
+        Task<bool> UpdateClassStatus(ClassSessionDto csdt);
     }
     public class MonthServices : IMonthService
     {
@@ -49,13 +52,13 @@ namespace Service
             int currentQuarter = classDetail.CurrentQuater;
             int numberOfHotels = classDetail.HotelsCount;
             int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
-            int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
+            int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter + 1, totMarket, false);
             // Change If Condition As Requirment 
             if (monthID > 0)
             {
                 // if (currentQuarter == 0)
                 {
-                    //   objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket);
+                    objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, true);
                     resObj.Message = "A new month has been created.";
 
                     await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
@@ -191,7 +194,7 @@ namespace Service
                 TotalMarket = x.TotalMarket,
                 ConfigId = x.ConfigId,
                 IsComplete = x.IsComplete
-            });
+            }).OrderBy(x => x.Sequence);
 
             return result.AsEnumerable();
         }
@@ -205,6 +208,22 @@ namespace Service
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> updateMonthCompletedStatus(MonthDto mdt)
+        {
+
+            FunMonth obj = new FunMonth();
+            bool result = obj.UpdateMonthCompletedStatus(_context, mdt.ClassId, mdt.Sequence, mdt.IsComplete);
+            return result;
+        }
+        public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
+        {
+
+            FunMonth obj = new FunMonth();
+            bool result = obj.UpdateClassStatus(_context, csdt.ClassId, csdt.Status);
+            return result;
+        }
+        //UpdateClassStatus
     }
 }
 

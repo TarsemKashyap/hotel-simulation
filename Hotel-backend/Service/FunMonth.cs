@@ -40,10 +40,10 @@ namespace Service
             return obj;
 
         }
-        public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket)
+        public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket,bool isCompleted)
         {
             IQueryable<Month> query = context.Months;
-            var obj = new Month() { ClassId = classID, Sequence = currentQuarter + 1, TotalMarket = totalMarket, ConfigId = 1, IsComplete = false };
+            var obj = new Month() { ClassId = classID, Sequence = currentQuarter + 1, TotalMarket = totalMarket, ConfigId = 1, IsComplete = isCompleted };
             context.Months.Add(obj);
             int status = context.SaveChanges();
             int monthID = obj.MonthId;
@@ -1108,10 +1108,61 @@ namespace Service
         {
             var data = context.IncomeState.Where(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter)
                     .ToList();
-            IncomeState obj= new IncomeState();
+            IncomeState obj = new IncomeState();
             obj.TotReven = data[0].TotReven;
             return obj;
         }
+        public bool UpdateMonthCompletedStatus(HotelDbContext context, int classID, int currentQuarter, bool iscompleted)
+        {
+            bool result = false;
+            try
+            {
+                Month clsMonth = context.Months.Where(x => x.ClassId == classID && x.Sequence == currentQuarter).First();
+                clsMonth.IsComplete = iscompleted;
+                context.Months.Add(clsMonth);
+                context.Entry(clsMonth).State = EntityState.Modified;
+                context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+        }
+        public bool UpdateClassStatus(HotelDbContext context, int classID, string status)
+        {
+            bool result = false;
+            try
+            {
+                ClassSession clsSess = context.ClassSessions.Where(x => x.ClassId == classID).First();
+                switch (status)
+                {
+                    case "I":
+                        clsSess.Status = ClassStatus.I;
+                        break;
+                    case "A":
+                        clsSess.Status = ClassStatus.A;
+                        break;
+                    case "S":
+                        clsSess.Status = ClassStatus.S;
+                        break;
+                    case "T":
+                        clsSess.Status = ClassStatus.T;
+                        break;
 
+                }
+
+                context.ClassSessions.Add(clsSess);
+                context.Entry(clsSess).State = EntityState.Modified;
+                context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+        }
     }
 }
