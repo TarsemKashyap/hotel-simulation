@@ -1,50 +1,36 @@
-<button class="align-right" mat-button [matMenuTriggerFor]="afterMenu">After</button>
+<button class="align-right" mat-button [matMenuTriggerFor]="afterMenu">Menu</button>
 <mat-menu #afterMenu="matMenu" xPosition="before">
   <button (click)="classEdit()" style="font-size: 10px;" mat-menu-item>Class Overview</button>
 </mat-menu>
-
-<div class="mat-elevation-z8">
-    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container matColumnDef="firstName">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>First Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
-        </ng-container>
-      
-        <ng-container matColumnDef="lastName">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Last name</th>
-          <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
-        </ng-container>
-      
-        <ng-container matColumnDef="email">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Email</th>
-          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="institute">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>Institute</th>
-            <td mat-cell *matCellDef="let element">{{ element.institute }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="classCode">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>ClassCode</th>
-            <td mat-cell *matCellDef="let element">{{ element.classCode }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="title">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>ClassName</th>
-            <td mat-cell *matCellDef="let element">{{ element.title }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row">
-              <button (click)="editClick(row)">
-                Manage Roles
-                <!-- <mat-icon class="text-gray-500  hover:text-primary" matRipple (click)="editClick(row)"></mat-icon> -->
-              </button>
-            </td>
-          </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+<section >
+  <ul class="custom_table mb-12">
+      <li>
+          <div class="grid grid-cols-2 border p-4">
+              <div class="text-left">First name</div>
+              <label class="text-right">hello</label>
+          </div>
+      </li>
+      <li>
+          <div class="grid grid-cols-2 border p-4">
+              <div class="text-left">Last name</div>
+              <label class="text-right">grllo</label>
+          </div>
+      </li>
+      <li>
+          <div class="grid grid-cols-2 border p-4">
+              <div class="text-left">Email</div>
+              <label class="text-right">hello</label>
+          </div>
+      </li>
+  </ul>
+</section>
+<h1 class="text-3xl text-black pb-0">Student List</h1>
+<div class="container">
+  <div>
   </div>
+  <div>
+    <ag-grid-angular style="height: 300px" class="ag-theme-alpine" [rowData]="$rows" [defaultColDef]="defaultColDef"
+      [columnDefs]="columnDefs">
+    </ag-grid-angular>
+  </div>
+</div>

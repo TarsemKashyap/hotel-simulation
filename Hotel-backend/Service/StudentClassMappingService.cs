@@ -38,7 +38,7 @@ namespace Service
         {
             var studentList = _context.StudentClassMapping
                 .Include(x => x.Class)
-                .Include(x => x.Student)
+                .Include(x => x.Student).Include(x=> x.ClassGroup)
                 .Where(x => x.ClassId == ClassId)
                 .Select(x => new StudentClassMappingDto
                 {
@@ -49,11 +49,12 @@ namespace Service
                     Email = x.Student.Email,
                     Code = x.Class.Code,
                     Institute = x.Student.Institue,
-                    StudentId = x.StudentId
+                    StudentId = x.StudentId,
+                    GroupName = x.ClassGroup.Name
                 })
                 .ToList();
-
-            return studentList;
+            int totalCount = studentList.Count;
+            return (studentList);
         }
 
         public IEnumerable<StudentClassMappingDto> StudentList(string studentId)
