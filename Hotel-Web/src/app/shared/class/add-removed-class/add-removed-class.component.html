@@ -1,0 +1,35 @@
+<h1 class="text-3xl text-black pb-0">Manage Class</h1>
+<mat-form-field class="align-right">
+  <mat-label>
+    <i *ngIf="Titles.length"> Select class</i>
+    <i *ngIf="!Titles.length"> No class available</i>
+  </mat-label>
+  <mat-select [(ngModel)]="selectedTitle" name="selectedTitle">
+    <mat-label>Choose an option</mat-label>
+    <mat-option *ngFor="let title of Titles" [value]="title">
+      {{ title.title }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<button
+  (click)="Save()"
+  class="bg-primary focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+  type="button"
+  style="margin-left: 10px"
+>
+  Save
+</button>
+
+<div class="container">
+  <div></div>
+  <div>
+    <ag-grid-angular
+      style="height: 300px"
+      class="ag-theme-alpine"
+      [rowData]="$rows"
+      [defaultColDef]="defaultColDef"
+      [columnDefs]="columnDefs"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

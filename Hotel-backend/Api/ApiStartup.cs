@@ -115,6 +115,10 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentSignupTempService, StudentSignupTempService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IMonthService, MonthServices>();
+        services.AddScoped<IStudentClassMappingService, StudentClassMappingService>();
+        services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
+        services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
+
 
 
     }

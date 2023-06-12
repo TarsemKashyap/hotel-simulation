@@ -1,3 +1,4 @@
+using Database.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +11,8 @@ public class ClassGroup
     public decimal Balance { get; set; }
 
     public virtual ClassSession Class { get; set; }
+    public virtual List<StudentGroupMapping> StudentGroupMapping { get; set; }
+    public virtual List<StudentClassMapping> StudentClassMappings { get; set; }
 
 }
 

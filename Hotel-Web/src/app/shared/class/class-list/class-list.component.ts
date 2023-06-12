@@ -55,6 +55,13 @@ export class ClassListComponent implements OnInit {
       cellRendererParams: {
         actions: [
           {
+            placeHolder: 'visibility',
+            mode: 'icon',
+            cssClass: 'hover:text-primary',
+            onClick: this.onOverviewClick(),
+            hide: () => false,
+          },
+          {
             placeHolder: 'edit',
             mode: 'icon',
             onClick: this.onEditCallback(),
@@ -102,6 +109,12 @@ export class ClassListComponent implements OnInit {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       console.log('Edit Class', row);
       this.router.navigate([`class/edit/${row.data?.classId}`]);
+    };
+  }
+
+  onOverviewClick() {
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      this.router.navigate([`class/student-list/${row.data?.classId}`]);
     };
   }
 

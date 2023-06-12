@@ -51,7 +51,6 @@ namespace Service
                 studentSignupTemp.PaymentDate = DateTime.Now;
 
                 StudentSignupTemp signup = _mapper.Map<StudentSignupTempDto, StudentSignupTemp>(studentSignupTemp);
-                
                 _context.Entry(signup).State = EntityState.Detached;
                 var result = _context.Set<StudentSignupTemp>().Update(signup);
 
@@ -69,7 +68,6 @@ namespace Service
         public async Task<StudentSignupTempDto> GetByRefrence(string refrenceId)
         {
             var studentSignup = _context.StudentSignupTemp.Where(x => x.Reference == refrenceId).AsNoTracking().SingleOrDefault();
-            
             if (studentSignup == null)
                 throw new ValidationException("student not found for given student Refrence");
             return studentSignup.Adapt<StudentSignupTempDto>();
