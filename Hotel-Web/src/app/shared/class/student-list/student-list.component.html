@@ -1,32 +1,61 @@
-<button class="align-right" mat-button [matMenuTriggerFor]="afterMenu">
-  Menu
+<button
+  class="bg-primary float-right p-2 m-2 text-white"
+  mat-button
+  [matMenuTriggerFor]="belowMenu"
+>
+  Class Management
 </button>
-<mat-menu #afterMenu="matMenu" xPosition="before">
-  <button (click)="classEdit()" style="font-size: 10px" mat-menu-item>
-    Class Overview
-  </button>
+<mat-menu #belowMenu="matMenu" yPosition="below">
+  <ul>
+    <a
+      [routerLink]="['/create-month', classId]"
+      routerLinkActive="router-link-active"
+      mat-menu-item
+      class="inline-block border border-white rounded text-sm hover:border-gray-200 text-blue-500 hover:bg-primary-200 py-1 px-3"
+      routerLinkActive="router-link-active"
+      >Create Month</a
+    >
+  </ul>
+  <ul>
+    <a
+      mat-menu-item
+      class="border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+      href="#"
+      >Finalize Month</a
+    >
+  </ul>
 </mat-menu>
 <section>
-  <ul class="custom_table mb-12">
-    <li>
-      <div class="grid grid-cols-2 border p-4">
-        <div class="text-left">First name</div>
-        <label class="text-right">hello</label>
-      </div>
-    </li>
-    <li>
-      <div class="grid grid-cols-2 border p-4">
-        <div class="text-left">Last name</div>
-        <label class="text-right">grllo</label>
-      </div>
-    </li>
-    <li>
-      <div class="grid grid-cols-2 border p-4">
-        <div class="text-left">Email</div>
-        <label class="text-right">hello</label>
-      </div>
-    </li>
-  </ul>
+  <div>
+    <div class="px-4 sm:px-0">
+      <h3 class="text-base font-semibold leading-7 text-gray-900">Applicant Information</h3>
+    </div>
+    <div class="mt-6 border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Class Name</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Javascript</dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Start Date</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">06 July 2023</dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">End date</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">23 July 2023</dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Total Student enrolled</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">340</dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">About</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.</dd>
+        </div>
+        
+      </dl>
+    </div>
+  </div>
 </section>
 <h1 class="text-3xl text-black pb-0">Student List</h1>
 <div class="container">
