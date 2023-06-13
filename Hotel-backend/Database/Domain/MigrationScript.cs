@@ -24,7 +24,7 @@ public class MigrationScriptEntityConfig : IEntityTypeConfiguration<MigrationScr
         builder.ToTable("__MigrationScript");
         builder.HasKey(x => x.ScriptId);
         builder.Property(x => x.Description).HasMaxLength(300);
-        builder.Property(x => x.ExecutedOn).HasDefaultValue(DateTime.Now);
+        builder.Property(x => x.ExecutedOn).HasDefaultValue(new DateTime(2023,05,20));
 
     }
 

@@ -32,8 +32,27 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<StudentGroupMapping> StudentGroupMapping { get; set; }
     public DbSet<StudentRoleMapping> StudentRoleMapping { get; set; }
 
+    public DbSet<Attribute> Attribute { get; set; }
+    public DbSet<Segment> Segment { get; set; }
+    public DbSet<MarketingTechniques> MarketingTechniques { get; set; }
+    public DbSet<DistributionChannels> DistributionChannels { get; set; }
+    public DbSet<MarketingDecision> MarketingDecision { get; set; }
+    public DbSet<PriceDecision> PriceDecision { get; set; }
+    public DbSet<AttributeDecision> AttributeDecision { get; set; }
+    public DbSet<RoomAllocation> RoomAllocation { get; set; }
+    public DbSet<CustomerRawRating> CustomerRawRating { get; set; }
+    public DbSet<WeightedAttributeRating> WeightedAttributeRating { get; set; }
+    public DbSet<IncomeState> IncomeState { get; set; }
+    public DbSet<Goal> Goal { get; set; }
+    public DbSet<BalanceSheet> BalanceSheet { get; set; }
+    public DbSet<SoldRoomByChannel> SoldRoomByChannel { get; set; }
+    public DbSet<AttributeMaxCapitalOperationConfig> AttributeMaxCapitalOperationConfig { get; set; }
+
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(), t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
         builder.Entity<StudentRoles>().HasData(
           new StudentRoles { Id = 1, RoleName = "Revenue Manager" },

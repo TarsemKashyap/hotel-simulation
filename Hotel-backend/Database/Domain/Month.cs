@@ -10,6 +10,16 @@ public class Month
     public bool IsComplete { get; set; }
     public int ConfigId { get; set; }
     public virtual ClassSession Class { get; set; }
+    public virtual List<MarketingDecision> MarketingDecision { get; set; }
+    public virtual List<PriceDecision> PriceDecision { get; set; }
+    public virtual List<AttributeDecision> AttributeDecision { get; set; }
+    public virtual List<RoomAllocation> RoomAllocation { get; set; }
+    public virtual List<CustomerRawRating> CustomerRawRating { get; set; }
+    public virtual List<WeightedAttributeRating> WeightedAttributeRating { get; set; }
+    public virtual List<IncomeState> IncomeState { get; set; }
+    public virtual List<Goal> Goal { get; set; }
+    public virtual List<BalanceSheet> BalanceSheet { get; set; }
+    public virtual List<SoldRoomByChannel> SoldRoomByChannel { get; set; }
 
 
 }

@@ -4,24 +4,32 @@ import { AddClassComponent } from './add-class/add-class.component';
 import { ClassService } from './class.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { ClassListComponent } from './class-list/class-list.component';
 import { ActionRendererComponent } from './action-renderer/action-renderer.component';
 import { ClassEditComponent } from './class-edit/class-edit.component';
 import { MatIconModule } from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { GridActionComponent } from './grid-action/grid-action.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { MatTableModule } from '@angular/material/table';
 import { StudentRolesEditComponent } from './student-roles-edit/student-roles-edit.component';
-import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.component';
 
-
 @NgModule({
-  declarations: [AddClassComponent, ClassListComponent, ActionRendererComponent, ClassEditComponent, StudentListComponent, StudentRolesEditComponent,GridActionComponent, AddRemovedClassComponent],
+  declarations: [
+    AddClassComponent,
+    ClassListComponent,
+    ActionRendererComponent,
+    ClassEditComponent,
+    StudentListComponent,
+    StudentRolesEditComponent,
+    GridActionComponent,
+    AddRemovedClassComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -32,7 +40,8 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
     MatTableModule,
     MatDialogModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    RouterModule 
   ],
   providers: [ClassService],
 })
@@ -43,5 +52,8 @@ export const classRoute: Routes = [
   { path: 'class/edit/:id', component: ClassEditComponent },
   { path: 'class/list', component: ClassListComponent },
   { path: 'class/student-list/:id', component: StudentListComponent },
-  { path: 'class/student-roles-edit/:id', component: StudentRolesEditComponent }
+  {
+    path: 'class/student-roles-edit/:id',
+    component: StudentRolesEditComponent,
+  },
 ];
