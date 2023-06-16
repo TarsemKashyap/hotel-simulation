@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { StudentList } from '../model/studentList.model';
+import { ClassOverview, StudentList } from '../model/studentList.model';
 import { ClassService } from '../class.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentRolesEditComponent } from '../student-roles-edit/student-roles-edit.component';
@@ -9,14 +9,18 @@ import { GridActionComponent } from '../grid-action/grid-action.component';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 import { ColDef, IRowNode } from 'ag-grid-community';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe } from '@angular/common';
+import { ClassInformation, ClassSession } from '../model/classSession.model';
 
 @Component({
   selector: 'app-student-list',
   templateUrl: './student-list.component.html',
-  styleUrls: ['./student-list.component.css']
+  styleUrls: ['./student-list.component.css'],
+  providers: [DatePipe]
 })
 export class StudentListComponent {
   classId: number | undefined;
+  classSession : ClassInformation | undefined;
   columnDefs: ColDef[] = [
     {
       field: 'firstName',
@@ -31,7 +35,7 @@ export class StudentListComponent {
       cellRendererParams: {
         actions: [
           {
-            placeHolder: 'visibility',
+            placeHolder: 'group',
             mode: 'icon',
             cssClass: 'hover:text-primary',
             onClick: this.onOverviewClick(),
@@ -49,21 +53,23 @@ export class StudentListComponent {
     sortable: true,
   };
 
-  $rows: StudentList[] = [];
+  $rows: StudentList[] = [] 
 
   constructor(
     private classService: ClassService,
     private router: Router,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
     this.classId = this.route.snapshot.params['id'];
-    this.classService.studentClassMappingList(this.classId).subscribe((x) => {
+    this.classService.studentClassMappingList(this.classId!).subscribe((x) => {
       debugger
-      this.$rows = x;
+      this.$rows = x.studentClassMappingDto;
+      this.classSession = x.classSessionDto;
     });
   }
 

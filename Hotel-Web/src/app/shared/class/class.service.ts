@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
 import { ClassSession } from '.';
-import { StudentList } from './model/studentList.model';
+import { ClassOverview, StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
 import { StudentGroupList, StudentRoleGroupRequest, StudentRoles } from './model/Roles';
 import { StudentRoleGroupAssign } from './model/StudentRoles';
@@ -41,8 +41,8 @@ export class ClassService {
     );
   }
 
-  studentClassMappingList(classId:any): Observable<StudentList[]> {
-    return this.httpClient.get<StudentList[]>(`roleMapping/studentlist/${classId}`);
+  studentClassMappingList(classId:number): Observable<ClassOverview> {
+    return this.httpClient.get<ClassOverview>(`roleMapping/studentlist/${classId}`);
   }
 
   getStudentData(id: string): Observable<any> {

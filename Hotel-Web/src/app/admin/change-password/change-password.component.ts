@@ -45,7 +45,7 @@ export class ChangePasswordComponent {
       currentPassword:this.form.value.currentPassword
     };
     this.accountService.changePassword(login).subscribe(x => {
-
+  debugger
     });
 
   }

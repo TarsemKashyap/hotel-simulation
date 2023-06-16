@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Common.Model;
 using Database;
 using Database.Domain;
 using Database.Migrations;
@@ -18,7 +19,7 @@ namespace Service
     {
 
         Task<AddRemoveClassDto> ClassesByStudent(string studentId);
-        IEnumerable<StudentClassMappingDto> List(int ClassId);
+        ClassOverviewDto List(int classId);
         Task<StudentClassMappingDto> GetById(Guid studentId);
         IEnumerable<StudentClassMappingDto> StudentList(string studentId);
         IEnumerable<StudentClassMappingDto> GetMissingClassList();
@@ -34,11 +35,12 @@ namespace Service
             _mapper = mapper;
             _context = context;
         }
-        public IEnumerable<StudentClassMappingDto> List(int ClassId)
+        public ClassOverviewDto List(int ClassId)
         {
+
             var studentList = _context.StudentClassMapping
                 .Include(x => x.Class)
-                .Include(x => x.Student).Include(x=> x.ClassGroup)
+                .Include(x => x.Student).Include(x => x.ClassGroup)
                 .Where(x => x.ClassId == ClassId)
                 .Select(x => new StudentClassMappingDto
                 {
@@ -50,11 +52,30 @@ namespace Service
                     Code = x.Class.Code,
                     Institute = x.Student.Institue,
                     StudentId = x.StudentId,
-                    GroupName = x.ClassGroup.Name
+                    GroupName = x.ClassGroup.Name,
+                    StartDate = x.Class.StartDate,
+                    EndDate = x.Class.EndDate
                 })
                 .ToList();
-            int totalCount = studentList.Count;
-            return (studentList);
+
+            var classSessions = _context.ClassSessions.FirstOrDefault(x => x.ClassId == ClassId);
+
+            var classDetails = new ClassSessionDto
+            {
+                Title = classSessions.Title,
+                TotalStudentCount = studentList.Count,
+                StartDate = classSessions.StartDate,
+                EndDate = classSessions.EndDate,
+            };
+
+
+
+            var classOverview = new ClassOverviewDto
+            {
+                StudentClassMappingDto = studentList,
+                ClassSessionDto = classDetails
+            };
+            return (classOverview);
         }
 
         public IEnumerable<StudentClassMappingDto> StudentList(string studentId)

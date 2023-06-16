@@ -31,4 +31,9 @@ export class SessionStore {
   GetRole(){
     return localStorage.getItem(userRole);
   }
+
+  RemoveAccessToken() {
+    return  localStorage.clear();
+  }
+
 }

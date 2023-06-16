@@ -61,12 +61,12 @@ export class ClassListComponent implements OnInit {
             onClick: this.onOverviewClick(),
             hide: () => false,
           },
-          {
-            placeHolder: 'edit',
-            mode: 'icon',
-            onClick: this.onEditCallback(),
-            hide: () => false,
-          },
+          // {
+          //   placeHolder: 'edit',
+          //   mode: 'icon',
+          //   onClick: this.onEditCallback(),
+          //   hide: () => false,
+          // },
           {
             placeHolder: 'delete',
             mode: 'icon',

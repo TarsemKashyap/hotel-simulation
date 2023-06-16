@@ -15,6 +15,7 @@ public class ClassSessionDto
     public string Code { get; set; }
     public string CreatedBy { get; set; }
     public string Status { get; set; }
+    public int TotalStudentCount { get; set; }
 
     public ClassGroupDto[] Groups { get; set; }
 
