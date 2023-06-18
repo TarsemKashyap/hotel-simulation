@@ -67,7 +67,6 @@ export class AddRemovedClassComponent {
     flex: 1,
     minWidth: 150,
     filter: 'agTextColumnFilter',
-    menuTabs: ['filterMenuTab'],
     sortable: true,
   };
 

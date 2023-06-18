@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-  import {
-    AbstractControl,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators,
-  } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassSession } from '..';
 import { ClassService } from '../class.service';
@@ -46,15 +46,14 @@ export class AddClassComponent {
       hotelsCount: [this.hotelCount, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
       groups: this.fb.array(this.createGroups()),
-      
     });
   }
 
   createGroups() {
     const groups: FormGroup[] = [];
     for (let index = 0; index < this.hotelCount; index++) {
-      let hotelGroup =  new FormGroup({
-        name: new FormControl(`Group ${index+1}`, Validators.required),
+      let hotelGroup = new FormGroup({
+        name: new FormControl(`Group ${index + 1}`, Validators.required),
       });
       groups.push(hotelGroup);
     }
@@ -77,7 +76,6 @@ export class AddClassComponent {
 
   addGroup($event: Event, index: number): void {
     this.groups.push(this.createItem());
-    
   }
 
   removeGroup($event: Event, index: number): void {
@@ -90,7 +88,12 @@ export class AddClassComponent {
       return;
     }
     const groups = (<Array<any>>this.form.value.groups).map((x, i) => {
-      var data: ClassGroup = { serial: i + 1, name: x.name, balance: 1 ,action: 1};
+      var data: ClassGroup = {
+        serial: i + 1,
+        name: x.name,
+        balance: 1,
+        action: 1,
+      };
       return data;
     });
     const sigup: ClassSession = {
