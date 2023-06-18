@@ -17,10 +17,28 @@ import { CompleteComponent, PaymentInitiatedPageComponent } from './student';
 import { NgxPayPalModule } from 'ngx-paypal';
 
 @NgModule({
-    imports: [publicRoutingModule, CommonModule, HttpClientModule, ReactiveFormsModule, MatTableModule, MatInputModule, MatFormFieldModule, MatCardModule,NgxPayPalModule],
-    exports: [HeaderMenuComponent,BannerComponent,SignupComponent],
-    declarations: [HeaderMenuComponent, BannerComponent, HomeComponent, SignupComponent, LoginComponent, PaymentInitiatedPageComponent, CompleteComponent],
-    providers: [AccountService],
-    bootstrap: [HomeComponent]
+  imports: [
+    publicRoutingModule,
+    CommonModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCardModule,
+    NgxPayPalModule,
+  ],
+  exports: [HeaderMenuComponent, BannerComponent, SignupComponent],
+  declarations: [
+    HeaderMenuComponent,
+    BannerComponent,
+    HomeComponent,
+    SignupComponent,
+    LoginComponent,
+    PaymentInitiatedPageComponent,
+    CompleteComponent,
+  ],
+  providers: [AccountService],
+  bootstrap: [HomeComponent],
 })
-export class publicModule { }
+export class publicModule {}

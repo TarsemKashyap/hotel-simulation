@@ -7,7 +7,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { RouterModule, Routes } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { ClassListComponent } from './class-list/class-list.component';
-import { ActionRendererComponent } from './action-renderer/action-renderer.component';
 import { ClassEditComponent } from './class-edit/class-edit.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -23,7 +22,6 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
   declarations: [
     AddClassComponent,
     ClassListComponent,
-    ActionRendererComponent,
     ClassEditComponent,
     StudentListComponent,
     StudentRolesEditComponent,
@@ -41,7 +39,7 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
     MatDialogModule,
     MatSelectModule,
     FormsModule,
-    RouterModule 
+    RouterModule,
   ],
   providers: [ClassService],
 })

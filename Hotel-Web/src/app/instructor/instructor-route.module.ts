@@ -1,12 +1,9 @@
-import { Component, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { classRoute } from '../shared/class/class.module';
-import { canActivateHome } from '../shared/auth.gurad';
+import { checkAccessPermission } from '../shared/auth.gurad';
 import { ChangePasswordComponent } from '../admin';
 import { InstructorDashboard } from './dashboard/instructor-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
-import { AddRemovedClassComponent } from '../shared/class/add-removed-class/add-removed-class.component';
 
 const routes: Routes = [
   {
@@ -17,7 +14,6 @@ const routes: Routes = [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'class/manage-class', component: ClassListComponent },
     ],
-    //canActivate: [canActivateHome],
   },
 ];
 

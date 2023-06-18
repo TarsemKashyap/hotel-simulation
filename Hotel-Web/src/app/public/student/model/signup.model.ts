@@ -15,7 +15,7 @@ export interface LoginModel {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-  roles: Array<string>;
+  roles: Array<AppRoles>;
 }
 
 export interface InstructorSignup extends Signup {
@@ -27,7 +27,7 @@ export interface InstructorUpdate extends Person {
 }
 
 export enum AppRoles {
-  Student="Student",
-  Admin="Admin",
-  Instructor="Instructor"
+  Student = 'Student',
+  Admin = 'Admin',
+  Instructor = 'Instructor',
 }

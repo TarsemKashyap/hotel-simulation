@@ -35,3 +35,7 @@ export interface AddRemoveClassDto {
   selectedClasses: Array<ClassSession>;
   availableClasses: Array<ClassSession>;
 }
+
+export interface ClassInformation extends ClassSession {
+  totalStudentCount : number;
+}

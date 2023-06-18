@@ -16,7 +16,6 @@ import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
   styleUrls: ['./add-removed-class.component.css'],
 })
 export class AddRemovedClassComponent {
- 
   private datePipe = new DatePipe('en-US');
   isDefault: any;
   Titles: ClassSession[] = [];
@@ -43,30 +42,25 @@ export class AddRemovedClassComponent {
       cellRenderer: (params: { value: string | number | Date }) =>
         this.datePipe.transform(params.value, 'dd-MM-yyyy'),
     },
-    { field: 'createdBy' },
+    // { field: 'createdBy' },
+    {
+      field: 'isDefault',
+      headerName: 'Default',
+    },
     {
       field: 'action',
-      headerName:'Set as default',
+      headerName: 'Set as default',
       cellRenderer: GridActionComponent,
       cellRendererParams: {
         actions: [
           {
-            placeHolder: 'visibility',
-            mode: 'icon',
-            cssClass: 'hover:text-primary',
+            placeHolder: 'Set as default',
+            mode: 'text',
             onClick: this.setAsDefault(),
             hide: () => false,
           },
-         
         ] as RowAction[],
       } as GridActionParmas,
-    },
-    {
-      field: 'isDefault',
-      headerName: 'Select as Default',
-      onCellClicked: (event) => {
-       
-      },
     },
   ];
   defaultColDef: ColDef = {
@@ -86,6 +80,10 @@ export class AddRemovedClassComponent {
   ) {}
 
   ngOnInit(): void {
+    this.loadClasses();
+  }
+
+  private loadClasses() {
     this.classService.studentByclass().subscribe((x) => {
       this.$rows = x.selectedClasses;
       this.Titles = x.availableClasses;
@@ -97,17 +95,16 @@ export class AddRemovedClassComponent {
       return;
     }
     this.classService.SaveClass(this.selectedTitle).subscribe((response) => {
+      this.loadClasses();
       this.snackBar.open('Student Assign Class Saved Successfully');
     });
   }
   setAsDefault(): ($event: Event, row: any) => void {
     return ($event: Event, row: IRowNode<ClassSession>) => {
-      this.classService
-      .setAsDefault(row.data!)
-      .subscribe((data) => {
-        this.snackBar.open('isDefault set succesfully');
+      this.classService.setAsDefault(row.data!).subscribe((data) => {
+        this.loadClasses();
+        this.snackBar.open('Class added succesfully');
       });
     };
-        
   }
 }

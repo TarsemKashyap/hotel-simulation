@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActionRendererComponent } from './action-renderer.component';
+import { CreateMonthComponent } from './create-month.component';
 
-describe('ActionRendererComponent', () => {
-  let component: ActionRendererComponent;
-  let fixture: ComponentFixture<ActionRendererComponent>;
+describe('CreateMonthComponent', () => {
+  let component: CreateMonthComponent;
+  let fixture: ComponentFixture<CreateMonthComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ActionRendererComponent ]
+      declarations: [ CreateMonthComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ActionRendererComponent);
+    fixture = TestBed.createComponent(CreateMonthComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

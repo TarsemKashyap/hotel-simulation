@@ -8,7 +8,7 @@
 <mat-menu #belowMenu="matMenu" yPosition="below">
   <ul>
     <a
-      [routerLink]="['/create-month', classId]"
+      [routerLink]="['/class/create-month', classId]"
       routerLinkActive="router-link-active"
       mat-menu-item
       class="inline-block border border-white rounded text-sm hover:border-gray-200 text-blue-500 hover:bg-primary-200 py-1 px-3"
@@ -28,25 +28,31 @@
 <section>
   <div>
     <div class="px-4 sm:px-0">
-      <h3 class="text-base font-semibold leading-7 text-gray-900">Applicant Information</h3>
+      <h3 class="text-base  leading-7 text-gray-900">Applicant Information</h3>
     </div>
     <div class="mt-6 border-t border-gray-100">
       <dl class="divide-y divide-gray-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Class Name</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Javascript</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            <span>{{classSession?.title}}</span>
+          </dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Start Date</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">06 July 2023</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            <span>{{classSession?.startDate | date:'dd MMMM yyyy'}}</span>
+          </dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">End date</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">23 July 2023</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            <span>{{classSession?.endDate | date:'dd MMMM yyyy'}}</span>
+        </dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Total Student enrolled</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">340</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"> <span>{{classSession?.totalStudentCount}}</span></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">About</dt>
@@ -57,6 +63,11 @@
     </div>
   </div>
 </section>
+<button (click)="classEdit()"
+  class="bg-primary float-right p-2 m-2 text-white"
+>
+  Edit Class
+</button>
 <h1 class="text-3xl text-black pb-0">Student List</h1>
 <div class="container">
   <div></div>
