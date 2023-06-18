@@ -44,7 +44,7 @@ export class CreateMonthComponent {
     isComplete: false,
     configId: '',
   };
-  classId = 0;
+  classId: any;
   monthId: any = 0;
   QuarterNoLabel: string = '';
   isMonthCompleted: boolean = false;
@@ -69,24 +69,21 @@ export class CreateMonthComponent {
   ];
   constructor(
     private monthService: MonthService,
-    private router: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
-  ) {
-    
-  }
+    public snackBar: MatSnackBar,
+    public route: ActivatedRoute
+  ) {}
   @ViewChild(MatSort)
   sort!: MatSort;
   ngOnInit(): void {
-    this.router.params.subscribe(x=>{
-      this.classId=x['id'];
-    })
     this.pageload();
   }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
   pageload() {
+    this.classId = this.route.snapshot.params['id'];
     this.monthService.quarterlyMarketList().subscribe((data) => {
       this.monthList = data;
 

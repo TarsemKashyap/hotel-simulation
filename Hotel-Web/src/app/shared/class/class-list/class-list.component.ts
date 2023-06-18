@@ -25,10 +25,10 @@ export class ClassListComponent implements OnInit {
   columnDefs: ColDef[] = [
     {
       field: 'code',
-      tooltipValueGetter:()=>"Click to copy code",
+      tooltipValueGetter: () => 'Click to copy code',
       onCellClicked: (event) => {
         Utility.copyToClipboard(event.value);
-        this.snackBar.open(`class code ${event.value} copied.`)
+        this.snackBar.open(`class code ${event.value} copied.`);
       },
     },
     { field: 'title' },
@@ -81,7 +81,6 @@ export class ClassListComponent implements OnInit {
     flex: 1,
     minWidth: 150,
     filter: 'agTextColumnFilter',
-    menuTabs: ['filterMenuTab'],
     sortable: true,
   };
 
@@ -91,7 +90,8 @@ export class ClassListComponent implements OnInit {
     private classService: ClassService,
     private router: Router,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public activeRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -100,20 +100,20 @@ export class ClassListComponent implements OnInit {
     });
   }
 
-  add() {
-    this.router.navigate(['class/add']);
-  }
-
   onEditCallback() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       console.log('Edit Class', row);
-      this.router.navigate([`class/edit/${row.data?.classId}`]);
+      this.router.navigate([`../edit/${row.data?.classId}`], {
+        relativeTo: this.activeRoute,
+      });
     };
   }
 
   onOverviewClick() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
-      this.router.navigate([`class/student-list/${row.data?.classId}`]);
+      this.router.navigate(['..', row.data?.classId, 'student-list'], {
+        relativeTo: this.activeRoute,
+      });
     };
   }
 
@@ -142,6 +142,4 @@ export class ClassListComponent implements OnInit {
       });
     };
   }
-
-  
 }

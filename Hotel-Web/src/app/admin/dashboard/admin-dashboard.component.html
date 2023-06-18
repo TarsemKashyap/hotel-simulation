@@ -3,19 +3,22 @@
     class="relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
   >
     <div class="p-6">
-      <a
-        href="/admin"
-        class="text-white text-3xl  uppercase hover:text-gray-300"
+      <a href="/" class="text-white text-3xl uppercase hover:text-gray-300"
         >Admin</a
       >
     </div>
-    <nav class="text-white text-base  pt-3">
+    <nav class="text-white text-base pt-3">
       <a
         routerLink="instructor/list"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
         <button>
-          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
+          <mat-icon
+            class="text-white-500"
+            style="margin-right: 5px"
+            matRipple
+            fontIcon="library_books"
+          ></mat-icon>
         </button>
         Instructors
       </a>
@@ -23,39 +26,41 @@
         routerLink="class/list"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-      <button>
-        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="class"></mat-icon>
-      </button>
+        <button>
+          <mat-icon
+            class="text-white-500"
+            style="margin-right: 5px"
+            matRipple
+            fontIcon="class"
+          ></mat-icon>
+        </button>
         Classes
-      </a>
-      <a
-        href="forms.html"
-        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-      >
-      <button>
-        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="payment"></mat-icon>
-      </button>
-        Manage Payment
       </a>
 
       <a
-        href="calendar.html"
+        routerLink="change-password"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
-      <button>
-        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="payment"></mat-icon>
-      </button>
-        Passdue Users
+        <button>
+          <mat-icon
+            class="text-white-500"
+            style="margin-right: 5px"
+            matRipple
+            fontIcon="edit"
+          ></mat-icon>
+        </button>
+        Change Password
       </a>
-      <a
-      routerLink="change-password"
-      class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-    >
-      <button>
-        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
-      </button>
-      Change Password
-    </a>
+     
+        <button (click)="logout()" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+          <mat-icon
+            class="text-white-500"
+            style="margin-right: 5px"
+            matRipple
+            fontIcon="logout"
+          ></mat-icon>
+          Logout
+        </button>
     </nav>
   </aside>
 
@@ -64,16 +69,23 @@
     <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
       <div class="w-1/2"></div>
       <div class="relative w-1/2 flex justify-end">
-        <button [matMenuTriggerFor]="menu" class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
+        <button
+          [matMenuTriggerFor]="menu"
+          class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
+        >
           <img src="" />
         </button>
-        
+
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="logout()">Logout</button>
-          <button mat-menu-item (click)="changePassword()">Change Password</button>
+          <button mat-menu-item (click)="changePassword()">
+            Change Password
+          </button>
         </mat-menu>
-        <div class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16" style="display: none
-        ;">
+        <div
+          class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16"
+          style="display: none"
+        >
           <a href="#" class="block px-4 py-2 account-link hover:text-white"
             >Account</a
           >
@@ -92,7 +104,7 @@
       <div class="flex items-center justify-between">
         <a
           href="index.html"
-          class="text-white text-3xl  uppercase hover:text-gray-300"
+          class="text-white text-3xl uppercase hover:text-gray-300"
           >Admin</a
         >
         <button class="text-white text-3xl focus:outline-none">
@@ -167,7 +179,7 @@
           Sign Out
         </a>
         <button
-          class="w-full bg-white cta-btn  py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center"
+          class="w-full bg-white cta-btn py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center"
         >
           <i class="fas fa-arrow-circle-up mr-3"></i> Upgrade to Pro!
         </button>
@@ -182,9 +194,7 @@
         <router-outlet></router-outlet>
       </main>
 
-      <footer class="w-full bg-white text-right p-4">
-      
-      </footer>
+      <footer class="w-full bg-white text-right p-4"></footer>
     </div>
   </div>
 </div>

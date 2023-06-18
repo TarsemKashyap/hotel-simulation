@@ -1,7 +1,12 @@
 <h1 class="text-3xl text-black pb-0">Instructors List</h1>
 <div class="add_btn">
-  <input type="submit" value="Add Instructor" (click)="add()"
-  class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
+  <a
+    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+    [routerLink]="['../../instructor/create']"
+    routerLinkActive="router-link-active"
+  >
+    Add Instructor
+  </a>
 </div>
 <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
   <!--- Note that these columns can be defined in any order.
@@ -36,12 +41,25 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell *matCellDef="let row">
-      <button>
-        <mat-icon class="text-gray-500  hover:text-primary" matRipple fontIcon="edit" (click)="editClick(row)"></mat-icon>
-      </button>
+      <a
+        [routerLink]="['../../instructor/edit', row.id]"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon
+          class="text-gray-500 hover:text-primary"
+          matRipple
+          fontIcon="edit"
+        >
+        </mat-icon>
+      </a>
 
       <button>
-        <mat-icon class="text-gray-500  hover:text-red-700" matRipple fontIcon="delete" (click)="deleteRow(row)"></mat-icon>
+        <mat-icon
+          class="text-gray-500 hover:text-red-700"
+          matRipple
+          fontIcon="delete"
+          (click)="deleteRow(row)"
+        ></mat-icon>
       </button>
     </td>
   </ng-container>

@@ -3,7 +3,7 @@
 <h1 class="text-3xl text-black pb-6 col-md-6">Update Class</h1>
 <button class="col-md-6" mat-button [matMenuTriggerFor]="afterMenu">After</button>
 <mat-menu #afterMenu="matMenu" xPosition="after">
-  <button (click)="studentList()" style="font-size: 10px;" mat-menu-item >Class Overview</button>
+  <a [routerLink]="[this.classId,'student-list']" mat-menu-item >Class Overview</a>
 </mat-menu>
 </div>
 <section class="w-full h-screen overflow-x-hidden border-t flex flex-col">

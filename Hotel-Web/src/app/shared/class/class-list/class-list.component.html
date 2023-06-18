@@ -1,13 +1,16 @@
-
 <h1 class="text-3xl text-black pb-0">Class List</h1>
 <div class="add_btn">
-  <input type="submit" value="Add Class" (click)="add()"
-  class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" />
+  <a
+    [routerLink]="['../add']"
+    routerLinkActive="router-link-active"
+    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+  >
+    Add class
+  </a>
 </div>
 
 <div class="container">
-  <div >
-  </div>
+  <div></div>
   <div>
     <ag-grid-angular
       style="height: 300px"

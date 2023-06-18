@@ -38,6 +38,15 @@
         </button>
         Change Password
       </a>
+      <button (click)="logout()" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+        <mat-icon
+          class="text-white-500"
+          style="margin-right: 5px"
+          matRipple
+          fontIcon="logout"
+        ></mat-icon>
+        Logout
+      </button>
     </nav>
   </aside>
 
@@ -50,15 +59,18 @@
           href="/"
           class="rounded-lg bg-primary cursor-pointer bg-opacity-90 py-3 px-6 text-base font-medium text-white hover:bg-opacity-100"
         >
-          Main site
+          Home
         </a>
       </div>
       <div class="relative w-1/2 flex justify-end">
-        <button
-          class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
-        >
+        <button [matMenuTriggerFor]="menu" class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
           <img src="" />
         </button>
+        
+        <mat-menu #menu="matMenu">
+          <a mat-menu-item routerLink="change-password">Change Password</a>
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
         <div
           class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16"
           style="display: none"

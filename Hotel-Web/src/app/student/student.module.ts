@@ -9,6 +9,7 @@ import { MaterialModule } from '../material.module';
 import { SharedModule } from '../shared/shared.module';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ChangePasswordService } from '../admin/change-password/change-password.service';
+import { AccountService } from '../public/account';
 
 @NgModule({
   declarations: [StudentDashboard],
@@ -21,7 +22,7 @@ import { ChangePasswordService } from '../admin/change-password/change-password.
     MaterialModule,
     StudentRouteModule
   ],
-  providers: [ChangePasswordService],
+  providers: [ChangePasswordService,AccountService],
   bootstrap: [StudentDashboard],
 })
 export class StudentModule {}

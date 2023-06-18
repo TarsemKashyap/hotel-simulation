@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AccountService } from 'src/app/public/account';
 
 @Component({
   selector: 'instructor-dashboard',
@@ -6,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./instructor-dashboard.component.css']
 })
 export class InstructorDashboard {
+  constructor(private router: Router, private accountService: AccountService) {}
 
+  logout() {
+    this.accountService.clearSession();
+    this.router.navigate([`login`]);
+  }
 }

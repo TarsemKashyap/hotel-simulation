@@ -30,14 +30,14 @@ export class ClassEditComponent {
     private fb: FormBuilder,
     private classService: ClassService,
     private _snackBar: MatSnackBar,
-    private route: ActivatedRoute,
+    private activeRoute: ActivatedRoute,
     private router: Router
   ) {
     this.form = this.createForm();
   }
 
   ngOnInit(): void {
-    this.classId = this.route.snapshot.params['id'];
+    this.classId = this.activeRoute.snapshot.params['id'];
     this.loadClass();
   }
 
@@ -47,7 +47,7 @@ export class ClassEditComponent {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       hotelsCount: [4, Validators.required],
-      roomInEachHotel: [{ value: 500}, Validators.required],
+      roomInEachHotel: [{ value: 500 }, Validators.required],
       groups: this.fb.array([]),
     });
   }
@@ -124,7 +124,7 @@ export class ClassEditComponent {
       }
     );
     const groups = updatedGroup.concat(this.removedGroups);
-    this.classId = this.route.snapshot.params['id'];
+    this.classId = this.activeRoute.snapshot.params['id'];
     const updateClass: ClassSession = {
       title: this.form.value.title,
       startDate: this.form.value.startDate,
@@ -137,7 +137,7 @@ export class ClassEditComponent {
       groups: groups,
     };
     this.classService.classUpdate(this.classId!, updateClass).subscribe((x) => {
-      this.router.navigate(['admin/class', 'list']);
+      this.router.navigate(['../../list'], { relativeTo: this.activeRoute });
       this._snackBar.open('Class updated successfully');
     });
   }
@@ -145,9 +145,5 @@ export class ClassEditComponent {
   onReset(): void {
     this.submitted = false;
     this.form.reset();
-  }
-
-  studentList() {
-    this.router.navigate(['class/student-list', this.classId]);
   }
 }

@@ -4,6 +4,7 @@ import { ChangePasswordComponent } from '../admin';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
 import { AddRemovedClassComponent } from '../shared/class';
+import { checkAccessPermission } from '../shared/auth.gurad';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'change-class', component: AddRemovedClassComponent },
     ],
+    canActivate:[checkAccessPermission]
   },
 ];
 

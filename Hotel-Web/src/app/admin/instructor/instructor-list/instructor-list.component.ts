@@ -3,7 +3,7 @@ import { ColDef, GridOptions } from 'ag-grid-community';
 import { InstructorService } from '../instructor.service';
 import { InstructorDto } from '../instructor.model';
 import { MatRow, MatTableDataSource } from '@angular/material/table';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared';
@@ -28,6 +28,7 @@ export class InstructorListComponent {
   constructor(
     private instructorService: InstructorService,
     private router: Router,
+    private activateRoute: ActivatedRoute,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {}
@@ -46,7 +47,9 @@ export class InstructorListComponent {
 
   editClick(row: InstructorDto) {
     console.log(row);
-    this.router.navigate([`instructor/edit/${row.id}`]);
+    this.router.navigate([`instructor/edit/${row.id}`], {
+      relativeTo: this.activateRoute,
+    });
   }
 
   deleteRow(row: InstructorDto) {
@@ -74,6 +77,6 @@ export class InstructorListComponent {
   }
 
   add() {
-    this.router.navigate(['instructor/create'])
+    this.router.navigate(['instructor/create']);
   }
 }

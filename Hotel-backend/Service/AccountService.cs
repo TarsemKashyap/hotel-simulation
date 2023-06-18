@@ -182,11 +182,17 @@ public class AccountService : IAccountService
         if (!signInResult.Succeeded)
             throw new ValidationException("UserId or password is incorrect");
 
+        var roles = await _userManager.GetRolesAsync(user);
+
         List<Claim> claims = new()
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.UserName),
         };
+        foreach(var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
         var accessToken = _tokenService.GenerateAccessToken(claims);
         var refreshToken = _tokenService.GenerateRefreshToken();
         _context.RefreshTokens.Add(new AppUserRefreshToken()
@@ -198,8 +204,7 @@ public class AccountService : IAccountService
             CreatedDate = DateTime.Now
         });
         await _context.SaveChangesAsync();
-
-        var roles = await _userManager.GetRolesAsync(user);
+        
         return new LoginResultDto
         {
             AccessToken = accessToken,

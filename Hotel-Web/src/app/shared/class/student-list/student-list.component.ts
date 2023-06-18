@@ -11,16 +11,17 @@ import { ColDef, IRowNode } from 'ag-grid-community';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { ClassInformation, ClassSession } from '../model/classSession.model';
+import { ClassModule } from '../class.module';
 
 @Component({
   selector: 'app-student-list',
   templateUrl: './student-list.component.html',
   styleUrls: ['./student-list.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class StudentListComponent {
   classId: number | undefined;
-  classSession : ClassInformation | undefined;
+  classSession: ClassInformation | undefined;
   columnDefs: ColDef[] = [
     {
       field: 'firstName',
@@ -49,11 +50,10 @@ export class StudentListComponent {
     flex: 1,
     minWidth: 150,
     filter: 'agTextColumnFilter',
-    menuTabs: ['filterMenuTab'],
     sortable: true,
   };
 
-  $rows: StudentList[] = [] 
+  $rows: StudentList[] = [];
 
   constructor(
     private classService: ClassService,
@@ -67,7 +67,7 @@ export class StudentListComponent {
   ngOnInit(): void {
     this.classId = this.route.snapshot.params['id'];
     this.classService.studentClassMappingList(this.classId!).subscribe((x) => {
-      debugger
+      debugger;
       this.$rows = x.studentClassMappingDto;
       this.classSession = x.classSessionDto;
     });
@@ -76,15 +76,10 @@ export class StudentListComponent {
   onOverviewClick() {
     return ($event: Event, row: IRowNode<StudentList>) => {
       const dialogRef = this.dialog.open(StudentRolesEditComponent, {
-             minWidth: '300px',
-             minHeight: '100px',
-             data: Object.assign({},row.data,{classId:this.classId})
-           });
+        minWidth: '300px',
+        minHeight: '100px',
+        data: Object.assign({}, row.data, { classId: this.classId }),
+      });
     };
   }
-
-  classEdit() {
-      this.router.navigate([`class/edit/${this.classId}`]);
-    }
-    
-  }
+}

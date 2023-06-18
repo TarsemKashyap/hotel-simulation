@@ -17,6 +17,8 @@ import { StudentRolesEditComponent } from './student-roles-edit/student-roles-ed
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.component';
+import { CreateMonthComponent } from './create-month/create-month.component';
+import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
     StudentRolesEditComponent,
     GridActionComponent,
     AddRemovedClassComponent,
+    CreateMonthComponent,
   ],
   imports: [
     CommonModule,
@@ -40,18 +43,29 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
     MatSelectModule,
     FormsModule,
     RouterModule,
+    CommonModule,
+    ReactiveFormsModule,
+    AgGridModule,
+    FormsModule,
+    MaterialModule,
   ],
   providers: [ClassService],
 })
 export class ClassModule {}
 
 export const classRoute: Routes = [
-  { path: 'class/add', component: AddClassComponent },
-  { path: 'class/edit/:id', component: ClassEditComponent },
-  { path: 'class/list', component: ClassListComponent },
-  { path: 'class/student-list/:id', component: StudentListComponent },
   {
-    path: 'class/student-roles-edit/:id',
-    component: StudentRolesEditComponent,
+    path: 'class',
+    children: [
+      { path: 'add', component: AddClassComponent },
+      { path: 'edit/:id', component: ClassEditComponent },
+      { path: 'list', component: ClassListComponent },
+      { path: ':id/student-list', component: StudentListComponent },
+      { path: ':id/create-month', component: CreateMonthComponent },
+      {
+        path: 'student-roles-edit/:id',
+        component: StudentRolesEditComponent,
+      },
+    ],
   },
 ];

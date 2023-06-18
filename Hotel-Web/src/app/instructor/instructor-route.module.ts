@@ -4,6 +4,7 @@ import { checkAccessPermission } from '../shared/auth.gurad';
 import { ChangePasswordComponent } from '../admin';
 import { InstructorDashboard } from './dashboard/instructor-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
+import { classRoute } from '../shared/class/class.module';
 
 const routes: Routes = [
   {
@@ -11,9 +12,11 @@ const routes: Routes = [
     title: '',
     component: InstructorDashboard,
     children: [
+      { path: 'class', redirectTo: 'class' },
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'class/manage-class', component: ClassListComponent },
+      ...classRoute,
     ],
+    canActivate: [checkAccessPermission],
   },
 ];
 
