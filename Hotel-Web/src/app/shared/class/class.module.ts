@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.component';
 import { CreateMonthComponent } from './create-month/create-month.component';
 import { MaterialModule } from 'src/app/material.module';
+import { ClassMenuComponent } from './class-menu/class-menu.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MaterialModule } from 'src/app/material.module';
     GridActionComponent,
     AddRemovedClassComponent,
     CreateMonthComponent,
+    ClassMenuComponent,
   ],
   imports: [
     CommonModule,

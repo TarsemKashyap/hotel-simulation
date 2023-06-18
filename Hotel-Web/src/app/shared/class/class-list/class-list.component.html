@@ -1,24 +1,27 @@
-<h1 class="text-3xl text-black pb-0">Class List</h1>
-<div class="add_btn">
-  <a
-    [routerLink]="['../add']"
-    routerLinkActive="router-link-active"
-    class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
-  >
-    Add class
-  </a>
-</div>
-
-<div class="container">
-  <div></div>
-  <div>
-    <ag-grid-angular
-      style="height: 300px"
-      class="ag-theme-alpine"
-      [rowData]="$rows"
-      [defaultColDef]="defaultColDef"
-      [columnDefs]="columnDefs"
-    >
-    </ag-grid-angular>
+<div class="flex-row w-full">
+  <div class="flex-initial">
+    <span class="text-3xl text-black pb-0">Class List</span>
+    <app-class-menu></app-class-menu>
   </div>
+</div>
+<div class="flex-initial mt-10 mb-5">
+  <div class="w-full add_btn">
+    <a
+      [routerLink]="['../add']"
+      routerLinkActive="router-link-active"
+      class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+    >
+      Add class
+    </a>
+  </div>
+</div>
+<div class="flex-initial container">
+  <ag-grid-angular
+    style="height: 300px"
+    class="ag-theme-alpine"
+    [rowData]="$rows"
+    [defaultColDef]="defaultColDef"
+    [columnDefs]="columnDefs"
+  >
+  </ag-grid-angular>
 </div>

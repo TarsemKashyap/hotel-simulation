@@ -1,0 +1,20 @@
+<button
+  class="bg-secondary border-solid float-right p-3 text-white hover:text-white"
+  [matMenuTriggerFor]="belowMenu"
+>
+  Class Management
+</button>
+<mat-menu #belowMenu="matMenu" class="w-full" yPosition="below">
+  <ul class="text-sm">
+    <li class="rounded w-full hover:bg-secondary hover:text-white p-3">
+      <a
+        [routerLink]="['../create-month']"
+        routerLinkActive="router-link-active"
+        >Create Month</a
+      >
+    </li>
+    <li class="rounded hover:bg-secondary hover:text-white p-3">
+      <a href="#">Finalize Month</a>
+    </li>
+  </ul>
+</mat-menu>

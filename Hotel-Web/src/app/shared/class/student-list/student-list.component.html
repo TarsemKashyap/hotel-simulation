@@ -1,30 +1,4 @@
-<button
-  class="bg-primary float-right p-2 m-2 text-white"
-  mat-button
-  [matMenuTriggerFor]="belowMenu"
->
-  Class Management
-</button>
-<mat-menu #belowMenu="matMenu" yPosition="below">
-  <ul>
-    <a
-      [routerLink]="['../create-month']"
-      routerLinkActive="router-link-active"
-      mat-menu-item
-      class="inline-block border border-white rounded text-sm hover:border-gray-200 text-blue-500 hover:bg-primary-200 py-1 px-3"
-      routerLinkActive="router-link-active"
-      >Create Month</a
-    >
-  </ul>
-  <ul>
-    <a
-      mat-menu-item
-      class="border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
-      href="#"
-      >Finalize Month</a
-    >
-  </ul>
-</mat-menu>
+<app-class-menu></app-class-menu>
 <section>
   <div>
     <div class="px-4 sm:px-0">
