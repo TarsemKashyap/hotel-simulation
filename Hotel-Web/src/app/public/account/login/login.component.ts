@@ -21,11 +21,7 @@ export class LoginComponent {
   submitted = false;
   errorMessage: string | undefined;
 
-  constructor(
-    private fb: FormBuilder,
-    private accountService: AccountService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private accountService: AccountService) {
     this.form = this.createForm();
   }
 
@@ -60,15 +56,7 @@ export class LoginComponent {
     };
     this.accountService.login(login).subscribe({
       next: (data) => {
-        if (data.roles.indexOf(AppRoles.Admin)>-1) {
-          this.router.navigate(['/', 'admin']);
-        }
-       else if (data.roles.indexOf(AppRoles.Student)>-1) {
-          this.router.navigate(['/', 'student']);
-        }
-        else if (data.roles.indexOf(AppRoles.Instructor)>-1) {
-          this.router.navigate(['/', 'instructor']);
-        }
+        return this.accountService.redirectToDashboard();
       },
       error: (err) => {
         this.errorMessage = Object.values<string>(err.error).at(0);

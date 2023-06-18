@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ClassService } from '../class.service';
 import { ColDef, IRowNode, RowNode } from 'ag-grid-community';
 import { ClassSession } from '../model/classSession.model';
-import { ActionRendererComponent } from '../action-renderer/action-renderer.component';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';

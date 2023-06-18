@@ -25,15 +25,19 @@ export class SessionStore {
     return localStorage.getItem(AccessToken);
   }
 
-  AddRole(role: AppRoles) {
-    localStorage.setItem(userRole, role);
+  AddRole(role: AppRoles[]) {
+    const json = JSON.stringify(role);
+    localStorage.setItem(userRole, json);
   }
-  GetRole(){
-    return localStorage.getItem(userRole);
+  GetRole(): AppRoles[] {
+    var data = localStorage.getItem(userRole);
+    if (data) {
+      return JSON.parse(data) as AppRoles[];
+    }
+    return [];
   }
 
-  RemoveAccessToken() {
-    return  localStorage.clear();
+  clearSession() {
+    return localStorage.clear();
   }
-
 }

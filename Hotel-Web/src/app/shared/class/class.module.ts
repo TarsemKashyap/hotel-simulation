@@ -7,7 +7,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { RouterModule, Routes } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { ClassListComponent } from './class-list/class-list.component';
-import { ActionRendererComponent } from './action-renderer/action-renderer.component';
 import { ClassEditComponent } from './class-edit/class-edit.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -18,19 +17,16 @@ import { StudentRolesEditComponent } from './student-roles-edit/student-roles-ed
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.component';
-import { CreateMonthComponent } from '../create-month/create-month.component';
 
 @NgModule({
   declarations: [
     AddClassComponent,
     ClassListComponent,
-    ActionRendererComponent,
     ClassEditComponent,
     StudentListComponent,
     StudentRolesEditComponent,
     GridActionComponent,
     AddRemovedClassComponent,
-    CreateMonthComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +39,7 @@ import { CreateMonthComponent } from '../create-month/create-month.component';
     MatDialogModule,
     MatSelectModule,
     FormsModule,
-    RouterModule 
+    RouterModule,
   ],
   providers: [ClassService],
 })
@@ -58,5 +54,4 @@ export const classRoute: Routes = [
     path: 'class/student-roles-edit/:id',
     component: StudentRolesEditComponent,
   },
-  { path: 'class/create-month/:id', component: CreateMonthComponent },
 ];

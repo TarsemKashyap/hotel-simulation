@@ -59,7 +59,6 @@ export class AppModule {}
 export function jwtOptionsFactory(sessionStore: SessionStore) {
   return {
     tokenGetter: () => {
-      console.log('jwtOptionsFactory');
       return sessionStore.GetAccessToken();
     },
     allowedDomains: ['localhost:4200'],

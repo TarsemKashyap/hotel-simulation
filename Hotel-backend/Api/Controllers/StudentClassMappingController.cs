@@ -38,11 +38,10 @@ namespace Api.Controllers
             return Ok();
         }
 
-        [HttpGet("studentClasslist"), AllowAnonymous]
+        [HttpGet("studentClasslist")]
         public async Task<ActionResult> StudentClassList()
         {
             var userId = LoggedUserId;
-            //  var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
             var studentListByClassId = _studentClassMappingService.GetMissingClassList();
             return Ok(studentListByClassId);
         }

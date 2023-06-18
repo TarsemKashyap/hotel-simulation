@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  AppRoles,
   InstructorSignup,
   InstructorUpdate,
   LoginModel,
@@ -10,7 +11,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
-import { InstructorDto } from 'src/app/admin/instructor';
+import { Router } from '@angular/router';
+import { appRoutes } from '../public-routing.module';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +20,8 @@ import { InstructorDto } from 'src/app/admin/instructor';
 export class AccountService {
   constructor(
     private httpClient: HttpClient,
-    private sessionStore: SessionStore
+    private sessionStore: SessionStore,
+    private router: Router
   ) {}
 
   CreateAccount(signup: Signup): Observable<any> {
@@ -38,6 +41,7 @@ export class AccountService {
       map((x) => {
         this.sessionStore.SetAccessToken(x.accessToken);
         this.sessionStore.SetRefreshToken(x.refreshToken);
+        this.sessionStore.AddRole(x.roles);
         return x;
       })
     );
@@ -64,9 +68,36 @@ export class AccountService {
     );
   }
 
+  userHasRole(role: AppRoles): boolean {
+    const savedRole = this.sessionStore.GetRole();
+    return savedRole.some((x) => x == role);
+  }
+
   getInstructor(userId: string): Observable<InstructorUpdate> {
     return this.httpClient.get<InstructorUpdate>(
       `account/instructor/${userId}`
     );
+  }
+
+  clearSession() {
+    this.sessionStore.clearSession();
+  }
+
+  redirectToDashboard(): Promise<boolean> {
+    if (this.userHasRole(AppRoles.Admin)) {
+      return this.router.navigate(['/', 'admin']);
+    }
+
+    if (this.userHasRole(AppRoles.Student)) {
+      return this.router.navigate(['/', 'student']);
+    }
+    if (this.userHasRole(AppRoles.Instructor)) {
+      return this.router.navigate(['/', 'instructor']);
+    }
+    return this.router.navigate(['/', 'login']);
+  }
+
+  isLoggedIn(): boolean {
+    return this.sessionStore.GetAccessToken() != null;
   }
 }

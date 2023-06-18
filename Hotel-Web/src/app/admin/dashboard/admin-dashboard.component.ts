@@ -14,7 +14,7 @@ export class DashboardComponent {
   ) { }
 
   logout() {
-    this.sessionStore.RemoveAccessToken();
+    this.sessionStore.clearSession();
     this.router.navigate([`login`]);
   }
 

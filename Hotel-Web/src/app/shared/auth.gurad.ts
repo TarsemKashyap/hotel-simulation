@@ -1,16 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   CanActivateFn,
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AccountService } from '../public/account/account.service';
-import { SessionStore } from '../store/session.store';
-import { lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
+import { AppRoles } from '../public/account';
 
 @Injectable({
   providedIn: 'root',
@@ -23,29 +22,42 @@ export class AuthGuard {
     private authService: AccountService
   ) {}
 
-  async validateSession() {
-    console.log('AuthGurad');
-    const token: string | null = this.authService.getAccessToken();
-    if (token && !this.jwtHelper.isTokenExpired(token)) {
-      console.log(this.jwtHelper.decodeToken(token));
+  async validateSession(routeData: AuthRouteData) {
+    const tokenValid = await this.isJwtTokenValid();
+    const hasRole = this.authService.userHasRole(routeData.role);
+    if (tokenValid && hasRole) {
       return true;
     }
-    return await this.tryRefreshingTokens();
+    if (tokenValid && !hasRole) {
+      return this.authService.redirectToDashboard();
+    }
+    this.authService.clearSession();
+    return this.router.navigate(['login']);
+  }
+
+  private async isJwtTokenValid(): Promise<boolean> {
+    const token: string | null = this.authService.getAccessToken();
+    if (token && this.jwtHelper.isTokenExpired(token)) {
+      return await this.tryRefreshingTokens();
+    }
+    return Promise.resolve(true);
   }
 
   private async tryRefreshingTokens(): Promise<boolean> {
     return lastValueFrom(this.authService.refreshToken()).then(
       (x) => Promise.resolve(true),
-      (error) => {
-        return this.router.navigate(['login']);
-      }
+      (error) => Promise.resolve(false)
     );
   }
 }
 
-export const canActivateHome: CanActivateFn = (
+export const checkAccessPermission: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
-  return inject(AuthGuard).validateSession();
+  return inject(AuthGuard).validateSession(route.data as AuthRouteData);
 };
+
+export interface AuthRouteData {
+  role: AppRoles;
+}

@@ -1,8 +1,5 @@
-import { Component, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { classRoute } from '../shared/class/class.module';
-import { canActivateHome } from '../shared/auth.gurad';
 import { ChangePasswordComponent } from '../admin';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
@@ -15,13 +12,12 @@ const routes: Routes = [
     component: StudentDashboard,
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'manage-class', component: ClassListComponent },
-      { path: 'class/add-change', component: AddRemovedClassComponent },
-
+      { path: 'change-class', component: AddRemovedClassComponent },
     ],
-    //canActivate: [canActivateHome],
   },
 ];
+
+
 
 @NgModule({
   declarations: [],
