@@ -103,7 +103,7 @@ export class ClassListComponent implements OnInit {
   onEditCallback() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       console.log('Edit Class', row);
-      this.router.navigate([`../edit/${row.data?.classId}`], {
+      this.router.navigate(['..', row.data?.classId, 'edit'], {
         relativeTo: this.activeRoute,
       });
     };

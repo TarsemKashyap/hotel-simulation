@@ -43,17 +43,17 @@ export class StudentRolesEditComponent {
   }
 
   ngOnInit(): void {
-    debugger
+    
     this.studentId = this.route.snapshot.params['id'];
     this.studentRoles();
   }
 
   private studentRoles() {
-    debugger
+    
     this.classService
       .Roleslist({ studentId: this.row.studentId, classId: this.row.classId })
       .subscribe((data) => {
-        debugger
+        
         this.selectedRoles = data.selectedRoles;
         this.selectedGroup = data.selectedGroup;
         this.groups = data.classGroups;
@@ -72,12 +72,12 @@ export class StudentRolesEditComponent {
     };
     this.classService.AddRoles(studentAssignRoles).subscribe((response) => {
       this._snackBar.open('Student Role Assign successfully');
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     });
   }
 
   Cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   isRoleSelected(option: StudentRoles, selectedRoles: StudentRoles): boolean {

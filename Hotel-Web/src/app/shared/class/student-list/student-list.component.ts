@@ -66,8 +66,12 @@ export class StudentListComponent {
 
   ngOnInit(): void {
     this.classId = this.route.snapshot.params['id'];
+    this.loadStudentList();
+  }
+
+  private loadStudentList() {
     this.classService.studentClassMappingList(this.classId!).subscribe((x) => {
-      debugger;
+      ;
       this.$rows = x.studentClassMappingDto;
       this.classSession = x.classSessionDto;
     });
@@ -79,6 +83,12 @@ export class StudentListComponent {
         minWidth: '300px',
         minHeight: '100px',
         data: Object.assign({}, row.data, { classId: this.classId }),
+      });
+
+      dialogRef.beforeClosed().subscribe((x) => {
+        if (x) {
+          this.loadStudentList();
+        }
       });
     };
   }

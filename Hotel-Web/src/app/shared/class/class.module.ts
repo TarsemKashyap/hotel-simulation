@@ -60,7 +60,7 @@ export const classRoute: Routes = [
     path: 'class',
     children: [
       { path: 'add', component: AddClassComponent },
-      { path: 'edit/:id', component: ClassEditComponent },
+      { path: ':id/edit', component: ClassEditComponent },
       { path: 'list', component: ClassListComponent },
       { path: ':id/student-list', component: StudentListComponent },
       { path: ':id/create-month', component: CreateMonthComponent },
