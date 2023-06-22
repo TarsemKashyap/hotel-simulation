@@ -47,6 +47,9 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<BalanceSheet> BalanceSheet { get; set; }
     public DbSet<SoldRoomByChannel> SoldRoomByChannel { get; set; }
     public DbSet<AttributeMaxCapitalOperationConfig> AttributeMaxCapitalOperationConfig { get; set; }
+    public DbSet<SegmentConfig> SegmentConfig { get; set; }
+    public DbSet<MarketingVSsegmentConfig> MarketingVSsegmentConfig { get; set; }
+    public DbSet<PriceMarketingAttributeSegmentConfig> PriceMarketingAttributeSegmentConfig { get; set; }
 
 
 
