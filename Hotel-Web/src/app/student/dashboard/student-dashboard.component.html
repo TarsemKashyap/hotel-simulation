@@ -9,7 +9,7 @@
         >Student</a
       >
     </div>
-    <nav class="text-white text-base font-semibold pt-3">
+    <nav  *ngFor="let studentRolePage of studentRolePageList" class="text-white text-base font-semibold pt-3">
       <!-- <a
         routerLink="change-password"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
@@ -29,16 +29,14 @@
         </button>
         Instructor Create
       </a> -->
-      <a
-        routerLink="class/manage-class"
-        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-      >
+     
+      <a (click)="openLink(studentRolePage)" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
         <button>
           <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
         </button>
-        Manage Classes
+        {{studentRolePage.pageName}}
       </a>
-      <a
+      <!-- <a
       routerLink="change-password"
       class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
     >
@@ -46,7 +44,7 @@
         <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
       </button>
       Change Password
-    </a>
+    </a> -->
     </nav>
   </aside>
 

@@ -5,6 +5,13 @@ export interface StudentRoles {
     roleName : string;
   }
 
+  export class RolePagesDtl{
+    pageName:string="";
+    pageKey:string="";
+    roleName:string="";
+
+  }
+
   export interface StudentGroupList {
     id : string;
     name : string;
