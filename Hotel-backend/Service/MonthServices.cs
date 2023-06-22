@@ -52,13 +52,13 @@ namespace Service
             int currentQuarter = classDetail.CurrentQuater;
             int numberOfHotels = classDetail.HotelsCount;
             int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
-            int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter + 1, totMarket, false);
+            int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter + 1, totMarket, true);
             // Change If Condition As Requirment 
             if (monthID > 0)
             {
                 // if (currentQuarter == 0)
                 {
-                    objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, true);
+                    objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, false);
                     resObj.Message = "A new month has been created.";
 
                     await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);

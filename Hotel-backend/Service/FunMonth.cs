@@ -1150,7 +1150,9 @@ namespace Service
                     case "T":
                         clsSess.Status = ClassStatus.T;
                         break;
-
+                    case "C": // For Calculation
+                        clsSess.Status = ClassStatus.C;
+                        break;
                 }
 
                 context.ClassSessions.Add(clsSess);

@@ -105,7 +105,7 @@ public static class ApiStartupExtensions
         service.Configure<AdminConfig>(config.GetSection("AdminConfig"));
         service.Configure<PaymentConfig>(config.GetSection("PaymentConfig"));
     }
-        
+
     public static void RegisterAppServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
@@ -118,6 +118,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentClassMappingService, StudentClassMappingService>();
         services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
+        services.AddScoped<ICalculationServices, CalculationServices>();
 
 
 
@@ -129,10 +130,10 @@ public static class ApiStartupExtensions
         var config = TypeAdapterConfig.GlobalSettings;
         services.AddSingleton(config);
         config.Scan(Assembly.GetAssembly(typeof(MappingProfile)));
-        
+
         // register the mapper as Singleton service for my application
         var mapperConfig = new MapsterMapper.Mapper(config);
         services.AddSingleton(mapperConfig);
-        services.AddTransient<IMapper,ServiceMapper>();
+        services.AddTransient<IMapper, ServiceMapper>();
     }
 }
