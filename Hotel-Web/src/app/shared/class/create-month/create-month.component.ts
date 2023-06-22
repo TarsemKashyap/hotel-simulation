@@ -21,7 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./create-month.component.css'],
 })
 export class CreateMonthComponent {
-  monthList: MonthDto[] = [];
+  $rows: MonthDto[] = [];
+ // monthList: MonthDto[] = [];
   classInfo: ClassDto = {
     classId: '',
     title: '',
@@ -44,7 +45,8 @@ export class CreateMonthComponent {
     isComplete: false,
     configId: '',
   };
-  classId: any;
+  classId: number | undefined;
+  //classId: any;
   monthId: any = 0;
   QuarterNoLabel: string = '';
   isMonthCompleted: boolean = false;
@@ -67,6 +69,35 @@ export class CreateMonthComponent {
     'IsComplete',
     'ConfigId',
   ];
+
+  columnDefs: ColDef[] = [
+    {
+      field: 'monthId',
+      
+    },
+    { field: 'classId' },
+    {
+      field: 'sequence',
+      
+    },
+    {
+      field: 'totalMarket',
+      
+    },
+    { field: 'isComplete' },
+    
+    {
+      field: 'configId',
+      
+    },
+  ];
+  defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 150,
+    filter: 'agTextColumnFilter',
+    sortable: true,
+  };
+
   constructor(
     private monthService: MonthService,
     private router: Router,
@@ -77,6 +108,7 @@ export class CreateMonthComponent {
   @ViewChild(MatSort)
   sort!: MatSort;
   ngOnInit(): void {
+    this.classId = this.route.snapshot.params['id'];
     this.pageload();
   }
   ngAfterViewInit() {
@@ -85,9 +117,9 @@ export class CreateMonthComponent {
   pageload() {
     this.classId = this.route.snapshot.params['id'];
     this.monthService.quarterlyMarketList().subscribe((data) => {
-      this.monthList = data;
-
-      console.log(this.monthList[0]);
+     // this.monthList = data;
+    this.$rows=data;
+     // console.log(this.monthList[0]);
       this.dataSourceMonth.data = data;
     });
 
