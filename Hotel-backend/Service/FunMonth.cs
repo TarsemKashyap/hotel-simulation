@@ -40,7 +40,7 @@ namespace Service
             return obj;
 
         }
-        public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket,bool isCompleted)
+        public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket, bool isCompleted)
         {
             IQueryable<Month> query = context.Months;
             var obj = new Month() { ClassId = classID, Sequence = currentQuarter + 1, TotalMarket = totalMarket, ConfigId = 1, IsComplete = isCompleted };
@@ -181,37 +181,51 @@ namespace Service
                     index = i;
                     foreach (SegmentDto segment in lstSegment)
                     {
-
-                        var data = lstmarketingTechniques.Select(mktTech =>
+                        foreach (MarketingTechniquesDto Mkt in lstmarketingTechniques)
                         {
-                            MarketDecisionPriceList obj = GetMarketDecisionPriceList(mktTech.Techniques.Trim(), segment.SegmentName.Trim());
-                            return new MarketingDecision()
+                            MarketDecisionPriceList obj = GetMarketDecisionPriceList(Mkt.Techniques.Trim(), segment.SegmentName.Trim());
+                            var obj1 = new MarketingDecision()
                             {
                                 // ID = Random.Shared.Next(100),
                                 MonthID = monthID,
                                 QuarterNo = currentQuarter + 1,
                                 GroupID = groupID,
-                                MarketingTechniques = mktTech.Techniques,
+                                MarketingTechniques = Mkt.Techniques,
                                 Segment = segment.SegmentName,
                                 Spending = (int)obj.Spending,
                                 LaborSpending = (int)obj.LaborSpending,
                                 ActualDemand = (int)obj.ActualDemand,
                                 Confirmed = false
                             };
-                        }).ToList();
-
-                        foreach (var marketingTechnique in data)
-                        {
-                            context.Entry(marketingTechnique).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+                            context.MarketingDecision.Add(obj1);
+                            int affected = await context.SaveChangesAsync();
                         }
-                        // await context.MarketingDecision.AddRangeAsync(data);
-                        var cahnge2s = context.ChangeTracker.Entries().Where(x => x.State == Microsoft.EntityFrameworkCore.EntityState.Added);
-                        int affected = await context.SaveChangesAsync();
+
+                        //var data = lstmarketingTechniques.Select(mktTech =>
+                        //{
+                        //    MarketDecisionPriceList obj = GetMarketDecisionPriceList(mktTech.Techniques.Trim(), segment.SegmentName.Trim());
+
+                        //    return new MarketingDecision()
+                        //    {
+                        //        // ID = Random.Shared.Next(100),
+                        //        MonthID = monthID,
+                        //        QuarterNo = currentQuarter + 1,
+                        //        GroupID = groupID,
+                        //        MarketingTechniques = mktTech.Techniques,
+                        //        Segment = segment.SegmentName,
+                        //        Spending = (int)obj.Spending,
+                        //        LaborSpending = (int)obj.LaborSpending,
+                        //        ActualDemand = (int)obj.ActualDemand,
+                        //        Confirmed = false
+                        //    };
+                        //}).ToList();
+
+                        //context.MarketingDecision.AddRange(data);
+                        //int affected = await context.SaveChangesAsync();
 
                     }
-                    var cahnges = context.ChangeTracker.Entries().Where(x => x.State == Microsoft.EntityFrameworkCore.EntityState.Added);
                 }
-                context.SaveChanges();
+                //context.SaveChanges();
 
             }
             catch (Exception ex)
