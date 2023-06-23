@@ -5,6 +5,8 @@ import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
 import { AddRemovedClassComponent } from '../shared/class';
 import { checkAccessPermission } from '../shared/auth.gurad';
+import { DecisionComponent } from './decision/decision.component';
+import { RoomComponent } from './room/room.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,9 @@ const routes: Routes = [
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'change-class', component: AddRemovedClassComponent },
+      { path: 'manage-class', component: ClassListComponent },
+      { path: 'decision', component: DecisionComponent },
+      { path: 'room', component: RoomComponent },
     ],
     canActivate:[checkAccessPermission]
   },

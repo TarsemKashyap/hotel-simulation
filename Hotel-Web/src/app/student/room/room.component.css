@@ -1,0 +1,4 @@
+:host::ng-deep .rag-red {
+    /* background-color: red; */
+    border: 3px solid red !important;
+  }
