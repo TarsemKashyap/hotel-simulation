@@ -9,65 +9,65 @@ namespace Database.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<bool>(
-                name: "isDefault",
-                table: "StudentClassMapping",
-                type: "tinyint(1)",
-                nullable: false,
-                oldClrType: typeof(bool),
-                oldType: "tinyint(1)",
-                oldDefaultValue: false);
+            //migrationBuilder.AlterColumn<bool>(
+            //    name: "isDefault",
+            //    table: "StudentClassMapping",
+            //    type: "tinyint(1)",
+            //    nullable: false,
+            //    oldClrType: typeof(bool),
+            //    oldType: "tinyint(1)",
+            //    oldDefaultValue: false);
 
-            migrationBuilder.CreateTable(
-                name: "MarketingVSsegmentConfig",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ConfigID = table.Column<int>(type: "int", nullable: false),
-                    Segment = table.Column<string>(type: "longtext", nullable: false),
-                    MarketingTechniques = table.Column<string>(type: "longtext", nullable: false),
-                    Percentage = table.Column<double>(type: "double", nullable: false, defaultValue: 0.0),
-                    LaborPercent = table.Column<double>(type: "double", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MarketingVSsegmentConfig", x => x.ID);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
+            //migrationBuilder.CreateTable(
+            //    name: "MarketingVSsegmentConfig",
+            //    columns: table => new
+            //    {
+            //        ID = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+            //        ConfigID = table.Column<int>(type: "int", nullable: false),
+            //        Segment = table.Column<string>(type: "longtext", nullable: false),
+            //        MarketingTechniques = table.Column<string>(type: "longtext", nullable: false),
+            //        Percentage = table.Column<double>(type: "double", nullable: false, defaultValue: 0.0),
+            //        LaborPercent = table.Column<double>(type: "double", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_MarketingVSsegmentConfig", x => x.ID);
+            //    })
+            //    .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "PriceMarketingAttributeSegmentConfig",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ConfigID = table.Column<int>(type: "int", nullable: false),
-                    PMA = table.Column<string>(type: "longtext", nullable: false),
-                    Segment = table.Column<string>(type: "longtext", nullable: false),
-                    Percentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PriceMarketingAttributeSegmentConfig", x => x.ID);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
+            //migrationBuilder.CreateTable(
+            //    name: "PriceMarketingAttributeSegmentConfig",
+            //    columns: table => new
+            //    {
+            //        ID = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+            //        ConfigID = table.Column<int>(type: "int", nullable: false),
+            //        PMA = table.Column<string>(type: "longtext", nullable: false),
+            //        Segment = table.Column<string>(type: "longtext", nullable: false),
+            //        Percentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_PriceMarketingAttributeSegmentConfig", x => x.ID);
+            //    })
+            //    .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "SegmentConfig",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ConfigID = table.Column<int>(type: "int", nullable: false),
-                    Segment = table.Column<string>(type: "longtext", nullable: false),
-                    Percentage = table.Column<double>(type: "double", nullable: false, defaultValue: 0.0)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SegmentConfig", x => x.ID);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
+            //migrationBuilder.CreateTable(
+            //    name: "SegmentConfig",
+            //    columns: table => new
+            //    {
+            //        ID = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+            //        ConfigID = table.Column<int>(type: "int", nullable: false),
+            //        Segment = table.Column<string>(type: "longtext", nullable: false),
+            //        Percentage = table.Column<double>(type: "double", nullable: false, defaultValue: 0.0)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_SegmentConfig", x => x.ID);
+            //    })
+            //    .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "WeekdayVSsegmentConfig",
@@ -87,27 +87,27 @@ namespace Database.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_StudentGroupMapping_ClassGroup_ClassGroupGroupId",
-                table: "StudentGroupMapping",
-                column: "ClassGroupGroupId",
-                principalTable: "ClassGroup",
-                principalColumn: "GroupId");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_StudentGroupMapping_ClassGroup_ClassGroupGroupId",
+            //    table: "StudentGroupMapping",
+            //    column: "ClassGroupGroupId",
+            //    principalTable: "ClassGroup",
+            //    principalColumn: "GroupId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_StudentRoleMapping_Student_StudentId",
-                table: "StudentRoleMapping",
-                column: "StudentId",
-                principalTable: "Student",
-                principalColumn: "Id");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_StudentRoleMapping_Student_StudentId",
+            //    table: "StudentRoleMapping",
+            //    column: "StudentId",
+            //    principalTable: "Student",
+            //    principalColumn: "Id");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_StudentRoleMapping_StudentRoles_RoleId",
-                table: "StudentRoleMapping",
-                column: "RoleId",
-                principalTable: "StudentRoles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_StudentRoleMapping_StudentRoles_RoleId",
+            //    table: "StudentRoleMapping",
+            //    column: "RoleId",
+            //    principalTable: "StudentRoles",
+            //    principalColumn: "Id",
+            //    onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
