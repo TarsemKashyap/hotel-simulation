@@ -1,5 +1,7 @@
 ﻿using Database;
+using Database.Migrations;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI;
 using Newtonsoft.Json;
 using System;
@@ -189,8 +191,58 @@ namespace Service
                         {
                             mDRow.ActualDemand = 0;
                         }
+                        MarketingDecisionUpdate(mDRow);
                     }
-                    //  adapter.Update(table);
+
+                    ////Slow down the calucation to give database more time to process, wait 1/10 second
+                    System.Threading.Thread.Sleep(10);
+                }
+
+                {
+                    //Price Decision
+                    PriceDecision objPriceDecision = new PriceDecision();
+                    ratio = 0;
+                    decimal avergePrice;
+                    decimal expectedPrice;
+                    decimal fairMarket;
+                    int actualDemand;
+                    //This get data need to change.
+                    List<PriceDecisionDto> listPd = GetDataByQuarterPriceDecision(monthId, currentQuarter);
+                    foreach (PriceDecisionDto priceDecisionRow in listPd)
+                    {
+                        avergePrice = Convert.ToDecimal(ScalarQueryAvgPricePriceDecision(monthId, currentQuarter, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel.Trim(), priceDecisionRow.Segment.Trim()));
+                        expectedPrice = Convert.ToDecimal(ScalarQueryPriceExpectationPriceDecision(monthId, currentQuarter, priceDecisionRow.Segment, priceDecisionRow.Weekday));
+                        //////Lower expected price by $25 dollars, this is a change made on 3/18/2012, in version 4.5.5
+                        expectedPrice = expectedPrice - 25;
+                        if (avergePrice != 0)
+                        {
+                            ratio = Convert.ToDouble(priceDecisionRow.Price * priceDecisionRow.Price / avergePrice / expectedPrice);
+                        }
+                        else
+                        {
+                            ratio = 2;
+                        }
+
+                        fairMarket = Convert.ToDecimal(ScalarQueryFairMarketPriceDecision(priceDecisionRow.Segment, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel, monthId, currentQuarter));
+                        if (ratio == 2 || fairMarket == 0)
+                        { actualDemand = 0; }
+                        else if (ratio > 2)
+                        {
+                            actualDemand = 0;
+                        }
+                        else
+                        {
+                            actualDemand = Convert.ToInt32((1 / (ratio - 2) + 2) * Convert.ToDouble(fairMarket));
+                        }
+
+                        if (actualDemand < 0)
+                        {
+                            actualDemand = 0;
+                        }
+                        priceDecisionRow.ActualDemand = actualDemand;
+
+                    }
+                    //adapter.Update(priceDecisionTable);
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
                     System.Threading.Thread.Sleep(10);
                 }
@@ -222,6 +274,129 @@ namespace Service
         public IEnumerable<MonthDto> monthList()
         {
             throw new NotImplementedException();
+        }
+
+        private bool MarketingDecisionUpdate(MarketingDecisionDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                MarketingDecision objMd = new MarketingDecision
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    MarketingTechniques = pObj.MarketingTechniques,
+                    Segment = pObj.Segment,
+                    Spending = pObj.Spending,
+                    LaborSpending = pObj.LaborSpending,
+                    ActualDemand = pObj.ActualDemand,
+                    Confirmed = pObj.Confirmed,
+                };
+                _context.MarketingDecision.Add(objMd);
+                _context.Entry(objMd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        public List<PriceDecisionDto> GetDataByQuarterPriceDecision(int monthId, int quartorNo)
+        {
+
+
+            List<PriceDecisionDto> objlist = _context.PriceDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quartorNo).
+                Select(x => new PriceDecisionDto
+                {
+
+                    MonthID = x.MonthID,
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    Weekday = x.Weekday,
+                    DistributionChannel = x.DistributionChannel,
+                    Segment = x.Segment,
+                    Price = x.Price,
+                    ActualDemand = x.ActualDemand,
+                    Confirmed = x.Confirmed,
+                }
+                ).ToList();
+            return objlist;
+
+        }
+        private decimal ScalarQueryAvgPricePriceDecision(int monthId, int quarterNo, bool weekday, string distributionChannel, string segment)
+        {
+
+            var list = (from m in _context.PriceDecision.Where(x => x.MonthID == monthId
+                        && x.QuarterNo == quarterNo
+                        && x.Weekday == weekday
+                        && x.DistributionChannel == distributionChannel.Trim()
+                        && x.Segment == segment.Trim())
+                        select new { averagePrice = m.Price }).ToList();
+            decimal averagePrice = 0;
+            if (list.Count > 0)
+            {
+                averagePrice = list[0].averagePrice;
+            }
+            return averagePrice;
+        }
+
+        private decimal ScalarQueryPriceExpectationPriceDecision(int monthId, int quarterNo,string segment, bool weekday)
+        {
+            /*
+             SELECT weekdayVSsegmentConfig.priceExpectation AS priceExpect
+FROM  quarterlyMarket INNER JOIN
+               weekdayVSsegmentConfig ON quarterlyMarket.configID = weekdayVSsegmentConfig.configID
+WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (weekdayVSsegmentConfig.segment = @segment) 
+               AND (weekdayVSsegmentConfig.weekDay = @weekday)
+             
+             
+             */
+            decimal averagePrice = 0;
+            //var list = (from m in _context.Months.Where(x => x.MonthId == monthId
+            //            join wsc in _context.week
+            //            && x.QuarterNo == quarterNo
+            //            && x.Weekday == weekday
+            //            && x.DistributionChannel == distributionChannel.Trim()
+            //            && x.Segment == segment.Trim())
+            //            select new { averagePrice = m.Price }).ToList();
+            
+            //if (list.Count > 0)
+            //{
+            //    averagePrice = list[0].averagePrice;
+            //}
+            return averagePrice;
+        }
+
+        private decimal ScalarQueryFairMarketPriceDecision(string segment, bool weekday, string distributionChannel,int monthId, int quarterNo)
+        {
+            /*
+             SELECT weekdayVSsegmentConfig.priceExpectation AS priceExpect
+FROM  quarterlyMarket INNER JOIN
+               weekdayVSsegmentConfig ON quarterlyMarket.configID = weekdayVSsegmentConfig.configID
+WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (weekdayVSsegmentConfig.segment = @segment) 
+               AND (weekdayVSsegmentConfig.weekDay = @weekday)
+             
+             
+             */
+            decimal averagePrice = 0;
+            //var list = (from m in _context.Months.Where(x => x.MonthId == monthId
+            //            join wsc in _context.week
+            //            && x.QuarterNo == quarterNo
+            //            && x.Weekday == weekday
+            //            && x.DistributionChannel == distributionChannel.Trim()
+            //            && x.Segment == segment.Trim())
+            //            select new { averagePrice = m.Price }).ToList();
+
+            //if (list.Count > 0)
+            //{
+            //    averagePrice = list[0].averagePrice;
+            //}
+            return averagePrice;
         }
     }
 }
