@@ -4,6 +4,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI;
 using Newtonsoft.Json;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -240,9 +241,10 @@ namespace Service
                             actualDemand = 0;
                         }
                         priceDecisionRow.ActualDemand = actualDemand;
+                        PriceDecisionUpdate(priceDecisionRow);
 
                     }
-                    //adapter.Update(priceDecisionTable);
+
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
                     System.Threading.Thread.Sleep(10);
                 }
@@ -347,15 +349,7 @@ namespace Service
 
         private decimal ScalarQueryPriceExpectationPriceDecision(int monthId, int quarterNo, string segment, bool weekday)
         {
-            /*
-             SELECT weekdayVSsegmentConfig.priceExpectation AS priceExpect
-FROM  quarterlyMarket INNER JOIN
-               weekdayVSsegmentConfig ON quarterlyMarket.configID = weekdayVSsegmentConfig.configID
-WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (weekdayVSsegmentConfig.segment = @segment) 
-               AND (weekdayVSsegmentConfig.weekDay = @weekday)
-             
-             
-             */
+
             decimal PriceExpectation = 0;
             var list = (from m in _context.Months
                         join wsc in _context.WeekdayVSsegmentConfig on m.ConfigId equals wsc.ConfigID
@@ -377,48 +371,63 @@ WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = 
 
         private decimal ScalarQueryFairMarketPriceDecision(string segment, bool weekday, string distributionChannel, int monthId, int quarterNo)
         {
-            /*
-             SELECT DISTINCT 
-                      quarterlyMarket.totalMarket * segmentConfig.percentage * weekdayVSsegmentConfig.percentage * priceMarketingAttributeSegmentConfig.percentage * distributionChannelVSsegmentConfig.percentage
-                       / classSession.noOfHotels AS FairMarket
-FROM         priceDecision 
-            INNER JOIN
-                      quarterlyMarket ON priceDecision.sessionID = quarterlyMarket.sessionID AND priceDecision.quarterNo = quarterlyMarket.quarterNo 
-            INNER JOIN
-                      priceMarketingAttributeSegmentConfig ON quarterlyMarket.configID = priceMarketingAttributeSegmentConfig.configID AND 
-                      priceDecision.segment = priceMarketingAttributeSegmentConfig.segment 
-            INNER JOIN
-                      segmentConfig ON priceDecision.segment = segmentConfig.segment AND quarterlyMarket.configID = segmentConfig.configID 
-            INNER JOIN
-                      weekdayVSsegmentConfig ON priceDecision.weekday = weekdayVSsegmentConfig.weekDay AND 
-                      priceDecision.segment = weekdayVSsegmentConfig.segment AND quarterlyMarket.configID = weekdayVSsegmentConfig.configID 
-            INNER JOIN
-                      distributionChannelVSsegmentConfig ON quarterlyMarket.configID = distributionChannelVSsegmentConfig.configID AND 
-                      priceDecision.segment = distributionChannelVSsegmentConfig.segment AND 
-                      priceDecision.distributionChannel = distributionChannelVSsegmentConfig.distributionChannel 
-            INNER JOIN
-                      classSession ON quarterlyMarket.sessionID = classSession.classSessionID
-WHERE     (priceMarketingAttributeSegmentConfig.segment = @segment) AND (priceMarketingAttributeSegmentConfig.PMA = N'Price') AND 
-                      (priceDecision.weekday = @weekday) AND (priceDecision.distributionChannel = @distributionChannel) AND (priceDecision.sessionID = @sessionID) 
-                      AND (priceDecision.quarterNo = @quarterNo)
-             
-             
-             */
-            decimal averagePrice = 0;
+
+            decimal FairMarket = 0;
             var list = (from pd in _context.PriceDecision
                         join m in _context.Months on pd.MonthID equals m.MonthId
+                        where (pd.QuarterNo == m.Sequence)
                         join pmasc in _context.PriceMarketingAttributeSegmentConfig on m.ConfigId equals pmasc.ConfigID
+                        where (pd.Segment == pmasc.Segment)
                         join sc in _context.SegmentConfig on pmasc.Segment equals sc.Segment
                         join wvsc in _context.WeekdayVSsegmentConfig on pd.Weekday equals wvsc.WeekDay
-                        //join dcvsc in _context.
-                        
-                        select new { averagePrice = m.MonthId }).ToList();
+                        where (pd.Segment == wvsc.Segment && m.ConfigId == wvsc.ConfigID)
+                        join dcvsc in _context.DistributionChannelVSsegmentConfig on m.ConfigId equals dcvsc.ConfigID
+                        where (pd.Segment == dcvsc.Segment && pd.DistributionChannel == dcvsc.DistributionChannel)
+                        join c in _context.ClassSessions on m.ClassId equals c.ClassId
+                        where (pmasc.Segment == segment && pmasc.PMA == "Price" && pd.Weekday == weekday && pd.DistributionChannel == distributionChannel
+                        && pd.QuarterNo == quarterNo && pd.MonthID == monthId)
+                        select new
+                        {
+                            FairMarket = m.TotalMarket * Convert.ToDecimal(sc.Percentage) * wvsc.Percentage * pmasc.Percentage * dcvsc.Percentage / c.HotelsCount,
 
-            //if (list.Count > 0)
-            //{
-            //    averagePrice = list[0].averagePrice;
-            //}
-            return averagePrice;
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                FairMarket = list[0].FairMarket;
+            }
+            return FairMarket;
+        }
+
+        private bool PriceDecisionUpdate(PriceDecisionDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                PriceDecision objPd = new PriceDecision
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    DistributionChannel = pObj.DistributionChannel,
+                    Price = pObj.Price,
+                    ActualDemand = pObj.ActualDemand,
+                    Confirmed = pObj.Confirmed,
+                };
+                _context.PriceDecision.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
         }
     }
 }
