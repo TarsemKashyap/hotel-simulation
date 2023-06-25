@@ -51,6 +51,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<MarketingVSsegmentConfig> MarketingVSsegmentConfig { get; set; }
     public DbSet<PriceMarketingAttributeSegmentConfig> PriceMarketingAttributeSegmentConfig { get; set; }
     public DbSet<WeekdayVSsegmentConfig> WeekdayVSsegmentConfig { get; set; }
+    public DbSet<DistributionChannelVSsegmentConfig> DistributionChannelVSsegmentConfig { get; set; }
 
 
 

@@ -345,7 +345,7 @@ namespace Service
             return averagePrice;
         }
 
-        private decimal ScalarQueryPriceExpectationPriceDecision(int monthId, int quarterNo,string segment, bool weekday)
+        private decimal ScalarQueryPriceExpectationPriceDecision(int monthId, int quarterNo, string segment, bool weekday)
         {
             /*
              SELECT weekdayVSsegmentConfig.priceExpectation AS priceExpect
@@ -356,41 +356,63 @@ WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = 
              
              
              */
-            decimal averagePrice = 0;
-            //var list = (from m in _context.Months.Where(x => x.MonthId == monthId
-            //            join wsc in _context.week
-            //            && x.QuarterNo == quarterNo
-            //            && x.Weekday == weekday
-            //            && x.DistributionChannel == distributionChannel.Trim()
-            //            && x.Segment == segment.Trim())
-            //            select new { averagePrice = m.Price }).ToList();
-            
-            //if (list.Count > 0)
-            //{
-            //    averagePrice = list[0].averagePrice;
-            //}
-            return averagePrice;
+            decimal PriceExpectation = 0;
+            var list = (from m in _context.Months
+                        join wsc in _context.WeekdayVSsegmentConfig on m.ConfigId equals wsc.ConfigID
+                        select new
+                        {
+                            MonthId = m.MonthId,
+                            QuarterNo = m.Sequence,
+                            Segment = wsc.Segment,
+                            Weekday = wsc.WeekDay,
+                            PriceExpect = wsc.PriceExpectation
+                        }).Where(x => x.MonthId == monthId && x.QuarterNo == quarterNo && x.Segment == segment && x.Weekday == weekday).ToList();
+
+            if (list.Count > 0)
+            {
+                PriceExpectation = list[0].PriceExpect;
+            }
+            return PriceExpectation;
         }
 
-        private decimal ScalarQueryFairMarketPriceDecision(string segment, bool weekday, string distributionChannel,int monthId, int quarterNo)
+        private decimal ScalarQueryFairMarketPriceDecision(string segment, bool weekday, string distributionChannel, int monthId, int quarterNo)
         {
             /*
-             SELECT weekdayVSsegmentConfig.priceExpectation AS priceExpect
-FROM  quarterlyMarket INNER JOIN
-               weekdayVSsegmentConfig ON quarterlyMarket.configID = weekdayVSsegmentConfig.configID
-WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (weekdayVSsegmentConfig.segment = @segment) 
-               AND (weekdayVSsegmentConfig.weekDay = @weekday)
+             SELECT DISTINCT 
+                      quarterlyMarket.totalMarket * segmentConfig.percentage * weekdayVSsegmentConfig.percentage * priceMarketingAttributeSegmentConfig.percentage * distributionChannelVSsegmentConfig.percentage
+                       / classSession.noOfHotels AS FairMarket
+FROM         priceDecision 
+            INNER JOIN
+                      quarterlyMarket ON priceDecision.sessionID = quarterlyMarket.sessionID AND priceDecision.quarterNo = quarterlyMarket.quarterNo 
+            INNER JOIN
+                      priceMarketingAttributeSegmentConfig ON quarterlyMarket.configID = priceMarketingAttributeSegmentConfig.configID AND 
+                      priceDecision.segment = priceMarketingAttributeSegmentConfig.segment 
+            INNER JOIN
+                      segmentConfig ON priceDecision.segment = segmentConfig.segment AND quarterlyMarket.configID = segmentConfig.configID 
+            INNER JOIN
+                      weekdayVSsegmentConfig ON priceDecision.weekday = weekdayVSsegmentConfig.weekDay AND 
+                      priceDecision.segment = weekdayVSsegmentConfig.segment AND quarterlyMarket.configID = weekdayVSsegmentConfig.configID 
+            INNER JOIN
+                      distributionChannelVSsegmentConfig ON quarterlyMarket.configID = distributionChannelVSsegmentConfig.configID AND 
+                      priceDecision.segment = distributionChannelVSsegmentConfig.segment AND 
+                      priceDecision.distributionChannel = distributionChannelVSsegmentConfig.distributionChannel 
+            INNER JOIN
+                      classSession ON quarterlyMarket.sessionID = classSession.classSessionID
+WHERE     (priceMarketingAttributeSegmentConfig.segment = @segment) AND (priceMarketingAttributeSegmentConfig.PMA = N'Price') AND 
+                      (priceDecision.weekday = @weekday) AND (priceDecision.distributionChannel = @distributionChannel) AND (priceDecision.sessionID = @sessionID) 
+                      AND (priceDecision.quarterNo = @quarterNo)
              
              
              */
             decimal averagePrice = 0;
-            //var list = (from m in _context.Months.Where(x => x.MonthId == monthId
-            //            join wsc in _context.week
-            //            && x.QuarterNo == quarterNo
-            //            && x.Weekday == weekday
-            //            && x.DistributionChannel == distributionChannel.Trim()
-            //            && x.Segment == segment.Trim())
-            //            select new { averagePrice = m.Price }).ToList();
+            var list = (from pd in _context.PriceDecision
+                        join m in _context.Months on pd.MonthID equals m.MonthId
+                        join pmasc in _context.PriceMarketingAttributeSegmentConfig on m.ConfigId equals pmasc.ConfigID
+                        join sc in _context.SegmentConfig on pmasc.Segment equals sc.Segment
+                        join wvsc in _context.WeekdayVSsegmentConfig on pd.Weekday equals wvsc.WeekDay
+                        //join dcvsc in _context.
+                        
+                        select new { averagePrice = m.MonthId }).ToList();
 
             //if (list.Count > 0)
             //{
