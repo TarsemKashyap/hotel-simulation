@@ -249,6 +249,28 @@ namespace Service
                     System.Threading.Thread.Sleep(10);
                 }
 
+                List<IncomeStateDto> incomTableAfter = GetDataByMonthIncomeState(monthId, currentQuarter);
+                foreach (IncomeStateDto row in incomTableAfter)
+                {
+                    if (currentQuarter <= 1)
+                    {
+                        row.TotReven = 3162981;
+                    }
+                    else
+                    {
+                        row.TotReven = GetDataBySingleRowIncomeState(monthId, currentQuarter - 1, row.GroupID).TotReven;
+                    }
+
+                    if (row.TotReven == 0)
+                    {
+                        row.TotReven = 3585548;
+                    }
+                    IncomeStateUpdate(row);
+                }
+
+                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                System.Threading.Thread.Sleep(10);
+
             }
             catch (Exception ex)
             {
@@ -418,6 +440,170 @@ namespace Service
                     Confirmed = pObj.Confirmed,
                 };
                 _context.PriceDecision.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private List<IncomeStateDto> GetDataByMonthIncomeState(int monthId, int quarterNo)
+        {
+            List<IncomeStateDto> list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
+                       .Select(x => new IncomeStateDto
+                       {
+                           MonthID = x.MonthID,
+                           QuarterNo = x.QuarterNo,
+                           GroupID = x.GroupID,
+                           Room1 = x.Room1,
+                           FoodB = x.FoodB,
+                           FoodB1 = x.FoodB1,
+                           Food2B = x.FoodB2,
+                           FoodB3 = x.FoodB3,
+                           FoodB4 = x.FoodB4,
+                           FoodB5 = x.FoodB5,
+                           Other = x.Other,
+                           Other1 = x.Other1,
+                           Other2 = x.Other2,
+                           Other3 = x.Other3,
+                           Other4 = x.Other4,
+                           Other5 = x.Other5,
+                           Other6 = x.Other6,
+                           Other7 = x.Other7,
+                           Rent = x.Rent,
+                           TotReven = x.TotReven,
+                           Room = x.Room,
+                           FoodB2 = x.FoodB2,
+                           TotExpen = x.TotExpen,
+                           TotDeptIncom = x.TotDeptIncom,
+                           UndisExpens1 = x.UndisExpens1,
+                           UndisExpens2 = x.UndisExpens2,
+                           UndisExpens3 = x.UndisExpens3,
+                           UndisExpens4 = x.UndisExpens4,
+                           UndisExpens5 = x.UndisExpens5,
+                           UndisExpens6 = x.UndisExpens6,
+                           GrossProfit = x.GrossProfit,
+                           MgtFee = x.MgtFee,
+                           IncomBfCharg = x.IncomBfCharg,
+                           Insurance = x.Insurance,
+                           Interest = x.Interest,
+                           PropDepreciationerty = x.PropDepreciationerty,
+                           TotCharg = x.TotCharg,
+                           NetIncomBfTAX = x.NetIncomBfTAX,
+                           Replace = x.Replace,
+                           AjstNetIncom = x.AjstNetIncom,
+                           IncomTAX = x.IncomTAX,
+                           NetIncom = x.NetIncom
+
+                       }
+                       ).ToList();
+
+            return list;
+
+        }
+        private IncomeStateDto GetDataBySingleRowIncomeState(int monthId, int quarterNo, int groupId)
+        {
+
+            var list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).
+                Select(x => new IncomeStateDto
+                {
+                    Replace = x.Replace,
+                    AjstNetIncom = x.AjstNetIncom,
+                    IncomTAX = x.IncomTAX,
+                    NetIncom = x.NetIncom,
+                    FoodB = x.FoodB,
+                    FoodB1 = x.FoodB1,
+                    FoodB2 = x.FoodB2,
+                    FoodB3 = x.FoodB3,
+                    FoodB4 = x.FoodB4,
+                    FoodB5 = x.FoodB5,
+                    Other = x.Other,
+                    Other1 = x.Other1,
+                    Other2 = x.Other2,
+                    Other3 = x.Other3,
+                    Other4 = x.Other4,
+                    Other5 = x.Other5,
+                    Other6 = x.Other6,
+                    Other7 = x.Other7,
+                    Rent = x.Rent,
+                    TotReven = x.TotReven,
+                    Room = x.Room,
+
+                    TotExpen = x.TotExpen,
+                    TotDeptIncom = x.TotDeptIncom,
+                    UndisExpens1 = x.UndisExpens1,
+                    UndisExpens2 = x.UndisExpens2,
+                    UndisExpens3 = x.UndisExpens3,
+                    UndisExpens4 = x.UndisExpens4,
+                    UndisExpens5 = x.UndisExpens5,
+                    UndisExpens6 = x.UndisExpens6,
+                    GrossProfit = x.GrossProfit,
+                    MgtFee = x.MgtFee,
+                    IncomBfCharg = x.IncomBfCharg,
+                    Insurance = x.Insurance,
+                    Interest = x.Interest,
+                    PropDepreciationerty = x.PropDepreciationerty,
+                    TotCharg = x.TotCharg,
+                    NetIncomBfTAX = x.NetIncomBfTAX,
+
+
+                }).ToList();
+
+            return list[0];
+        }
+
+
+        private bool IncomeStateUpdate(IncomeStateDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                IncomeState objPd = new IncomeState
+                {
+                    Replace = pObj.Replace,
+                    AjstNetIncom = pObj.AjstNetIncom,
+                    IncomTAX = pObj.IncomTAX,
+                    NetIncom = pObj.NetIncom,
+                    FoodB = pObj.FoodB,
+                    FoodB1 = pObj.FoodB1,
+                    FoodB2 = pObj.FoodB2,
+                    FoodB3 = pObj.FoodB3,
+                    FoodB4 = pObj.FoodB4,
+                    FoodB5 = pObj.FoodB5,
+                    Other = pObj.Other,
+                    Other1 = pObj.Other1,
+                    Other2 = pObj.Other2,
+                    Other3 = pObj.Other3,
+                    Other4 = pObj.Other4,
+                    Other5 = pObj.Other5,
+                    Other6 = pObj.Other6,
+                    Other7 = pObj.Other7,
+                    Rent = pObj.Rent,
+                    TotReven = pObj.TotReven,
+                    Room = pObj.Room,
+
+                    TotExpen = pObj.TotExpen,
+                    TotDeptIncom = pObj.TotDeptIncom,
+                    UndisExpens1 = pObj.UndisExpens1,
+                    UndisExpens2 = pObj.UndisExpens2,
+                    UndisExpens3 = pObj.UndisExpens3,
+                    UndisExpens4 = pObj.UndisExpens4,
+                    UndisExpens5 = pObj.UndisExpens5,
+                    UndisExpens6 = pObj.UndisExpens6,
+                    GrossProfit = pObj.GrossProfit,
+                    MgtFee = pObj.MgtFee,
+                    IncomBfCharg = pObj.IncomBfCharg,
+                    Insurance = pObj.Insurance,
+                    Interest = pObj.Interest,
+                    PropDepreciationerty = pObj.PropDepreciationerty,
+                    TotCharg = pObj.TotCharg,
+                    NetIncomBfTAX = pObj.NetIncomBfTAX,
+                };
+                _context.IncomeState.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
                 _context.SaveChanges();
                 result = true;
