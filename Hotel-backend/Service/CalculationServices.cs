@@ -333,25 +333,29 @@ namespace Service
                 System.Threading.Thread.Sleep(10);
 
 
-                //// roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                //hotelSimulator.roomAllocationDataTable table = adapter.GetDataByQuarter(monthId, currentQuarter);
+                // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
 
-                ////Sum customer demand and set into database
-                //foreach (hotelSimulator.roomAllocationRow row in table)
-                //{
-                //    if (row.weekday == true)
-                //    {
-                //        row.actualDemand = Convert.ToInt32(4 * (
-                //            Convert.ToInt32(adapter.ScalarQueryMarketingDemandBySegment(sessionID, quarterNo, row.groupID, row.segment)) +
-                //            Convert.ToInt32(adapter.ScalarQueryAttributeDemandBySegment(sessionID, quarterNo, row.groupID, row.segment))) / 7) +
-                //            Convert.ToInt32(adapter.ScalarQueryPriceDemandBySegment(sessionID, quarterNo, row.groupID, row.segment, row.weekday));
-                //    }
-                //    if (row.weekday == false)
-                //    {
-                //        row.actualDemand = Convert.ToInt32(3 * (Convert.ToInt32(adapter.ScalarQueryMarketingDemandBySegment(sessionID, quarterNo, row.groupID, row.segment)) + Convert.ToInt32(adapter.ScalarQueryAttributeDemandBySegment(sessionID, quarterNo, row.groupID, row.segment))) / 7) + Convert.ToInt32(adapter.ScalarQueryPriceDemandBySegment(sessionID, quarterNo, row.groupID, row.segment, row.weekday));
-                //    }
-                //}
-                //adapter.Update(table);
+                //Sum customer demand and set into database
+                foreach (RoomAllocationDto row in table)
+                {
+                    if (row.Weekday == true)
+                    {
+                        row.ActualDemand = Convert.ToInt32(4 * (
+                            Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
+                            Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
+                            Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
+                    }
+                    if (row.Weekday == false)
+                    {
+                        row.ActualDemand = Convert.ToInt32(3 * (
+                            Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) + 
+                            Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) + 
+                            Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
+                    }
+                    RoomAllocationUpdate(row);
+                }
+               
                 ////Slow down the calucation to give database more time to process, wait 1/10 second
                 System.Threading.Thread.Sleep(10);
             }
@@ -919,6 +923,131 @@ namespace Service
                     ActualDemand = (int)pObj.ActualDemand
                 };
                 _context.WeightedAttributeRating.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+
+        private List<RoomAllocationDto> GetDataByQuarterRoomAllocation(int monthId, int quarterNo)
+        {
+
+            var list = _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
+                Select(x => new RoomAllocationDto
+                {
+                    MonthID = x.MonthID,
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    Weekday = x.Weekday,
+                    Segment = x.Segment,
+                    RoomsAllocated = x.RoomsAllocated,
+                    ActualDemand = x.ActualDemand,
+                    RoomsSold = x.RoomsSold,
+                    Confirmed = x.Confirmed,
+                    Revenue = x.Revenue,
+                    QuarterForecast = x.QuarterForecast,
+
+
+                }).ToList();
+
+            return list;
+        }
+        //ScalarQueryMarketingDemandBySegment
+        private decimal ScalarQueryMarketingDemandBySegment(int monthId, int quarterNo, int groupID, string segment)
+        {
+            /*SELECT     SUM(actualDemand) AS MarketingDemand
+FROM         marketingDecision
+WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
+            decimal MarketingDemand = 0;
+            var list = (from md in _context.MarketingDecision
+                        where (md.MonthID == monthId && md.Segment == segment && md.MonthID == monthId && md.GroupID == groupID)
+
+                        select new
+                        {
+                            MarketingDemand = md.ActualDemand,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                MarketingDemand = list[0].MarketingDemand;
+            }
+            return MarketingDemand;
+
+        }
+
+        private decimal ScalarQueryAttributeDemandBySegment(int monthId, int quarterNo, int groupID, string segment)
+        {
+            /*SELECT     SUM(actualDemand) AS AttributeDemand
+FROM         weightedAttributeRating
+WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
+            decimal AttributeDemand = 0;
+            var list = (from md in _context.WeightedAttributeRating
+                        where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && md.GroupID == groupID)
+
+                        select new
+                        {
+                            AttributeDemand = md.ActualDemand,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                AttributeDemand = list[0].AttributeDemand;
+            }
+            return AttributeDemand;
+
+        }
+        //ScalarQueryPriceDemandBySegment
+        private decimal ScalarQueryPriceDemandBySegment(int monthId, int quarterNo, int groupID, string segment,bool weekday)
+        {
+            /*SELECT     SUM(actualDemand) AS PriceDemand
+FROM         priceDecision
+WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment) AND (weekday = @weekday)*/
+            decimal PriceDemand = 0;
+            var list = (from md in _context.PriceDecision
+                        where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && Convert.ToInt16(md.GroupID) == groupID)
+
+                        select new
+                        {
+                            PriceDemand = md.ActualDemand,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                PriceDemand = list[0].PriceDemand;
+            }
+            return PriceDemand;
+
+        }
+
+        private bool RoomAllocationUpdate(RoomAllocationDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                RoomAllocation objPd = new RoomAllocation
+                {
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    RoomsAllocated = pObj.RoomsAllocated,
+                    ActualDemand = pObj.ActualDemand,
+                    RoomsSold = pObj.RoomsSold,
+                    Confirmed = pObj.Confirmed,
+                    Revenue = pObj.Revenue,
+                    QuarterForecast = pObj.QuarterForecast,
+                };
+                _context.RoomAllocation.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
                 _context.SaveChanges();
                 result = true;
