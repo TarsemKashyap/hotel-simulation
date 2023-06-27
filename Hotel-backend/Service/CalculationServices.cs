@@ -4,11 +4,13 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Cms;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -205,7 +207,7 @@ namespace Service
                     ratio = 0;
                     decimal avergePrice;
                     decimal expectedPrice;
-                    decimal fairMarket;
+                    decimal fairMarketPD = 0;
                     int actualDemand;
                     //This get data need to change.
                     List<PriceDecisionDto> listPd = GetDataByQuarterPriceDecision(monthId, currentQuarter);
@@ -224,8 +226,8 @@ namespace Service
                             ratio = 2;
                         }
 
-                        fairMarket = Convert.ToDecimal(ScalarQueryFairMarketPriceDecision(priceDecisionRow.Segment, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel, monthId, currentQuarter));
-                        if (ratio == 2 || fairMarket == 0)
+                        fairMarketPD = Convert.ToDecimal(ScalarQueryFairMarketPriceDecision(priceDecisionRow.Segment, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel, monthId, currentQuarter));
+                        if (ratio == 2 || fairMarketPD == 0)
                         { actualDemand = 0; }
                         else if (ratio > 2)
                         {
@@ -233,7 +235,7 @@ namespace Service
                         }
                         else
                         {
-                            actualDemand = Convert.ToInt32((1 / (ratio - 2) + 2) * Convert.ToDouble(fairMarket));
+                            actualDemand = Convert.ToInt32((1 / (ratio - 2) + 2) * Convert.ToDouble(fairMarketPD));
                         }
 
                         if (actualDemand < 0)
@@ -271,6 +273,87 @@ namespace Service
                 ////Slow down the calucation to give database more time to process, wait 1/10 second
                 System.Threading.Thread.Sleep(10);
 
+
+                List<CustomerRawRatingDto> rawRatingTable = GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
+                //attributeDecisionTableAdapter attriDeAdapter = new attributeDecisionTableAdapter();
+                //idealRatingAttributeWeightConfigTableAdapter idealAdpt = new idealRatingAttributeWeightConfigTableAdapter();
+
+                foreach (CustomerRawRatingDto row in rawRatingTable)
+                {
+                    AttributeDecisionDto attriDeRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute);
+                    //In order to avoid divided by zero exception, if any of these spending is zero, 
+                    //we will skip the quary and set the rating as zero.
+                    if (attriDeRow.OperationBudget == 0 || attriDeRow.AccumulatedCapital == 0 || attriDeRow.LaborBudget == 0)
+                    {
+                        row.RawRating = 0;
+                    }
+                    else
+                    {
+                        decimal ideal = ScalarAttriSegIdealRating(row.MonthID, row.QuarterNo, row.Attribute, row.Segment);
+                        row.RawRating = Convert.ToDecimal(ScalarQueryCustomerRawRating(row.MonthID, row.QuarterNo, row.GroupID, row.Attribute, row.Segment));
+                        if (row.RawRating > ideal)
+                        {
+                            //////This one is tricky!
+                            ///////This line I made changes to correct the captial over time effects
+                            row.RawRating = ideal + Convert.ToDecimal(Math.Log(Convert.ToDouble(row.RawRating - ideal + 1), 2));
+                        }
+                    }
+                    if (row.RawRating < 0)
+                    {
+                        row.RawRating = 0;
+                    }
+                    if (row.RawRating >= 10)
+                    {
+                        row.RawRating = Convert.ToDecimal(9.99);
+                    }
+                    CustomerRowRatingUpdate(row);
+                }
+                // rawRatingAdapter.Update(rawRatingTable);
+                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                System.Threading.Thread.Sleep(10);
+                // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
+                List<WeightedAttributeRatingDto> overallRatingTable = GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
+                decimal averageRating = 0;
+                decimal fairMarket = 0;
+                foreach (WeightedAttributeRatingDto row in overallRatingTable)
+                {
+                    row.CustomerRating = ScalarQueryRatingBySegmentCustomerRawRatting(row.MonthID, row.QuarterNo, row.GroupID, row.Segment);
+                    averageRating = Convert.ToDecimal(ScalarQueryGetAvageRatingWeightAttributeRating(row.MonthID, row.QuarterNo, row.Segment));
+                    fairMarket = Convert.ToDecimal(ScalarQueryFairMarketWeightAttributeRating(row.Segment, row.MonthID, row.QuarterNo));
+                    if (row.CustomerRating == 0 || averageRating == 0 || fairMarket == 0)
+                    { row.ActualDemand = 0; }
+                    else
+                    {
+                        row.ActualDemand = Convert.ToInt32(row.CustomerRating / averageRating * fairMarket);
+                    }
+                    WeightedAttributeRatingUpdate(row);
+                }
+
+                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                System.Threading.Thread.Sleep(10);
+
+
+                //// roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                //hotelSimulator.roomAllocationDataTable table = adapter.GetDataByQuarter(monthId, currentQuarter);
+
+                ////Sum customer demand and set into database
+                //foreach (hotelSimulator.roomAllocationRow row in table)
+                //{
+                //    if (row.weekday == true)
+                //    {
+                //        row.actualDemand = Convert.ToInt32(4 * (
+                //            Convert.ToInt32(adapter.ScalarQueryMarketingDemandBySegment(sessionID, quarterNo, row.groupID, row.segment)) +
+                //            Convert.ToInt32(adapter.ScalarQueryAttributeDemandBySegment(sessionID, quarterNo, row.groupID, row.segment))) / 7) +
+                //            Convert.ToInt32(adapter.ScalarQueryPriceDemandBySegment(sessionID, quarterNo, row.groupID, row.segment, row.weekday));
+                //    }
+                //    if (row.weekday == false)
+                //    {
+                //        row.actualDemand = Convert.ToInt32(3 * (Convert.ToInt32(adapter.ScalarQueryMarketingDemandBySegment(sessionID, quarterNo, row.groupID, row.segment)) + Convert.ToInt32(adapter.ScalarQueryAttributeDemandBySegment(sessionID, quarterNo, row.groupID, row.segment))) / 7) + Convert.ToInt32(adapter.ScalarQueryPriceDemandBySegment(sessionID, quarterNo, row.groupID, row.segment, row.weekday));
+                //    }
+                //}
+                //adapter.Update(table);
+                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                System.Threading.Thread.Sleep(10);
             }
             catch (Exception ex)
             {
@@ -604,6 +687,238 @@ namespace Service
                     NetIncomBfTAX = pObj.NetIncomBfTAX,
                 };
                 _context.IncomeState.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+
+        private List<CustomerRawRatingDto> GetDataByQuarterCustomerRowRatting(int monthId, int quarterNo)
+        {
+            List<CustomerRawRatingDto> list = _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
+                       .Select(x => new CustomerRawRatingDto
+                       {
+                           MonthID = x.MonthID,
+                           QuarterNo = x.QuarterNo,
+                           GroupID = x.GroupID,
+                           Attribute = x.Attribute,
+                           RawRating = x.RawRating,
+                           Segment = x.Segment
+
+
+                       }
+                       ).ToList();
+
+            return list;
+
+        }
+        private AttributeDecisionDto GetDataBySingleRowAttributeDecision(int monthId, int quarterNo, int groupId, string attribute)
+        {
+
+            var list = _context.AttributeDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute).
+                Select(x => new AttributeDecisionDto
+                {
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    Attribute = x.Attribute,
+                    AccumulatedCapital = x.AccumulatedCapital,
+                    NewCapital = x.NewCapital,
+                    OperationBudget = x.OperationBudget,
+                    LaborBudget = x.LaborBudget,
+                    Confirmed = x.Confirmed,
+                    QuarterForecast = x.QuarterForecast,
+                    MonthID = x.MonthID,
+
+
+                }).ToList();
+
+            return list[0];
+        }
+
+        private decimal ScalarAttriSegIdealRating(int monthID, int quarterNo, string attribute, string segment)
+        {
+
+            decimal ideal = 0;
+            var list = (from irawc in _context.IdealRatingAttributeWeightConfig
+                        join m in _context.Months on irawc.ConfigID equals m.ConfigId
+                        where (irawc.Attribute == attribute && irawc.Segment == segment && m.Sequence == quarterNo && m.MonthId == monthID)
+                        select new
+                        {
+                            Ideal = irawc.IdealRating,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                ideal = list[0].Ideal;
+            }
+            return ideal;
+        }
+
+        //ScalarQueryRawRating
+
+        private decimal ScalarQueryCustomerRawRating(int monthID, int quarterNo, int groupId, string attribute, string segment)
+        {
+
+            decimal ideal = 0;
+            var list = (from crr in _context.CustomerRawRating
+                        join irawc in _context.IdealRatingAttributeWeightConfig on crr.Segment equals irawc.Segment
+                        where (crr.Attribute == irawc.Attribute)
+                        join amcoc in _context.AttributeMaxCapitalOperationConfig on crr.Attribute equals amcoc.Attribute
+                        where (irawc.ConfigID == amcoc.ConfigID)
+                        join m in _context.Months on crr.MonthID equals m.MonthId
+                        join ad in _context.AttributeDecision on crr.MonthID equals ad.MonthID
+                        where (crr.QuarterNo == ad.MonthID && crr.GroupID == ad.GroupID && crr.Attribute == ad.Attribute)
+                        join ins in _context.IncomeState on crr.MonthID equals ins.MonthID
+                        where (m.MonthId == ins.MonthID && m.Sequence == ins.QuarterNo && crr.GroupID == ins.GroupID && crr.MonthID == monthID
+                        && crr.QuarterNo == quarterNo && crr.GroupID == groupId && crr.Attribute == attribute && crr.Segment == segment)
+                        select new
+                        {
+                            RawRating = (ad.AccumulatedCapital + ad.NewCapital / ((amcoc.MaxNewCapital))
+                            * irawc.IdealRating * amcoc.NewCapitalPortion + ad.OperationBudget)
+                            / amcoc.MaxOperation
+                      * irawc.IdealRating * amcoc.OperationPortion + ad.LaborBudget
+                      / ins.TotReven
+                      / amcoc.PreLaborPercent * irawc.IdealRating * amcoc.LaborPortion,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                ideal = list[0].RawRating;
+            }
+            return ideal;
+        }
+        private bool CustomerRowRatingUpdate(CustomerRawRatingDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                CustomerRawRating objPd = new CustomerRawRating
+                {
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Attribute = pObj.Attribute,
+                    Segment = pObj.Segment,
+                    RawRating = (int)pObj.RawRating
+                };
+                _context.CustomerRawRating.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+
+        private List<WeightedAttributeRatingDto> GetDataByQuarterWeightAttributeRating(int monthId, int quarterNo)
+        {
+
+            var list = _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
+                Select(x => new WeightedAttributeRatingDto
+                {
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    MonthID = x.MonthID,
+                    ActualDemand = x.ActualDemand,
+                    CustomerRating = x.CustomerRating,
+                    Segment = x.Segment
+
+
+                }).ToList();
+
+            return list;
+        }
+        private decimal ScalarQueryRatingBySegmentCustomerRawRatting(int monthID, int quarterNo, int groupID, string segment)
+        {
+
+            decimal WeightedRating = 0;
+            var list = (from irawc in _context.IdealRatingAttributeWeightConfig
+                        join m in _context.Months on irawc.ConfigID equals m.ConfigId
+                        join crr in _context.CustomerRawRating on irawc.Attribute equals crr.Attribute
+                        where (irawc.Segment == crr.Segment && m.MonthId == crr.MonthID && m.Sequence == crr.QuarterNo
+                        && crr.MonthID == monthID && crr.QuarterNo == quarterNo && crr.GroupID == groupID && crr.Segment == segment
+                        )
+                        select new
+                        {
+                            WeightedRating = (crr.RawRating * irawc.Weight),
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                WeightedRating = list[0].WeightedRating;
+            }
+            return WeightedRating;
+
+        }
+        private decimal ScalarQueryGetAvageRatingWeightAttributeRating(int monthID, int quarterNo, string segment)
+        {
+
+
+            var list = (from w in _context.WeightedAttributeRating.Where(x => x.MonthID == monthID && x.QuarterNo == quarterNo && x.Segment == segment)
+                        select new { AverageRating = w.CustomerRating }).ToList();
+
+
+
+            decimal AverageRating = 0;
+            if (list.Count > 0)
+            {
+                AverageRating = list[0].AverageRating;
+            }
+            return AverageRating;
+
+        }
+        private decimal ScalarQueryFairMarketWeightAttributeRating(string segment, int monthID, int quarterNo)
+        {
+
+            decimal FairMarket = 0;
+            var list = (from m in _context.Months
+                        join sc in _context.SegmentConfig on m.ConfigId equals sc.ConfigID
+                        join pmasc in _context.PriceMarketingAttributeSegmentConfig on m.ConfigId equals pmasc.ConfigID
+                        where (sc.Segment == pmasc.Segment)
+                        join c in _context.ClassSessions on m.ClassId equals c.ClassId
+                        where (pmasc.PMA == "Attributes" && sc.Segment == segment && m.MonthId == monthID && m.Sequence == quarterNo)
+
+                        select new
+                        {
+                            FairMarket = Convert.ToDecimal(sc.Percentage) * pmasc.Percentage * m.TotalMarket / c.HotelsCount,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                FairMarket = list[0].FairMarket;
+            }
+            return FairMarket;
+
+        }
+        private bool WeightedAttributeRatingUpdate(WeightedAttributeRatingDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                WeightedAttributeRating objPd = new WeightedAttributeRating
+                {
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    CustomerRating = Convert.ToInt16(pObj.CustomerRating),
+                    Segment = pObj.Segment,
+                    ActualDemand = (int)pObj.ActualDemand
+                };
+                _context.WeightedAttributeRating.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
                 _context.SaveChanges();
                 result = true;
