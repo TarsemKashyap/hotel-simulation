@@ -2,6 +2,7 @@
 using Database.Migrations;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using Mysqlx.Resultset;
 using MySqlX.XDevAPI;
 using Newtonsoft.Json;
@@ -758,7 +759,63 @@ namespace Service
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
                     System.Threading.Thread.Sleep(10);
                 }
+                {
 
+                    List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+
+
+                    decimal directSold;
+                    decimal travelSold;
+                    decimal onlineSold;
+                    decimal opaqueSold;
+                    decimal thisSold;
+                    decimal roomAlloSold;
+
+                    decimal sum;
+
+                    foreach (SoldRoomByChannelDto row in soldChanTable)
+                    {
+                        directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment).ActualDemand;
+                        travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment).ActualDemand;
+                        onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment).ActualDemand;
+                        opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment).ActualDemand;
+                        thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment).ActualDemand;
+                        roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment).RoomsSold;
+
+                        sum = directSold + travelSold + onlineSold + opaqueSold;
+
+                        if (sum == 0)
+                        {
+                            row.SoldRoom = 0;
+                            row.Revenue = 0;
+                            row.Cost = 0;
+                        }
+                        else
+                        {
+                            row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
+
+                        }
+                        SoldRoomByChannelUpdate(row);
+                    }
+
+                    ////Slow down the calucation to give database more time to process, wait 1/10 second
+                    System.Threading.Thread.Sleep(10);
+
+                    /////////////////////////////////
+                    /////////Set revenue and cost
+                    //////////////////////////////
+                    //List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+                    foreach (SoldRoomByChannelDto row in soldChanTable)
+                    {
+                        row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                        row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                        SoldRoomByChannelUpdate(row);
+                    }
+
+
+                    ////Slow down the calucation to give database more time to process, wait 1/10 second
+                    System.Threading.Thread.Sleep(10);
+                }
 
             }
             catch (Exception ex)
@@ -1510,7 +1567,229 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
 
             return list;
         }
-        //GetDataByGroupWeekday
-        /*SELECT actualDemand, confirmed, groupID, quarterForecast, quarterNo, revenue, roomsAllocated, roomsSold, segment, sessionID, weekday FROM roomAllocation WHERE (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (weekday = @weekday)*/
+        //GetDataByMonth
+        private List<SoldRoomByChannelDto> GetDataByMonthSoldRoomByChannel(int monthId, int quarterNo)
+        {
+
+            var list = _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
+                Select(x => new SoldRoomByChannelDto
+                {
+                    MonthID = x.MonthID,
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    Weekday = x.Weekday,
+                    Segment = x.Segment,
+                    Revenue = x.Revenue,
+                    Channel = x.Channel,
+                    Cost = x.Cost,
+                    SoldRoom = x.SoldRoom,
+                }).ToList();
+
+            return list;
+        }
+        private PriceDecisionDto GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
+        {
+            /*SELECT actualDemand, confirmed, distributionChannel, groupID, price, quarterNo, segment, sessionID, weekday FROM priceDecision 
+             * WHERE (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (weekday = @weekday) AND (distributionChannel = @distributionChannel) AND (segment = @segment)*/
+            var list = _context.PriceDecision.
+                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId.ToString()
+                && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday).
+                Select(x => new PriceDecisionDto
+                {
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    MonthID = x.MonthID,
+                    ActualDemand = x.ActualDemand,
+                    Confirmed = x.Confirmed,
+                    DistributionChannel = x.DistributionChannel,
+                    Price = x.Price,
+                    Segment = x.Segment,
+                    Weekday = x.Weekday
+
+
+                }).ToList();
+
+            return list[0];
+        }
+
+
+
+        private RoomAllocationDto GetDataByEachDecisionRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday, string segment)
+        {
+            /*SELECT actualDemand, confirmed, groupID, quarterForecast, quarterNo, revenue, roomsAllocated, 
+             * roomsSold, segment, sessionID, weekday FROM roomAllocation 
+             * WHERE (sessionID = @sessionID) 
+             * AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (weekday = @weekday) AND (segment = @segment)*/
+
+            var list = _context.RoomAllocation.
+                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+                && x.Segment == segment && x.Weekday == weekday).
+                Select(x => new RoomAllocationDto
+                {
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    MonthID = x.MonthID,
+                    ActualDemand = x.ActualDemand,
+                    Confirmed = x.Confirmed,
+                    Segment = x.Segment,
+                    Weekday = x.Weekday,
+                    QuarterForecast = x.QuarterForecast,
+                    Revenue = x.Revenue,
+                    RoomsAllocated = x.RoomsAllocated,
+                    RoomsSold = x.RoomsSold
+
+
+                }).ToList();
+
+            return list[0];
+        }
+        private bool SoldRoomByChannelUpdate(SoldRoomByChannelDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                SoldRoomByChannel objPd = new SoldRoomByChannel
+                {
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    Revenue = pObj.Revenue,
+                    Channel = pObj.Channel,
+                    Cost = pObj.Cost,
+                    SoldRoom = pObj.SoldRoom
+
+                };
+                _context.SoldRoomByChannel.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+
+
+        //ScalarSingleRevenue
+
+        private decimal ScalarSingleRevenueSoldRoomByChannel(int monthId, int quarterNo, int groupID, string segment, string channel, bool weekday)
+        {
+            /*SELECT              priceDecision.price * soldRoomByChannel.soldRoom AS Revenue
+ FROM                  distributionChannelVSsegmentConfig 
+            INNER JOIN
+                                 quarterlyMarket ON distributionChannelVSsegmentConfig.configID = quarterlyMarket.configID 
+            INNER JOIN
+                                 priceDecision ON quarterlyMarket.sessionID = priceDecision.sessionID 
+                                AND quarterlyMarket.quarterNo = priceDecision.quarterNo 
+            INNER JOIN
+                                 soldRoomByChannel ON priceDecision.sessionID = soldRoomByChannel.sessionID 
+            AND priceDecision.quarterNo = soldRoomByChannel.quarterNo 
+            AND 
+                                 priceDecision.groupID = soldRoomByChannel.groupID 
+            AND priceDecision.weekday = soldRoomByChannel.weekday 
+            AND 
+                                 priceDecision.distributionChannel = soldRoomByChannel.channel 
+            AND priceDecision.segment = soldRoomByChannel.segment 
+            AND 
+                                 distributionChannelVSsegmentConfig.segment = soldRoomByChannel.segment 
+            AND distributionChannelVSsegmentConfig.distributionChannel = soldRoomByChannel.channel
+ WHERE              (soldRoomByChannel.sessionID = @sessionID) 
+            AND (soldRoomByChannel.quarterNo = @quarterNo) 
+            AND (soldRoomByChannel.groupID = @groupID) 
+            AND 
+                                 (soldRoomByChannel.segment = @segment) 
+            AND (soldRoomByChannel.channel = @channel) 
+            AND (soldRoomByChannel.weekday = @weekday)
+ GROUP BY       priceDecision.price, distributionChannelVSsegmentConfig.costPercent, soldRoomByChannel.soldRoom*/
+            decimal Revenue = 0;
+            var list = (from dcvsc in _context.DistributionChannelVSsegmentConfig
+                        join m in _context.Months on dcvsc.ConfigID equals m.ConfigId
+                        join pd in _context.PriceDecision on m.MonthId equals pd.MonthID
+                        where (m.Sequence == pd.QuarterNo)
+                        join sbr in _context.SoldRoomByChannel on pd.MonthID equals sbr.MonthID
+                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID.ToString() && pd.DistributionChannel == sbr.Channel
+                        && pd.Segment == sbr.Segment && pd.Weekday == sbr.Weekday && dcvsc.Segment == sbr.Segment && dcvsc.DistributionChannel == sbr.Channel
+                       && sbr.MonthID == monthId && sbr.GroupID == groupID && sbr.QuarterNo == quarterNo && sbr.Segment == segment
+                       && sbr.Channel == channel && sbr.Weekday == weekday)
+
+                        group new { pd, dcvsc, sbr } by new { pd.Price, dcvsc.CostPercent, sbr.SoldRoom } into dps
+                        let firstgroup = dps.FirstOrDefault()
+                        let priceDecision = firstgroup.pd
+                        let distChanConfig = firstgroup.dcvsc
+                        let soldChanel = firstgroup.sbr
+                        select new
+                        {
+                            Revenue = priceDecision.Price * soldChanel.SoldRoom,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                Revenue = list[0].Revenue;
+            }
+            return Revenue;
+
+        }
+        //ScalarSingleCost
+        private decimal ScalarSingleCostSoldRoomByChannel(int monthId, int quarterNo, int groupID, string segment, string channel, bool weekday)
+        {
+            /*SELECT              priceDecision.price * distributionChannelVSsegmentConfig.costPercent * soldRoomByChannel.soldRoom AS COST
+FROM                  distributionChannelVSsegmentConfig 
+            INNER JOIN
+                                quarterlyMarket ON distributionChannelVSsegmentConfig.configID = quarterlyMarket.configID 
+            INNER JOIN
+                                priceDecision ON quarterlyMarket.sessionID = priceDecision.sessionID AND quarterlyMarket.quarterNo = priceDecision.quarterNo 
+            INNER JOIN
+                                soldRoomByChannel ON priceDecision.sessionID = soldRoomByChannel.sessionID 
+            AND priceDecision.quarterNo = soldRoomByChannel.quarterNo AND 
+                                priceDecision.groupID = soldRoomByChannel.groupID 
+            AND priceDecision.weekday = soldRoomByChannel.weekday 
+            AND 
+                                priceDecision.distributionChannel = soldRoomByChannel.channel 
+            AND priceDecision.segment = soldRoomByChannel.segment 
+            AND 
+                                distributionChannelVSsegmentConfig.segment = soldRoomByChannel.segment 
+            AND distributionChannelVSsegmentConfig.distributionChannel = soldRoomByChannel.channel
+WHERE              (soldRoomByChannel.sessionID = @sessionID) AND (soldRoomByChannel.quarterNo = @quarterNo) 
+            AND (soldRoomByChannel.groupID = @groupID) AND 
+                                (soldRoomByChannel.segment = @segment) AND (soldRoomByChannel.channel = @channel) 
+            AND (soldRoomByChannel.weekday = @weekday)
+GROUP BY       priceDecision.price, distributionChannelVSsegmentConfig.costPercent, soldRoomByChannel.soldRoom
+            */
+            decimal COST = 0;
+            var list = (from dcvsc in _context.DistributionChannelVSsegmentConfig
+                        join m in _context.Months on dcvsc.ConfigID equals m.ConfigId
+                        join pd in _context.PriceDecision on m.MonthId equals pd.MonthID
+                        where (m.Sequence == pd.QuarterNo)
+                        join sbr in _context.SoldRoomByChannel on pd.MonthID equals sbr.MonthID
+                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID.ToString() && pd.DistributionChannel == sbr.Channel
+                        && pd.Segment == sbr.Segment && pd.Weekday == sbr.Weekday && dcvsc.Segment == sbr.Segment && dcvsc.DistributionChannel == sbr.Channel
+                       && sbr.MonthID == monthId && sbr.GroupID == groupID && sbr.QuarterNo == quarterNo && sbr.Segment == segment
+                       && sbr.Channel == channel && sbr.Weekday == weekday)
+
+                        group new { pd, dcvsc, sbr } by new { pd.Price, dcvsc.CostPercent, sbr.SoldRoom } into dps
+                        let firstgroup = dps.FirstOrDefault()
+                        let priceDecision = firstgroup.pd
+                        let distChanConfig = firstgroup.dcvsc
+                        let soldChanel = firstgroup.sbr
+                        select new
+                        {
+                            // priceDecision.price * distributionChannelVSsegmentConfig.costPercent * soldRoomByChannel.soldRoom
+                            COST = priceDecision.Price * distChanConfig.CostPercent * soldChanel.SoldRoom,
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                COST = list[0].COST;
+            }
+            return COST;
+
+        }
     }
 }
