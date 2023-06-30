@@ -46,7 +46,7 @@ namespace Service
 
                 FunMonth obj = new FunMonth();
                 FunCalculation objCalculation = new FunCalculation();
-                 obj.UpdateClassStatus(_context, month.ClassId, "C");
+                obj.UpdateClassStatus(_context, month.ClassId, "C");
                 ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
                 int currentQuarter = objclassSess.CurrentQuater;
                 int hotelsCount = objclassSess.HotelsCount;
@@ -1103,12 +1103,12 @@ namespace Service
                     if (currentQuarter > 1)
                     {
                         //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                        int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId,currentQuarter));
+                        int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
                         int groupIDRA = 1;
                         //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
                         string schoolName = Convert.ToString(ScalarSchoolName(monthId));
                         string groupName = null;
-                       
+
                         decimal a;
                         decimal b;
                         decimal profiM;
@@ -1116,7 +1116,7 @@ namespace Service
                         {
                             groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
                             //////Profit Margin
-                           IncomeStateDto incomeRowCurrent = GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
+                            IncomeStateDto incomeRowCurrent = GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
                             a = incomeRowCurrent.NetIncom;
                             b = incomeRowCurrent.TotReven;
 
@@ -1136,18 +1136,18 @@ namespace Service
                             {
                                 groupName = "Group " + groupID.ToString();
                             }
-                            //if (ranksAdpt.GetDataBySingleRow(monthId, "Profit Margin", groupID).Count == 0)
-                            //{
-                            //    ranksAdpt.Insert1(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
-                            //}
-                            //else
-                            //{
-                            //    ranksR = ranksAdpt.GetDataBySingleRow(monthId, "Profit Margin", groupID)[0];
-                            //    ranksR.performance = profiM;
-                            //    ranksAdpt.Update(ranksR);
-                            //    ////Slow down the calucation to give database more time to process, wait 1/10 second
-                            //    System.Threading.Thread.Sleep(10);
-                            //}
+                            if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID) == null)
+                            {
+                                InsertRank(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
+                            }
+                            else
+                            {
+                                RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupID);
+                                ranksR.Performance = profiM;
+                                RankingUpdate(ranksR);
+                                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                                System.Threading.Thread.Sleep(10);
+                            }
                             //////go to next group
                             groupID++;
                         }
@@ -2382,6 +2382,78 @@ WHERE              (roomAllocation.sessionID = @sessionID)
     WHERE     (sessionID = @sessionID) AND (groupID = @groupID)*/
 
             return "HardCode";
+        }
+        private RankingsDto GetDataBySingleRowRanking(int monthId, string indicator, int teamno)
+        {
+            /*SELECT indicator, institution, month, performance, session, teamName, teamNo, time 
+             * FROM rankings WHERE (session = @sessionID) AND (indicator = @indicator) AND (teamNo = @teamNo)*/
+
+            var list = _context.Rankings.Where(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno)
+                .Select(x => new RankingsDto
+                {
+                    Indicator = x.Indicator,
+                    Institution = x.Institution,
+                    Month = x.Month,
+                    MonthID = x.MonthID,
+                    Performance = x.Performance,
+                    TeamName = x.TeamName,
+                    TeamNo = x.TeamNo,
+                    Time = x.Time
+                }).ToList();
+            RankingsDto rnk = new RankingsDto();
+            if (list.Count > 0)
+            {
+                rnk = list[0];
+            }
+            return rnk;
+        }
+        public int InsertRank(int monthId, int currentQuarter, int groupID, string groupName, string schoolName, string indicator, decimal profiM, DateTime time)
+        {
+            IQueryable<Rankings> query = _context.Rankings;
+            var obj = new Rankings()
+            {
+                MonthID = monthId,
+                Month = currentQuarter,
+                Indicator = indicator,
+                Institution = schoolName,
+                Performance = profiM,
+                TeamName = groupName,
+                TeamNo = groupID,
+                Time = time
+            };
+            _context.Rankings.Add(obj);
+            int status = _context.SaveChanges();
+            int id = obj.ID;
+
+            return id;
+        }
+        private bool RankingUpdate(RankingsDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                Rankings objPd = new Rankings
+                {
+                    MonthID = pObj.MonthID,
+                    Month = pObj.Month,
+                    TeamNo = pObj.TeamNo,
+                    TeamName = pObj.TeamName,
+                    Indicator = pObj.Indicator,
+                    Institution = pObj.Institution,
+                    Performance = pObj.Performance,
+                    Time = pObj.Time
+                };
+                _context.Rankings.Add(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
         }
     }
 
