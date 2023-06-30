@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ZstdNet;
 
 namespace Service
 {
@@ -817,6 +818,275 @@ namespace Service
                     System.Threading.Thread.Sleep(10);
                 }
 
+                {
+
+
+                    IncomeState incomStatAdpt = new IncomeState();
+                    BalanceSheet balanTableAdpt = new BalanceSheet();
+                    RoomAllocation roomAlloAdpt = new RoomAllocation();
+                    SoldRoomByChannel roomChanAdpt = new SoldRoomByChannel();
+                    ClassSession classAdapter = new ClassSession();
+
+                    BalanceSheetDto balanTableRow;
+
+                    List<IncomeStateDto> incoTable = GetDataByMonthIncomeState(monthId, currentQuarter);
+
+                    int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(monthId));
+
+                    for (int c = 1; c < groupNo + 1; c++)
+                    {
+                        IncomeStateDto incomStaRow = GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
+
+                        int roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
+
+                        ///Revenue_Room Revenue
+                        incomStaRow.Room = roomRevenue;
+
+                        ///Revenue_Food and Beverage Total
+                        incomStaRow.FoodB1 = Convert.ToInt16(31 * roomRevenue / 52);
+
+                        ////revenue by attribute under Food and Beverage Section
+                        decimal restaurantScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Resturants"));
+                        decimal BarScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Bars"));
+                        decimal roomServiceScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Room Service"));
+                        decimal banquetScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering"));
+                        decimal meetRoomScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms"));
+                        decimal foodBTotalScore = restaurantScore + BarScore + roomServiceScore + banquetScore + meetRoomScore;
+
+                        if (foodBTotalScore == 0)
+                        {
+                            ///////////////////////////////
+                            ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
+                            incomStaRow.FoodB1 = 0;
+                            incomStaRow.FoodB2 = 0;
+                            incomStaRow.FoodB3 = 0;
+                            incomStaRow.FoodB4 = 0;
+                            incomStaRow.FoodB5 = 0;
+                        }
+                        else
+                        {
+                            incomStaRow.FoodB1 = incomStaRow.FoodB * restaurantScore / foodBTotalScore;
+                            incomStaRow.FoodB2 = incomStaRow.FoodB * BarScore / foodBTotalScore;
+                            incomStaRow.FoodB3 = incomStaRow.FoodB * roomServiceScore / foodBTotalScore;
+                            incomStaRow.FoodB4 = incomStaRow.FoodB * banquetScore / foodBTotalScore;
+                            incomStaRow.FoodB5 = incomStaRow.FoodB * meetRoomScore / foodBTotalScore;
+                        }
+
+                        ///Revenue_Other Operated Departments
+                        incomStaRow.Other = 12 * roomRevenue / 52;
+
+                        decimal golfScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course"));
+                        decimal spaScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Spa"));
+                        decimal fitnessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center"));
+                        decimal businessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Business Center"));
+                        decimal otherRecreScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect"));
+                        decimal entertainScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment"));
+                        decimal otherOperatedTotal = golfScore + spaScore + fitnessScore + businessScore + otherRecreScore + entertainScore;
+
+                        if (otherOperatedTotal == 0)
+                        {
+                            incomStaRow.Other1 = 0;
+                            incomStaRow.Other2 = 0;
+                            incomStaRow.Other3 = 0;
+                            incomStaRow.Other4 = 0;
+                            incomStaRow.Other5 = 0;
+                            incomStaRow.Other6 = 0;
+                        }
+                        else
+                        {
+                            ///////////////////////////////
+                            ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
+                            ///////////////////////////////////////////////////////////
+                            incomStaRow.Other1 = incomStaRow.Other * golfScore / otherOperatedTotal;
+                            incomStaRow.Other2 = incomStaRow.Other * spaScore / otherOperatedTotal;
+                            incomStaRow.Other3 = incomStaRow.Other * fitnessScore / otherOperatedTotal;
+                            incomStaRow.Other4 = incomStaRow.Other * businessScore / otherOperatedTotal;
+                            incomStaRow.Other5 = incomStaRow.Other * otherRecreScore / otherOperatedTotal;
+                            incomStaRow.Other6 = incomStaRow.Other * entertainScore / otherOperatedTotal;
+                        }
+
+                        ///Revenue_Rental and other Income
+                        incomStaRow.Rent = 5 * roomRevenue / 52;
+
+                        ///Revenue_Total Revenue
+                        incomStaRow.TotReven = 100 * roomRevenue / 52;
+
+                        ///Departmental Expenses from Rooms
+                        // attributeDecisionTableAdapter attriDecisionAdpt = new attributeDecisionTableAdapter();
+                        //hotelSimulator.attributeDecisionRow attriDecisionRow;
+
+                        AttributeDecisionDto attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
+                        incomStaRow.Room1 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
+                        incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
+                        incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
+                        incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
+                        incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Maintanence and security")[0];
+                        //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+                        //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy (Rooms)")[0];
+                        //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+
+                        ///Departmental Expenses from Food and Beverage
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Resturants");
+                        incomStaRow.FoodB2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Bars");
+                        incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Room Service");
+                        incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering");
+                        incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms");
+                        incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Entertainment")[0];
+                        //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+                        //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy(FB)")[0];
+                        //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+
+                        ///Expenses from other operation department such as spa, fitness center etc.
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Spa");
+                        incomStaRow.Other2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center");
+                        incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Business Center");
+                        incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course");
+                        incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect");
+                        incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment");
+                        incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+                        ///Expenses TOTAL
+                        incomStaRow.TotExpen = incomStaRow.Room1 + incomStaRow.FoodB2 + incomStaRow.Other2;
+
+                        ///Total Departmental Income
+                        ///////room revenue *100/52 is the total revenue
+                        incomStaRow.TotDeptIncom = 100 * roomRevenue / 52 - incomStaRow.TotExpen;
+
+                        ///Undistributed Expenses from Administrative and General or mangement sales attention
+                        ///8% of the total revenue.
+                        //////Revision: according to Gursoy's email Monday, April 27, 2015 3:58 PM, 
+                        //////courtesy and management/sales attention should be listed under administrative and general (which is undisExpens1)
+                        //////incomStaRow._4UndisExpens1 = 2 * roomRevenue / 13;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy(FB)");
+                        incomStaRow.UndisExpens1 = 2 * roomRevenue / 13 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Management/Sales Attention");
+                        incomStaRow.UndisExpens1 = incomStaRow.UndisExpens1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+                        ///Undistributed Expenses from Salses and Marketing
+                        incomStaRow.UndisExpens2 = ScalarQueryTotalSpendingMarketingDecision(monthId, currentQuarter, incomStaRow.GroupID);
+
+                        ///Undistributed Expenses from Distributional Channels
+                        incomStaRow.UndisExpens3 = Convert.ToDecimal(ScalarGroupDistriCostByMonthSoldByChannel(monthId, currentQuarter, incomStaRow.GroupID));
+
+                        ///Undistributed Expenses Property Operation and Maintenance (5.5 % of total revenue plus the labor and other from mantainance and security, building)
+                        incomStaRow.UndisExpens4 = 11 * roomRevenue / 104;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Maintanence and security");
+                        incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                        attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy (Rooms)");
+                        incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+
+                        ///Undistributed Expenses from untilities
+                        incomStaRow.UndisExpens5 = 11 * roomRevenue / 130;
+
+                        ///Undistributed Expenses TOTAL
+                        incomStaRow.UndisExpens6 = incomStaRow.UndisExpens1 + incomStaRow.UndisExpens2 + incomStaRow.UndisExpens3 + incomStaRow.UndisExpens4 + incomStaRow.UndisExpens5;
+
+                        ///5.Gross operating profit
+                        incomStaRow.GrossProfit = incomStaRow.TotDeptIncom - incomStaRow.UndisExpens6;
+
+                        ///6.Managment Fee
+                        incomStaRow.MgtFee = 5 * roomRevenue / 104;
+
+                        ///7.Income before fixed charges
+                        incomStaRow.IncomBfCharg = incomStaRow.GrossProfit - incomStaRow.MgtFee;
+
+                        ///8.1 Property and other taxes
+                        incomStaRow.Property = 4 * roomRevenue / 65;
+
+                        ///8.2 Insurance
+                        incomStaRow.Insurance = 3 * roomRevenue / 104;
+
+                        ///8.3 Insterests 
+                        ///Right now is fake value, the real value should come from (currentquarter -1) balance sheet 
+                        balanTableRow = GetDataBySingleRowBallanceSheet(incomStaRow.MonthID, incomStaRow.QuarterNo, incomStaRow.GroupID);
+                        incomStaRow.Interest = balanTableRow.LongDebt * 7 / 1000 + balanTableRow.ShortDebt * 3 / 100;
+
+                        ///8.4 Depriciation
+                        incomStaRow.PropDepreciationerty = ScalarMonthDepreciationTotalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID);
+
+                        ///8 Fixed Charge Total
+                        incomStaRow.TotCharg = incomStaRow.Property + incomStaRow.Insurance + incomStaRow.Interest + incomStaRow.PropDepreciationerty;
+
+                        ///9. Net Operating Income (before TAX)
+                        incomStaRow.NetIncomBfTAX = incomStaRow.IncomBfCharg - incomStaRow.TotCharg;
+
+                        ///10.LESS: replacement reserves
+                        incomStaRow.Replace = Convert.ToDecimal(ScalarMonthlyTotalNewCapitalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID));
+
+                        ///11. Adjusted.......
+                        incomStaRow.AjstNetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.Replace;
+
+                        ///income TAX
+                        if (incomStaRow.NetIncomBfTAX < 0)
+                        {
+                            incomStaRow.IncomTAX = 0;
+                        }
+                        else
+                        {
+                            incomStaRow.IncomTAX = incomStaRow.NetIncomBfTAX / 4;
+                        }
+
+                        ///NET INCOME
+                        incomStaRow.NetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.IncomTAX;
+
+
+                        /////Repeat one more time to input the total Revenue
+                        incomStaRow.TotReven = 100 * roomRevenue / 52;
+
+                        ////////Update the income statement row by row rather than the entire table, to avoide the same total income issue. 
+                        IncomeStateUpdate(incomStaRow);
+                        ////Slow down the calucation to give database more time to process, wait 1/10 second
+                        System.Threading.Thread.Sleep(10);
+
+                    }
+                    //////////////////
+                    ///////Update Database///
+                    /////////incomStatAdpt.Update(incoTable);
+
+                    ////////////////////////////////////////
+                    ////The following code is just to ensure the Total Revenue is input correctly
+                    /////This check only makes sense when current month is greater than 1
+                    ////////////////////////////////////////
+
+                    if (currentQuarter > 1)
+                    {
+                        //incomeState1TableAdapter income1Adpt = new incomeState1TableAdapter();
+                        decimal totalRevThisMonth;
+                        decimal totalRevPrevMonth;
+
+                        List<IncomeStateDto> income1Table = GetDataByMonthIncomeState(monthId, currentQuarter);
+                        foreach (IncomeStateDto incom1StaRow in income1Table)
+                        {
+                            totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
+                            totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter - 1));
+                            if (totalRevPrevMonth == totalRevThisMonth)
+                            {
+                                decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));
+                                incom1StaRow.TotReven = 100 * roomRevenue / 52;
+                                IncomeStateUpdate(incom1StaRow);
+                                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                                System.Threading.Thread.Sleep(10);
+                            }
+                        }
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -1110,44 +1380,44 @@ namespace Service
             {
                 IncomeState objPd = new IncomeState
                 {
-                    Replace = pObj.Replace,
-                    AjstNetIncom = pObj.AjstNetIncom,
-                    IncomTAX = pObj.IncomTAX,
-                    NetIncom = pObj.NetIncom,
-                    FoodB = pObj.FoodB,
-                    FoodB1 = pObj.FoodB1,
-                    FoodB2 = pObj.FoodB2,
-                    FoodB3 = pObj.FoodB3,
-                    FoodB4 = pObj.FoodB4,
-                    FoodB5 = pObj.FoodB5,
-                    Other = pObj.Other,
-                    Other1 = pObj.Other1,
-                    Other2 = pObj.Other2,
-                    Other3 = pObj.Other3,
-                    Other4 = pObj.Other4,
-                    Other5 = pObj.Other5,
-                    Other6 = pObj.Other6,
+                    Replace = (int)pObj.Replace,
+                    AjstNetIncom = (int)pObj.AjstNetIncom,
+                    IncomTAX = (int)pObj.IncomTAX,
+                    NetIncom = (int)pObj.NetIncom,
+                    FoodB = (int)pObj.FoodB,
+                    FoodB1 = (int)pObj.FoodB1,
+                    FoodB2 = (int)pObj.FoodB2,
+                    FoodB3 = (int)pObj.FoodB3,
+                    FoodB4 = (int)pObj.FoodB4,
+                    FoodB5 = (int)pObj.FoodB5,
+                    Other = (int)pObj.Other,
+                    Other1 = (int)pObj.Other1,
+                    Other2 = (int)pObj.Other2,
+                    Other3 = (int)pObj.Other3,
+                    Other4 = (int)pObj.Other4,
+                    Other5 = (int)pObj.Other5,
+                    Other6 = (int)pObj.Other6,
                     Other7 = pObj.Other7,
                     Rent = pObj.Rent,
-                    TotReven = pObj.TotReven,
+                    TotReven = (int)pObj.TotReven,
                     Room = pObj.Room,
 
-                    TotExpen = pObj.TotExpen,
-                    TotDeptIncom = pObj.TotDeptIncom,
-                    UndisExpens1 = pObj.UndisExpens1,
-                    UndisExpens2 = pObj.UndisExpens2,
-                    UndisExpens3 = pObj.UndisExpens3,
-                    UndisExpens4 = pObj.UndisExpens4,
-                    UndisExpens5 = pObj.UndisExpens5,
-                    UndisExpens6 = pObj.UndisExpens6,
-                    GrossProfit = pObj.GrossProfit,
+                    TotExpen = (int)pObj.TotExpen,
+                    TotDeptIncom = (int)pObj.TotDeptIncom,
+                    UndisExpens1 = (int)pObj.UndisExpens1,
+                    UndisExpens2 = (int)pObj.UndisExpens2,
+                    UndisExpens3 = (int)pObj.UndisExpens3,
+                    UndisExpens4 = (int)pObj.UndisExpens4,
+                    UndisExpens5 = (int)pObj.UndisExpens5,
+                    UndisExpens6 = (int)pObj.UndisExpens6,
+                    GrossProfit = (int)pObj.GrossProfit,
                     MgtFee = pObj.MgtFee,
-                    IncomBfCharg = pObj.IncomBfCharg,
+                    IncomBfCharg = (int)pObj.IncomBfCharg,
                     Insurance = pObj.Insurance,
                     Interest = pObj.Interest,
                     PropDepreciationerty = pObj.PropDepreciationerty,
                     TotCharg = pObj.TotCharg,
-                    NetIncomBfTAX = pObj.NetIncomBfTAX,
+                    NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
                 };
                 _context.IncomeState.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
@@ -1679,33 +1949,7 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
 
         private decimal ScalarSingleRevenueSoldRoomByChannel(int monthId, int quarterNo, int groupID, string segment, string channel, bool weekday)
         {
-            /*SELECT              priceDecision.price * soldRoomByChannel.soldRoom AS Revenue
- FROM                  distributionChannelVSsegmentConfig 
-            INNER JOIN
-                                 quarterlyMarket ON distributionChannelVSsegmentConfig.configID = quarterlyMarket.configID 
-            INNER JOIN
-                                 priceDecision ON quarterlyMarket.sessionID = priceDecision.sessionID 
-                                AND quarterlyMarket.quarterNo = priceDecision.quarterNo 
-            INNER JOIN
-                                 soldRoomByChannel ON priceDecision.sessionID = soldRoomByChannel.sessionID 
-            AND priceDecision.quarterNo = soldRoomByChannel.quarterNo 
-            AND 
-                                 priceDecision.groupID = soldRoomByChannel.groupID 
-            AND priceDecision.weekday = soldRoomByChannel.weekday 
-            AND 
-                                 priceDecision.distributionChannel = soldRoomByChannel.channel 
-            AND priceDecision.segment = soldRoomByChannel.segment 
-            AND 
-                                 distributionChannelVSsegmentConfig.segment = soldRoomByChannel.segment 
-            AND distributionChannelVSsegmentConfig.distributionChannel = soldRoomByChannel.channel
- WHERE              (soldRoomByChannel.sessionID = @sessionID) 
-            AND (soldRoomByChannel.quarterNo = @quarterNo) 
-            AND (soldRoomByChannel.groupID = @groupID) 
-            AND 
-                                 (soldRoomByChannel.segment = @segment) 
-            AND (soldRoomByChannel.channel = @channel) 
-            AND (soldRoomByChannel.weekday = @weekday)
- GROUP BY       priceDecision.price, distributionChannelVSsegmentConfig.costPercent, soldRoomByChannel.soldRoom*/
+
             decimal Revenue = 0;
             var list = (from dcvsc in _context.DistributionChannelVSsegmentConfig
                         join m in _context.Months on dcvsc.ConfigID equals m.ConfigId
@@ -1738,29 +1982,7 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
         //ScalarSingleCost
         private decimal ScalarSingleCostSoldRoomByChannel(int monthId, int quarterNo, int groupID, string segment, string channel, bool weekday)
         {
-            /*SELECT              priceDecision.price * distributionChannelVSsegmentConfig.costPercent * soldRoomByChannel.soldRoom AS COST
-FROM                  distributionChannelVSsegmentConfig 
-            INNER JOIN
-                                quarterlyMarket ON distributionChannelVSsegmentConfig.configID = quarterlyMarket.configID 
-            INNER JOIN
-                                priceDecision ON quarterlyMarket.sessionID = priceDecision.sessionID AND quarterlyMarket.quarterNo = priceDecision.quarterNo 
-            INNER JOIN
-                                soldRoomByChannel ON priceDecision.sessionID = soldRoomByChannel.sessionID 
-            AND priceDecision.quarterNo = soldRoomByChannel.quarterNo AND 
-                                priceDecision.groupID = soldRoomByChannel.groupID 
-            AND priceDecision.weekday = soldRoomByChannel.weekday 
-            AND 
-                                priceDecision.distributionChannel = soldRoomByChannel.channel 
-            AND priceDecision.segment = soldRoomByChannel.segment 
-            AND 
-                                distributionChannelVSsegmentConfig.segment = soldRoomByChannel.segment 
-            AND distributionChannelVSsegmentConfig.distributionChannel = soldRoomByChannel.channel
-WHERE              (soldRoomByChannel.sessionID = @sessionID) AND (soldRoomByChannel.quarterNo = @quarterNo) 
-            AND (soldRoomByChannel.groupID = @groupID) AND 
-                                (soldRoomByChannel.segment = @segment) AND (soldRoomByChannel.channel = @channel) 
-            AND (soldRoomByChannel.weekday = @weekday)
-GROUP BY       priceDecision.price, distributionChannelVSsegmentConfig.costPercent, soldRoomByChannel.soldRoom
-            */
+
             decimal COST = 0;
             var list = (from dcvsc in _context.DistributionChannelVSsegmentConfig
                         join m in _context.Months on dcvsc.ConfigID equals m.ConfigId
@@ -1791,5 +2013,265 @@ GROUP BY       priceDecision.price, distributionChannelVSsegmentConfig.costPerce
             return COST;
 
         }
+
+
+        private int ScalarQueryFindNoOfHotels(int classId)
+        {
+
+            int noOfHotels = 0;
+            var list = (from c in _context.ClassSessions
+                        where (c.ClassId == classId)
+                        select new
+                        {
+                            // priceDecision.price * distributionChannelVSsegmentConfig.costPercent * soldRoomByChannel.soldRoom
+                            noOfHotels = c.HotelsCount
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                noOfHotels = list[0].noOfHotels;
+            }
+            return noOfHotels;
+
+        }
+
+        private int ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int quarterNo, int groupId)
+        {
+
+            int groupRevenue = 0;
+            var list = (from c in _context.SoldRoomByChannel
+                        where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
+                        group c by c.Revenue into gpc
+                        select new
+                        {
+                            groupRevenue = gpc.Sum(x => x.Revenue)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                groupRevenue = list[0].groupRevenue;
+            }
+            return groupRevenue;
+
+        }
+        private int ScalarAttributeRevenueScoreRoomAllocation(int monthId, int quarterNo, int groupId, string attribute)
+        {
+
+            int groupRevenue = 0;
+            var list = (from c in _context.SoldRoomByChannel
+                        where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
+                        group c by c.Revenue into gpc
+                        select new
+                        {
+                            groupRevenue = gpc.Sum(x => x.Revenue)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                groupRevenue = list[0].groupRevenue;
+            }
+            return groupRevenue;
+
+        }
+
+        private decimal ScalarQueryTotalSpendingMarketingDecision(int monthId, int quarterNo, int groupId)
+        {
+
+            decimal totalSpending = 0;
+            var list = (from r in _context.MarketingDecision
+
+                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
+                        && r.GroupID == groupId)
+                        group r by new { r.Spending, r.LaborSpending } into gpc
+
+                        select new
+                        {
+                            totalSpending = gpc.Sum(x => x.Spending + x.LaborSpending)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                totalSpending = list[0].totalSpending;
+            }
+            return totalSpending;
+
+        }
+
+        //ScalarGroupDistriCostByMonth
+        /*SELECT              SUM(cost) AS groupCost
+FROM                  soldRoomByChannel
+WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (groupID = @groupID)*/
+
+        private decimal ScalarGroupDistriCostByMonthSoldByChannel(int monthId, int quarterNo, int groupId)
+        {
+
+            decimal groupCost = 0;
+            var list = (from r in _context.SoldRoomByChannel
+
+                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
+                        && r.GroupID == groupId)
+                        group r by new { r.Cost } into gpc
+
+                        select new
+                        {
+                            groupCost = gpc.Sum(x => x.Cost)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                groupCost = list[0].groupCost;
+            }
+            return groupCost;
+
+        }
+
+        //GetDataBySingleRow
+
+        private BalanceSheetDto GetDataBySingleRowBallanceSheet(int monthId, int quarterNo, int groupId)
+        {
+
+            var list = _context.BalanceSheet.
+                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+                ).
+                Select(x => new BalanceSheetDto
+                {
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
+                    MonthID = x.MonthID,
+                    Cash = x.Cash,
+                    AcctReceivable = x.AcctReceivable,
+                    Inventories = x.Inventories,
+                    TotCurrentAsset = x.TotCurrentLiab,
+                    NetPrptyEquip = x.NetPrptyEquip,
+                    TotAsset = x.TotAsset,
+                    TotCurrentLiab = x.TotCurrentLiab,
+                    LongDebt = x.LongDebt,
+                    LongDebtPay = x.LongDebtPay,
+                    ShortDebt = x.ShortDebtPay,
+                    ShortDebtPay = x.ShortDebtPay,
+                    TotLiab = x.TotLiab,
+                    RetainedEarn = x.RetainedEarn,
+
+
+                }).ToList();
+
+            return list[0];
+        }
+
+        private int ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
+        {
+            int TotalDepreciation = 0;
+            var list = (from ad in _context.AttributeDecision
+                        join m in _context.Months on ad.MonthID equals m.MonthId
+                        where (ad.QuarterNo == m.Sequence)
+                        join amcoc in _context.AttributeMaxCapitalOperationConfig on m.ConfigId equals amcoc.ConfigID
+                        where (ad.Attribute == amcoc.Attribute && ad.MonthID == monthId && ad.QuarterNo == quarter && ad.GroupID == groupID)
+                        group new { ad, amcoc } by new { ad.AccumulatedCapital, ad.NewCapital, amcoc.DepreciationYearly } into gp
+                        select new
+                        {
+                            TotalDepreciation = gp.Sum((x => (x.ad.AccumulatedCapital + x.ad.NewCapital) * x.amcoc.DepreciationYearly))
+
+                        }
+
+                      ).ToList();
+            if (list.Count > 0)
+            {
+                TotalDepreciation = Convert.ToInt16(list[0].TotalDepreciation);
+            }
+            return 0;
+        }
+
+        /*SELECT              SUM(newCapital) AS totalNewCapital
+FROM                  attributeDecision
+WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
+
+        private decimal ScalarMonthlyTotalNewCapitalAttributeDecision(int monthId, int quarterNo, int groupId)
+        {
+
+            decimal totalNewCapital = 0;
+            var list = (from r in _context.AttributeDecision
+
+                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
+                        && r.GroupID == groupId)
+                        group r by new { r.NewCapital } into gpc
+
+                        select new
+                        {
+                            totalNewCapital = gpc.Sum(x => x.NewCapital)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                totalNewCapital = list[0].totalNewCapital;
+            }
+            return totalNewCapital;
+
+        }
+
+        /*SELECT     [1TotReven] AS totalRevenue
+FROM         incomeState
+WHERE     (sessionID = @session) AND (groupID = @group) AND (quarterNo = @quarter)
+GROUP BY [1TotReven]*/
+
+        private decimal ScalarGetTotalRevenueIncomeState(int monthId, int groupId, int quarterNo)
+        {
+
+            decimal totalRevenue = 0;
+            var list = (from r in _context.IncomeState
+
+                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
+                        && r.GroupID == groupId)
+                        group r by new { r.TotReven } into gpc
+
+                        select new
+                        {
+                            TotalRevenue = gpc.Sum(x => x.TotReven)
+
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                totalRevenue = list[0].TotalRevenue;
+            }
+            return totalRevenue;
+
+        }
+      
+
+
+
+//        private decimal ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int groupId, int quarterNo)
+//        {
+//            /*SELECT              SUM(revenue) AS groupRevenue
+//FROM                  soldRoomByChannel
+//WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (groupID = @groupID)*/
+
+//            decimal groupRevenue = 0;
+//            var list = (from r in _context.SoldRoomByChannel
+
+//                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
+//                        && r.GroupID == groupId)
+//                        group r by new { r.Revenue } into gpc
+
+//                        select new
+//                        {
+//                            groupRevenue = gpc.Sum(x => x.Revenue)
+
+//                        }).ToList();
+
+//            if (list.Count > 0)
+//            {
+//                groupRevenue = list[0].groupRevenue;
+//            }
+//            return groupRevenue;
+
+//        }
     }
+
 }
