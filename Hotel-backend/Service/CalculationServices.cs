@@ -46,7 +46,7 @@ namespace Service
 
                 FunMonth obj = new FunMonth();
                 FunCalculation objCalculation = new FunCalculation();
-                // obj.UpdateClassStatus(_context, month.ClassId, "C");
+                 obj.UpdateClassStatus(_context, month.ClassId, "C");
                 ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
                 int currentQuarter = objclassSess.CurrentQuater;
                 int hotelsCount = objclassSess.HotelsCount;
@@ -1086,7 +1086,73 @@ namespace Service
                         }
                     }
                 }
+                ////////////////////////////////////
+                //Set Revenue By segment////////////
+                ////////////////////////////////////
 
+                List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                foreach (RoomAllocationDto roRw in roTab)
+                {
+                    roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
+                    RoomAllocationUpdate(roRw);
+                }
+                obj.UpdateClassStatus(_context, month.ClassId, "T");
+                ////Slow down the calucation to give database more time to process, wait 1/10 second
+                System.Threading.Thread.Sleep(10);
+                {
+                    if (currentQuarter > 1)
+                    {
+                        //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                        int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId,currentQuarter));
+                        int groupIDRA = 1;
+                        //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
+                        string schoolName = Convert.ToString(ScalarSchoolName(monthId));
+                        string groupName = null;
+                       
+                        decimal a;
+                        decimal b;
+                        decimal profiM;
+                        while (groupIDRA < maxGroupRA + 1)
+                        {
+                            groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
+                            //////Profit Margin
+                           IncomeStateDto incomeRowCurrent = GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
+                            a = incomeRowCurrent.NetIncom;
+                            b = incomeRowCurrent.TotReven;
+
+                            if (b == 0)
+                            {
+                                ////do nothing, keep the profit margin to be null.
+                                profiM = 0;
+                            }
+                            else
+                            {
+                                profiM = a / b;
+                            }
+
+                            ///////Insert or Update Performance Ranking
+                            /////First check if the instructor missed the the group Name
+                            if (groupName == "Null")
+                            {
+                                groupName = "Group " + groupID.ToString();
+                            }
+                            //if (ranksAdpt.GetDataBySingleRow(monthId, "Profit Margin", groupID).Count == 0)
+                            //{
+                            //    ranksAdpt.Insert1(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
+                            //}
+                            //else
+                            //{
+                            //    ranksR = ranksAdpt.GetDataBySingleRow(monthId, "Profit Margin", groupID)[0];
+                            //    ranksR.performance = profiM;
+                            //    ranksAdpt.Update(ranksR);
+                            //    ////Slow down the calucation to give database more time to process, wait 1/10 second
+                            //    System.Threading.Thread.Sleep(10);
+                            //}
+                            //////go to next group
+                            groupID++;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1773,7 +1839,7 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
                     ActualDemand = pObj.ActualDemand,
                     RoomsSold = pObj.RoomsSold,
                     Confirmed = pObj.Confirmed,
-                    Revenue = pObj.Revenue,
+                    Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
                 _context.RoomAllocation.Add(objPd);
@@ -2242,36 +2308,81 @@ GROUP BY [1TotReven]*/
             return totalRevenue;
 
         }
-      
 
 
 
-//        private decimal ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int groupId, int quarterNo)
-//        {
-//            /*SELECT              SUM(revenue) AS groupRevenue
-//FROM                  soldRoomByChannel
-//WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (groupID = @groupID)*/
 
-//            decimal groupRevenue = 0;
-//            var list = (from r in _context.SoldRoomByChannel
+        private decimal ScalarQueryRevenueByWeekSegmentRoomAllocation(int monthId, int groupId, int quarterNo, string segment, bool weekday)
+        {
+            /*SELECT              SUM(roomAllocation.roomsSold * distributionChannelVSsegmentConfig.percentage * priceDecision.price) AS revenue
+FROM                  roomAllocation 
+            INNER JOIN
+                                quarterlyMarket ON roomAllocation.sessionID = quarterlyMarket.sessionID 
+            AND roomAllocation.quarterNo = quarterlyMarket.quarterNo 
+            INNER JOIN
+                                distributionChannelVSsegmentConfig ON roomAllocation.segment = distributionChannelVSsegmentConfig.segment AND 
+                                quarterlyMarket.configID = distributionChannelVSsegmentConfig.configID 
+            INNER JOIN
+                                priceDecision ON quarterlyMarket.sessionID = priceDecision.sessionID 
+            AND quarterlyMarket.quarterNo = priceDecision.quarterNo 
+            AND 
+                                roomAllocation.groupID = priceDecision.groupID 
+            AND distributionChannelVSsegmentConfig.distributionChannel = priceDecision.distributionChannel 
+            AND 
+             roomAllocation.segment = priceDecision.segment 
+            AND roomAllocation.weekday = priceDecision.weekday
+WHERE              (roomAllocation.sessionID = @sessionID) 
+            AND (roomAllocation.quarterNo = @quarterNo) AND (roomAllocation.groupID = @groupID) AND (roomAllocation.segment = @segment) AND 
+                                (roomAllocation.weekday = @weekday)*/
 
-//                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
-//                        && r.GroupID == groupId)
-//                        group r by new { r.Revenue } into gpc
+            decimal roomAllocation = 0;
+            var list = (from r in _context.RoomAllocation
+                        join m in _context.Months on r.MonthID equals m.MonthId
+                        where (r.QuarterNo == m.Sequence)
+                        join dcvsc in _context.DistributionChannelVSsegmentConfig on r.Segment equals dcvsc.Segment
+                        where (m.ConfigId == dcvsc.ConfigID)
+                        join pd in _context.PriceDecision on m.MonthId equals pd.MonthID
+                        where (m.Sequence == pd.QuarterNo && r.GroupID == Convert.ToInt16(pd.GroupID) && dcvsc.DistributionChannel == pd.DistributionChannel
+                        && r.Segment == pd.Segment && r.Weekday == pd.Weekday && r.MonthID == monthId && r.QuarterNo == quarterNo
+                        && r.GroupID == groupId && r.Segment == segment && r.Weekday == weekday)
 
-//                        select new
-//                        {
-//                            groupRevenue = gpc.Sum(x => x.Revenue)
 
-//                        }).ToList();
+                        group new { r, pd, dcvsc } by new { r.RoomsSold, dcvsc.Percentage, pd.Price } into gpc
 
-//            if (list.Count > 0)
-//            {
-//                groupRevenue = list[0].groupRevenue;
-//            }
-//            return groupRevenue;
+                        select new
+                        {
+                            roomAllocation = gpc.Sum(x => (x.r.RoomsSold * x.dcvsc.Percentage * x.pd.Price))
 
-//        }
+                        }).ToList();
+
+            if (list.Count > 0)
+            {
+                roomAllocation = list[0].roomAllocation;
+            }
+            return roomAllocation;
+
+        }
+
+        private string ScalarSchoolName(int monthId)
+        {
+            //ScalarSchoolName
+            /*SELECT     [user].instituion
+    FROM         classSession INNER JOIN
+                          [user] ON classSession.UserID = [user].UserId
+    WHERE     (classSession.classSessionID = @sessionID)
+    GROUP BY [user].instituion*/
+
+            return "HardCord ";
+        }
+
+        private string ScalarGroupName(int monthId, int groupId)
+        {
+            /*SELECT     hotelName
+    FROM         [group]
+    WHERE     (sessionID = @sessionID) AND (groupID = @groupID)*/
+
+            return "HardCode";
+        }
     }
 
 }
