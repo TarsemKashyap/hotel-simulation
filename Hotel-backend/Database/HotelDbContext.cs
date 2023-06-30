@@ -53,6 +53,7 @@ public class HotelDbContext : IdentityDbContext<AppUser, AppUserRole, string>
     public DbSet<WeekdayVSsegmentConfig> WeekdayVSsegmentConfig { get; set; }
     public DbSet<DistributionChannelVSsegmentConfig> DistributionChannelVSsegmentConfig { get; set; }
     public DbSet<IdealRatingAttributeWeightConfig> IdealRatingAttributeWeightConfig { get; set; }
+    public DbSet<Rankings> Rankings { get; set; }
 
 
 
