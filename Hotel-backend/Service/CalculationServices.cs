@@ -168,8 +168,11 @@ namespace Service
                             weightedSpending = fourpercentOfRevenue * 7 / 2;
                         }
                         double fairmarket = Convert.ToDouble(objCalculation.ScalarQueryFairMarketMarketingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo));
-                        ratio = Convert.ToDouble(weightedSpending * weightedSpending / Convert.ToDouble(objCalculation.ScalarQueryAverageSpendingMarktingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo)) / industryNorm);
-
+                        double AverageSpendingMarktingDecision = objCalculation.ScalarQueryAverageSpendingMarktingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo);
+                        if (AverageSpendingMarktingDecision > 0)
+                            ratio = (((weightedSpending * weightedSpending) / AverageSpendingMarktingDecision) / industryNorm);
+                        else
+                            ratio = 0;
 
                         ////////To avoid ratio = and fairmarket=0 exceptions
                         if (ratio == 0 || fairmarket == 0)
@@ -250,8 +253,6 @@ namespace Service
 
                     }
 
-                    ////Slow down the calucation to give database more time to process, wait 1/10 second
-                    System.Threading.Thread.Sleep(10);
                 }
 
                 List<IncomeStateDto> incomTableAfter = GetDataByMonthIncomeState(monthId, currentQuarter);
@@ -273,13 +274,7 @@ namespace Service
                     IncomeStateUpdate(row);
                 }
 
-                ////Slow down the calucation to give database more time to process, wait 1/10 second
-                System.Threading.Thread.Sleep(10);
-
-
                 List<CustomerRawRatingDto> rawRatingTable = GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
-                //attributeDecisionTableAdapter attriDeAdapter = new attributeDecisionTableAdapter();
-                //idealRatingAttributeWeightConfigTableAdapter idealAdpt = new idealRatingAttributeWeightConfigTableAdapter();
 
                 foreach (CustomerRawRatingDto row in rawRatingTable)
                 {
@@ -312,8 +307,7 @@ namespace Service
                     CustomerRowRatingUpdate(row);
                 }
                 // rawRatingAdapter.Update(rawRatingTable);
-                ////Slow down the calucation to give database more time to process, wait 1/10 second
-                System.Threading.Thread.Sleep(10);
+
                 // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
                 List<WeightedAttributeRatingDto> overallRatingTable = GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
                 decimal averageRating = 0;
@@ -331,9 +325,6 @@ namespace Service
                     }
                     WeightedAttributeRatingUpdate(row);
                 }
-
-                ////Slow down the calucation to give database more time to process, wait 1/10 second
-                System.Threading.Thread.Sleep(10);
 
 
                 // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
@@ -360,7 +351,7 @@ namespace Service
                 }
 
                 ////Slow down the calucation to give database more time to process, wait 1/10 second
-                System.Threading.Thread.Sleep(10);
+
 
                 int maxGroup = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
                 int groupID = 1;
@@ -757,8 +748,7 @@ namespace Service
 
                     }
                     // RoomAllocationUpdate(Row);
-                    ////Slow down the calucation to give database more time to process, wait 1/10 second
-                    System.Threading.Thread.Sleep(10);
+
                 }
                 {
 
@@ -812,9 +802,6 @@ namespace Service
                         row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
                         SoldRoomByChannelUpdate(row);
                     }
-
-
-                    ////Slow down the calucation to give database more time to process, wait 1/10 second
 
                 }
 
@@ -1097,7 +1084,6 @@ namespace Service
                     RoomAllocationUpdate(roRw);
                 }
                 obj.UpdateClassStatus(_context, month.ClassId, "T");
-                ////Slow down the calucation to give database more time to process, wait 1/10 second
 
                 {
                     if (currentQuarter > 1)
