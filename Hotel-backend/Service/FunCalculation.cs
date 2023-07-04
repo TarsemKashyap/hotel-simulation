@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZstdNet;
 
 namespace Service
 {
@@ -32,6 +33,7 @@ namespace Service
         }
         public double ScalarQueryIndustrialNormPercentMarketingDecision(HotelDbContext context, int monthId, int currentQuarter, string segment, string marketTech)
         {
+            double Proportion = 0;
 
             var list = (from m in context.Months
                         join sc in context.SegmentConfig on m.ConfigId equals sc.ConfigID
@@ -53,8 +55,16 @@ namespace Service
                                )
 
                        .ToList();
+            if (list.Count > 0)
+            {
+                Proportion = list[0].Proportion;
+            }
+            else
+            {
+                Proportion = 0;
+            }
 
-            double Proportion = list[0].Proportion;
+
 
             return Proportion;
         }
@@ -179,8 +189,45 @@ WHERE     (priceMarketingAttributeSegmentConfig.PMA = N'Marketing') AND (marketi
 
         }
 
-        public double ScalarQueryAverageSpendingMarktingDecision(HotelDbContext context, string Segment, string MarketingTechniques, int MonthID, int QuarterNo)
+        public double ScalarQueryAverageSpendingMarktingDecision(HotelDbContext context, string segment, string marketingTechniques, int monthID, int quarterNo)
         {
+
+            /*SELECT              AVG(marketingDecision.spending * (1 - marketingVSsegmentConfig.laborPercent) + marketingDecision.laborSpending * marketingVSsegmentConfig.laborPercent) 
+                                AS averageSpending
+FROM                  marketingDecision INNER JOIN
+                                quarterlyMarket ON marketingDecision.sessionID = quarterlyMarket.sessionID 
+            AND marketingDecision.quarterNo = quarterlyMarket.quarterNo 
+            INNER JOIN
+                                marketingVSsegmentConfig ON quarterlyMarket.configID = marketingVSsegmentConfig.configID 
+            AND 
+                                marketingDecision.marketingTechniques = marketingVSsegmentConfig.marketingTechniques 
+            AND marketingDecision.segment = marketingVSsegmentConfig.segment
+WHERE              (marketingDecision.segment = @segment) AND (marketingDecision.marketingTechniques = @marketingTechniques)
+            AND (marketingDecision.sessionID = @sessionID) AND 
+                                (marketingDecision.quarterNo = @quarterNo)
+GROUP BY       marketingDecision.segment, marketingDecision.marketingTechniques, marketingDecision.sessionID, marketingDecision.quarterNo*/
+            double AverageSpending = 0;
+            var list = (from md in context.MarketingDecision
+                        join m in context.Months on md.MonthID equals m.MonthId
+                        where (md.QuarterNo == m.Sequence)
+                        join mvsc in context.MarketingVSsegmentConfig on m.ConfigId equals mvsc.ConfigID
+                        where (md.MarketingTechniques == mvsc.MarketingTechniques && md.Segment == mvsc.Segment
+                        && md.Segment == segment && md.MarketingTechniques == marketingTechniques && md.MonthID == monthID && md.QuarterNo == quarterNo
+                        )
+                        group new { md, mvsc } by new { md.Segment, md.MarketingTechniques, md.MonthID, md.QuarterNo, mvsc.LaborPercent } into gp
+                        select new
+                        {
+                            /*AVG(marketingDecision.spending * (1 - marketingVSsegmentConfig.laborPercent) + marketingDecision.laborSpending * marketingVSsegmentConfig.laborPercent) 
+                                */
+                            AverageSpending = gp.Average(x => (x.md.Spending * (1 - x.mvsc.LaborPercent) + x.md.LaborSpending * x.mvsc.LaborPercent))
+
+                        }
+
+                      ).ToList();
+            if (list.Count > 0)
+            {
+                AverageSpending = list[0].AverageSpending;
+            }
 
             return 0;
         }

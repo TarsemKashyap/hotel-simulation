@@ -800,7 +800,7 @@ namespace Service
                     }
 
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
-                    System.Threading.Thread.Sleep(10);
+
 
                     /////////////////////////////////
                     /////////Set revenue and cost
@@ -815,7 +815,7 @@ namespace Service
 
 
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
-                    System.Threading.Thread.Sleep(10);
+
                 }
 
                 {
@@ -1052,7 +1052,7 @@ namespace Service
                         ////////Update the income statement row by row rather than the entire table, to avoide the same total income issue. 
                         IncomeStateUpdate(incomStaRow);
                         ////Slow down the calucation to give database more time to process, wait 1/10 second
-                        System.Threading.Thread.Sleep(10);
+
 
                     }
                     //////////////////
@@ -1081,7 +1081,7 @@ namespace Service
                                 incom1StaRow.TotReven = 100 * roomRevenue / 52;
                                 IncomeStateUpdate(incom1StaRow);
                                 ////Slow down the calucation to give database more time to process, wait 1/10 second
-                                System.Threading.Thread.Sleep(10);
+
                             }
                         }
                     }
@@ -1098,7 +1098,7 @@ namespace Service
                 }
                 obj.UpdateClassStatus(_context, month.ClassId, "T");
                 ////Slow down the calucation to give database more time to process, wait 1/10 second
-                System.Threading.Thread.Sleep(10);
+
                 {
                     if (currentQuarter > 1)
                     {
@@ -1146,7 +1146,7 @@ namespace Service
                                 ranksR.Performance = profiM;
                                 RankingUpdate(ranksR);
                                 ////Slow down the calucation to give database more time to process, wait 1/10 second
-                                System.Threading.Thread.Sleep(10);
+
                             }
                             //////go to next group
                             groupID++;
