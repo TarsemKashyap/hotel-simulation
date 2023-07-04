@@ -24,7 +24,7 @@ namespace Service
     {
         IEnumerable<MonthDto> monthList();
         Task<ResponseData> Create(MonthDto month);
-        IEnumerable<MonthDto> List(string monthidId = null);
+        Task<ResponseData> List(MonthDto month);
         Task<ResponseData> Calculation(MonthDto month);
 
     }
@@ -221,7 +221,7 @@ namespace Service
                     {
                         avergePrice = Convert.ToDecimal(ScalarQueryAvgPricePriceDecision(monthId, currentQuarter, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel.Trim(), priceDecisionRow.Segment.Trim()));
                         expectedPrice = Convert.ToDecimal(ScalarQueryPriceExpectationPriceDecision(monthId, currentQuarter, priceDecisionRow.Segment, priceDecisionRow.Weekday));
-                        //////Lower expected price by $25 dollars, this is a change made on 3/18/2012, in version 4.5.5
+                        //////Lower expected price by 25 dollars, this is a change made on 3/18/2012, in version 4.5.5
                         expectedPrice = expectedPrice - 25;
                         if (avergePrice != 0)
                         {
@@ -1158,11 +1158,76 @@ namespace Service
             throw new NotImplementedException();
         }
 
-        public IEnumerable<MonthDto> List(string monthidId = null)
+        public async Task<ResponseData> List(MonthDto month)
         {
-            throw new NotImplementedException();
-        }
+            FunMonth obj = new FunMonth();
+            ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
+            int currentQuarter = objclassSess.CurrentQuater;
+            month.Sequence = currentQuarter;
+            ResponseData resObj = new ResponseData();
+            var list = (from c in _context.ClassSessions
+                        join m in _context.Months on c.ClassId equals m.ClassId
+                        where (c.ClassId == month.ClassId)
+                        select new
+                        {
+                            MonthId = m.MonthId,
+                            Status = c.Status// MonthStatus(m.Sequence, month.Sequence, c.Status)
+                        }
+                      ).ToList();
 
+            List<CalculationResponse> listnew = new List<CalculationResponse>();
+            foreach (var item in list)
+            {
+                CalculationResponse cr = new CalculationResponse();
+                //item.Status = MonthStatus(item.MonthId, currentQuarter, item.Status);
+                cr.MonthId = item.MonthId;
+                cr.Status = MonthStatus(item.MonthId, currentQuarter, item.Status);
+                listnew.Add(cr);
+
+
+            }
+
+            resObj.Message = "Calculation Success";
+            resObj.StatusCode = 200;
+            // string strjson = "{ monthID:" + month.MonthId + "}";
+            var jobj = listnew;
+            resObj.Data = jobj;
+            return resObj;
+
+        }
+        protected string MonthStatus(int quartarno, int currentQuartarNo, ClassStatus status)
+        {
+            string returnStatus = "";
+            if (currentQuartarNo < quartarno)
+            {
+                returnStatus = "Calculated";
+            }
+            else
+            {
+
+                if (status == ClassStatus.T)
+                {
+                    returnStatus = "Calculated";
+                }
+                else if (status == ClassStatus.S)
+                {
+                    returnStatus = "This Month Has Been Just Created.";
+                }
+                else if (status == ClassStatus.A)
+                {
+                    returnStatus = "This Month Has Been Finalized. Please Go Ahead and Create A New Month.";
+                }
+                else if (status == ClassStatus.C)
+                {
+                    returnStatus = "Calculation is not finished yet, please wait...";
+                }
+                else
+                {
+                    returnStatus = "Ready For Calculation";
+                }
+            }
+            return returnStatus;
+        }
         public IEnumerable<MonthDto> monthList()
         {
             throw new NotImplementedException();
@@ -2442,5 +2507,10 @@ WHERE              (roomAllocation.sessionID = @sessionID)
 
         }
     }
+    public class CalculationResponse
 
+    {
+        public int MonthId { get; set; }
+        public string Status { get; set; }
+    }
 }

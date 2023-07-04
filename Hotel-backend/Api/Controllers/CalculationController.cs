@@ -29,5 +29,16 @@ namespace Api.Controllers
             return Ok(response);
             //return Ok("OK");
         }
+        [HttpPost("calculationList")]
+        public async Task<IActionResult> CalculationList(MonthDto dto)
+        {
+            //_validator.ValidateAndThrow(dto);
+            // dto.CreatedBy = LoggedUserId;
+
+
+            var response = await _calculationService.List(dto);
+            return Ok(response);
+            //return Ok("OK");
+        }
     }
 }
