@@ -2,3 +2,31 @@
     /* background-color: red; */
     border: 3px solid red !important;
   }
+
+  .style1
+  {
+      width: 100%;
+  }
+  .style2
+  {
+      text-align: center;
+  }
+  .style3
+  {
+      text-align: left;
+  }
+   .table
+  {
+      width:100%;
+      border-style: none none inset none;
+  }
+   .tableHeader
+  {
+      width:100%;
+      border-style: none none inset none;
+  }
+  .tableCell
+  {
+      border-style: none inset inset none;
+      border-width: thin;
+  }

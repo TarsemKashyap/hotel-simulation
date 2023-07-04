@@ -1,19 +1,119 @@
 <section class="bg-[#F4F7FF] py-14 lg:py-20">
     <div class="container">
-        <ag-grid-angular
-        style="height: 300px"
-        class="ag-theme-alpine"
-        [rowData]="$rows"
-        [defaultColDef]="defaultColDef"
-        (gridReady)="onGridReady($event)"
-        [groupIncludeTotalFooter]="true"
-        [statusBar]="statusBar"
-        [columnDefs]="columnDefs">
-      </ag-grid-angular>
-    </div>
+       
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <table class="table-auto">
+          <tr>
+              <td style="border-style: none none inset none">
+                  &nbsp;</td>
+              <td style="border-style: none none inset none">
+                  Weekday</td>
+              <td style="border-style: none none inset none">
+                  Weekend</td>
+          </tr>
+          <tr>
+              <td >
+                  Business
+              </td>
+              <td >
+                <input type="text"  formControlName="weekDay1"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay1.errors }" class="input-field" />
+
+            <div *ngIf="submitted && f.weekDay1.errors" >
+                <div *ngIf="f.weekDay1.errors.required">weekDay1 name is required</div>
+                <div *ngIf="f.weekDay1.errors.pattern">Only interger</div>
+            </div>
+              </td>
+              <td >
+                  
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Small Business</td>
+              <td >
+                  
+              </td>
+              <td >
+                
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Corporate contract</td>
+              <td >
+                 
+              </td>
+              <td >
+                 
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Families</td>
+              <td >
+                 
+              </td>
+              <td >
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Afluent Mature Travelers</td>
+              <td >
+                  
+              </td>
+              <td >
+                 
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  International leisure travelers
+              </td>
+              <td >
+                  
+              </td>
+              <td >
+                
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Corporate/Business Meetings
+              </td>
+              <td >
+                  
+              </td>
+              <td >
+                  
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Association Meetings
+              </td>
+              <td >
+                 
+              </td>
+              <td >
+                  
+              </td>
+          </tr>
+      </table>
+        <div class="mb-6">
+            <div *ngIf="form.errors && form.errors.apiError">
+                {{ form.errors.apiError }}
+              </div>
+            
+            </div>
+           
+   
     <div class="footer">
       <div class="buton-group fr">
-        <button mat-raised-button color="primary" class="save-button" (click)="onSave()">Save</button>
+        <button type="submit" class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">Save</button>
       </div>
     </div>
+  </form>
+</div>
 </section>

@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: 'decision', component: DecisionComponent },
       { path: 'room', component: RoomComponent },
     ],
-    canActivate:[checkAccessPermission]
+    canActivate:[]
   },
 ];
 

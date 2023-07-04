@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ColDef,IAggFuncParams, StatusPanelDef  } from 'ag-grid-community';
-import { RoomList } from 'src/app/shared/class/model/RoomList';
-import { Utility } from 'src/app/shared/utility';
+
 import { StudentService } from '../student.service';
-import { CustomTooltip, NumericEditor } from 'src/app/shared/editors';
-import { CellRenderComponent } from 'src/app/shared/render';
+
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-room',
@@ -12,115 +10,59 @@ import { CellRenderComponent } from 'src/app/shared/render';
   styleUrls: ['./room.component.css']
 })
 export class RoomComponent {
-  isSaveAttempted = false;
-  $roomListArr: RoomList[] = [];
-  private gridColumnApi:any;
-  private gridApi:any;
-  weekdaySum:any = 0;
-  cellRules = {
-    'rag-red': (params:any) => this.isSaveAttempted && !params.value
-  };
+  form: FormGroup;
+ 
 
-  columnDefs: ColDef[] = [
-    {
-      field: 'label',
-
-    },
-    { field: 'weekday',filter:"agNumberColumnFilter", valueParser: "Number(newValue)", cellClassRules: this.cellRules, editable: true, cellEditor: NumericEditor, singleClickEdit: true,  cellRenderer:this.validationShow, tooltipValueGetter: this.validationStatusRenderer,onCellValueChanged:this.sumAllfield
-     , aggFunc: (params: IAggFuncParams) => {
-      let sum = 0;
-      params.values.forEach((value: number) => (sum += value));
-      console.log("sum",sum)
-    },
-      },
-    {
-      field: 'weekend', editable: true, singleClickEdit: true, cellEditor: NumericEditor, tooltipComponent: CustomTooltip,
-    },
-
-  ];
-
-  public statusBar: {
-    statusPanels: StatusPanelDef[];
-  } = {
-    statusPanels: [
-      {
-        statusPanel: 'agAggregationComponent',
-        statusPanelParams: {
-        
-          aggFuncs: ['sum', 'avg'],
-        },
-      },
-    ],
-  };
-  defaultColDef: ColDef = {
-    flex: 1,
-    minWidth: 150,
-    filter: 'agTextColumnFilter',
-    menuTabs: ['filterMenuTab'],
-    sortable: true,
-  };
-
-  $rows: RoomList[] = [];
+  submitted = false;
+ 
 
   ngOnInit(): void {
 
-    this.roomList();
+ 
   }
 
   constructor(
-    private studentService: StudentService,) {
-  }
-  sumAllfield(param:any){
-    console.log('getter',param);
+    private studentService: StudentService, private fb: FormBuilder,) {
+      this.form = this.createForm();
   }
 
-  validationShow(params: any) {
-    
-    if (!params.value) {
-      return "";
+  onSubmit(): void {
+  
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
     }
-    return params.value;
   }
 
-  validationStatusRenderer(params: any) {
-    console.log("validationStatusRenderer",params)
-    let message = params.value  ? '' : 'Value not Empty';
-    return message;
+  
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
   }
 
-  onGridReady(params:any) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    console.log('onGridReady');
-  }
-
-  onSave(): void {
-    this.isSaveAttempted = true;
-    this.gridApi.redrawRows();
-
-    // validation
-    let validationPass = true;
-
-    this.$rows.forEach(row => {
-      if (!row['Weekday']) {
-        row['Weekday'] = '';
-
-        validationPass = false;
-      }
-      if (!row['Weekend']) {
-        row['Weekend'] = '';
-        validationPass = false;
-      }
+  private createForm(): FormGroup {
+    return this.fb.group({
+      weekDay1: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
+      Weekend1: ['', Validators.required,,this.numberValidator]
     });
-
-    alert(`Validation result: ${validationPass ? 'OK' : 'Failed'}`);
   }
 
+  numberValidator(control: FormControl) {
+    if (isNaN(control?.value)) {
+      return {
+        number: true
+      }
+    }
+    return null;
+  }
+
+
+
+ 
   private roomList() {
 
     this.studentService
       .RoomList().subscribe((data) => {
-        this.$rows = data;
+      
       });
   }
 }
