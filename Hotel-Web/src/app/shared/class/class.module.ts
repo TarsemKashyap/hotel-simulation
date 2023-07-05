@@ -20,6 +20,7 @@ import { AddRemovedClassComponent } from './add-removed-class/add-removed-class.
 import { CreateMonthComponent } from './create-month/create-month.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ClassMenuComponent } from './class-menu/class-menu.component';
+import { MonthCalculationComponent } from './month-calculation/month-calculation.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ClassMenuComponent } from './class-menu/class-menu.component';
     AddRemovedClassComponent,
     CreateMonthComponent,
     ClassMenuComponent,
+    MonthCalculationComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +66,7 @@ export const classRoute: Routes = [
       { path: 'list', component: ClassListComponent },
       { path: ':id/student-list', component: StudentListComponent },
       { path: ':id/create-month', component: CreateMonthComponent },
+      { path: ':id/month-calculation', component: MonthCalculationComponent },
       {
         path: 'student-roles-edit/:id',
         component: StudentRolesEditComponent,
