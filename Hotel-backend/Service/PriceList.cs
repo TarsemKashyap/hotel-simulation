@@ -47,6 +47,7 @@ public class RoomAllocationPriceList
     public int RoomsSold { get; set; }
     public int Revenue { get; set; }
     public int QuarterForecast { get; set; }
+    public bool WeekDay { get; set; }
 
 }
 
@@ -197,22 +198,22 @@ public class PriceListCreated
     {
         var list = new List<RoomAllocationPriceList> {
 
-        new RoomAllocationPriceList { Segment= "Business",                          RoomsAllocated= 1632,   ActualDemand= 0,RoomsSold= 0,    Revenue= 0, QuarterForecast=0 },
-        new RoomAllocationPriceList { Segment=  "Small Business",                   RoomsAllocated=1530,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Corporate contract",               RoomsAllocated=1717,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Families",                         RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",         RoomsAllocated=544,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "International leisure travelers",  RoomsAllocated=901,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",      RoomsAllocated=1445,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Association Meetings",             RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Business",                         RoomsAllocated=180,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Small Business",                   RoomsAllocated=276,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Corporate contract",               RoomsAllocated=96,      ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Families",                         RoomsAllocated=1452,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",         RoomsAllocated=1272,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "International leisure travelers",  RoomsAllocated=912,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",      RoomsAllocated=360,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
-        new RoomAllocationPriceList { Segment = "Association Meetings",             RoomsAllocated = 1452, ActualDemand = 0, RoomsSold = 0, Revenue = 0, QuarterForecast  = 0 }
+        new RoomAllocationPriceList { Segment= "Business",                           WeekDay=true,RoomsAllocated= 1632,   ActualDemand= 0,RoomsSold= 0,    Revenue= 0, QuarterForecast=0 },
+        new RoomAllocationPriceList { Segment=  "Small Business",                    WeekDay=true,RoomsAllocated=1530,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate contract",                WeekDay=true,RoomsAllocated=1717,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Families",                          WeekDay=true,RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",          WeekDay=true,RoomsAllocated=544,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "International leisure travelers",   WeekDay=true,RoomsAllocated=901,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",       WeekDay=true,RoomsAllocated=1445,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Association Meetings",              WeekDay=true,RoomsAllocated=357,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Business",                          WeekDay=false,RoomsAllocated=180,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Small Business",                    WeekDay=false,RoomsAllocated=276,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate contract",                WeekDay=false,RoomsAllocated=96,      ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Families",                          WeekDay=false,RoomsAllocated=1452,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Afluent Mature Travelers",          WeekDay=false,RoomsAllocated=1272,    ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "International leisure travelers",   WeekDay=false,RoomsAllocated=912,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Corporate/Business Meetings",       WeekDay=false,RoomsAllocated=360,     ActualDemand=0, RoomsSold=0,     Revenue=0, QuarterForecast=    0},
+        new RoomAllocationPriceList { Segment = "Association Meetings",              WeekDay=false,RoomsAllocated = 1452, ActualDemand = 0, RoomsSold = 0, Revenue = 0, QuarterForecast  = 0 }
 
     };
         return list;

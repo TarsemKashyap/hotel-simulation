@@ -64,7 +64,8 @@ namespace Service
                     await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
                     await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
                     objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels);
+                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, true);
+                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, false);
                     objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
                     //////////////////////////////////////////////////
                     /////Create Weighted Attribute Table for New Quarter

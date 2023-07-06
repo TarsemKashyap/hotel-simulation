@@ -558,7 +558,7 @@ namespace Service
             return 1;
         }
         */
-        public int CreateRoomAllocation(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public int CreateRoomAllocation(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels, bool weekday)
         {
             // Pending For RoomAllocation Value 
 
@@ -570,7 +570,7 @@ namespace Service
                 foreach (var item in lstSegment)
                 {
 
-                    RoomAllocationPriceList RmPList = GetRoomAllocationPriceList(item.SegmentName.Trim());
+                    RoomAllocationPriceList RmPList = GetRoomAllocationPriceList(item.SegmentName.Trim(), weekday);
                     var obj1 = new RoomAllocation()
                     {
                         MonthID = monthID,
@@ -632,8 +632,6 @@ namespace Service
             {
                 foreach (var segmentRow in lstSegment)
                 {
-
-
                     var obj1 = new WeightedAttributeRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = groupID, Segment = segmentRow.SegmentName, CustomerRating = 0, ActualDemand = 0 };
                     context.WeightedAttributeRating.Add(obj1);
                     int status = context.SaveChanges();
@@ -1101,10 +1099,10 @@ namespace Service
 
             return obj;
         }
-        public RoomAllocationPriceList GetRoomAllocationPriceList(string SegmentName)
+        public RoomAllocationPriceList GetRoomAllocationPriceList(string SegmentName, bool weekday)
         {
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.RoomAllocationPriceList().Where(x => x.Segment == SegmentName.Trim()).ToList();
+            var plist = objPC.RoomAllocationPriceList().Where(x => x.Segment == SegmentName.Trim() && x.WeekDay == weekday).ToList();
 
             RoomAllocationPriceList obj = new RoomAllocationPriceList();
 
@@ -1170,7 +1168,9 @@ namespace Service
                 }
 
                 context.ClassSessions.Add(clsSess);
-                context.Entry(clsSess).State = EntityState.Modified;
+                // context.Entry(clsSess).State = EntityState.Modified;
+                context.Entry(clsSess).Property(c => c.Status).IsModified = true;
+                context.Update(clsSess);
                 context.SaveChanges();
                 result = true;
             }

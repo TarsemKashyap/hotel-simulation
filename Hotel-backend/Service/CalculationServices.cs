@@ -47,6 +47,7 @@ namespace Service
                 FunMonth obj = new FunMonth();
                 FunCalculation objCalculation = new FunCalculation();
                 obj.UpdateClassStatus(_context, month.ClassId, "C");
+                //obj.UpdateClassStatus(_context, month.ClassId, "T");
                 ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
                 int currentQuarter = objclassSess.CurrentQuater;
                 int hotelsCount = objclassSess.HotelsCount;
@@ -1092,7 +1093,7 @@ namespace Service
                         roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
                         RoomAllocationUpdate(roRw);
                     }
-                    obj.UpdateClassStatus(_context, month.ClassId, "T");
+                    //     obj.UpdateClassStatus(_context, month.ClassId, "T");
 
                     {
                         if (currentQuarter > 1)
@@ -1144,7 +1145,7 @@ namespace Service
 
                                 }
                                 //////go to next group
-                                groupID++;
+                                groupIDRA++;
                             }
                         }
                     }
@@ -1553,6 +1554,7 @@ namespace Service
                 };
                 _context.IncomeState.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -1602,8 +1604,13 @@ namespace Service
 
 
                 }).ToList();
+            AttributeDecisionDto obj = new AttributeDecisionDto();
+            if (list.Count > 0)
+            {
+                obj = list[0];
+            }
 
-            return list[0];
+            return obj;
         }
 
         private decimal ScalarAttriSegIdealRating(int monthID, int quarterNo, string attribute, string segment)
@@ -2294,8 +2301,13 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (grou
 
 
                 }).ToList();
+            BalanceSheetDto obj = new BalanceSheetDto();
+            if (list.Count > 0)
+            {
+                obj = list[0];
+            }
 
-            return list[0];
+            return obj;
         }
 
         private int ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
