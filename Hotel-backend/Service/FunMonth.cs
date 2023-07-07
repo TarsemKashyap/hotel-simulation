@@ -169,8 +169,8 @@ namespace Service
 
         public async Task<int> CreateMarketingDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
-            int index = 1;
-            int groupID = index;
+            //int index = 1;
+            //int groupID = index;
 
             try
             {
@@ -178,7 +178,7 @@ namespace Service
                 List<MarketingTechniquesDto> lstmarketingTechniques = GetMarketingTechniques(context);
                 for (int i = 1; i <= noOfHotels; i++)
                 {
-                    index = i;
+                    //index = i;
                     foreach (SegmentDto segment in lstSegment)
                     {
                         foreach (MarketingTechniquesDto Mkt in lstmarketingTechniques)
@@ -189,7 +189,7 @@ namespace Service
                                 // ID = Random.Shared.Next(100),
                                 MonthID = monthID,
                                 QuarterNo = currentQuarter + 1,
-                                GroupID = groupID,
+                                GroupID = i,
                                 MarketingTechniques = Mkt.Techniques,
                                 Segment = segment.SegmentName,
                                 Spending = (int)obj.Spending,
@@ -249,13 +249,13 @@ namespace Service
 
             for (int i = 1; i <= noOfHotels; i++)
             {
-                int index = 1;
+                // int index = 1;
                 foreach (SegmentDto segment in lstSegment)
                 {
                     foreach (DistributionChannelsDto channel in lstChannel)
                     {
 
-                        PriceDecisionPriceList obj = GetPriceDecisionPriceList(channel.Channel.Trim(), segment.SegmentName.Trim(), index);
+                        PriceDecisionPriceList obj = GetPriceDecisionPriceList(channel.Channel.Trim(), segment.SegmentName.Trim(), i);
                         context.PriceDecision.Add(new PriceDecision
                         {
                             MonthID = monthID,
@@ -270,7 +270,7 @@ namespace Service
                         });
                         //int sat = await context.SaveChangesAsync();
                         // context.PriceDecision.Add(obj1);
-                        index++;
+                        // index++;
                     }
 
                 }
@@ -562,8 +562,8 @@ namespace Service
         {
             // Pending For RoomAllocation Value 
 
-            int index = 1;
-            int groupID = index;
+            //int index = 1;
+            //int groupID = index;
             List<SegmentDto> lstSegment = GetSegment(context);
             for (int i = 1; i <= noOfHotels; i++)
             {
@@ -589,7 +589,7 @@ namespace Service
                 }
                 int status = context.SaveChanges();
 
-                index++;
+                //index++;
             }
             return 1;
         }
@@ -626,17 +626,16 @@ namespace Service
 
             List<SegmentDto> lstSegment = GetSegment(context);
             // List<AttributeDto> lstAttribute = GetAttribute(context);
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
+
+            for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var segmentRow in lstSegment)
                 {
-                    var obj1 = new WeightedAttributeRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = groupID, Segment = segmentRow.SegmentName, CustomerRating = 0, ActualDemand = 0 };
+                    var obj1 = new WeightedAttributeRating() { MonthID = monthID, QuarterNo = currentQuarter + 1, GroupID = i, Segment = segmentRow.SegmentName, CustomerRating = 0, ActualDemand = 0 };
                     context.WeightedAttributeRating.Add(obj1);
                     int status = context.SaveChanges();
                 }
-                index++;
+
             }
             return 1;
         }
@@ -704,16 +703,15 @@ namespace Service
         {
 
 
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
+            //while (index < noOfHotels + 1)
+            for (int i = 1; i <= noOfHotels; i++)
             {
                 IQueryable<Goal> query = context.Goal;
                 var obj1 = new Goal()
                 {
                     MonthID = monthID,
                     QuarterNo = currentQuarter + 1,
-                    GroupID = groupID,
+                    GroupID = i,
                     OccupancyM = 0,
                     OccupancyY = 0,
                     RoomRevenM = 0,
@@ -738,22 +736,20 @@ namespace Service
                 context.Goal.Add(obj1);
                 int status = context.SaveChanges();
 
-                index++;
+
             }
             return 1;
         }
 
         public int CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
-            int index = 1;
-            int groupID = index;
 
-            int i = 1;
             string segmentName = null;
             string channelName = null;
             bool weekdayIndicator = true;
 
-            while (i < noOfHotels + 1)
+            // while (i < noOfHotels + 1)
+            for (int i = 1; i <= noOfHotels; i++)
             {
                 for (int j = 1; j <= 8; j++)
                 {
@@ -794,7 +790,7 @@ namespace Service
                             {
                                 MonthID = monthID,
                                 QuarterNo = currentQuarter + 1,
-                                GroupID = groupID,
+                                GroupID = i,
                                 Segment = segmentName,
                                 Channel = channelName,
                                 Weekday = weekdayIndicator,
@@ -819,9 +815,10 @@ namespace Service
         {
 
 
-            int index = 1;
-            int groupID = index;
-            while (index < noOfHotels + 1)
+
+            // while (index < noOfHotels + 1)
+
+            for (int i = 1; i <= noOfHotels; i++)
             {
 
 
@@ -829,7 +826,7 @@ namespace Service
                 {
                     MonthID = monthID,
                     QuarterNo = currentQuarter,
-                    GroupID = groupID,
+                    GroupID = i,
                     Cash = 1000000,
                     AcctReceivable = 400000,
                     Inventories = 500000,
@@ -848,7 +845,7 @@ namespace Service
                 {
                     MonthID = monthID,
                     QuarterNo = currentQuarter + 1,
-                    GroupID = groupID,
+                    GroupID = i,
                     Cash = 1000000,
                     AcctReceivable = 400000,
                     Inventories = 500000,
@@ -866,8 +863,6 @@ namespace Service
                 context.BalanceSheet.Add(obj1);
                 context.BalanceSheet.Add(obj2);
                 int status = context.SaveChanges();
-
-                index++;
             }
             return 1;
         }
@@ -1109,9 +1104,9 @@ namespace Service
             obj.RoomsAllocated = plist[0].RoomsAllocated;
             obj.ActualDemand = plist[0].ActualDemand;
 
-            obj.RoomsSold = plist[1].RoomsSold;
-            obj.Revenue = plist[1].Revenue;
-            obj.QuarterForecast = plist[1].QuarterForecast;
+            obj.RoomsSold = plist[0].RoomsSold;
+            obj.Revenue = plist[0].Revenue;
+            obj.QuarterForecast = plist[0].QuarterForecast;
 
             return obj;
 

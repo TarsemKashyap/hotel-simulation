@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SendGrid;
 using Service;
 
 namespace Api.Controllers
@@ -29,9 +30,17 @@ namespace Api.Controllers
             //_validator.ValidateAndThrow(dto);
             // dto.CreatedBy = LoggedUserId;
 
+            try
+            {
+                var response = await _monthService.Create(dto);
+                return Ok(response);
 
-            var response = await _monthService.Create(dto);
-            return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return Ok(message);
+            }
             //return Ok("OK");
         }
 
