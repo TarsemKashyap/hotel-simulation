@@ -32,9 +32,8 @@ logout() {
 }
 
 private studentRolesList() {
-  this.studentId = '01b96b31-649a-4b87-a4a4-4c63f6c4d636';
   this.studentService
-    .StudentRoleslist({ studentId: this.studentId})
+    .StudentRoleslist()
     .subscribe((data) => {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);

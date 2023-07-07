@@ -118,7 +118,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentClassMappingService, StudentClassMappingService>();
         services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
-
+        services.AddScoped<IRoomAllocationService, RoomAllocationService>();
 
 
     }

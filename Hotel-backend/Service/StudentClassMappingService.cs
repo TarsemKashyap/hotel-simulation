@@ -21,6 +21,7 @@ namespace Service
         Task<AddRemoveClassDto> ClassesByStudent(string studentId);
         ClassOverviewDto List(int classId);
         Task<StudentClassMappingDto> GetById(Guid studentId);
+        Task<StudentClassMappingDto> GetDefaultByStudentID(string studentId);
         IEnumerable<StudentClassMappingDto> StudentList(string studentId);
         IEnumerable<StudentClassMappingDto> GetMissingClassList();
         Task IsDefaultUpdate(string studentId, StudentClassMappingDto dto);
@@ -93,6 +94,24 @@ namespace Service
                 .ToList();
 
             return studentList;
+        }
+
+        
+
+        public async Task<StudentClassMappingDto> GetDefaultByStudentID(string studentID)
+        {
+            var studentSignup = _context.StudentClassMapping.Include(x => x.Class)
+                .Include(x => x.Student).FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
+            if (studentSignup == null)
+                throw new ValidationException("student not found for given student id");
+            var studentSignupDto = new StudentClassMappingDto
+            {
+                Id = studentSignup.Id,
+                ClassId = studentSignup.ClassId,
+                GroupId = studentSignup.GroupId
+            };
+
+            return studentSignupDto;
         }
 
         public async Task<StudentClassMappingDto> GetById(Guid id)

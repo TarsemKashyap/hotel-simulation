@@ -16,15 +16,19 @@ namespace Api.Controllers
         private readonly IStudentClassMappingService _studentClassMappingService;
         private readonly IClassSessionService _classSessionService;
         private readonly IStudentGroupMappingService _studentGroupMappingService;
+        private readonly IRoomAllocationService _roomAllocationService;
+        private readonly IMonthService _monthService;
 
         public StudentRoleMappingController(IStudentRolesMappingService studentRolesMappingService,
-            IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService,
-            IStudentGroupMappingService studentGroupMappingService)
+            IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService, IMonthService monthService,
+            IStudentGroupMappingService studentGroupMappingService, IRoomAllocationService roomAllocationService)
         {
             _studentRolesMappingService = studentRolesMappingService;
             _studentClassMappingService = studentClassMappingService;
             _classSessionService = classSessionService;
             _studentGroupMappingService = studentGroupMappingService;
+            _monthService= monthService;
+            _roomAllocationService= roomAllocationService;
 
         }
         [HttpPost("list")]
@@ -34,12 +38,14 @@ namespace Api.Controllers
             return Ok(studentRoleResult);
         }
 
-        [HttpPost("studentRolelist")]
-        public async Task<ActionResult> GetStudentRoles(StudentAssignmentRequestParam parms)
+        [HttpPost("studentRolelist"), AllowAnonymous]
+        public async Task<ActionResult> GetStudentRoles()
         {
-            var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(parms.StudentId);
+            var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(LoggedUserId);
             return Ok(studentRoleResult);
         }
+
+        //[HttpPost("")]
 
         
 
@@ -64,22 +70,28 @@ namespace Api.Controllers
             return Ok(StudentData);
         }
 
-        [HttpGet("RoomList")]
-        public async Task<ActionResult> RoomList()
+        [HttpGet("RoomAllocationDetails"), AllowAnonymous]
+        public async Task<ActionResult> RoomAllocationDetails()
         {
-            List<RoomDto> RoomList = new List<RoomDto>();
-            RoomList.Add(new RoomDto { Label = "Business", Weekday = "0", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Small Business", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Corporate contract", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Families", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Afluent Mature Travelers", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "International leisure travelers", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Corporate/Business Meetings", Weekday = "", Weekend = "" });
-            RoomList.Add(new RoomDto { Label = "Association Meetings", Weekday = "", Weekend = "" });
-           
-            return Ok(RoomList);
+            var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            var groupId = studenClassMappingDtls.GroupId;
+            var classId = studenClassMappingDtls.ClassId;
+            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
+            var monthId = monthsDtls.MonthId;
+            var classDtls = await _classSessionService.GetById(classId);
+            var currentQuarter = classDtls.CurrentQuater;
+            var roomAllocationDetails = await _roomAllocationService.RoomAllocationDetails(monthId, groupId, currentQuarter);
+            return Ok(roomAllocationDetails);
         }
-        
+
+
+        [HttpPost("UpdateRoomAllocationDtls")]
+        public async Task<ActionResult> UpdateRoomAllocationDtls(List<RoomAllocationDto> roomAllocationDto)
+        {
+            await _roomAllocationService.UpdateRoomAlocations(roomAllocationDto);
+            return Ok();
+        }
+
         [HttpPost()]
         public async Task<ActionResult> UpsertStudentData(StudentRoleGroupAssign studentGroupMappingDto)
         {

@@ -39,3 +39,17 @@ export interface AddRemoveClassDto {
 export interface ClassInformation extends ClassSession {
   totalStudentCount : number;
 }
+
+export interface RoomAllocations {
+  id:number;
+  monthID : number;
+  quarterNo : number;
+  groupID : number;
+  weekday : boolean;
+  segment : string;
+  roomsAllocated : number;
+  actualDemand : number;
+  roomsSold : number;
+  confirmed : boolean;
+  revenue : number;
+}
