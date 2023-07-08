@@ -237,7 +237,7 @@ namespace Service
             return 1;
         }
 
-        public async Task<int> CreatePriceDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreatePriceDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels, bool weekday)
         {
 
             // Not underStand for Old Project Run Two Time Insert 
@@ -255,27 +255,26 @@ namespace Service
                     foreach (DistributionChannelsDto channel in lstChannel)
                     {
 
-                        PriceDecisionPriceList obj = GetPriceDecisionPriceList(channel.Channel.Trim(), segment.SegmentName.Trim(), i);
+                        PriceDecisionPriceList obj = GetPriceDecisionPriceList(channel.Channel.Trim(), segment.SegmentName.Trim(), weekday);
                         context.PriceDecision.Add(new PriceDecision
                         {
                             MonthID = monthID,
                             QuarterNo = currentQuarter + 1,
                             GroupID = i.ToString(),
-                            Weekday = true,
+                            Weekday = weekday,
                             DistributionChannel = channel.Channel,
                             Segment = segment.SegmentName,
                             Price = (int)obj.Price,
                             ActualDemand = (int)obj.ActualDemand,
                             Confirmed = false
                         });
-                        //int sat = await context.SaveChangesAsync();
                         // context.PriceDecision.Add(obj1);
-                        // index++;
+                        int affected = await context.SaveChangesAsync();
                     }
 
                 }
 
-                context.SaveChanges();
+                // context.SaveChanges();
 
             }
             return 1;
@@ -576,7 +575,7 @@ namespace Service
                         MonthID = monthID,
                         QuarterNo = currentQuarter + 1,
                         GroupID = i,
-                        Weekday = true,
+                        Weekday = weekday,
                         Segment = item.SegmentName,
                         RoomsAllocated = RmPList.RoomsAllocated,
                         ActualDemand = RmPList.ActualDemand,
@@ -1059,22 +1058,19 @@ namespace Service
             return obj;
         }
 
-        public PriceDecisionPriceList GetPriceDecisionPriceList(string distributionChannel, string segment, int index)
+        public PriceDecisionPriceList GetPriceDecisionPriceList(string distributionChannel, string segment, bool weekday)
         {
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.PriceDecisionPriceList().Where(x => x.DistributionChannel == distributionChannel.Trim() && x.Segment == segment.Trim()).ToList();
+            var plist = objPC.PriceDecisionPriceList().Where(x => x.DistributionChannel == distributionChannel.Trim()
+            && x.Segment == segment.Trim() && x.WeekDay == weekday).ToList();
 
             PriceDecisionPriceList obj = new PriceDecisionPriceList();
-            if (index < 32)
-            {
-                obj.ActualDemand = plist[0].ActualDemand;
-                obj.Price = plist[0].Price;
-            }
-            else
-            {
-                obj.ActualDemand = plist[1].ActualDemand;
-                obj.Price = plist[1].Price;
-            }
+
+            obj.ActualDemand = plist[0].ActualDemand;
+            obj.Price = plist[0].Price;
+
+
+
             return obj;
         }
 

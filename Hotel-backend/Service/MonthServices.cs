@@ -62,7 +62,8 @@ namespace Service
                     resObj.Message = "A new month has been created.";
 
                     await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels);
+                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, false);
+                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, true);
                     objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
                     objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, true);
                     objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, false);
