@@ -824,7 +824,7 @@ namespace Service
                 var obj1 = new BalanceSheet()
                 {
                     MonthID = monthID,
-                    QuarterNo = currentQuarter,
+                    QuarterNo = currentQuarter ,
                     GroupID = i,
                     Cash = 1000000,
                     AcctReceivable = 400000,

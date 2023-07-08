@@ -229,7 +229,7 @@ GROUP BY       marketingDecision.segment, marketingDecision.marketingTechniques,
                 AverageSpending = list[0].AverageSpending;
             }
 
-            return 0;
+            return AverageSpending;
         }
     }
 }
