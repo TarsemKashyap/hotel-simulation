@@ -134,7 +134,8 @@ export class CreateMonthComponent {
           this.isMonthCompleted = this.monthInfo.isComplete;
           console.log(this.monthInfo);
 
-          if (this.currentQuarter != 0) {
+          if (this.currentQuarter != 0) 
+          {
             this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
             // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
             if (this.isMonthCompleted == false) {
@@ -144,7 +145,15 @@ export class CreateMonthComponent {
                 this.currentQuarter +
                 " hasn't finished. You can't create new month at this moment.";
             }
-          } else if (this.currentQuarter == 0) {
+            else{
+              this.isNewQuarterButtonDisable = false;
+              this.MessageLabel =
+              'Month ' +
+              this.currentQuarter +
+              " has been finished. You can create new month at this moment.";
+            }
+          } 
+          else if (this.currentQuarter == 0) {
             this.isNewQuarterButtonDisable = false;
             this.MessageLabel = 'No month has been created.';
           }
