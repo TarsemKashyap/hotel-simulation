@@ -44,8 +44,8 @@ public class IncomeStateDto
     public int Property { get; set; }
     public int Insurance { get; set; }
     public int Interest { get; set; }
-    public int PropDepreciationerty { get; set; }
-    public int TotCharg { get; set; }
+    public decimal PropDepreciationerty { get; set; }
+    public decimal TotCharg { get; set; }
     public decimal NetIncomBfTAX { get; set; }
     public decimal Replace { get; set; }
     public decimal AjstNetIncom { get; set; }

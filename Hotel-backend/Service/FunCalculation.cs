@@ -18,6 +18,7 @@ namespace Service
             List<MarketingDecisionDto> listMD = context.MarketingDecision.Where(x => x.QuarterNo == quarterNo && x.MonthID == monthId).
                 Select(x => new MarketingDecisionDto
                 {
+                    ID=x.ID,
                     GroupID = x.GroupID,
                     QuarterNo = x.QuarterNo,
                     MonthID = x.MonthID,

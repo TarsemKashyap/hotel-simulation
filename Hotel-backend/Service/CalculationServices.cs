@@ -128,7 +128,7 @@ namespace Service
                             if (mDRow.QuarterNo == 4)
                             {
                                 Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID-1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                 Qminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                 Qminus4 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                 LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
@@ -281,7 +281,7 @@ namespace Service
                         {
                             row.TotReven = 3585548;
                         }
-                        IncomeStateUpdate(row);
+                        IncomeStateTotalRevenUpdate(row);
                     }
 
                     List<CustomerRawRatingDto> rawRatingTable = GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
@@ -357,7 +357,7 @@ namespace Service
                                 Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
                                 Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
                         }
-                        RoomAllocationUpdate(row);
+                        RoomAllocationActualDemandUpdate(row);
                     }
 
                     ////Slow down the calucation to give database more time to process, wait 1/10 second
@@ -416,14 +416,14 @@ namespace Service
                             {
                                 roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
                             }
-                            RoomAllocationUpdate(row);
-                        }
-                        ////////////////Re-allocate the rooms that are free in such an order
-                        ////////////////Business, Corporate contract, Small Business,Afluent Mature Travelers,International leisure travelers,Families,Corporate/Business Meetings,Association Meetings  
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
+                            //    RoomAllocationUpdate(row);
+                            //}
+                            ////////////////Re-allocate the rooms that are free in such an order
+                            ////////////////Business, Corporate contract, Small Business,Afluent Mature Travelers,International leisure travelers,Families,Corporate/Business Meetings,Association Meetings  
+                            if (roomPool > 0)
                             {
+                                // foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Business")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -459,13 +459,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //  RoomAllocationUpdate(row);
+                                //}
+                                //////}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Corporate contract")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -501,13 +501,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //  RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Small Business")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -543,13 +543,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Afluent Mature Travelers")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -585,13 +585,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "International leisure travelers")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -627,13 +627,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Families")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -669,13 +669,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Corporate/Business Meetings")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -711,13 +711,13 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
-                        }
-                        if (roomPool > 0)
-                        {
-                            foreach (RoomAllocationDto row in table)
-                            {
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                //}
+                                //if (roomPool > 0)
+                                //{
+                                //foreach (RoomAllocationDto row in table)
+                                //{
                                 if (row.Segment == "Association Meetings")
                                 {
                                     if (row.RoomsAllocated > row.ActualDemand)
@@ -753,9 +753,11 @@ namespace Service
                                         }
                                     }
                                 }
-                                RoomAllocationUpdate(row);
-                            }
+                                //    RoomAllocationUpdate(row);
+                                //}
 
+                            }
+                            RoomAllocationRoomSoldUpdate(row);
                         }
                         // RoomAllocationUpdate(Row);
                         groupID++;
@@ -794,6 +796,8 @@ namespace Service
                             else
                             {
                                 row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
+                                row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                                row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
 
                             }
                             SoldRoomByChannelUpdate(row);
@@ -806,29 +810,29 @@ namespace Service
                         /////////Set revenue and cost
                         //////////////////////////////
                         //List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
-                        foreach (SoldRoomByChannelDto row in soldChanTable)
-                        {
-                            row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-                            row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-                            SoldRoomByChannelUpdate(row);
-                        }
+                        //foreach (SoldRoomByChannelDto row in soldChanTable)
+                        //{
+                        //    row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                        //    row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                        //    SoldRoomByChannelUpdate(row);
+                        //}
 
                     }
 
                     {
 
 
-                        IncomeState incomStatAdpt = new IncomeState();
-                        BalanceSheet balanTableAdpt = new BalanceSheet();
-                        RoomAllocation roomAlloAdpt = new RoomAllocation();
-                        SoldRoomByChannel roomChanAdpt = new SoldRoomByChannel();
-                        ClassSession classAdapter = new ClassSession();
+                        //IncomeState incomStatAdpt = new IncomeState();
+                        //BalanceSheet balanTableAdpt = new BalanceSheet();
+                        //RoomAllocation roomAlloAdpt = new RoomAllocation();
+                        //SoldRoomByChannel roomChanAdpt = new SoldRoomByChannel();
+                        //ClassSession classAdapter = new ClassSession();
 
                         BalanceSheetDto balanTableRow;
 
                         List<IncomeStateDto> incoTable = GetDataByMonthIncomeState(monthId, currentQuarter);
 
-                        int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(monthId));
+                        int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(month.ClassId));
                         if (incoTable.Count > 0)
                         {
                             for (int c = 1; c < groupNo + 1; c++)
@@ -1078,7 +1082,7 @@ namespace Service
                                 {
                                     decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));
                                     incom1StaRow.TotReven = 100 * roomRevenue / 52;
-                                    IncomeStateUpdate(incom1StaRow);
+                                    IncomeStateTotalRevenUpdate(incom1StaRow);
                                     ////Slow down the calucation to give database more time to process, wait 1/10 second
 
                                 }
@@ -1093,7 +1097,7 @@ namespace Service
                     foreach (RoomAllocationDto roRw in roTab)
                     {
                         roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
-                        RoomAllocationUpdate(roRw);
+                        RoomAllocationRevenueUpdate(roRw);
                     }
                     //     obj.UpdateClassStatus(_context, month.ClassId, "T");
 
@@ -1152,6 +1156,7 @@ namespace Service
                         }
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -1246,36 +1251,7 @@ namespace Service
             throw new NotImplementedException();
         }
 
-        private bool MarketingDecisionUpdate(MarketingDecisionDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                MarketingDecision objMd = new MarketingDecision
-                {
-                    ID = pObj.ID,
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    MarketingTechniques = pObj.MarketingTechniques,
-                    Segment = pObj.Segment,
-                    Spending = pObj.Spending,
-                    LaborSpending = pObj.LaborSpending,
-                    ActualDemand = pObj.ActualDemand,
-                    Confirmed = pObj.Confirmed,
-                };
-                _context.MarketingDecision.Add(objMd);
-                _context.Entry(objMd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
 
-        }
         public List<PriceDecisionDto> GetDataByQuarterPriceDecision(int monthId, int quartorNo)
         {
 
@@ -1283,7 +1259,7 @@ namespace Service
             List<PriceDecisionDto> objlist = _context.PriceDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quartorNo).
                 Select(x => new PriceDecisionDto
                 {
-
+                    ID = x.ID,
                     MonthID = x.MonthID,
                     QuarterNo = x.QuarterNo,
                     GroupID = x.GroupID,
@@ -1367,41 +1343,12 @@ namespace Service
             return FairMarket;
         }
 
-        private bool PriceDecisionUpdate(PriceDecisionDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                PriceDecision objPd = new PriceDecision
-                {
-                    ID = pObj.ID,
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    Weekday = pObj.Weekday,
-                    Segment = pObj.Segment,
-                    DistributionChannel = pObj.DistributionChannel,
-                    Price = pObj.Price,
-                    ActualDemand = pObj.ActualDemand,
-                    Confirmed = pObj.Confirmed,
-                };
-                _context.PriceDecision.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
-
-        }
         private List<IncomeStateDto> GetDataByMonthIncomeState(int monthId, int quarterNo)
         {
             List<IncomeStateDto> list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
                        .Select(x => new IncomeStateDto
                        {
+                           ID = x.ID,
                            MonthID = x.MonthID,
                            QuarterNo = x.QuarterNo,
                            GroupID = x.GroupID,
@@ -1457,6 +1404,10 @@ namespace Service
             var list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).
                 Select(x => new IncomeStateDto
                 {
+                    ID = x.ID,
+                    MonthID = x.MonthID,
+                    QuarterNo = x.QuarterNo,
+                    GroupID = x.GroupID,
                     Replace = x.Replace,
                     AjstNetIncom = x.AjstNetIncom,
                     IncomTAX = x.IncomTAX,
@@ -1508,71 +1459,13 @@ namespace Service
         }
 
 
-        private bool IncomeStateUpdate(IncomeStateDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                IncomeState objPd = new IncomeState
-                {
-                    Replace = (int)pObj.Replace,
-                    AjstNetIncom = (int)pObj.AjstNetIncom,
-                    IncomTAX = (int)pObj.IncomTAX,
-                    NetIncom = (int)pObj.NetIncom,
-                    FoodB = (int)pObj.FoodB,
-                    FoodB1 = (int)pObj.FoodB1,
-                    FoodB2 = (int)pObj.FoodB2,
-                    FoodB3 = (int)pObj.FoodB3,
-                    FoodB4 = (int)pObj.FoodB4,
-                    FoodB5 = (int)pObj.FoodB5,
-                    Other = (int)pObj.Other,
-                    Other1 = (int)pObj.Other1,
-                    Other2 = (int)pObj.Other2,
-                    Other3 = (int)pObj.Other3,
-                    Other4 = (int)pObj.Other4,
-                    Other5 = (int)pObj.Other5,
-                    Other6 = (int)pObj.Other6,
-                    Other7 = pObj.Other7,
-                    Rent = pObj.Rent,
-                    TotReven = (int)pObj.TotReven,
-                    Room = pObj.Room,
-
-                    TotExpen = (int)pObj.TotExpen,
-                    TotDeptIncom = (int)pObj.TotDeptIncom,
-                    UndisExpens1 = (int)pObj.UndisExpens1,
-                    UndisExpens2 = (int)pObj.UndisExpens2,
-                    UndisExpens3 = (int)pObj.UndisExpens3,
-                    UndisExpens4 = (int)pObj.UndisExpens4,
-                    UndisExpens5 = (int)pObj.UndisExpens5,
-                    UndisExpens6 = (int)pObj.UndisExpens6,
-                    GrossProfit = (int)pObj.GrossProfit,
-                    MgtFee = pObj.MgtFee,
-                    IncomBfCharg = (int)pObj.IncomBfCharg,
-                    Insurance = pObj.Insurance,
-                    Interest = pObj.Interest,
-                    PropDepreciationerty = pObj.PropDepreciationerty,
-                    TotCharg = pObj.TotCharg,
-                    NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
-                };
-                _context.IncomeState.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.Update(objPd);
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
-
-        }
 
         private List<CustomerRawRatingDto> GetDataByQuarterCustomerRowRatting(int monthId, int quarterNo)
         {
             List<CustomerRawRatingDto> list = _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
                        .Select(x => new CustomerRawRatingDto
                        {
+                           ID = x.ID,
                            MonthID = x.MonthID,
                            QuarterNo = x.QuarterNo,
                            GroupID = x.GroupID,
@@ -1639,62 +1532,47 @@ namespace Service
 
         private decimal ScalarQueryCustomerRawRating(int monthID, int quarterNo, int groupId, string attribute, string segment)
         {
-
-            decimal ideal = 0;
-            var list = (from crr in _context.CustomerRawRating
-                        join irawc in _context.IdealRatingAttributeWeightConfig on crr.Segment equals irawc.Segment
-                        where (crr.Attribute == irawc.Attribute)
-                        join amcoc in _context.AttributeMaxCapitalOperationConfig on crr.Attribute equals amcoc.Attribute
-                        where (irawc.ConfigID == amcoc.ConfigID)
-                        join m in _context.Months on crr.MonthID equals m.MonthId
-                        join ad in _context.AttributeDecision on crr.MonthID equals ad.MonthID
-                        where (crr.QuarterNo == ad.QuarterNo && crr.GroupID == ad.GroupID && crr.Attribute == ad.Attribute)
-                        join ins in _context.IncomeState on crr.MonthID equals ins.MonthID
-                        where (m.MonthId == ins.MonthID && m.Sequence == ins.QuarterNo && crr.GroupID == ins.GroupID && crr.MonthID == monthID
-                        && crr.QuarterNo == quarterNo && crr.GroupID == groupId && crr.Attribute == attribute && crr.Segment == segment)
-                        select new
-                        {
-                            RawRating = (ad.AccumulatedCapital + ad.NewCapital / ((amcoc.MaxNewCapital))
-                            * irawc.IdealRating * amcoc.NewCapitalPortion + ad.OperationBudget)
-                            / amcoc.MaxOperation
-                      * irawc.IdealRating * amcoc.OperationPortion + ad.LaborBudget
-                      / ins.TotReven
-                      / amcoc.PreLaborPercent * irawc.IdealRating * amcoc.LaborPortion,
-
-                        }).ToList();
-
-            if (list.Count > 0)
-            {
-                ideal = list[0].RawRating;
-            }
-            return ideal;
-        }
-        private bool CustomerRowRatingUpdate(CustomerRawRatingDto pObj)
-        {
-            bool result = false;
             try
             {
-                CustomerRawRating objPd = new CustomerRawRating
+                decimal ideal = 0;
+                var list = (from crr in _context.CustomerRawRating
+                            join irawc in _context.IdealRatingAttributeWeightConfig on crr.Segment equals irawc.Segment
+                            where (crr.Attribute == irawc.Attribute)
+                            join amcoc in _context.AttributeMaxCapitalOperationConfig on crr.Attribute equals amcoc.Attribute
+                            where (irawc.ConfigID == amcoc.ConfigID)
+                            join m in _context.Months on crr.MonthID equals m.MonthId
+                            join ad in _context.AttributeDecision on crr.MonthID equals ad.MonthID
+                            where (crr.QuarterNo == ad.QuarterNo && crr.GroupID == ad.GroupID && crr.Attribute == ad.Attribute)
+                            join ins in _context.IncomeState on crr.MonthID equals ins.MonthID
+                            where (m.MonthId == ins.MonthID && m.Sequence == ins.QuarterNo && crr.GroupID == ins.GroupID && crr.MonthID == monthID
+                            && crr.QuarterNo == quarterNo && crr.GroupID == groupId && crr.Attribute == attribute && crr.Segment == segment)
+                            select new
+                            {
+                                RawRating = (decimal?)((ad.AccumulatedCapital + ad.NewCapital / ((amcoc.MaxNewCapital))
+                                * irawc.IdealRating * amcoc.NewCapitalPortion + ad.OperationBudget)
+                                / amcoc.MaxOperation
+                          * irawc.IdealRating * amcoc.OperationPortion + ad.LaborBudget
+                          / ins.TotReven
+                          / amcoc.PreLaborPercent * irawc.IdealRating * amcoc.LaborPortion) ?? 0,
+
+                            }).ToList();
+
+                if (list.Count > 0)
                 {
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    Attribute = pObj.Attribute,
-                    Segment = pObj.Segment,
-                    RawRating = (int)pObj.RawRating
-                };
-                _context.CustomerRawRating.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
+                    ideal = list[0].RawRating;
+                }
+                return ideal;
             }
-            catch
+            catch (Exception ex)
             {
-                result = false;
+                string exp = ex.ToString();
+                return 0;
+
+
             }
-            return result;
 
         }
+
 
         private List<WeightedAttributeRatingDto> GetDataByQuarterWeightAttributeRating(int monthId, int quarterNo)
         {
@@ -1702,12 +1580,14 @@ namespace Service
             var list = _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
                 Select(x => new WeightedAttributeRatingDto
                 {
+                    ID = x.ID,
                     QuarterNo = x.QuarterNo,
                     GroupID = x.GroupID,
                     MonthID = x.MonthID,
                     ActualDemand = x.ActualDemand,
                     CustomerRating = x.CustomerRating,
-                    Segment = x.Segment
+                    Segment = x.Segment,
+
 
 
                 }).ToList();
@@ -1724,9 +1604,10 @@ namespace Service
                         where (irawc.Segment == crr.Segment && m.MonthId == crr.MonthID && m.Sequence == crr.QuarterNo
                         && crr.MonthID == monthID && crr.QuarterNo == quarterNo && crr.GroupID == groupID && crr.Segment == segment
                         )
+                        group new { crr, irawc } by new { crr.RawRating, irawc.Weight } into grp
                         select new
                         {
-                            WeightedRating = (crr.RawRating * irawc.Weight),
+                            WeightedRating = grp.Sum(x => (x.crr.RawRating * x.irawc.Weight)),
 
                         }).ToList();
 
@@ -1741,15 +1622,20 @@ namespace Service
         {
 
 
-            var list = (from w in _context.WeightedAttributeRating.Where(x => x.MonthID == monthID && x.QuarterNo == quarterNo && x.Segment == segment)
-                        select new { AverageRating = w.CustomerRating }).ToList();
+            var list = (from w in _context.WeightedAttributeRating
+                        .Where(x => x.MonthID == monthID && x.QuarterNo == quarterNo && x.Segment == segment)
+                        group w by w.CustomerRating into grp
+                        select new
+                        {
+                            AverageRating = grp.Average(x => (x.CustomerRating))
+                        }).ToList();
 
 
 
             decimal AverageRating = 0;
             if (list.Count > 0)
             {
-                AverageRating = list[0].AverageRating;
+                AverageRating = Convert.ToDecimal(list[0].AverageRating);
             }
             return AverageRating;
 
@@ -1778,32 +1664,7 @@ namespace Service
             return FairMarket;
 
         }
-        private bool WeightedAttributeRatingUpdate(WeightedAttributeRatingDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                WeightedAttributeRating objPd = new WeightedAttributeRating
-                {
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    CustomerRating = Convert.ToInt16(pObj.CustomerRating),
-                    Segment = pObj.Segment,
-                    ActualDemand = (int)pObj.ActualDemand
-                };
-                _context.WeightedAttributeRating.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
 
-        }
 
         private List<RoomAllocationDto> GetDataByQuarterRoomAllocation(int monthId, int quarterNo)
         {
@@ -1811,6 +1672,7 @@ namespace Service
             var list = _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
                 Select(x => new RoomAllocationDto
                 {
+                    ID = x.ID,
                     MonthID = x.MonthID,
                     QuarterNo = x.QuarterNo,
                     GroupID = x.GroupID,
@@ -1832,15 +1694,15 @@ namespace Service
         private decimal ScalarQueryMarketingDemandBySegment(int monthId, int quarterNo, int groupID, string segment)
         {
             /*SELECT     SUM(actualDemand) AS MarketingDemand
-FROM         marketingDecision
-WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
+        FROM         marketingDecision
+        WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
             decimal MarketingDemand = 0;
             var list = (from md in _context.MarketingDecision
                         where (md.MonthID == monthId && md.Segment == segment && md.MonthID == monthId && md.GroupID == groupID)
-
+                        group md by new { md.ActualDemand, md.GroupID } into gp
                         select new
                         {
-                            MarketingDemand = md.ActualDemand,
+                            MarketingDemand = gp.Sum(x => x.ActualDemand),
 
                         }).ToList();
 
@@ -1855,15 +1717,15 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
         private decimal ScalarQueryAttributeDemandBySegment(int monthId, int quarterNo, int groupID, string segment)
         {
             /*SELECT     SUM(actualDemand) AS AttributeDemand
-FROM         weightedAttributeRating
-WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
+        FROM         weightedAttributeRating
+        WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
             decimal AttributeDemand = 0;
             var list = (from md in _context.WeightedAttributeRating
                         where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && md.GroupID == groupID)
-
+                        group md by md.ActualDemand into gp
                         select new
                         {
-                            AttributeDemand = md.ActualDemand,
+                            AttributeDemand = gp.Sum(x => x.ActualDemand),
 
                         }).ToList();
 
@@ -1878,8 +1740,8 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
         private decimal ScalarQueryPriceDemandBySegment(int monthId, int quarterNo, int groupID, string segment, bool weekday)
         {
             /*SELECT     SUM(actualDemand) AS PriceDemand
-FROM         priceDecision
-WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment) AND (weekday = @weekday)*/
+        FROM         priceDecision
+        WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment) AND (weekday = @weekday)*/
             decimal PriceDemand = 0;
             var list = (from md in _context.PriceDecision
                         where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && Convert.ToInt16(md.GroupID) == groupID)
@@ -1898,13 +1760,278 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
 
         }
 
-        private bool RoomAllocationUpdate(RoomAllocationDto pObj)
+
+
+        private bool MarketingDecisionUpdate(MarketingDecisionDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                MarketingDecision objMd = new MarketingDecision
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    MarketingTechniques = pObj.MarketingTechniques,
+                    Segment = pObj.Segment,
+                    Spending = pObj.Spending,
+                    LaborSpending = pObj.LaborSpending,
+                    ActualDemand = pObj.ActualDemand,
+                    Confirmed = pObj.Confirmed,
+                };
+                _context.MarketingDecision.Attach(objMd);
+                _context.Entry(objMd).Property(x => x.ActualDemand).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool PriceDecisionUpdate(PriceDecisionDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                PriceDecision objPd = new PriceDecision
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    DistributionChannel = pObj.DistributionChannel,
+                    Price = pObj.Price,
+                    ActualDemand = pObj.ActualDemand,
+                    Confirmed = pObj.Confirmed,
+                };
+                _context.PriceDecision.Attach(objPd);
+                //_context.Entry(objPd).State = EntityState.Modified;
+                _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
+                _context.SaveChanges();
+                // _context.Update(objPd);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                string exp = ex.ToString();
+                result = false;
+            }
+            return result;
+
+        }
+        private bool IncomeStateUpdate(IncomeStateDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                IncomeState objPd = new IncomeState
+                {
+                   ID = pObj.ID,
+                    GroupID = pObj.GroupID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    Replace = (int)pObj.Replace,
+                    AjstNetIncom = (int)pObj.AjstNetIncom,
+                    IncomTAX = (int)pObj.IncomTAX,
+                    NetIncom = (int)pObj.NetIncom,
+                    Room1 = (int)pObj.Room1,
+                    FoodB = (int)pObj.FoodB,
+                    FoodB1 = (int)pObj.FoodB1,
+                    FoodB2 = (int)pObj.FoodB2,
+                    FoodB3 = (int)pObj.FoodB3,
+                    FoodB4 = (int)pObj.FoodB4,
+                    FoodB5 = (int)pObj.FoodB5,
+                    Other = (int)pObj.Other,
+                    Other1 = (int)pObj.Other1,
+                    Other2 = (int)pObj.Other2,
+                    Other3 = (int)pObj.Other3,
+                    Other4 = (int)pObj.Other4,
+                    Other5 = (int)pObj.Other5,
+                    Other6 = (int)pObj.Other6,
+                    Other7 = pObj.Other7,
+                    Rent = pObj.Rent,
+                    TotReven = (int)pObj.TotReven,
+                    Room = pObj.Room,
+
+                    TotExpen = (int)pObj.TotExpen,
+                    TotDeptIncom = (int)pObj.TotDeptIncom,
+                    UndisExpens1 = (int)pObj.UndisExpens1,
+                    UndisExpens2 = (int)pObj.UndisExpens2,
+                    UndisExpens3 = (int)pObj.UndisExpens3,
+                    UndisExpens4 = (int)pObj.UndisExpens4,
+                    UndisExpens5 = (int)pObj.UndisExpens5,
+                    UndisExpens6 = (int)pObj.UndisExpens6,
+                    GrossProfit = (int)pObj.GrossProfit,
+                    MgtFee = pObj.MgtFee,
+                    IncomBfCharg = (int)pObj.IncomBfCharg,
+                    Insurance = pObj.Insurance,
+                    Interest = pObj.Interest,
+                    PropDepreciationerty = (int)pObj.PropDepreciationerty,
+                    TotCharg = (int)pObj.TotCharg,
+                    NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
+                };
+                _context.IncomeState.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.Room1).IsModified = true;
+                _context.Entry(objPd).Property(x => x.FoodB1).IsModified = true;
+                _context.Entry(objPd).Property(x => x.FoodB2).IsModified = true;
+                _context.Entry(objPd).Property(x => x.FoodB3).IsModified = true;
+                _context.Entry(objPd).Property(x => x.FoodB4).IsModified = true;
+                _context.Entry(objPd).Property(x => x.FoodB5).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other1).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other2).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other3).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other4).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other5).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Other6).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Rent).IsModified = true;
+                _context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
+                _context.Entry(objPd).Property(x => x.TotExpen).IsModified = true;
+                _context.Entry(objPd).Property(x => x.TotDeptIncom).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens1).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens2).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens3).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens4).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens5).IsModified = true;
+                _context.Entry(objPd).Property(x => x.UndisExpens6).IsModified = true;
+                _context.Entry(objPd).Property(x => x.GrossProfit).IsModified = true;
+                _context.Entry(objPd).Property(x => x.MgtFee).IsModified = true;
+                _context.Entry(objPd).Property(x => x.IncomBfCharg).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Property).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Insurance).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Interest).IsModified = true;
+                _context.Entry(objPd).Property(x => x.PropDepreciationerty).IsModified = true;
+                _context.Entry(objPd).Property(x => x.TotCharg).IsModified = true;
+                _context.Entry(objPd).Property(x => x.NetIncomBfTAX).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Replace).IsModified = true;
+                _context.Entry(objPd).Property(x => x.AjstNetIncom).IsModified = true;
+                _context.Entry(objPd).Property(x => x.IncomTAX).IsModified = true;
+                _context.Entry(objPd).Property(x => x.NetIncom).IsModified = true;
+
+
+                _context.SaveChanges();
+                result = true;
+            }
+            catch(Exception ex)
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool IncomeStateTotalRevenUpdate(IncomeStateDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                IncomeState objPd = new IncomeState
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+
+                    Replace = (int)pObj.Replace,
+                    AjstNetIncom = (int)pObj.AjstNetIncom,
+                    IncomTAX = (int)pObj.IncomTAX,
+                    NetIncom = (int)pObj.NetIncom,
+                    FoodB = (int)pObj.FoodB,
+                    FoodB1 = (int)pObj.FoodB1,
+                    FoodB2 = (int)pObj.FoodB2,
+                    FoodB3 = (int)pObj.FoodB3,
+                    FoodB4 = (int)pObj.FoodB4,
+                    FoodB5 = (int)pObj.FoodB5,
+                    Other = (int)pObj.Other,
+                    Other1 = (int)pObj.Other1,
+                    Other2 = (int)pObj.Other2,
+                    Other3 = (int)pObj.Other3,
+                    Other4 = (int)pObj.Other4,
+                    Other5 = (int)pObj.Other5,
+                    Other6 = (int)pObj.Other6,
+                    Other7 = pObj.Other7,
+                    Rent = pObj.Rent,
+                    TotReven = (int)pObj.TotReven,
+                    Room = pObj.Room,
+
+                    TotExpen = (int)pObj.TotExpen,
+                    TotDeptIncom = (int)pObj.TotDeptIncom,
+                    UndisExpens1 = (int)pObj.UndisExpens1,
+                    UndisExpens2 = (int)pObj.UndisExpens2,
+                    UndisExpens3 = (int)pObj.UndisExpens3,
+                    UndisExpens4 = (int)pObj.UndisExpens4,
+                    UndisExpens5 = (int)pObj.UndisExpens5,
+                    UndisExpens6 = (int)pObj.UndisExpens6,
+                    GrossProfit = (int)pObj.GrossProfit,
+                    MgtFee = pObj.MgtFee,
+                    IncomBfCharg = (int)pObj.IncomBfCharg,
+                    Insurance = pObj.Insurance,
+                    Interest = pObj.Interest,
+                    PropDepreciationerty = (int)pObj.PropDepreciationerty,
+                    TotCharg = (int)pObj.TotCharg,
+                    NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
+
+                };
+                //_context.IncomeState.Add(objPd);
+                //_context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
+                //_context.Update(objPd);
+                //_context.SaveChanges();
+
+                _context.IncomeState.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
+                _context.SaveChanges();
+
+
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool CustomerRowRatingUpdate(CustomerRawRatingDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                CustomerRawRating objPd = new CustomerRawRating
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Attribute = pObj.Attribute,
+                    Segment = pObj.Segment,
+                    RawRating = (int)pObj.RawRating
+                };
+                _context.CustomerRawRating.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.RawRating).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                string exp = ex.ToString();
+                result = false;
+            }
+            return result;
+
+        }
+        private bool RoomAllocationActualDemandUpdate(RoomAllocationDto pObj)
         {
             bool result = false;
             try
             {
                 RoomAllocation objPd = new RoomAllocation
                 {
+                    ID = pObj.ID,
                     MonthID = pObj.MonthID,
                     QuarterNo = pObj.QuarterNo,
                     GroupID = pObj.GroupID,
@@ -1917,8 +2044,164 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
                     Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
-                _context.RoomAllocation.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
+                _context.RoomAllocation.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool RoomAllocationRoomSoldUpdate(RoomAllocationDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                RoomAllocation objPd = new RoomAllocation
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    RoomsAllocated = pObj.RoomsAllocated,
+                    ActualDemand = pObj.ActualDemand,
+                    RoomsSold = pObj.RoomsSold,
+                    Confirmed = pObj.Confirmed,
+                    Revenue = (int)pObj.Revenue,
+                    QuarterForecast = pObj.QuarterForecast,
+                };
+                _context.RoomAllocation.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.RoomsSold).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool RoomAllocationRevenueUpdate(RoomAllocationDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                RoomAllocation objPd = new RoomAllocation
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    RoomsAllocated = pObj.RoomsAllocated,
+                    ActualDemand = pObj.ActualDemand,
+                    RoomsSold = pObj.RoomsSold,
+                    Confirmed = pObj.Confirmed,
+                    Revenue = (int)pObj.Revenue,
+                    QuarterForecast = pObj.QuarterForecast,
+                };
+                _context.RoomAllocation.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.Revenue).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool RoomAllocationUpdate(RoomAllocationDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                RoomAllocation objPd = new RoomAllocation
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    RoomsAllocated = pObj.RoomsAllocated,
+                    ActualDemand = pObj.ActualDemand,
+                    RoomsSold = pObj.RoomsSold,
+                    Confirmed = pObj.Confirmed,
+                    Revenue = (int)pObj.Revenue,
+                    QuarterForecast = pObj.QuarterForecast,
+                };
+                _context.RoomAllocation.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.RoomsSold).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool WeightedAttributeRatingUpdate(WeightedAttributeRatingDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                WeightedAttributeRating objPd = new WeightedAttributeRating
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    CustomerRating = Convert.ToInt16(pObj.CustomerRating),
+                    Segment = pObj.Segment,
+                    ActualDemand = (int)pObj.ActualDemand
+                };
+                _context.WeightedAttributeRating.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
+        private bool SoldRoomByChannelUpdate(SoldRoomByChannelDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                SoldRoomByChannel objPd = new SoldRoomByChannel
+                {
+                    ID = pObj.ID,
+                    MonthID = pObj.MonthID,
+                    QuarterNo = pObj.QuarterNo,
+                    GroupID = pObj.GroupID,
+                    Weekday = pObj.Weekday,
+                    Segment = pObj.Segment,
+                    Revenue = pObj.Revenue,
+                    Channel = pObj.Channel,
+                    Cost = pObj.Cost,
+                    SoldRoom = pObj.SoldRoom
+
+                };
+                _context.SoldRoomByChannel.Attach(objPd);
+                _context.Entry(objPd).Property(x => x.Revenue).IsModified = true;
+                _context.Entry(objPd).Property(x => x.Cost).IsModified = true;
+                _context.Entry(objPd).Property(x => x.SoldRoom).IsModified = true;
                 _context.SaveChanges();
                 result = true;
             }
@@ -1930,12 +2213,59 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @
 
         }
         //ScalarQueryMaxGroupNo
+        public int InsertRank(int monthId, int currentQuarter, int groupID, string groupName, string schoolName, string indicator, decimal profiM, DateTime time)
+        {
+            IQueryable<Rankings> query = _context.Rankings;
+            var obj = new Rankings()
+            {
+                MonthID = monthId,
+                Month = currentQuarter,
+                Indicator = indicator,
+                Institution = schoolName,
+                Performance = profiM,
+                TeamName = groupName,
+                TeamNo = groupID,
+                Time = time
+            };
+            _context.Rankings.Add(obj);
+            int status = _context.SaveChanges();
+            int id = obj.ID;
 
+            return id;
+        }
+        private bool RankingUpdate(RankingsDto pObj)
+        {
+            bool result = false;
+            try
+            {
+                Rankings objPd = new Rankings
+                {
+                    MonthID = pObj.MonthID,
+                    Month = pObj.Month,
+                    TeamNo = pObj.TeamNo,
+                    TeamName = pObj.TeamName,
+                    Indicator = pObj.Indicator,
+                    Institution = pObj.Institution,
+                    Performance = pObj.Performance,
+                    Time = pObj.Time
+                };
+                _context.Rankings.Attach(objPd);
+                _context.Entry(objPd).State = EntityState.Modified;
+                _context.SaveChanges();
+                result = true;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+
+        }
         private int ScalarQueryMaxGroupNoRommAllocation(int monthID, int quarterNo)
         {
             /*SELECT     COUNT(DISTINCT groupID) AS MaxGroup
-FROM         roomAllocation
-WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
+        FROM         roomAllocation
+        WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
             int MaxGroup = 0;
             var list = (from r in _context.RoomAllocation
                         where (r.MonthID == monthID && r.QuarterNo == quarterNo)
@@ -1985,6 +2315,7 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
             var list = _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
                 Select(x => new SoldRoomByChannelDto
                 {
+                    ID = x.ID,
                     MonthID = x.MonthID,
                     QuarterNo = x.QuarterNo,
                     GroupID = x.GroupID,
@@ -2063,36 +2394,7 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
             }
             return obj;
         }
-        private bool SoldRoomByChannelUpdate(SoldRoomByChannelDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                SoldRoomByChannel objPd = new SoldRoomByChannel
-                {
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    Weekday = pObj.Weekday,
-                    Segment = pObj.Segment,
-                    Revenue = pObj.Revenue,
-                    Channel = pObj.Channel,
-                    Cost = pObj.Cost,
-                    SoldRoom = pObj.SoldRoom
 
-                };
-                _context.SoldRoomByChannel.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
-
-        }
 
 
         //ScalarSingleRevenue
@@ -2247,8 +2549,8 @@ WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
 
         //ScalarGroupDistriCostByMonth
         /*SELECT              SUM(cost) AS groupCost
-FROM                  soldRoomByChannel
-WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (groupID = @groupID)*/
+        FROM                  soldRoomByChannel
+        WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (groupID = @groupID)*/
 
         private decimal ScalarGroupDistriCostByMonthSoldByChannel(int monthId, int quarterNo, int groupId)
         {
@@ -2312,9 +2614,9 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (grou
             return obj;
         }
 
-        private int ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
+        private decimal ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
         {
-            int TotalDepreciation = 0;
+            decimal TotalDepreciation = 0;
             var list = (from ad in _context.AttributeDecision
                         join m in _context.Months on ad.MonthID equals m.MonthId
                         where (ad.QuarterNo == m.Sequence)
@@ -2330,14 +2632,14 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarter) AND (grou
                       ).ToList();
             if (list.Count > 0)
             {
-                TotalDepreciation = Convert.ToInt16(list[0].TotalDepreciation);
+                TotalDepreciation = list[0].TotalDepreciation;
             }
             return 0;
         }
 
         /*SELECT              SUM(newCapital) AS totalNewCapital
-FROM                  attributeDecision
-WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
+        FROM                  attributeDecision
+        WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
 
         private decimal ScalarMonthlyTotalNewCapitalAttributeDecision(int monthId, int quarterNo, int groupId)
         {
@@ -2364,9 +2666,9 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (gr
         }
 
         /*SELECT     [1TotReven] AS totalRevenue
-FROM         incomeState
-WHERE     (sessionID = @session) AND (groupID = @group) AND (quarterNo = @quarter)
-GROUP BY [1TotReven]*/
+        FROM         incomeState
+        WHERE     (sessionID = @session) AND (groupID = @group) AND (quarterNo = @quarter)
+        GROUP BY [1TotReven]*/
 
         private decimal ScalarGetTotalRevenueIncomeState(int monthId, int groupId, int quarterNo)
         {
@@ -2398,7 +2700,7 @@ GROUP BY [1TotReven]*/
         private decimal ScalarQueryRevenueByWeekSegmentRoomAllocation(int monthId, int groupId, int quarterNo, string segment, bool weekday)
         {
             /*SELECT              SUM(roomAllocation.roomsSold * distributionChannelVSsegmentConfig.percentage * priceDecision.price) AS revenue
-FROM                  roomAllocation 
+        FROM                  roomAllocation 
             INNER JOIN
                                 quarterlyMarket ON roomAllocation.sessionID = quarterlyMarket.sessionID 
             AND roomAllocation.quarterNo = quarterlyMarket.quarterNo 
@@ -2414,7 +2716,7 @@ FROM                  roomAllocation
             AND 
              roomAllocation.segment = priceDecision.segment 
             AND roomAllocation.weekday = priceDecision.weekday
-WHERE              (roomAllocation.sessionID = @sessionID) 
+        WHERE              (roomAllocation.sessionID = @sessionID) 
             AND (roomAllocation.quarterNo = @quarterNo) AND (roomAllocation.groupID = @groupID) AND (roomAllocation.segment = @segment) AND 
                                 (roomAllocation.weekday = @weekday)*/
 
@@ -2450,10 +2752,10 @@ WHERE              (roomAllocation.sessionID = @sessionID)
         {
             //ScalarSchoolName
             /*SELECT     [user].instituion
-    FROM         classSession INNER JOIN
+        FROM         classSession INNER JOIN
                           [user] ON classSession.UserID = [user].UserId
-    WHERE     (classSession.classSessionID = @sessionID)
-    GROUP BY [user].instituion*/
+        WHERE     (classSession.classSessionID = @sessionID)
+        GROUP BY [user].instituion*/
 
             return "HardCord ";
         }
@@ -2461,8 +2763,8 @@ WHERE              (roomAllocation.sessionID = @sessionID)
         private string ScalarGroupName(int monthId, int groupId)
         {
             /*SELECT     hotelName
-    FROM         [group]
-    WHERE     (sessionID = @sessionID) AND (groupID = @groupID)*/
+        FROM         [group]
+        WHERE     (sessionID = @sessionID) AND (groupID = @groupID)*/
 
             return "HardCode";
         }
@@ -2490,54 +2792,7 @@ WHERE              (roomAllocation.sessionID = @sessionID)
             }
             return rnk;
         }
-        public int InsertRank(int monthId, int currentQuarter, int groupID, string groupName, string schoolName, string indicator, decimal profiM, DateTime time)
-        {
-            IQueryable<Rankings> query = _context.Rankings;
-            var obj = new Rankings()
-            {
-                MonthID = monthId,
-                Month = currentQuarter,
-                Indicator = indicator,
-                Institution = schoolName,
-                Performance = profiM,
-                TeamName = groupName,
-                TeamNo = groupID,
-                Time = time
-            };
-            _context.Rankings.Add(obj);
-            int status = _context.SaveChanges();
-            int id = obj.ID;
 
-            return id;
-        }
-        private bool RankingUpdate(RankingsDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                Rankings objPd = new Rankings
-                {
-                    MonthID = pObj.MonthID,
-                    Month = pObj.Month,
-                    TeamNo = pObj.TeamNo,
-                    TeamName = pObj.TeamName,
-                    Indicator = pObj.Indicator,
-                    Institution = pObj.Institution,
-                    Performance = pObj.Performance,
-                    Time = pObj.Time
-                };
-                _context.Rankings.Add(objPd);
-                _context.Entry(objPd).State = EntityState.Modified;
-                _context.SaveChanges();
-                result = true;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
-
-        }
 
         public List<MonthDto> GetMonthListByClassId(int classID)
         {
