@@ -824,7 +824,7 @@ namespace Service
                 var obj1 = new BalanceSheet()
                 {
                     MonthID = monthID,
-                    QuarterNo = currentQuarter ,
+                    QuarterNo = currentQuarter,
                     GroupID = i,
                     Cash = 1000000,
                     AcctReceivable = 400000,
@@ -1115,16 +1115,29 @@ namespace Service
             obj.TotReven = data[0].TotReven;
             return obj;
         }
-        public bool UpdateMonthCompletedStatus(HotelDbContext context, int classID, int currentQuarter, bool iscompleted)
+        public bool UpdateMonthCompletedStatus(HotelDbContext context, int classID, int currentQuarter)
         {
             bool result = false;
             try
             {
-                Month clsMonth = context.Months.Where(x => x.ClassId == classID && x.Sequence == currentQuarter).First();
-                clsMonth.IsComplete = iscompleted;
-                context.Months.Add(clsMonth);
-                context.Entry(clsMonth).State = EntityState.Modified;
-                context.SaveChanges();
+                List<Month> lstMonth = context.Months.Where(x => x.ClassId == classID && x.Sequence == currentQuarter && x.IsComplete == false).ToList();
+                context.ChangeTracker.Clear();
+                if (lstMonth.Count > 0)
+                {
+                    Month clsMonth = new Month();
+                    clsMonth.MonthId = lstMonth[0].MonthId;
+                    clsMonth.ClassId = lstMonth[0].ClassId;
+                    clsMonth.Sequence = lstMonth[0].Sequence;
+                    clsMonth.TotalMarket = lstMonth[0].TotalMarket;
+                    clsMonth.ConfigId = lstMonth[0].ConfigId;
+                    
+                    clsMonth.IsComplete = true;
+                    context.Months.Add(clsMonth);
+                    context.Entry(clsMonth).Property(x => x.IsComplete).IsModified = true;
+                    context.Update(clsMonth);
+                    context.SaveChanges();
+                }
+
                 result = true;
             }
             catch

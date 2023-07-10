@@ -1099,7 +1099,7 @@ namespace Service
                         roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
                         RoomAllocationRevenueUpdate(roRw);
                     }
-                    //     obj.UpdateClassStatus(_context, month.ClassId, "T");
+                    obj.UpdateClassStatus(_context, month.ClassId, "T");
 
                     {
                         if (currentQuarter > 1)
@@ -1138,7 +1138,7 @@ namespace Service
                                 {
                                     groupName = "Group " + groupID.ToString();
                                 }
-                                if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID) == null)
+                                if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID).ID == 0)
                                 {
                                     InsertRank(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
                                 }
@@ -1165,7 +1165,7 @@ namespace Service
             }
             resObj.Message = "Calculation Success";
             resObj.StatusCode = 200;
-            string strjson = "{ monthID:" + month.MonthId + "}";
+            string strjson = "{ monthID:" + month.ClassId + "}";
             var jobj = JsonConvert.DeserializeObject<MonthDto>(strjson)!;
             resObj.Data = jobj;
             return resObj;
@@ -1189,7 +1189,8 @@ namespace Service
                         select new
                         {
                             MonthId = m.MonthId,
-                            Status = c.Status// MonthStatus(m.Sequence, month.Sequence, c.Status)
+                            Status = c.Status,// MonthStatus(m.Sequence, month.Sequence, c.Status)
+                            IsMonthCompleted = m.IsComplete
                         }
                       ).ToList();
 
@@ -1199,7 +1200,7 @@ namespace Service
                 CalculationResponse cr = new CalculationResponse();
                 //item.Status = MonthStatus(item.MonthId, currentQuarter, item.Status);
                 cr.MonthId = item.MonthId;
-                cr.Status = MonthStatus(item.MonthId, currentQuarter, item.Status);
+                cr.Status = MonthStatus(item.MonthId, currentQuarter, item.Status, item.IsMonthCompleted);
                 listnew.Add(cr);
 
 
@@ -1213,10 +1214,15 @@ namespace Service
             return resObj;
 
         }
-        protected string MonthStatus(int quartarno, int currentQuartarNo, ClassStatus status)
+        protected string MonthStatus(int quartarno, int currentQuartarNo, ClassStatus status, bool isMonthCompleted)
         {
             string returnStatus = "";
-            if (currentQuartarNo < quartarno)
+            //if (currentQuartarNo < quartarno)
+            //{
+            //    returnStatus = "Calculated";
+            //}
+            //else
+            if (isMonthCompleted == true)
             {
                 returnStatus = "Calculated";
             }
@@ -1271,6 +1277,7 @@ namespace Service
                     Confirmed = x.Confirmed,
                 }
                 ).ToList();
+            _context.ChangeTracker.Clear();
             return objlist;
 
         }
@@ -1395,6 +1402,7 @@ namespace Service
                        }
                        ).ToList();
 
+            _context.ChangeTracker.Clear();
             return list;
 
         }
@@ -1454,7 +1462,7 @@ namespace Service
             {
                 list1 = list[0];
             }
-
+            _context.ChangeTracker.Clear();
             return list1;
         }
 
@@ -1476,7 +1484,7 @@ namespace Service
 
                        }
                        ).ToList();
-
+            _context.ChangeTracker.Clear();
             return list;
 
         }
@@ -1504,7 +1512,7 @@ namespace Service
             {
                 obj = list[0];
             }
-
+            _context.ChangeTracker.Clear();
             return obj;
         }
 
@@ -1591,7 +1599,7 @@ namespace Service
 
 
                 }).ToList();
-
+            _context.ChangeTracker.Clear();
             return list;
         }
         private decimal ScalarQueryRatingBySegmentCustomerRawRatting(int monthID, int quarterNo, int groupID, string segment)
@@ -1687,7 +1695,7 @@ namespace Service
 
 
                 }).ToList();
-
+            _context.ChangeTracker.Clear();
             return list;
         }
         //ScalarQueryMarketingDemandBySegment
@@ -1832,7 +1840,7 @@ namespace Service
             {
                 IncomeState objPd = new IncomeState
                 {
-                   ID = pObj.ID,
+                    ID = pObj.ID,
                     GroupID = pObj.GroupID,
                     MonthID = pObj.MonthID,
                     QuarterNo = pObj.QuarterNo,
@@ -1876,7 +1884,7 @@ namespace Service
                     TotCharg = (int)pObj.TotCharg,
                     NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
                 };
-                _context.IncomeState.Attach(objPd);
+                _context.IncomeState.Add(objPd);
                 _context.Entry(objPd).Property(x => x.Room1).IsModified = true;
                 _context.Entry(objPd).Property(x => x.FoodB1).IsModified = true;
                 _context.Entry(objPd).Property(x => x.FoodB2).IsModified = true;
@@ -1914,11 +1922,11 @@ namespace Service
                 _context.Entry(objPd).Property(x => x.IncomTAX).IsModified = true;
                 _context.Entry(objPd).Property(x => x.NetIncom).IsModified = true;
 
-
+                _context.UpdateRange(objPd);
                 _context.SaveChanges();
                 result = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result = false;
             }
@@ -2044,8 +2052,9 @@ namespace Service
                     Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
-                _context.RoomAllocation.Attach(objPd);
+                _context.RoomAllocation.Add(objPd);
                 _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -2076,8 +2085,9 @@ namespace Service
                     Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
-                _context.RoomAllocation.Attach(objPd);
+                _context.RoomAllocation.Add(objPd);
                 _context.Entry(objPd).Property(x => x.RoomsSold).IsModified = true;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -2108,8 +2118,9 @@ namespace Service
                     Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
-                _context.RoomAllocation.Attach(objPd);
+                _context.RoomAllocation.Add(objPd);
                 _context.Entry(objPd).Property(x => x.Revenue).IsModified = true;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -2140,8 +2151,9 @@ namespace Service
                     Revenue = (int)pObj.Revenue,
                     QuarterForecast = pObj.QuarterForecast,
                 };
-                _context.RoomAllocation.Attach(objPd);
+                _context.RoomAllocation.Add(objPd);
                 _context.Entry(objPd).Property(x => x.RoomsSold).IsModified = true;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -2212,7 +2224,7 @@ namespace Service
             return result;
 
         }
-        //ScalarQueryMaxGroupNo
+
         public int InsertRank(int monthId, int currentQuarter, int groupID, string groupName, string schoolName, string indicator, decimal profiM, DateTime time)
         {
             IQueryable<Rankings> query = _context.Rankings;
@@ -2230,6 +2242,7 @@ namespace Service
             _context.Rankings.Add(obj);
             int status = _context.SaveChanges();
             int id = obj.ID;
+            _context.ChangeTracker.Clear();
 
             return id;
         }
@@ -2240,6 +2253,7 @@ namespace Service
             {
                 Rankings objPd = new Rankings
                 {
+                    ID = pObj.ID,
                     MonthID = pObj.MonthID,
                     Month = pObj.Month,
                     TeamNo = pObj.TeamNo,
@@ -2249,8 +2263,9 @@ namespace Service
                     Performance = pObj.Performance,
                     Time = pObj.Time
                 };
-                _context.Rankings.Attach(objPd);
+                _context.Rankings.Add(objPd);
                 _context.Entry(objPd).State = EntityState.Modified;
+                _context.Update(objPd);
                 _context.SaveChanges();
                 result = true;
             }
@@ -2284,13 +2299,14 @@ namespace Service
 
         }
 
-        //GetDataByGroupWeekday
+
         private List<RoomAllocationDto> GetDataByGroupWeekdayRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday)
         {
 
             var list = _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Weekday == weekday).
                 Select(x => new RoomAllocationDto
                 {
+                    ID = x.ID,
                     MonthID = x.MonthID,
                     QuarterNo = x.QuarterNo,
                     GroupID = x.GroupID,
@@ -2305,10 +2321,10 @@ namespace Service
 
 
                 }).ToList();
-
+            _context.ChangeTracker.Clear();
             return list;
         }
-        //GetDataByMonth
+
         private List<SoldRoomByChannelDto> GetDataByMonthSoldRoomByChannel(int monthId, int quarterNo)
         {
 
@@ -2326,7 +2342,7 @@ namespace Service
                     Cost = x.Cost,
                     SoldRoom = x.SoldRoom,
                 }).ToList();
-
+            _context.ChangeTracker.Clear();
             return list;
         }
         private PriceDecisionDto GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
@@ -2776,6 +2792,7 @@ namespace Service
             var list = _context.Rankings.Where(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno)
                 .Select(x => new RankingsDto
                 {
+                    ID = x.ID,
                     Indicator = x.Indicator,
                     Institution = x.Institution,
                     Month = x.Month,
@@ -2790,6 +2807,7 @@ namespace Service
             {
                 rnk = list[0];
             }
+            _context.ChangeTracker.Clear();
             return rnk;
         }
 
@@ -2808,7 +2826,7 @@ namespace Service
                 MonthId = x.MonthId,
 
             }).ToList();
-
+            _context.ChangeTracker.Clear();
             return result;
 
         }

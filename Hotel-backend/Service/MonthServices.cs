@@ -218,7 +218,7 @@ namespace Service
         {
 
             FunMonth obj = new FunMonth();
-            bool result = obj.UpdateMonthCompletedStatus(_context, mdt.ClassId, mdt.Sequence, mdt.IsComplete);
+            bool result = obj.UpdateMonthCompletedStatus(_context, mdt.ClassId, mdt.Sequence);
             return result;
         }
         public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
