@@ -29,7 +29,8 @@
         month. Be careful, once 
         you finalize current month, it is not allowed to rollback. You can only review 
         finalized months.</div>
-        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md mt-5" [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">Finalize Now</button>
+        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md mt-5" 
+        [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">{{btnfinltext}}</button>
     </div>
   </div>
   </section>
@@ -118,7 +119,7 @@
                     Edit Class
                   </a> -->
 
-                  <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >Create a New Month</button>
+                  <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >{{btnCreateNewMonth}}</button>
                 </dd>
               </div>
             </dl>

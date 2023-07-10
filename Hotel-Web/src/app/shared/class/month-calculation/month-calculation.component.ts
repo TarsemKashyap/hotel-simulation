@@ -26,6 +26,7 @@ export class MonthCalculationComponent {
   status:''
 };
 apiBody = {};
+btnCalculationText:string='Calculate Now';
 classId: number | undefined;
 dataSource = new MatTableDataSource<MonthDto>();
 dataSourceMonth = new MatTableDataSource<MonthDto>();
@@ -77,6 +78,20 @@ dataSourceMonth = new MatTableDataSource<MonthDto>();
       console.log(data.data);
       this.dataSourceMonth.data = data;
     });
+}
+monthCalculation()
+{
+  this.btnCalculationText='Processing.....';
+  this.apiBody = {
+    ClassId: this.classId
+  };
+  this.monthCalculationService.monthCalculate(this.apiBody).subscribe((data) => {
+    // this.monthList = data;
+     console.log(data.data);
+     this.dataSourceMonth.data = data;
+     this.btnCalculationText='Calculate Now';
+   });
+
 }
 
 }

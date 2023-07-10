@@ -15,6 +15,9 @@ export class MonthCalculationService {
   monthList(apiBody:any): Observable<any> {
     return this.httpClient.post<MonthDto[]>('month/calculationList',apiBody);
   }
+  monthCalculate(apiBody:any): Observable<any> {
+    return this.httpClient.post<MonthDto[]>('month/Calculation',apiBody);
+  }
 
   
   quarterlyMarketList(): Observable<MonthDto[]> {

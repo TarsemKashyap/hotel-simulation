@@ -60,6 +60,8 @@ export class CreateMonthComponent {
   configId = '2853c04b-3f2d-4e4c-b930-a7fc924871df';
   currentQuarter: Number = 0;
   MarketTextBox: string = '';
+  btnfinltext:string="Finalize Now";
+  btnCreateNewMonth:string="Create a New Month";
   apiBody = {};
   displayedColumns: string[] = [
     'MonthId',
@@ -160,6 +162,9 @@ export class CreateMonthComponent {
           if (this.classInfo.status != 'T') {
             this.isFinalizeButtonDisable = true;
           }
+          else{
+            this.isFinalizeButtonDisable = false;
+          }
           ////"C" means that calucation is not finished yet.
           if (this.classInfo.status == 'C') {
             this.isFinalizeButtonDisable = true;
@@ -169,6 +174,7 @@ export class CreateMonthComponent {
     });
   }
   CreateNewMonth() {
+    this.btnCreateNewMonth="Processing.......";
     console.log('it does nothing', this.MarketTextBox);
     if (this.MarketTextBox.length == 0) {
       this.isError = true;
@@ -183,10 +189,12 @@ export class CreateMonthComponent {
       this.pageload();
       console.log('MonthID:=' + data.data.monthId);
       console.log(data.message);
+      this.btnCreateNewMonth="Create a New Month";
       //console.log(data.Data.monthID);
     });
   }
   FinalizeMonth() {
+    this.btnfinltext="Processing.......";
     this.apiBody = {
       ClassId: this.classId,
       Sequence: this.currentQuarter,
@@ -201,6 +209,7 @@ export class CreateMonthComponent {
         this.apiBody = { ClassId: this.classId, Status: 'A' };
         this.monthService.UpdateClassStatus(this.apiBody).subscribe((data) => {
           console.log('isClass CompletedDone:=' + data);
+          this.btnfinltext="Finalize Now";
           //console.log(data.message);
           //console.log(data.Data.monthID);
         });
