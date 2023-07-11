@@ -18,7 +18,7 @@ namespace Service
         Task<IEnumerable<MonthDto>> AddGroupAsync(int monthId, MonthDto[] monthGroup);
         IEnumerable<MonthDto> monthList();
         Task<ResponseData> Create(MonthDto month);
-        IEnumerable<MonthDto> List(string monthidId = null);
+        IEnumerable<MonthDto> List(MonthDto month);
         Task<MonthDto> GetById(int sessionId);
         Task<MonthDto> Update(int id, MonthDto account);
         Task DeleteId(int sessionId);
@@ -184,12 +184,12 @@ namespace Service
             return obj;
         }
 
-        public IEnumerable<MonthDto> List(string monthId = null)
+        public IEnumerable<MonthDto> List(MonthDto month)
         {
             IQueryable<Month> query = _context.Months;
-            if (!string.IsNullOrEmpty(monthId))
+            if (month.ClassId > 0)
             {
-                //query = query.Where(x => x.CreatedBy == monthidId);
+                query = query.Where(x => x.ClassId == month.ClassId);
             }
             var result = query.Select(x => new MonthDto
             {

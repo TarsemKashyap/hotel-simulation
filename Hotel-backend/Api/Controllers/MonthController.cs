@@ -84,12 +84,12 @@ namespace Api.Controllers
 
         }
 
-        [HttpGet("list")]
-        public IActionResult MonthList()
+        [HttpPost("list")]
+        public IActionResult MonthList(MonthDto month)
         {
             // string instructorId = IsAdmin ? null : LoggedUserId;
 
-            var MonthResult = _monthService.List();
+            var MonthResult = _monthService.List(month);
             return Ok(MonthResult);
 
         }
