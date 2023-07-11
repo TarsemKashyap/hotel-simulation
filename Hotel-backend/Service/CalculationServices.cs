@@ -44,17 +44,15 @@ namespace Service
             try
             {
 
-                FunMonth obj = new FunMonth();
-                FunCalculation objCalculation = new FunCalculation();
-                obj.UpdateClassStatus(_context, month.ClassId, "C");
-                //obj.UpdateClassStatus(_context, month.ClassId, "T");
-                ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
-                int currentQuarter = objclassSess.CurrentQuater;
-                int hotelsCount = objclassSess.HotelsCount;
-
                 List<MonthDto> listMonth = GetMonthListByClassId(month.ClassId);
                 for (int i = 0; i < listMonth.Count; i++)
                 {
+                    FunMonth obj = new FunMonth();
+                    FunCalculation objCalculation = new FunCalculation();
+                    obj.UpdateClassStatus(_context, month.ClassId, "C");
+                    ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
+                    int currentQuarter = objclassSess.CurrentQuater;
+                    int hotelsCount = objclassSess.HotelsCount;
                     int monthId = listMonth[i].MonthId;
 
 
@@ -2814,7 +2812,7 @@ namespace Service
 
         public List<MonthDto> GetMonthListByClassId(int classID)
         {
-            IQueryable<Month> query = _context.Months;
+            IQueryable<Month> query = _context.Months.Where(x => x.IsComplete == false);
             if (classID > 0)
             {
                 query = query.Where(x => x.ClassId == classID);

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
         public decimal TotalMarket { get; set; }
         public bool IsComplete { get; set; }
         public int ConfigId { get; set; }
+        public string Status { get; set; }
         public virtual ClassSessionDto Class { get; set; }
 
     

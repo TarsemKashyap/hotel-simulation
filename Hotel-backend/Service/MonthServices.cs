@@ -198,7 +198,9 @@ namespace Service
                 Sequence = x.Sequence,
                 TotalMarket = x.TotalMarket,
                 ConfigId = x.ConfigId,
-                IsComplete = x.IsComplete
+                IsComplete = x.IsComplete,
+                Status = x.IsComplete == true ? "Completed" : "Not Completed"
+
             }).OrderBy(x => x.Sequence);
 
             return result.AsEnumerable();
