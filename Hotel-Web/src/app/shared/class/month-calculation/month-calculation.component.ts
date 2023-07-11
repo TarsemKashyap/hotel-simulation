@@ -91,7 +91,9 @@ monthCalculation()
      this.dataSourceMonth.data = data;
      this.pageload();
      this.btnCalculationText='Calculate Now';
-
+     this.snackBar.open('Calculate successfully','close',{
+      duration: 3000
+    });
    });
 
 }

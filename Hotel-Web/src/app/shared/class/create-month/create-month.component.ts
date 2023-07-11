@@ -74,11 +74,11 @@ export class CreateMonthComponent {
   ];
 
   columnDefs: ColDef[] = [
-    {
-      field: 'monthId',
+    // {
+    //   field: 'monthId',
       
-    },
-    { field: 'classId' },
+    // },
+    // { field: 'classId' },
     {
       field: 'sequence',
       
@@ -87,12 +87,13 @@ export class CreateMonthComponent {
       field: 'totalMarket',
       
     },
-    { field: 'status' },
-    
     {
       field: 'configId',
       
     },
+    { field: 'status' },
+    
+    
     
   ];
   defaultColDef: ColDef = {
@@ -120,7 +121,8 @@ export class CreateMonthComponent {
   }
   pageload() {
     this.classId = this.route.snapshot.params['id'];
-    this.monthService.quarterlyMarketList().subscribe((data) => {
+    this.apiBody = { ClassId: this.classId };
+    this.monthService.quarterlyMarketList(this.apiBody).subscribe((data) => {
      // this.monthList = data;
     this.$rows=data;
      // console.log(this.monthList[0]);
@@ -136,8 +138,7 @@ export class CreateMonthComponent {
         .subscribe((data) => {
           this.monthInfo = data;
           this.isMonthCompleted = this.monthInfo.isComplete;
-          console.log("MonthInfo000000000000000000");
-          console.log(this.monthInfo);
+          
 
           if (this.currentQuarter != 0) 
           {
@@ -179,11 +180,16 @@ export class CreateMonthComponent {
   CreateNewMonth() {
     this.btnCreateNewMonth="Processing.......";
     console.log('it does nothing', this.MarketTextBox);
-    if (this.MarketTextBox.length == 0) {
+    this.isError = false;
+      this.errorMsg = '';
+      
+    if (this.MarketTextBox==null || this.MarketTextBox.length == 0) {
       this.isError = true;
       this.errorMsg = 'Required Field';
+      this.btnCreateNewMonth="Create a New Month";
       return;
     }
+    
     this.isNewQuarterButtonDisable = true;
     this.apiBody = { ClassId: this.classId, TotalMarket: this.MarketTextBox };
     this.monthService.createNewMonth(this.apiBody).subscribe((data) => {
@@ -193,6 +199,9 @@ export class CreateMonthComponent {
       console.log('MonthID:=' + data.data.monthId);
       console.log(data.message);
       this.btnCreateNewMonth="Create a New Month";
+      this.snackBar.open('Create a New Month successfully','close',{
+        duration: 3000
+      });
       //console.log(data.Data.monthID);
     });
   }
@@ -214,6 +223,9 @@ export class CreateMonthComponent {
           console.log('isClass CompletedDone:=' + data);
           this.pageload();
           this.btnfinltext="Finalize Now";
+          this.snackBar.open('Finalize successfully','close',{
+            duration: 3000
+          });
           //console.log(data.message);
           //console.log(data.Data.monthID);
         });

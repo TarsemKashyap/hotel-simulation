@@ -21,8 +21,8 @@ export class MonthService {
       `account/instructor/${userId}`
     );
   }
-  quarterlyMarketList(): Observable<MonthDto[]> {
-    return this.httpClient.get<MonthDto[]>('month/list');
+  quarterlyMarketList(apiBody:any): Observable<MonthDto[]> {
+    return this.httpClient.post<MonthDto[]>('month/list',apiBody);
   }
   createNewMonth(apiBody:any): Observable<any> {
     return this.httpClient.post('month/Create',apiBody);
