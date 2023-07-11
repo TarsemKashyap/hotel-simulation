@@ -89,7 +89,9 @@ monthCalculation()
     // this.monthList = data;
      console.log(data.data);
      this.dataSourceMonth.data = data;
+     this.pageload();
      this.btnCalculationText='Calculate Now';
+
    });
 
 }

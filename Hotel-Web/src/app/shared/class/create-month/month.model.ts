@@ -4,7 +4,8 @@ export interface MonthDto {
     sequence: string;
     totalMarket: string;
     isComplete: boolean;
-    configId:string
+    configId:string;
+	status:string;
 }
 export interface ClassDto {
     classId 		:string;

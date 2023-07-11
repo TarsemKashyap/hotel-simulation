@@ -42,8 +42,9 @@ export class CreateMonthComponent {
     classId: '',
     sequence: '',
     totalMarket: '',
-    isComplete: false,
+    status: '',
     configId: '',
+    isComplete:false
   };
   classId: number | undefined;
   //classId: any;
@@ -68,7 +69,7 @@ export class CreateMonthComponent {
     'ClassId',
     'Sequence',
     'TotalMarket',
-    'IsComplete',
+    'Status',
     'ConfigId',
   ];
 
@@ -86,12 +87,13 @@ export class CreateMonthComponent {
       field: 'totalMarket',
       
     },
-    { field: 'isComplete' },
+    { field: 'status' },
     
     {
       field: 'configId',
       
     },
+    
   ];
   defaultColDef: ColDef = {
     flex: 1,
@@ -134,6 +136,7 @@ export class CreateMonthComponent {
         .subscribe((data) => {
           this.monthInfo = data;
           this.isMonthCompleted = this.monthInfo.isComplete;
+          console.log("MonthInfo000000000000000000");
           console.log(this.monthInfo);
 
           if (this.currentQuarter != 0) 
@@ -209,6 +212,7 @@ export class CreateMonthComponent {
         this.apiBody = { ClassId: this.classId, Status: 'A' };
         this.monthService.UpdateClassStatus(this.apiBody).subscribe((data) => {
           console.log('isClass CompletedDone:=' + data);
+          this.pageload();
           this.btnfinltext="Finalize Now";
           //console.log(data.message);
           //console.log(data.Data.monthID);
