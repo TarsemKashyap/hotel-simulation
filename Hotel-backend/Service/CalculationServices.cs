@@ -1,22 +1,13 @@
 ﻿using Database;
-using Database.Migrations;
+using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
-using Mysqlx.Resultset;
-using MySqlX.XDevAPI;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Cms;
-using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ZstdNet;
 
 namespace Service
 {
@@ -44,7 +35,7 @@ namespace Service
             try
             {
 
-                List<MonthDto> listMonth = GetMonthListByClassId(month.ClassId);
+                List<MonthDto> listMonth = await GetMonthListByClassId(month.ClassId);
                 for (int i = 0; i < listMonth.Count; i++)
                 {
                     FunMonth obj = new FunMonth();
@@ -224,7 +215,7 @@ namespace Service
                         decimal fairMarketPD = 0;
                         int actualDemand;
                         //This get data need to change.
-                        List<PriceDecisionDto> listPd = GetDataByQuarterPriceDecision(monthId, currentQuarter);
+                        List<PriceDecisionDto> listPd = await GetDataByQuarterPriceDecision(monthId, currentQuarter);
                         foreach (PriceDecisionDto priceDecisionRow in listPd)
                         {
                             avergePrice = Convert.ToDecimal(ScalarQueryAvgPricePriceDecision(monthId, currentQuarter, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel.Trim(), priceDecisionRow.Segment.Trim()));
@@ -263,7 +254,7 @@ namespace Service
 
                     }
 
-                    List<IncomeStateDto> incomTableAfter = GetDataByMonthIncomeState(monthId, currentQuarter);
+                    List<IncomeStateDto> incomTableAfter = await GetDataByMonthIncomeState(monthId, currentQuarter);
                     foreach (IncomeStateDto row in incomTableAfter)
                     {
                         if (currentQuarter <= 1)
@@ -272,7 +263,8 @@ namespace Service
                         }
                         else
                         {
-                            row.TotReven = GetDataBySingleRowIncomeState(monthId, currentQuarter - 1, row.GroupID).TotReven;
+                            IncomeStateDto objinsDto = await GetDataBySingleRowIncomeState(monthId, currentQuarter - 1, row.GroupID);
+                            row.TotReven = objinsDto.TotReven;
                         }
 
                         if (row.TotReven == 0)
@@ -282,11 +274,11 @@ namespace Service
                         IncomeStateTotalRevenUpdate(row);
                     }
 
-                    List<CustomerRawRatingDto> rawRatingTable = GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
+                    List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
 
                     foreach (CustomerRawRatingDto row in rawRatingTable)
                     {
-                        AttributeDecisionDto attriDeRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute);
+                        AttributeDecisionDto attriDeRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute);
                         //In order to avoid divided by zero exception, if any of these spending is zero, 
                         //we will skip the quary and set the rating as zero.
                         if (attriDeRow.OperationBudget == 0 || attriDeRow.AccumulatedCapital == 0 || attriDeRow.LaborBudget == 0)
@@ -317,7 +309,7 @@ namespace Service
                     // rawRatingAdapter.Update(rawRatingTable);
 
                     // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
-                    List<WeightedAttributeRatingDto> overallRatingTable = GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
+                    List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
                     decimal averageRating = 0;
                     decimal fairMarket = 0;
                     foreach (WeightedAttributeRatingDto row in overallRatingTable)
@@ -369,7 +361,7 @@ namespace Service
                     while (groupID < maxGroup + 1)
                     {
                         /////////Do the sold room and Room Pools each group by each group for weekday
-                        table = GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
+                        table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
                         //////First, we collect all the free rooms that is not used, or in another word, over-allocated.
                         /////Different Segment will have different percentage that will "go bad"
                         /////Business 60% goes bad
@@ -762,7 +754,7 @@ namespace Service
                     }
                     {
 
-                        List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+                        List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
 
 
                         decimal directSold;
@@ -828,14 +820,14 @@ namespace Service
 
                         BalanceSheetDto balanTableRow;
 
-                        List<IncomeStateDto> incoTable = GetDataByMonthIncomeState(monthId, currentQuarter);
+                        List<IncomeStateDto> incoTable = await GetDataByMonthIncomeState(monthId, currentQuarter);
 
                         int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(month.ClassId));
                         if (incoTable.Count > 0)
                         {
                             for (int c = 1; c < groupNo + 1; c++)
                             {
-                                IncomeStateDto incomStaRow = GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
+                                IncomeStateDto incomStaRow = await GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
 
                                 int roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
 
@@ -915,15 +907,15 @@ namespace Service
                                 // attributeDecisionTableAdapter attriDecisionAdpt = new attributeDecisionTableAdapter();
                                 //hotelSimulator.attributeDecisionRow attriDecisionRow;
 
-                                AttributeDecisionDto attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
+                                AttributeDecisionDto attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
                                 incomStaRow.Room1 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
                                 incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
                                 incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
                                 incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
                                 incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                 //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Maintanence and security")[0];
                                 //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
@@ -931,15 +923,15 @@ namespace Service
                                 //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
 
                                 ///Departmental Expenses from Food and Beverage
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Resturants");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Resturants");
                                 incomStaRow.FoodB2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Bars");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Bars");
                                 incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Room Service");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Room Service");
                                 incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering");
                                 incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms");
                                 incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                 //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Entertainment")[0];
                                 //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
@@ -947,17 +939,17 @@ namespace Service
                                 //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
 
                                 ///Expenses from other operation department such as spa, fitness center etc.
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Spa");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Spa");
                                 incomStaRow.Other2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center");
                                 incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Business Center");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Business Center");
                                 incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course");
                                 incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect");
                                 incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment");
                                 incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
 
                                 ///Expenses TOTAL
@@ -972,9 +964,9 @@ namespace Service
                                 //////Revision: according to Gursoy's email Monday, April 27, 2015 3:58 PM, 
                                 //////courtesy and management/sales attention should be listed under administrative and general (which is undisExpens1)
                                 //////incomStaRow._4UndisExpens1 = 2 * roomRevenue / 13;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy(FB)");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy(FB)");
                                 incomStaRow.UndisExpens1 = 2 * roomRevenue / 13 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Management/Sales Attention");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Management/Sales Attention");
                                 incomStaRow.UndisExpens1 = incomStaRow.UndisExpens1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
 
                                 ///Undistributed Expenses from Salses and Marketing
@@ -985,9 +977,9 @@ namespace Service
 
                                 ///Undistributed Expenses Property Operation and Maintenance (5.5 % of total revenue plus the labor and other from mantainance and security, building)
                                 incomStaRow.UndisExpens4 = 11 * roomRevenue / 104;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Maintanence and security");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Maintanence and security");
                                 incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy (Rooms)");
+                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy (Rooms)");
                                 incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
 
 
@@ -1071,7 +1063,7 @@ namespace Service
                             decimal totalRevThisMonth;
                             decimal totalRevPrevMonth;
 
-                            List<IncomeStateDto> income1Table = GetDataByMonthIncomeState(monthId, currentQuarter);
+                            List<IncomeStateDto> income1Table = await GetDataByMonthIncomeState(monthId, currentQuarter);
                             foreach (IncomeStateDto incom1StaRow in income1Table)
                             {
                                 totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
@@ -1116,7 +1108,7 @@ namespace Service
                             {
                                 groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
                                 //////Profit Margin
-                                IncomeStateDto incomeRowCurrent = GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
+                                IncomeStateDto incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
                                 a = incomeRowCurrent.NetIncom;
                                 b = incomeRowCurrent.TotReven;
 
@@ -1256,27 +1248,33 @@ namespace Service
         }
 
 
-        public List<PriceDecisionDto> GetDataByQuarterPriceDecision(int monthId, int quartorNo)
+        public async Task<List<PriceDecisionDto>> GetDataByQuarterPriceDecision(int monthId, int quartorNo)
         {
+            var data = await _context.PriceDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quartorNo).ToListAsync();
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<List<PriceDecisionDto>>();
 
 
-            List<PriceDecisionDto> objlist = _context.PriceDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quartorNo).
-                Select(x => new PriceDecisionDto
-                {
-                    ID = x.ID,
-                    MonthID = x.MonthID,
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    Weekday = x.Weekday,
-                    DistributionChannel = x.DistributionChannel,
-                    Segment = x.Segment,
-                    Price = x.Price,
-                    ActualDemand = x.ActualDemand,
-                    Confirmed = x.Confirmed,
-                }
-                ).ToList();
-            _context.ChangeTracker.Clear();
-            return objlist;
+            //List<PriceDecisionDto> objlist = _context.PriceDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quartorNo).
+            //    Select(x => new PriceDecisionDto
+            //    {
+            //        ID = x.ID,
+            //        MonthID = x.MonthID,
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        Weekday = x.Weekday,
+            //        DistributionChannel = x.DistributionChannel,
+            //        Segment = x.Segment,
+            //        Price = x.Price,
+            //        ActualDemand = x.ActualDemand,
+            //        Confirmed = x.Confirmed,
+            //    }
+            //    ).ToList();
+            //_context.ChangeTracker.Clear();
+            //return objlist;
 
         }
         private decimal ScalarQueryAvgPricePriceDecision(int monthId, int quarterNo, bool weekday, string distributionChannel, string segment)
@@ -1348,170 +1346,193 @@ namespace Service
             return FairMarket;
         }
 
-        private List<IncomeStateDto> GetDataByMonthIncomeState(int monthId, int quarterNo)
+        private async Task<List<IncomeStateDto>> GetDataByMonthIncomeState(int monthId, int quarterNo)
         {
-            List<IncomeStateDto> list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
-                       .Select(x => new IncomeStateDto
-                       {
-                           ID = x.ID,
-                           MonthID = x.MonthID,
-                           QuarterNo = x.QuarterNo,
-                           GroupID = x.GroupID,
-                           Room1 = x.Room1,
-                           FoodB = x.FoodB,
-                           FoodB1 = x.FoodB1,
-                           Food2B = x.FoodB2,
-                           FoodB3 = x.FoodB3,
-                           FoodB4 = x.FoodB4,
-                           FoodB5 = x.FoodB5,
-                           Other = x.Other,
-                           Other1 = x.Other1,
-                           Other2 = x.Other2,
-                           Other3 = x.Other3,
-                           Other4 = x.Other4,
-                           Other5 = x.Other5,
-                           Other6 = x.Other6,
-                           Other7 = x.Other7,
-                           Rent = x.Rent,
-                           TotReven = x.TotReven,
-                           Room = x.Room,
-                           FoodB2 = x.FoodB2,
-                           TotExpen = x.TotExpen,
-                           TotDeptIncom = x.TotDeptIncom,
-                           UndisExpens1 = x.UndisExpens1,
-                           UndisExpens2 = x.UndisExpens2,
-                           UndisExpens3 = x.UndisExpens3,
-                           UndisExpens4 = x.UndisExpens4,
-                           UndisExpens5 = x.UndisExpens5,
-                           UndisExpens6 = x.UndisExpens6,
-                           GrossProfit = x.GrossProfit,
-                           MgtFee = x.MgtFee,
-                           IncomBfCharg = x.IncomBfCharg,
-                           Insurance = x.Insurance,
-                           Interest = x.Interest,
-                           PropDepreciationerty = x.PropDepreciationerty,
-                           TotCharg = x.TotCharg,
-                           NetIncomBfTAX = x.NetIncomBfTAX,
-                           Replace = x.Replace,
-                           AjstNetIncom = x.AjstNetIncom,
-                           IncomTAX = x.IncomTAX,
-                           NetIncom = x.NetIncom
-
-                       }
-                       ).ToList();
-
-            _context.ChangeTracker.Clear();
-            return list;
-
-        }
-        private IncomeStateDto GetDataBySingleRowIncomeState(int monthId, int quarterNo, int groupId)
-        {
-
-            var list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).
-                Select(x => new IncomeStateDto
-                {
-                    ID = x.ID,
-                    MonthID = x.MonthID,
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    Replace = x.Replace,
-                    AjstNetIncom = x.AjstNetIncom,
-                    IncomTAX = x.IncomTAX,
-                    NetIncom = x.NetIncom,
-                    FoodB = x.FoodB,
-                    FoodB1 = x.FoodB1,
-                    FoodB2 = x.FoodB2,
-                    FoodB3 = x.FoodB3,
-                    FoodB4 = x.FoodB4,
-                    FoodB5 = x.FoodB5,
-                    Other = x.Other,
-                    Other1 = x.Other1,
-                    Other2 = x.Other2,
-                    Other3 = x.Other3,
-                    Other4 = x.Other4,
-                    Other5 = x.Other5,
-                    Other6 = x.Other6,
-                    Other7 = x.Other7,
-                    Rent = x.Rent,
-                    TotReven = x.TotReven,
-                    Room = x.Room,
-
-                    TotExpen = x.TotExpen,
-                    TotDeptIncom = x.TotDeptIncom,
-                    UndisExpens1 = x.UndisExpens1,
-                    UndisExpens2 = x.UndisExpens2,
-                    UndisExpens3 = x.UndisExpens3,
-                    UndisExpens4 = x.UndisExpens4,
-                    UndisExpens5 = x.UndisExpens5,
-                    UndisExpens6 = x.UndisExpens6,
-                    GrossProfit = x.GrossProfit,
-                    MgtFee = x.MgtFee,
-                    IncomBfCharg = x.IncomBfCharg,
-                    Insurance = x.Insurance,
-                    Interest = x.Interest,
-                    PropDepreciationerty = x.PropDepreciationerty,
-                    TotCharg = x.TotCharg,
-                    NetIncomBfTAX = x.NetIncomBfTAX,
-
-
-                }).ToList();
-            IncomeStateDto list1 = new IncomeStateDto();
-            if (list.Count > 0)
+            var data = await _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).ToListAsync();
+            if (data == null)
             {
-                list1 = list[0];
+                throw new ValidationException("data not found ");
             }
-            _context.ChangeTracker.Clear();
-            return list1;
+            return data.Adapt<List<IncomeStateDto>>();
+            //List<IncomeStateDto> list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
+            //           .Select(x => new IncomeStateDto
+            //           {
+            //               ID = x.ID,
+            //               MonthID = x.MonthID,
+            //               QuarterNo = x.QuarterNo,
+            //               GroupID = x.GroupID,
+            //               Room1 = x.Room1,
+            //               FoodB = x.FoodB,
+            //               FoodB1 = x.FoodB1,
+            //               Food2B = x.FoodB2,
+            //               FoodB3 = x.FoodB3,
+            //               FoodB4 = x.FoodB4,
+            //               FoodB5 = x.FoodB5,
+            //               Other = x.Other,
+            //               Other1 = x.Other1,
+            //               Other2 = x.Other2,
+            //               Other3 = x.Other3,
+            //               Other4 = x.Other4,
+            //               Other5 = x.Other5,
+            //               Other6 = x.Other6,
+            //               Other7 = x.Other7,
+            //               Rent = x.Rent,
+            //               TotReven = x.TotReven,
+            //               Room = x.Room,
+            //               FoodB2 = x.FoodB2,
+            //               TotExpen = x.TotExpen,
+            //               TotDeptIncom = x.TotDeptIncom,
+            //               UndisExpens1 = x.UndisExpens1,
+            //               UndisExpens2 = x.UndisExpens2,
+            //               UndisExpens3 = x.UndisExpens3,
+            //               UndisExpens4 = x.UndisExpens4,
+            //               UndisExpens5 = x.UndisExpens5,
+            //               UndisExpens6 = x.UndisExpens6,
+            //               GrossProfit = x.GrossProfit,
+            //               MgtFee = x.MgtFee,
+            //               IncomBfCharg = x.IncomBfCharg,
+            //               Insurance = x.Insurance,
+            //               Interest = x.Interest,
+            //               PropDepreciationerty = x.PropDepreciationerty,
+            //               TotCharg = x.TotCharg,
+            //               NetIncomBfTAX = x.NetIncomBfTAX,
+            //               Replace = x.Replace,
+            //               AjstNetIncom = x.AjstNetIncom,
+            //               IncomTAX = x.IncomTAX,
+            //               NetIncom = x.NetIncom
+
+            //           }
+            //           ).ToList();
+
+            //_context.ChangeTracker.Clear();
+            //return list;
+
         }
-
-
-
-        private List<CustomerRawRatingDto> GetDataByQuarterCustomerRowRatting(int monthId, int quarterNo)
+        private async Task<IncomeStateDto> GetDataBySingleRowIncomeState(int monthId, int quarterNo, int groupId)
         {
-            List<CustomerRawRatingDto> list = _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
-                       .Select(x => new CustomerRawRatingDto
-                       {
-                           ID = x.ID,
-                           MonthID = x.MonthID,
-                           QuarterNo = x.QuarterNo,
-                           GroupID = x.GroupID,
-                           Attribute = x.Attribute,
-                           RawRating = x.RawRating,
-                           Segment = x.Segment
-
-
-                       }
-                       ).ToList();
-            _context.ChangeTracker.Clear();
-            return list;
-
-        }
-        private AttributeDecisionDto GetDataBySingleRowAttributeDecision(int monthId, int quarterNo, int groupId, string attribute)
-        {
-
-            var list = _context.AttributeDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute).
-                Select(x => new AttributeDecisionDto
-                {
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    Attribute = x.Attribute,
-                    AccumulatedCapital = x.AccumulatedCapital,
-                    NewCapital = x.NewCapital,
-                    OperationBudget = x.OperationBudget,
-                    LaborBudget = x.LaborBudget,
-                    Confirmed = x.Confirmed,
-                    QuarterForecast = x.QuarterForecast,
-                    MonthID = x.MonthID,
-
-
-                }).ToList();
-            AttributeDecisionDto obj = new AttributeDecisionDto();
-            if (list.Count > 0)
+            var data = await _context.IncomeState.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId);
+            if (data == null)
             {
-                obj = list[0];
+                throw new ValidationException("data not found ");
             }
-            _context.ChangeTracker.Clear();
-            return obj;
+            return data.Adapt<IncomeStateDto>();
+
+            //var list = _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).
+            //    Select(x => new IncomeStateDto
+            //    {
+            //        ID = x.ID,
+            //        MonthID = x.MonthID,
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        Replace = x.Replace,
+            //        AjstNetIncom = x.AjstNetIncom,
+            //        IncomTAX = x.IncomTAX,
+            //        NetIncom = x.NetIncom,
+            //        FoodB = x.FoodB,
+            //        FoodB1 = x.FoodB1,
+            //        FoodB2 = x.FoodB2,
+            //        FoodB3 = x.FoodB3,
+            //        FoodB4 = x.FoodB4,
+            //        FoodB5 = x.FoodB5,
+            //        Other = x.Other,
+            //        Other1 = x.Other1,
+            //        Other2 = x.Other2,
+            //        Other3 = x.Other3,
+            //        Other4 = x.Other4,
+            //        Other5 = x.Other5,
+            //        Other6 = x.Other6,
+            //        Other7 = x.Other7,
+            //        Rent = x.Rent,
+            //        TotReven = x.TotReven,
+            //        Room = x.Room,
+
+            //        TotExpen = x.TotExpen,
+            //        TotDeptIncom = x.TotDeptIncom,
+            //        UndisExpens1 = x.UndisExpens1,
+            //        UndisExpens2 = x.UndisExpens2,
+            //        UndisExpens3 = x.UndisExpens3,
+            //        UndisExpens4 = x.UndisExpens4,
+            //        UndisExpens5 = x.UndisExpens5,
+            //        UndisExpens6 = x.UndisExpens6,
+            //        GrossProfit = x.GrossProfit,
+            //        MgtFee = x.MgtFee,
+            //        IncomBfCharg = x.IncomBfCharg,
+            //        Insurance = x.Insurance,
+            //        Interest = x.Interest,
+            //        PropDepreciationerty = x.PropDepreciationerty,
+            //        TotCharg = x.TotCharg,
+            //        NetIncomBfTAX = x.NetIncomBfTAX,
+
+
+            //    }).ToList();
+            //IncomeStateDto list1 = new IncomeStateDto();
+            //if (list.Count > 0)
+            //{
+            //    list1 = list[0];
+            //}
+            //_context.ChangeTracker.Clear();
+            //return list1;
+        }
+
+
+
+        private async Task<List<CustomerRawRatingDto>> GetDataByQuarterCustomerRowRatting(int monthId, int quarterNo)
+        {
+            var data = await _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).ToListAsync();
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<List<CustomerRawRatingDto>>();
+            //List<CustomerRawRatingDto> list = _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo)
+            //           .Select(x => new CustomerRawRatingDto
+            //           {
+            //               ID = x.ID,
+            //               MonthID = x.MonthID,
+            //               QuarterNo = x.QuarterNo,
+            //               GroupID = x.GroupID,
+            //               Attribute = x.Attribute,
+            //               RawRating = x.RawRating,
+            //               Segment = x.Segment
+
+
+            //           }
+            //           ).ToList();
+            //_context.ChangeTracker.Clear();
+            //return list;
+
+        }
+        private async Task<AttributeDecisionDto> GetDataBySingleRowAttributeDecision(int monthId, int quarterNo, int groupId, string attribute)
+        {
+            var data = await _context.AttributeDecision.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute);
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<AttributeDecisionDto>();
+            //var list = _context.AttributeDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute).
+            //    Select(x => new AttributeDecisionDto
+            //    {
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        Attribute = x.Attribute,
+            //        AccumulatedCapital = x.AccumulatedCapital,
+            //        NewCapital = x.NewCapital,
+            //        OperationBudget = x.OperationBudget,
+            //        LaborBudget = x.LaborBudget,
+            //        Confirmed = x.Confirmed,
+            //        QuarterForecast = x.QuarterForecast,
+            //        MonthID = x.MonthID,
+
+
+            //    }).ToList();
+            //AttributeDecisionDto obj = new AttributeDecisionDto();
+            //if (list.Count > 0)
+            //{
+            //    obj = list[0];
+            //}
+            //_context.ChangeTracker.Clear();
+            //return obj;
         }
 
         private decimal ScalarAttriSegIdealRating(int monthID, int quarterNo, string attribute, string segment)
@@ -1580,25 +1601,31 @@ namespace Service
         }
 
 
-        private List<WeightedAttributeRatingDto> GetDataByQuarterWeightAttributeRating(int monthId, int quarterNo)
+        private async Task<List<WeightedAttributeRatingDto>> GetDataByQuarterWeightAttributeRating(int monthId, int quarterNo)
         {
+            var data = await _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).ToListAsync();
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<List<WeightedAttributeRatingDto>>();
 
-            var list = _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
-                Select(x => new WeightedAttributeRatingDto
-                {
-                    ID = x.ID,
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    MonthID = x.MonthID,
-                    ActualDemand = x.ActualDemand,
-                    CustomerRating = x.CustomerRating,
-                    Segment = x.Segment,
+            //var list = _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
+            //    Select(x => new WeightedAttributeRatingDto
+            //    {
+            //        ID = x.ID,
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        MonthID = x.MonthID,
+            //        ActualDemand = x.ActualDemand,
+            //        CustomerRating = x.CustomerRating,
+            //        Segment = x.Segment,
 
 
 
-                }).ToList();
-            _context.ChangeTracker.Clear();
-            return list;
+            //    }).ToList();
+            //_context.ChangeTracker.Clear();
+            //return list;
         }
         private decimal ScalarQueryRatingBySegmentCustomerRawRatting(int monthID, int quarterNo, int groupID, string segment)
         {
@@ -2298,115 +2325,150 @@ namespace Service
         }
 
 
-        private List<RoomAllocationDto> GetDataByGroupWeekdayRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday)
+        private async Task<List<RoomAllocationDto>> GetDataByGroupWeekdayRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday)
         {
+            var data = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Weekday == weekday).ToListAsync();
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<List<RoomAllocationDto>>();
 
-            var list = _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Weekday == weekday).
-                Select(x => new RoomAllocationDto
-                {
-                    ID = x.ID,
-                    MonthID = x.MonthID,
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    Weekday = x.Weekday,
-                    Segment = x.Segment,
-                    RoomsAllocated = x.RoomsAllocated,
-                    ActualDemand = x.ActualDemand,
-                    RoomsSold = x.RoomsSold,
-                    Confirmed = x.Confirmed,
-                    Revenue = x.Revenue,
-                    QuarterForecast = x.QuarterForecast,
+            //var list = _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Weekday == weekday).
+            //    Select(x => new RoomAllocationDto
+            //    {
+            //        ID = x.ID,
+            //        MonthID = x.MonthID,
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        Weekday = x.Weekday,
+            //        Segment = x.Segment,
+            //        RoomsAllocated = x.RoomsAllocated,
+            //        ActualDemand = x.ActualDemand,
+            //        RoomsSold = x.RoomsSold,
+            //        Confirmed = x.Confirmed,
+            //        Revenue = x.Revenue,
+            //        QuarterForecast = x.QuarterForecast,
 
 
-                }).ToList();
-            _context.ChangeTracker.Clear();
-            return list;
+            //    }).ToList();
+            //_context.ChangeTracker.Clear();
+            //return list;
         }
 
-        private List<SoldRoomByChannelDto> GetDataByMonthSoldRoomByChannel(int monthId, int quarterNo)
+        private async Task<List<SoldRoomByChannelDto>> GetDataByMonthSoldRoomByChannel(int monthId, int quarterNo)
         {
-
-            var list = _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
-                Select(x => new SoldRoomByChannelDto
-                {
-                    ID = x.ID,
-                    MonthID = x.MonthID,
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    Weekday = x.Weekday,
-                    Segment = x.Segment,
-                    Revenue = x.Revenue,
-                    Channel = x.Channel,
-                    Cost = x.Cost,
-                    SoldRoom = x.SoldRoom,
-                }).ToList();
-            _context.ChangeTracker.Clear();
-            return list;
+            var data = await _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).ToListAsync();
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<List<SoldRoomByChannelDto>>();
+            //var list = _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo).
+            //    Select(x => new SoldRoomByChannelDto
+            //    {
+            //        ID = x.ID,
+            //        MonthID = x.MonthID,
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        Weekday = x.Weekday,
+            //        Segment = x.Segment,
+            //        Revenue = x.Revenue,
+            //        Channel = x.Channel,
+            //        Cost = x.Cost,
+            //        SoldRoom = x.SoldRoom,
+            //    }).ToList();
+            //_context.ChangeTracker.Clear();
+            //return list;
         }
         private PriceDecisionDto GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
         {
+            var data = _context.PriceDecision.
+                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId.ToString()
+                && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday);
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<PriceDecisionDto>();
+
+
+
+
             /*SELECT actualDemand, confirmed, distributionChannel, groupID, price, quarterNo, segment, sessionID, weekday FROM priceDecision 
              * WHERE (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (weekday = @weekday) AND (distributionChannel = @distributionChannel) AND (segment = @segment)*/
-            var list = _context.PriceDecision.
-                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId.ToString()
-                && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday).
-                Select(x => new PriceDecisionDto
-                {
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    MonthID = x.MonthID,
-                    ActualDemand = x.ActualDemand,
-                    Confirmed = x.Confirmed,
-                    DistributionChannel = x.DistributionChannel,
-                    Price = x.Price,
-                    Segment = x.Segment,
-                    Weekday = x.Weekday
+            //var list = _context.PriceDecision.
+            //    Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId.ToString()
+            //    && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday).
+            //    Select(x => new PriceDecisionDto
+            //    {
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        MonthID = x.MonthID,
+            //        ActualDemand = x.ActualDemand,
+            //        Confirmed = x.Confirmed,
+            //        DistributionChannel = x.DistributionChannel,
+            //        Price = x.Price,
+            //        Segment = x.Segment,
+            //        Weekday = x.Weekday
 
 
-                }).ToList();
-            PriceDecisionDto prclist = new PriceDecisionDto();
-            if (list.Count > 0)
-            {
-                prclist = list[0];
-            }
+            //    }).ToList();
+            //PriceDecisionDto prclist = new PriceDecisionDto();
+            //if (list.Count > 0)
+            //{
+            //    prclist = list[0];
+            //}
 
-            return prclist;
+            //return prclist;
         }
 
 
 
         private RoomAllocationDto GetDataByEachDecisionRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday, string segment)
         {
+            var data = _context.RoomAllocation.
+                SingleOrDefault(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+                && x.Segment == segment && x.Weekday == weekday);
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<RoomAllocationDto>();
+
+
+
+
             /*SELECT actualDemand, confirmed, groupID, quarterForecast, quarterNo, revenue, roomsAllocated, 
              * roomsSold, segment, sessionID, weekday FROM roomAllocation 
              * WHERE (sessionID = @sessionID) 
              * AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (weekday = @weekday) AND (segment = @segment)*/
 
-            var list = _context.RoomAllocation.
-                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
-                && x.Segment == segment && x.Weekday == weekday).
-                Select(x => new RoomAllocationDto
-                {
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    MonthID = x.MonthID,
-                    ActualDemand = x.ActualDemand,
-                    Confirmed = x.Confirmed,
-                    Segment = x.Segment,
-                    Weekday = x.Weekday,
-                    QuarterForecast = x.QuarterForecast,
-                    Revenue = x.Revenue,
-                    RoomsAllocated = x.RoomsAllocated,
-                    RoomsSold = x.RoomsSold
+            //var list = _context.RoomAllocation.
+            //    Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+            //    && x.Segment == segment && x.Weekday == weekday).
+            //    Select(x => new RoomAllocationDto
+            //    {
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        MonthID = x.MonthID,
+            //        ActualDemand = x.ActualDemand,
+            //        Confirmed = x.Confirmed,
+            //        Segment = x.Segment,
+            //        Weekday = x.Weekday,
+            //        QuarterForecast = x.QuarterForecast,
+            //        Revenue = x.Revenue,
+            //        RoomsAllocated = x.RoomsAllocated,
+            //        RoomsSold = x.RoomsSold
 
 
-                }).ToList();
-            RoomAllocationDto obj = new RoomAllocationDto();
-            if (list.Count > 0)
-            {
-                obj = list[0];
-            }
-            return obj;
+            //    }).ToList();
+            //RoomAllocationDto obj = new RoomAllocationDto();
+            //if (list.Count > 0)
+            //{
+            //    obj = list[0];
+            //}
+            //return obj;
         }
 
 
@@ -2594,38 +2656,46 @@ namespace Service
 
         private BalanceSheetDto GetDataBySingleRowBallanceSheet(int monthId, int quarterNo, int groupId)
         {
-
-            var list = _context.BalanceSheet.
-                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
-                ).
-                Select(x => new BalanceSheetDto
-                {
-                    QuarterNo = x.QuarterNo,
-                    GroupID = x.GroupID,
-                    MonthID = x.MonthID,
-                    Cash = x.Cash,
-                    AcctReceivable = x.AcctReceivable,
-                    Inventories = x.Inventories,
-                    TotCurrentAsset = x.TotCurrentLiab,
-                    NetPrptyEquip = x.NetPrptyEquip,
-                    TotAsset = x.TotAsset,
-                    TotCurrentLiab = x.TotCurrentLiab,
-                    LongDebt = x.LongDebt,
-                    LongDebtPay = x.LongDebtPay,
-                    ShortDebt = x.ShortDebtPay,
-                    ShortDebtPay = x.ShortDebtPay,
-                    TotLiab = x.TotLiab,
-                    RetainedEarn = x.RetainedEarn,
-
-
-                }).ToList();
-            BalanceSheetDto obj = new BalanceSheetDto();
-            if (list.Count > 0)
+            var data = _context.BalanceSheet.
+                SingleOrDefault(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+                );
+            if (data == null)
             {
-                obj = list[0];
+                throw new ValidationException("data not found ");
             }
+            return data.Adapt<BalanceSheetDto>();
 
-            return obj;
+            //var list = _context.BalanceSheet.
+            //    Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
+            //    ).
+            //    Select(x => new BalanceSheetDto
+            //    {
+            //        QuarterNo = x.QuarterNo,
+            //        GroupID = x.GroupID,
+            //        MonthID = x.MonthID,
+            //        Cash = x.Cash,
+            //        AcctReceivable = x.AcctReceivable,
+            //        Inventories = x.Inventories,
+            //        TotCurrentAsset = x.TotCurrentLiab,
+            //        NetPrptyEquip = x.NetPrptyEquip,
+            //        TotAsset = x.TotAsset,
+            //        TotCurrentLiab = x.TotCurrentLiab,
+            //        LongDebt = x.LongDebt,
+            //        LongDebtPay = x.LongDebtPay,
+            //        ShortDebt = x.ShortDebtPay,
+            //        ShortDebtPay = x.ShortDebtPay,
+            //        TotLiab = x.TotLiab,
+            //        RetainedEarn = x.RetainedEarn,
+
+
+            //    }).ToList();
+            //BalanceSheetDto obj = new BalanceSheetDto();
+            //if (list.Count > 0)
+            //{
+            //    obj = list[0];
+            //}
+
+            //return obj;
         }
 
         private decimal ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
@@ -2784,48 +2854,64 @@ namespace Service
         }
         private RankingsDto GetDataBySingleRowRanking(int monthId, string indicator, int teamno)
         {
+
+            var data = _context.Rankings.SingleOrDefault(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno);
+            if (data == null)
+            {
+                throw new ValidationException("data not found ");
+            }
+            return data.Adapt<RankingsDto>();
+
+
             /*SELECT indicator, institution, month, performance, session, teamName, teamNo, time 
              * FROM rankings WHERE (session = @sessionID) AND (indicator = @indicator) AND (teamNo = @teamNo)*/
 
-            var list = _context.Rankings.Where(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno)
-                .Select(x => new RankingsDto
-                {
-                    ID = x.ID,
-                    Indicator = x.Indicator,
-                    Institution = x.Institution,
-                    Month = x.Month,
-                    MonthID = x.MonthID,
-                    Performance = x.Performance,
-                    TeamName = x.TeamName,
-                    TeamNo = x.TeamNo,
-                    Time = x.Time
-                }).ToList();
-            RankingsDto rnk = new RankingsDto();
-            if (list.Count > 0)
-            {
-                rnk = list[0];
-            }
-            _context.ChangeTracker.Clear();
-            return rnk;
+            //var list = _context.Rankings.Where(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno)
+            //    .Select(x => new RankingsDto
+            //    {
+            //        ID = x.ID,
+            //        Indicator = x.Indicator,
+            //        Institution = x.Institution,
+            //        Month = x.Month,
+            //        MonthID = x.MonthID,
+            //        Performance = x.Performance,
+            //        TeamName = x.TeamName,
+            //        TeamNo = x.TeamNo,
+            //        Time = x.Time
+            //    }).ToList();
+            //RankingsDto rnk = new RankingsDto();
+            //if (list.Count > 0)
+            //{
+            //    rnk = list[0];
+            //}
+            //_context.ChangeTracker.Clear();
+            //return rnk;
         }
 
 
-        public List<MonthDto> GetMonthListByClassId(int classID)
+        public async Task<List<MonthDto>> GetMonthListByClassId(int classID)
         {
-            IQueryable<Month> query = _context.Months.Where(x => x.IsComplete == false);
-            if (classID > 0)
+            var data = await _context.Months.Where(x => x.IsComplete == false).ToListAsync();
+            if (data == null)
             {
-                query = query.Where(x => x.ClassId == classID);
+                throw new ValidationException("data not found ");
             }
-            var result = query.Select(x => new MonthDto
-            {
+            return data.Adapt<List<MonthDto>>();
 
-                ClassId = x.ClassId,
-                MonthId = x.MonthId,
+            // IQueryable<Month> query = _context.Months.Where(x => x.IsComplete == false);
+            // if (classID > 0)
+            // {
+            //     query = query.Where(x => x.ClassId == classID);
+            // }
+            // var result = query.Select(x => new MonthDto
+            // {
 
-            }).ToList();
-            _context.ChangeTracker.Clear();
-            return result;
+            //     ClassId = x.ClassId,
+            //     MonthId = x.MonthId,
+
+            // }).ToList();
+            //// _context.ChangeTracker.Clear();
+            // return result;
 
         }
 
