@@ -1,7 +1,9 @@
 ﻿using Common.Dto;
 using Database;
 using Database.Migrations;
+using Mapster;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore.Storage;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +20,7 @@ namespace Service
         Task<IEnumerable<MonthDto>> AddGroupAsync(int monthId, MonthDto[] monthGroup);
         IEnumerable<MonthDto> monthList();
         Task<ResponseData> Create(MonthDto month);
-        IEnumerable<MonthDto> List(MonthDto month);
+        IList<MonthDto> List(MonthDto month);
         Task<MonthDto> GetById(int sessionId);
         Task<MonthDto> Update(int id, MonthDto account);
         Task DeleteId(int sessionId);
@@ -44,68 +46,87 @@ namespace Service
 
         public async Task<ResponseData> Create(MonthDto month)
         {
-            FunMonth objFunMonth = new FunMonth();
-            ResponseData resObj = new ResponseData();
-            int marketPercentage = Convert.ToInt16(month.TotalMarket);
-            int classID = month.ClassId;
-            ClassSessionDto classDetail = objFunMonth.GetClassDetailsById(classID, _context);
-            int currentQuarter = classDetail.CurrentQuater;
-            int numberOfHotels = classDetail.HotelsCount;
-            int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
-            if (currentQuarter == 0)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, true);
-                resObj.Message = "A new month has been created.";
-            }
-            int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, false);
-            // Change If Condition As Requirment 
-            if (monthID > 0)
-            {
-                // if (currentQuarter == 0)
+                ResponseData resObj = new ResponseData();
+                string strjson = "";
+                try
                 {
 
-                    await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, false);
-                    await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, true);
-                    objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
-                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, true);
-                    objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, false);
-                    objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
-                    //////////////////////////////////////////////////
-                    /////Create Weighted Attribute Table for New Quarter
-                    /////////////////////////////////////////////////
-                    objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
-                    ////////////////////////////////////////////////
-                    /////Insert income Statement template for new month
-                    ///////////////////////////////////////////////
-                    ///
+                    FunMonth objFunMonth = new FunMonth();
 
-                    objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
+                    int marketPercentage = Convert.ToInt16(month.TotalMarket);
+                    int classID = month.ClassId;
+                    ClassSessionDto classDetail = objFunMonth.GetClassDetailsById(classID, _context);
+                    int currentQuarter = classDetail.CurrentQuater;
+                    int numberOfHotels = classDetail.HotelsCount;
+                    int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
+                    if (currentQuarter == 0)
+                    {
+                        objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, true);
+                        resObj.Message = "A new month has been created.";
+                    }
+                    int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, false);
+                    // Change If Condition As Requirment 
+                    if (monthID > 0)
+                    {
+                        // if (currentQuarter == 0)
+                        {
 
-                    /////////////////////////////////
-                    //////Insert Goal template for new month
-                    ////////////////////////////////
-                    ///
-                    objFunMonth.CreateGoal(_context, monthID, currentQuarter, numberOfHotels);
-                    ///////////////////////////////////////////////////////////////////
-                    ///////////Insert sold room by channel table template for new month
-                    ///////////////////////////////////////////////////////////////////
-                    ///
-                    objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
+                            await objFunMonth.CreateMarketingDecision(_context, monthID, currentQuarter, numberOfHotels);
+                            await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, false);
+                            await objFunMonth.CreatePriceDecision(_context, monthID, currentQuarter, numberOfHotels, true);
+                            await objFunMonth.CreateAttributeDecision(_context, monthID, currentQuarter, numberOfHotels);
+                            await objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, true);
+                            await objFunMonth.CreateRoomAllocation(_context, monthID, currentQuarter, numberOfHotels, false);
+                            await objFunMonth.CreateCustomerRawRating(_context, monthID, currentQuarter, numberOfHotels);
+                            //////////////////////////////////////////////////
+                            /////Create Weighted Attribute Table for New Quarter
+                            /////////////////////////////////////////////////
+                            await objFunMonth.CreateWeightedAttributeRating(_context, monthID, currentQuarter, numberOfHotels);
+                            ////////////////////////////////////////////////
+                            /////Insert income Statement template for new month
+                            ///////////////////////////////////////////////
+                            ///
 
-                    objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
+                            await objFunMonth.CreateIncomeState(_context, monthID, currentQuarter, numberOfHotels);
 
-                    objFunMonth.UpdateClassQuarter(_context, classID, currentQuarter);
+                            /////////////////////////////////
+                            //////Insert Goal template for new month
+                            ////////////////////////////////
+                            ///
+                            await objFunMonth.CreateGoal(_context, monthID, currentQuarter, numberOfHotels);
+                            ///////////////////////////////////////////////////////////////////
+                            ///////////Insert sold room by channel table template for new month
+                            ///////////////////////////////////////////////////////////////////
+                            ///
+                            await objFunMonth.CreateSoldRoomByChannel(_context, monthID, currentQuarter, numberOfHotels);
+
+                            await objFunMonth.CreateBalanceSheet(_context, monthID, currentQuarter, numberOfHotels);
+
+                            await objFunMonth.UpdateClassQuarter(_context, classID, currentQuarter);
+                        }
+
+
+                    }
+                    await transaction.CommitAsync();
+                    resObj.Message = "Month Create";
+                    strjson = "{ monthID:" + monthID + "}";
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    resObj.Message = ex.ToString();
                 }
 
 
+                var jobj = JsonConvert.DeserializeObject<MonthDto>(strjson)!;
+
+                resObj.StatusCode = 200;
+                resObj.Data = jobj;
+                return resObj;
             }
-            string strjson = "{ monthID:" + monthID + "}";
-            var jobj = JsonConvert.DeserializeObject<MonthDto>(strjson)!;
-            resObj.Message = "Month Create";
-            resObj.StatusCode = 200;
-            resObj.Data = jobj;
-            return resObj;
+
 
         }
 
@@ -121,89 +142,121 @@ namespace Service
 
         public async Task<ClassSessionDto> GetClassInfoById(int classId)
         {
-            IQueryable<ClassSession> query = _context.ClassSessions.Where(x => x.ClassId == classId);
-            var result = query.Select(x => new ClassSessionDto
-            {
-                ClassId = x.ClassId,
-                Title = x.Title,
-                Memo = x.Memo,
-                StartDate = x.StartDate,
-                EndDate = x.EndDate,
-                HotelsCount = x.HotelsCount,
-                RoomInEachHotel = x.RoomInEachHotel,
-                CurrentQuater = x.CurrentQuater,
-                CreatedOn = x.CreatedOn,
-                Code = x.Code,
-                CreatedBy = x.CreatedBy,
-                Status = x.Status.ToString(),
 
-
-            }).ToList();
-            ClassSessionDto obj = new ClassSessionDto();
-            if (result.Count > 0)
+            var data = _context.ClassSessions.SingleOrDefault(x => x.ClassId == classId);
+            if (data == null)
             {
-                obj.ClassId = classId;
-                obj.Title = result[0].Title;
-                obj.Memo = result[0].Memo;
-                obj.StartDate = result[0].StartDate;
-                obj.EndDate = result[0].EndDate;
-                obj.HotelsCount = result[0].HotelsCount;
-                obj.RoomInEachHotel = result[0].RoomInEachHotel;
-                obj.CurrentQuater = result[0].CurrentQuater;
-                obj.CreatedOn = result[0].CreatedOn;
-                obj.Code = result[0].Code;
-                obj.CreatedBy = result[0].CreatedBy;
-                obj.Status = result[0].Status.ToString();
+                return new ClassSessionDto();
             }
-            return obj;
+            // throw new ValidationException("data not found ");
+            return data.Adapt<ClassSessionDto>();
+            //IQueryable<ClassSession> query = _context.ClassSessions.Where(x => x.ClassId == classId);
+            //var result = query.Select(x => new ClassSessionDto
+            //{
+            //    ClassId = x.ClassId,
+            //    Title = x.Title,
+            //    Memo = x.Memo,
+            //    StartDate = x.StartDate,
+            //    EndDate = x.EndDate,
+            //    HotelsCount = x.HotelsCount,
+            //    RoomInEachHotel = x.RoomInEachHotel,
+            //    CurrentQuater = x.CurrentQuater,
+            //    CreatedOn = x.CreatedOn,
+            //    Code = x.Code,
+            //    CreatedBy = x.CreatedBy,
+            //    Status = x.Status.ToString(),
+
+
+            //}).ToList();
+            //ClassSessionDto obj = new ClassSessionDto();
+            //if (result.Count > 0)
+            //{
+            //    obj.ClassId = classId;
+            //    obj.Title = result[0].Title;
+            //    obj.Memo = result[0].Memo;
+            //    obj.StartDate = result[0].StartDate;
+            //    obj.EndDate = result[0].EndDate;
+            //    obj.HotelsCount = result[0].HotelsCount;
+            //    obj.RoomInEachHotel = result[0].RoomInEachHotel;
+            //    obj.CurrentQuater = result[0].CurrentQuater;
+            //    obj.CreatedOn = result[0].CreatedOn;
+            //    obj.Code = result[0].Code;
+            //    obj.CreatedBy = result[0].CreatedBy;
+            //    obj.Status = result[0].Status.ToString();
+            //}
+            //return obj;
 
         }
 
         public async Task<MonthDto> GetMonthInfoById(int classId, int quarterNo)
         {
-            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId && x.Sequence == quarterNo);
-            var result = query.Select(x => new MonthDto
+            var data = _context.Months.SingleOrDefault(x => x.ClassId == classId && x.Sequence == quarterNo);
+            if (data == null)
             {
-                MonthId = x.MonthId,
-                ClassId = x.ClassId,
-                Sequence = x.Sequence,
-                TotalMarket = x.TotalMarket,
-                ConfigId = x.ConfigId,
-                IsComplete = x.IsComplete
-            }).ToList();
-            MonthDto obj = new MonthDto();
-            if (result.Count > 0)
-            {
-                obj.MonthId = result[0].MonthId;
-                obj.ClassId = result[0].ClassId;
-                obj.Sequence = result[0].Sequence;
-                obj.TotalMarket = result[0].TotalMarket;
-                obj.ConfigId = result[0].ConfigId;
-                obj.IsComplete = result[0].IsComplete;
+                return new MonthDto();
             }
-            return obj;
+            //    throw new ValidationException("data not found ");
+            return data.Adapt<MonthDto>();
+            //IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId && x.Sequence == quarterNo);
+            //var result = query.Select(x => new MonthDto
+            //{
+            //    MonthId = x.MonthId,
+            //    ClassId = x.ClassId,
+            //    Sequence = x.Sequence,
+            //    TotalMarket = x.TotalMarket,
+            //    ConfigId = x.ConfigId,
+            //    IsComplete = x.IsComplete
+            //}).ToList();
+            //MonthDto obj = new MonthDto();
+            //if (result.Count > 0)
+            //{
+            //    obj.MonthId = result[0].MonthId;
+            //    obj.ClassId = result[0].ClassId;
+            //    obj.Sequence = result[0].Sequence;
+            //    obj.TotalMarket = result[0].TotalMarket;
+            //    obj.ConfigId = result[0].ConfigId;
+            //    obj.IsComplete = result[0].IsComplete;
+            //}
+            //return obj;
+
         }
 
-        public IEnumerable<MonthDto> List(MonthDto month)
+        public IList<MonthDto> List(MonthDto month)
         {
-            IQueryable<Month> query = _context.Months;
-            if (month.ClassId > 0)
-            {
-                query = query.Where(x => x.ClassId == month.ClassId);
-            }
-            var result = query.Select(x => new MonthDto
-            {
-                MonthId = x.MonthId,
-                ClassId = x.ClassId,
-                Sequence = x.Sequence,
-                TotalMarket = x.TotalMarket,
-                ConfigId = x.ConfigId,
-                IsComplete = x.IsComplete,
-                Status = x.IsComplete == true ? "Completed" : "Not Completed"
+            //IQueryable<Month> query = _context.Months;
+            //if (month.ClassId > 0)
+            //{
+            //    query = query.Where(x => x.ClassId == month.ClassId);
+            //}
+            //var result = query.Select(x => new MonthDto
+            //{
+            //    MonthId = x.MonthId,
+            //    ClassId = x.ClassId,
+            //    Sequence = x.Sequence,
+            //    TotalMarket = x.TotalMarket,
+            //    ConfigId = x.ConfigId,
+            //    IsComplete = x.IsComplete,
+            //    Status = x.IsComplete == true ? "Completed" : "Not Completed"
 
-            }).OrderBy(x => x.Sequence);
+            //}).OrderBy(x => x.Sequence);
+            //return result.AsEnumerable();
 
-            return result.AsEnumerable();
+            var list = (from m in _context.Months
+                        where (m.ClassId == month.ClassId)
+                        select new
+                        {
+                            MonthId = m.MonthId,
+                            ClassId = m.ClassId,
+                            Sequence = m.Sequence,
+                            TotalMarket = m.TotalMarket,
+                            ConfigId = m.ConfigId,
+                            IsComplete = m.IsComplete,
+                            Status = m.IsComplete == true ? "Completed" : "Not Completed"
+                        }
+                       ).ToList();
+            return list.Adapt<IList<MonthDto>>();
+
+
         }
 
         public IEnumerable<MonthDto> monthList()

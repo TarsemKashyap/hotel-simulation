@@ -15,6 +15,7 @@ using MySqlX.XDevAPI;
 using Org.BouncyCastle.Asn1.Cms;
 using Mysqlx.Expr;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SendGrid.Helpers.Mail;
 //using EFCore.BulkExtensions;
 
 namespace Service
@@ -23,21 +24,30 @@ namespace Service
     {
         public ClassSessionDto GetClassDetailsById(int classID, HotelDbContext context)
         {
-            IQueryable<ClassSession> query = context.ClassSessions;
-            if (classID > 0)
-            {
-                query = query.Where(x => x.ClassId == classID);
-            }
-            var result = query.Select(x => new ClassSessionDto
-            {
 
-                ClassId = x.ClassId,
-                CurrentQuater = x.CurrentQuater,
-                HotelsCount = x.HotelsCount
-            }).ToList();
-            ClassSessionDto obj = new ClassSessionDto();
-            obj = result[0];
-            return obj;
+            var data = context.ClassSessions.SingleOrDefault(x => x.ClassId == classID);
+            if (data == null)
+            // throw new ValidationException("data not found ");
+            {
+                return new ClassSessionDto();
+            }
+            return data.Adapt<ClassSessionDto>();
+
+            //IQueryable<ClassSession> query = context.ClassSessions;
+            //if (classID > 0)
+            //{
+            //    query = query.Where(x => x.ClassId == classID);
+            //}
+            //var result = query.Select(x => new ClassSessionDto
+            //{
+
+            //    ClassId = x.ClassId,
+            //    CurrentQuater = x.CurrentQuater,
+            //    HotelsCount = x.HotelsCount
+            //}).ToList();
+            //ClassSessionDto obj = new ClassSessionDto();
+            //obj = result[0];
+            //return obj;
 
         }
         public int CreateMonth(HotelDbContext context, int classID, int currentQuarter, int totalMarket, bool isCompleted)
@@ -174,8 +184,8 @@ namespace Service
 
             try
             {
-                List<SegmentDto> lstSegment = GetSegment(context);
-                List<MarketingTechniquesDto> lstmarketingTechniques = GetMarketingTechniques(context);
+                List<SegmentDto> lstSegment = await GetSegment(context);
+                List<MarketingTechniquesDto> lstmarketingTechniques = await GetMarketingTechniques(context);
                 for (int i = 1; i <= noOfHotels; i++)
                 {
                     //index = i;
@@ -243,9 +253,9 @@ namespace Service
             // Not underStand for Old Project Run Two Time Insert 
 
 
-            List<SegmentDto> lstSegment = GetSegment(context);
+            List<SegmentDto> lstSegment = await GetSegment(context);
 
-            List<DistributionChannelsDto> lstChannel = GetDistributionChannels(context);
+            List<DistributionChannelsDto> lstChannel = await GetDistributionChannels(context);
 
             for (int i = 1; i <= noOfHotels; i++)
             {
@@ -419,16 +429,16 @@ namespace Service
             return 1;
         }
         */
-        public int CreateAttributeDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateAttributeDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
-            List<AttributeDto> lstAttribute = GetAttribute(context);
+            List<AttributeDto> lstAttribute = await GetAttribute(context);
             for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var item in lstAttribute)
                 {
                     int groupID = i;
-                    var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
+                   // var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
                     decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
                     AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
                     var obj1 = new AttributeDecision()
@@ -557,13 +567,13 @@ namespace Service
             return 1;
         }
         */
-        public int CreateRoomAllocation(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels, bool weekday)
+        public async Task<int> CreateRoomAllocation(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels, bool weekday)
         {
             // Pending For RoomAllocation Value 
 
             //int index = 1;
             //int groupID = index;
-            List<SegmentDto> lstSegment = GetSegment(context);
+            List<SegmentDto> lstSegment = await GetSegment(context);
             for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var item in lstSegment)
@@ -593,12 +603,12 @@ namespace Service
             return 1;
         }
 
-        public int CreateCustomerRawRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateCustomerRawRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
 
-            List<SegmentDto> lstSegment = GetSegment(context);
-            List<AttributeDto> lstAttribute = GetAttribute(context);
+            List<SegmentDto> lstSegment = await GetSegment(context);
+            List<AttributeDto> lstAttribute = await GetAttribute(context);
             for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var attributeRow in lstAttribute)
@@ -620,10 +630,10 @@ namespace Service
             return 1;
         }
 
-        public int CreateWeightedAttributeRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateWeightedAttributeRating(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
-            List<SegmentDto> lstSegment = GetSegment(context);
+            List<SegmentDto> lstSegment = await GetSegment(context);
             // List<AttributeDto> lstAttribute = GetAttribute(context);
 
             for (int i = 1; i <= noOfHotels; i++)
@@ -639,7 +649,7 @@ namespace Service
             return 1;
         }
 
-        public int CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
 
@@ -691,14 +701,14 @@ namespace Service
                     NetIncom = 1000000
                 };
                 context.IncomeState.Add(obj1);
-                int status = context.SaveChanges();
+                int status = await context.SaveChangesAsync();
 
 
             }
             return 1;
         }
 
-        public int CreateGoal(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateGoal(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
 
@@ -733,14 +743,14 @@ namespace Service
                     ProfitMarginY = 0
                 };
                 context.Goal.Add(obj1);
-                int status = context.SaveChanges();
+                int status = await context.SaveChangesAsync();
 
 
             }
             return 1;
         }
 
-        public int CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
             string segmentName = null;
@@ -799,7 +809,7 @@ namespace Service
 
                             };
                             context.SoldRoomByChannel.Add(obj1);
-                            int status = context.SaveChanges();
+                            int status = await context.SaveChangesAsync();
 
                         }
                     }
@@ -810,7 +820,7 @@ namespace Service
             return 1;
         }
 
-        public int CreateBalanceSheet(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        public async Task<int> CreateBalanceSheet(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
 
@@ -861,81 +871,113 @@ namespace Service
                 };
                 context.BalanceSheet.Add(obj1);
                 context.BalanceSheet.Add(obj2);
-                int status = context.SaveChanges();
+                int status = await context.SaveChangesAsync();
             }
             return 1;
         }
 
-        public int UpdateClassQuarter(HotelDbContext context, int classID, int currentQuarter)
+        public async Task<int> UpdateClassQuarter(HotelDbContext context, int classID, int currentQuarter)
         {
             ClassSession clsSess = context.ClassSessions.Where(x => x.ClassId == classID).First();
             clsSess.CurrentQuater = currentQuarter + 1;
             clsSess.Status = ClassStatus.I;
             context.ClassSessions.Add(clsSess);
             context.Entry(clsSess).State = EntityState.Modified;
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return 1;
         }
-        public List<AttributeDto> GetAttribute(HotelDbContext context)
+        public async Task<List<AttributeDto>> GetAttribute(HotelDbContext context)
         {
-            IQueryable<Attribute> query = context.Attribute;
 
-            var result = query.Select(x => new AttributeDto
-            {
+            var data = await context.Attribute.ToListAsync();
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<List<AttributeDto>>();
+            //IQueryable<Attribute> query = context.Attribute;
 
-                ID = x.ID,
-                AttributeName = x.AttributeName
+            //var result = query.Select(x => new AttributeDto
+            //{
 
-            }).ToList();
+            //    ID = x.ID,
+            //    AttributeName = x.AttributeName
 
-            return result;
+            //}).ToList();
+
+            //return result;
 
         }
-        public List<SegmentDto> GetSegment(HotelDbContext context)
+        public async Task<List<SegmentDto>> GetSegment(HotelDbContext context)
         {
-            IQueryable<Segment> query = context.Segment;
-            ;
+            //var data = context.Segment;
+            //if (data == null)
+            //    throw new ValidationException("data not found ");
+            //context.ChangeTracker.Clear();
+            //return data.Adapt<List<SegmentDto>>();
 
-            var result = query.Select(x => new SegmentDto
-            {
 
-                ID = x.ID,
-                SegmentName = x.SegmentName
+            var data = await context.Segment.ToListAsync();
+            if (data == null)
+                throw new ValidationException("data not found ");
+            // context.ChangeTracker.Clear();
+            return data.Adapt<List<SegmentDto>>();
 
-            }).ToList();
 
-            return result;
+            //IQueryable<Segment> query = context.Segment;
+            //;
+
+            //var result = query.Select(x => new SegmentDto
+            //{
+
+            //    ID = x.ID,
+            //    SegmentName = x.SegmentName
+
+            //}).ToList();
+
+            //return result;
 
         }
-        public List<MarketingTechniquesDto> GetMarketingTechniques(HotelDbContext context)
+        public async Task<List<MarketingTechniquesDto>> GetMarketingTechniques(HotelDbContext context)
         {
-            IQueryable<MarketingTechniques> query = context.MarketingTechniques;
+            var data = await context.MarketingTechniques.ToListAsync();
+            if (data == null)
+                throw new ValidationException("data not found ");
+            //context.ChangeTracker.Clear();
+            return data.Adapt<List<MarketingTechniquesDto>>();
 
-            var result = query.Select(x => new MarketingTechniquesDto
-            {
 
-                ID = x.ID,
-                Techniques = x.Techniques
+            //IQueryable<MarketingTechniques> query = context.MarketingTechniques;
 
-            }).ToList();
+            //var result = query.Select(x => new MarketingTechniquesDto
+            //{
 
-            return result;
+            //    ID = x.ID,
+            //    Techniques = x.Techniques
+
+            //}).ToList();
+
+            //return result;
 
         }
-        public List<DistributionChannelsDto> GetDistributionChannels(HotelDbContext context)
+        public async Task<List<DistributionChannelsDto>> GetDistributionChannels(HotelDbContext context)
         {
-            IQueryable<DistributionChannels> query = context.DistributionChannels;
 
-            var result = query.Select(x => new DistributionChannelsDto
-            {
+            var data = await context.DistributionChannels.ToListAsync();
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<List<DistributionChannelsDto>>();
 
-                ID = x.ID,
-                Channel = x.Channel
+            //IQueryable<DistributionChannels> query = context.DistributionChannels;
 
-            }).ToList();
+            //var result = query.Select(x => new DistributionChannelsDto
+            //{
 
-            return result;
+            //    ID = x.ID,
+            //    Channel = x.Channel
+
+            //}).ToList();
+
+            //return result;
 
         }
         public decimal ScalarQueryInitialCapitalInvestAttributeConfig(HotelDbContext context, int monthID, int currentQuarter, string AttributeName)
@@ -954,6 +996,8 @@ namespace Service
                         }
 
                      ).ToList();
+
+          
             decimal sindleRow = 0;
             if (data != null)
             {
@@ -965,69 +1009,81 @@ namespace Service
         }
         public MarketingDecisionDto GetDataBySingleRowMarketingDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string marketingTechniques, string segment)
         {
-            var mkt = (from md in context.MarketingDecision
-                       where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
-                       && md.MarketingTechniques == marketingTechniques && md.Segment == segment
-                       select new
-                       {
-                           ActualDemand = md.ActualDemand,
-                           Confirmed = md.Confirmed,
-                           GroupID = md.GroupID,
-                           LaborSpending = md.LaborSpending,
-                           MarketingTechniques = md.MarketingTechniques,
-                           QuarterNo = md.QuarterNo,
-                           Segment = md.Segment,
-                           MonthID = md.MonthID,
-                           Spending = md.Spending
-                       }).ToList();
-            MarketingDecisionDto obj = new MarketingDecisionDto();
-            if (obj != null)
-            {
-                obj.ActualDemand = mkt[0].ActualDemand;
-                obj.Confirmed = mkt[0].Confirmed;
-                obj.GroupID = mkt[0].GroupID;
-                obj.LaborSpending = mkt[0].LaborSpending;
-                obj.MarketingTechniques = mkt[0].MarketingTechniques;
-                obj.QuarterNo = mkt[0].QuarterNo;
-                obj.Segment = mkt[0].Segment;
-                obj.MonthID = mkt[0].MonthID;
-                obj.Spending = mkt[0].Spending;
-            }
-            return obj;
+            var data = context.MarketingDecision.SingleOrDefault(x => (x.GroupID == groupID && x.MonthID == monthID && x.QuarterNo == currentQuarter
+                       && x.MarketingTechniques == marketingTechniques && x.Segment == segment));
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<MarketingDecisionDto>();
+            //var mkt = (from md in context.MarketingDecision
+            //           where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
+            //           && md.MarketingTechniques == marketingTechniques && md.Segment == segment
+            //           select new
+            //           {
+            //               ActualDemand = md.ActualDemand,
+            //               Confirmed = md.Confirmed,
+            //               GroupID = md.GroupID,
+            //               LaborSpending = md.LaborSpending,
+            //               MarketingTechniques = md.MarketingTechniques,
+            //               QuarterNo = md.QuarterNo,
+            //               Segment = md.Segment,
+            //               MonthID = md.MonthID,
+            //               Spending = md.Spending
+            //           }).ToList();
+            //MarketingDecisionDto obj = new MarketingDecisionDto();
+            //if (obj != null)
+            //{
+            //    obj.ActualDemand = mkt[0].ActualDemand;
+            //    obj.Confirmed = mkt[0].Confirmed;
+            //    obj.GroupID = mkt[0].GroupID;
+            //    obj.LaborSpending = mkt[0].LaborSpending;
+            //    obj.MarketingTechniques = mkt[0].MarketingTechniques;
+            //    obj.QuarterNo = mkt[0].QuarterNo;
+            //    obj.Segment = mkt[0].Segment;
+            //    obj.MonthID = mkt[0].MonthID;
+            //    obj.Spending = mkt[0].Spending;
+            //}
+            //return obj;
         }
         public AttributeDecisionDto GetDataBySingleRowAttributeDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string attributeName)
         {
-            var mkt = (from md in context.AttributeDecision
-                       where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
-                       && md.Attribute == attributeName.Trim()
-                       select new
-                       {
-                           AccumulatedCapital = md.AccumulatedCapital,
-                           Attribute = md.Attribute,
-                           Confirmed = md.Confirmed,
-                           GroupID = md.GroupID,
-                           LaborBudget = md.LaborBudget,
-                           NewCapital = md.NewCapital,
-                           OperationBudget = md.OperationBudget,
-                           QuarterForecast = md.QuarterForecast,
-                           QuarterNo = md.QuarterNo,
-                           MonthID = md.MonthID
-                       }).ToList();
-            AttributeDecisionDto obj = new AttributeDecisionDto();
-            if (mkt.Count > 0)
-            {
 
-                obj.AccumulatedCapital = mkt[0].AccumulatedCapital;
-                obj.Attribute = mkt[0].Attribute;
-                obj.GroupID = mkt[0].GroupID;
-                obj.LaborBudget = mkt[0].LaborBudget;
-                obj.NewCapital = mkt[0].NewCapital;
-                obj.QuarterNo = mkt[0].QuarterNo;
-                obj.OperationBudget = mkt[0].OperationBudget;
-                obj.MonthID = mkt[0].MonthID;
-                obj.QuarterForecast = mkt[0].QuarterForecast;
-            }
-            return obj;
+            var data = context.AttributeDecision.SingleOrDefault(x => (x.GroupID == groupID && x.MonthID == monthID && x.QuarterNo == currentQuarter
+                     && x.Attribute == attributeName.Trim()));
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<AttributeDecisionDto>();
+
+            //var mkt = (from md in context.AttributeDecision
+            //           where md.GroupID == groupID && md.MonthID == monthID && md.QuarterNo == currentQuarter
+            //           && md.Attribute == attributeName.Trim()
+            //           select new
+            //           {
+            //               AccumulatedCapital = md.AccumulatedCapital,
+            //               Attribute = md.Attribute,
+            //               Confirmed = md.Confirmed,
+            //               GroupID = md.GroupID,
+            //               LaborBudget = md.LaborBudget,
+            //               NewCapital = md.NewCapital,
+            //               OperationBudget = md.OperationBudget,
+            //               QuarterForecast = md.QuarterForecast,
+            //               QuarterNo = md.QuarterNo,
+            //               MonthID = md.MonthID
+            //           }).ToList();
+            //AttributeDecisionDto obj = new AttributeDecisionDto();
+            //if (mkt.Count > 0)
+            //{
+
+            //    obj.AccumulatedCapital = mkt[0].AccumulatedCapital;
+            //    obj.Attribute = mkt[0].Attribute;
+            //    obj.GroupID = mkt[0].GroupID;
+            //    obj.LaborBudget = mkt[0].LaborBudget;
+            //    obj.NewCapital = mkt[0].NewCapital;
+            //    obj.QuarterNo = mkt[0].QuarterNo;
+            //    obj.OperationBudget = mkt[0].OperationBudget;
+            //    obj.MonthID = mkt[0].MonthID;
+            //    obj.QuarterForecast = mkt[0].QuarterForecast;
+            //}
+            //return obj;
         }
         public decimal ScalarDepreciRateMonthlyAttributeConfig(HotelDbContext context, int monthID, int currentQuarter, string AttributeName)
         {
@@ -1045,75 +1101,114 @@ namespace Service
         }
         public MarketDecisionPriceList GetMarketDecisionPriceList(string marketingTech, string segment)
         {
+
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.MarketDecisionPriceList().Where(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim()).ToList();
+            var data = objPC.MarketDecisionPriceList().SingleOrDefault(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim());
 
-            MarketDecisionPriceList obj = new MarketDecisionPriceList();
-            obj.ActualDemand = plist[0].ActualDemand;
-            obj.LaborSpending = plist[0].LaborSpending;
-            obj.Spending = plist[0].Spending;
+            // var data = context.ClassSessions.SingleOrDefault(x => x.ClassId == classID);
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<MarketDecisionPriceList>();
+
+            //PriceListCreated objPC = new PriceListCreated();
+            //var plist = objPC.MarketDecisionPriceList().Where(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim()).ToList();
+
+            //MarketDecisionPriceList obj = new MarketDecisionPriceList();
+            //obj.ActualDemand = plist[0].ActualDemand;
+            //obj.LaborSpending = plist[0].LaborSpending;
+            //obj.Spending = plist[0].Spending;
 
 
 
-            return obj;
+            //return obj;
         }
 
         public PriceDecisionPriceList GetPriceDecisionPriceList(string distributionChannel, string segment, bool weekday)
         {
+
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.PriceDecisionPriceList().Where(x => x.DistributionChannel == distributionChannel.Trim()
-            && x.Segment == segment.Trim() && x.WeekDay == weekday).ToList();
+            var data = objPC.PriceDecisionPriceList().SingleOrDefault(x => x.DistributionChannel == distributionChannel.Trim()
+            && x.Segment == segment.Trim() && x.WeekDay == weekday);
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<PriceDecisionPriceList>();
 
-            PriceDecisionPriceList obj = new PriceDecisionPriceList();
+            //PriceListCreated objPC = new PriceListCreated();
+            //var plist = objPC.PriceDecisionPriceList().Where(x => x.DistributionChannel == distributionChannel.Trim()
+            //&& x.Segment == segment.Trim() && x.WeekDay == weekday).ToList();
 
-            obj.ActualDemand = plist[0].ActualDemand;
-            obj.Price = plist[0].Price;
+            //PriceDecisionPriceList obj = new PriceDecisionPriceList();
+
+            //obj.ActualDemand = plist[0].ActualDemand;
+            //obj.Price = plist[0].Price;
 
 
 
-            return obj;
+            //return obj;
         }
 
         public AttributeDecisionPriceList GetAttributeDecisionPriceList(string AttributeName)
         {
+
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.AttributeDecisionPriceList().Where(x => x.Attribute == AttributeName.Trim()).ToList();
+            var data = objPC.AttributeDecisionPriceList().SingleOrDefault(x => x.Attribute == AttributeName.Trim());
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<AttributeDecisionPriceList>();
 
-            AttributeDecisionPriceList obj = new AttributeDecisionPriceList();
+            //PriceListCreated objPC = new PriceListCreated();
+            //var plist = objPC.AttributeDecisionPriceList().Where(x => x.Attribute == AttributeName.Trim()).ToList();
 
-            obj.AccumulatedCapital = plist[0].AccumulatedCapital;
-            obj.NewCapital = plist[0].NewCapital;
+            //AttributeDecisionPriceList obj = new AttributeDecisionPriceList();
 
-            obj.OperationBudget = plist[0].OperationBudget;
-            obj.LaborBudget = plist[0].LaborBudget;
-            obj.QuarterForecast = plist[0].QuarterForecast;
+            //obj.AccumulatedCapital = plist[0].AccumulatedCapital;
+            //obj.NewCapital = plist[0].NewCapital;
 
-            return obj;
+            //obj.OperationBudget = plist[0].OperationBudget;
+            //obj.LaborBudget = plist[0].LaborBudget;
+            //obj.QuarterForecast = plist[0].QuarterForecast;
+
+            //return obj;
         }
         public RoomAllocationPriceList GetRoomAllocationPriceList(string SegmentName, bool weekday)
         {
+
             PriceListCreated objPC = new PriceListCreated();
-            var plist = objPC.RoomAllocationPriceList().Where(x => x.Segment == SegmentName.Trim() && x.WeekDay == weekday).ToList();
+            var data = objPC.RoomAllocationPriceList().SingleOrDefault(x => x.Segment == SegmentName.Trim() && x.WeekDay == weekday);
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<RoomAllocationPriceList>();
 
-            RoomAllocationPriceList obj = new RoomAllocationPriceList();
 
-            obj.RoomsAllocated = plist[0].RoomsAllocated;
-            obj.ActualDemand = plist[0].ActualDemand;
+            //PriceListCreated objPC = new PriceListCreated();
+            //var plist = objPC.RoomAllocationPriceList().Where(x => x.Segment == SegmentName.Trim() && x.WeekDay == weekday).ToList();
 
-            obj.RoomsSold = plist[0].RoomsSold;
-            obj.Revenue = plist[0].Revenue;
-            obj.QuarterForecast = plist[0].QuarterForecast;
+            //RoomAllocationPriceList obj = new RoomAllocationPriceList();
 
-            return obj;
+            //obj.RoomsAllocated = plist[0].RoomsAllocated;
+            //obj.ActualDemand = plist[0].ActualDemand;
+
+            //obj.RoomsSold = plist[0].RoomsSold;
+            //obj.Revenue = plist[0].Revenue;
+            //obj.QuarterForecast = plist[0].QuarterForecast;
+
+            //return obj;
 
         }
         public IncomeState GetDataBySingleRowIncomeState(HotelDbContext context, int MonthID, int groupID, int currentQuarter)
         {
-            var data = context.IncomeState.Where(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter)
-                    .ToList();
-            IncomeState obj = new IncomeState();
-            obj.TotReven = data[0].TotReven;
-            return obj;
+
+
+            var data = context.IncomeState.SingleOrDefault(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter);
+            if (data == null)
+                throw new ValidationException("data not found ");
+            return data.Adapt<IncomeState>();
+
+            //var data = context.IncomeState.Where(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter)
+            //        .ToList();
+            //IncomeState obj = new IncomeState();
+            //obj.TotReven = data[0].TotReven;
+            //return obj;
         }
         public bool UpdateMonthCompletedStatus(HotelDbContext context, int classID, int currentQuarter)
         {
@@ -1130,7 +1225,7 @@ namespace Service
                     clsMonth.Sequence = lstMonth[0].Sequence;
                     clsMonth.TotalMarket = lstMonth[0].TotalMarket;
                     clsMonth.ConfigId = lstMonth[0].ConfigId;
-                    
+
                     clsMonth.IsComplete = true;
                     context.Months.Add(clsMonth);
                     context.Entry(clsMonth).Property(x => x.IsComplete).IsModified = true;
