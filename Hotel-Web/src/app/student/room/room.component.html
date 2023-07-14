@@ -1,8 +1,6 @@
 <section class="bg-[#F4F7FF] py-14 lg:py-20">
     <div class="container">
-       
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        
         <table class="table-auto">
           <tr>
               <td style="border-style: none none inset none">
@@ -179,13 +177,10 @@
       </table>
       <p>
         Maximum Room Number Weekday:&nbsp; {{WeekdayTotal}}
-        
         &nbsp;Room Allocated:&nbsp; {{roomAllowWeekdays}}
         <br />
-                    Maximum Room Number Weekend:&nbsp; {{WeekendTotal}}
-                    &nbsp;Room Allocated:&nbsp; {{roomAllowWeekend}}
-            
-        
+        Maximum Room Number Weekend:&nbsp; {{WeekendTotal}}
+        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekend}}
     </p>
     <p>{{errorMsg}}</p>
         <div class="mb-6">

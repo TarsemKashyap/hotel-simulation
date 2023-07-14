@@ -7,6 +7,7 @@ import { AddRemovedClassComponent } from '../shared/class';
 import { checkAccessPermission } from '../shared/auth.gurad';
 import { DecisionComponent } from './decision/decision.component';
 import { RoomComponent } from './room/room.component';
+import { AttributeComponent } from './attribute/attribute.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'manage-class', component: ClassListComponent },
       { path: 'decision', component: DecisionComponent },
       { path: 'room', component: RoomComponent },
+      { path: 'attribute', component: AttributeComponent },
     ],
     canActivate:[]
   },

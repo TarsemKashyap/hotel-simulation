@@ -10,10 +10,10 @@ public class AttributeDecisionDto
     public int QuarterNo { get; set; }
     public int GroupID { get; set; }
     public string Attribute { get; set; }
-    public int AccumulatedCapital { get; set; }
-    public int NewCapital { get; set; }
-    public int OperationBudget { get; set; }
-    public int LaborBudget { get; set; }
+    public decimal AccumulatedCapital { get; set; }
+    public decimal NewCapital { get; set; }
+    public decimal OperationBudget { get; set; }
+    public decimal LaborBudget { get; set; }
     public bool Confirmed { get; set; }
     public int QuarterForecast { get; set; }
     public int MonthID { get; set; }

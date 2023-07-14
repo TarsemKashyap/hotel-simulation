@@ -12,9 +12,10 @@ import { ChangePasswordService } from '../admin/change-password/change-password.
 import { AccountService } from '../public/account';
 import { DecisionComponent } from './decision/decision.component';
 import { RoomComponent } from './room/room.component';
+import { AttributeComponent } from './attribute/attribute.component';
 
 @NgModule({
-  declarations: [StudentDashboard, DecisionComponent, RoomComponent],
+  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent],
   imports: [
     CommonModule,
     SharedModule,

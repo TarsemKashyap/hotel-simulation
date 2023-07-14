@@ -12,8 +12,6 @@ import { SessionStore } from 'src/app/store';
 })
 export class StudentDashboard {
 
-
-  
   studentId:  string = '';
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
@@ -31,20 +29,20 @@ logout() {
   this.router.navigate([`login`]);
 }
 
+
 private studentRolesList() {
   this.studentService
-    .StudentRoleslist()
-    .subscribe((data) => {
+    .StudentRoleslist().subscribe((data) => {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);
       //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
       this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
-      console.log(this.studentRolePageList,this.sessionStore.GetStudentRole())
-      
+     // console.log(this.studentRolePageList,this.sessionStore.GetStudentRole());
     });
 }
 
-openLink(studentRolePage:RolePagesDtl) {
-  this.router.navigate(['decision'], {queryParams : {role:  studentRolePage.roleName}});
-}
+  openLink(studentRolePage:RolePagesDtl) {
+    this.sessionStore.SetCurrentRole(studentRolePage.roleName);
+    this.router.navigate(['decision']);
+  }
 }

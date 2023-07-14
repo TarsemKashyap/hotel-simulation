@@ -53,3 +53,17 @@ export interface RoomAllocations {
   confirmed : boolean;
   revenue : number;
 }
+
+export interface AttributeDecision {
+  iD: number;
+  quarterNo: number;
+  groupID: number;
+  attribute: string;
+  accumulatedCapital: number;
+  newCapital: number;
+  operationBudget: number;
+  laborBudget: number;
+  confirmed: boolean;
+  quarterForecast: number;
+  monthID: number;
+}

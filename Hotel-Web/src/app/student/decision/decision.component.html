@@ -1,13 +1,13 @@
-<section class="bg-[#F4F7FF] py-14 lg:py-20">
+<section class="bg-[#F4F7FF]">
     <div class="container">
         <div class="-mx-4 flex flex-wrap">
+          
             <mat-list>
-                <mat-list-item> <a>Room Allocation</a></mat-list-item>
-                <mat-list-item> <a> Hotel Attributes and Amenities</a></mat-list-item>
-                <mat-list-item><a> Room Rate Decisions</a></mat-list-item>
-                <mat-list-item><a> Marketing Decisions</a></mat-list-item>
+                <mat-list-item><a  [routerLink]="['../room']" class="decision-link"> Room Allocation</a></mat-list-item>
+                <mat-list-item><a  [routerLink]="['../attribute']" class="decision-link"> Hotel Attributes and Amenities</a></mat-list-item>
+                <mat-list-item><a class="decision-link"> Room Rate Decisions</a></mat-list-item>
+                <mat-list-item><a class="decision-link"> Marketing Decisions</a></mat-list-item>
             </mat-list>
-
         </div>
     </div>
 </section>

@@ -119,7 +119,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
         services.AddScoped<IRoomAllocationService, RoomAllocationService>();
-
+        services.AddScoped<IAttributeDecisionService, AttributeDecisionService>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)

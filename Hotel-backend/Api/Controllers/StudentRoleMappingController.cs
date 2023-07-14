@@ -18,18 +18,19 @@ namespace Api.Controllers
         private readonly IStudentGroupMappingService _studentGroupMappingService;
         private readonly IRoomAllocationService _roomAllocationService;
         private readonly IMonthService _monthService;
+        private readonly IAttributeDecisionService _attributeDecisionService;
 
         public StudentRoleMappingController(IStudentRolesMappingService studentRolesMappingService,
             IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService, IMonthService monthService,
-            IStudentGroupMappingService studentGroupMappingService, IRoomAllocationService roomAllocationService)
+            IStudentGroupMappingService studentGroupMappingService, IRoomAllocationService roomAllocationService, IAttributeDecisionService attributeDecisionService)
         {
             _studentRolesMappingService = studentRolesMappingService;
             _studentClassMappingService = studentClassMappingService;
             _classSessionService = classSessionService;
             _studentGroupMappingService = studentGroupMappingService;
-            _monthService= monthService;
-            _roomAllocationService= roomAllocationService;
-
+            _monthService = monthService;
+            _roomAllocationService = roomAllocationService;
+            _attributeDecisionService = attributeDecisionService;
         }
         [HttpPost("list")]
         public async Task<ActionResult> StudentRoleList(StudentAssignmentRequestParam parms)
@@ -82,6 +83,28 @@ namespace Api.Controllers
             var currentQuarter = classDtls.CurrentQuater;
             var roomAllocationDetails = await _roomAllocationService.RoomAllocationDetails(monthId, groupId, currentQuarter);
             return Ok(roomAllocationDetails);
+          
+        }
+
+        [HttpGet("AttributeDecisionDetails"), AllowAnonymous]
+        public async Task<ActionResult> AttributeDecisionDetails()
+        {
+            var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            var groupId = studenClassMappingDtls.GroupId;
+            var classId = studenClassMappingDtls.ClassId;
+            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
+            var monthId = monthsDtls.MonthId;
+            var classDtls = await _classSessionService.GetById(classId);
+            var currentQuarter = classDtls.CurrentQuater;
+            var attributeDecisionDetails = await _attributeDecisionService.AttributeDecisionDetails(monthId, groupId, currentQuarter);
+            return Ok(attributeDecisionDetails);
+        }
+
+        [HttpPost("UpdateAttributeDecision")]
+        public async Task<ActionResult> UpdateAttributeDecision(List<AttributeDecisionDto> attributeDecisionDtos)
+        {
+            await _attributeDecisionService.UpdateAttributeDecision(attributeDecisionDtos);
+            return Ok();
         }
 
 

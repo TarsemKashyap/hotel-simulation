@@ -11,8 +11,8 @@ export class DecisionComponent {
   }
   
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-     console.log(params['role'],"rolena");
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //  console.log(params['role'],"rolena");
+    // });
   }
 }

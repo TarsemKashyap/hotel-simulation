@@ -19,6 +19,7 @@ export class RoomComponent {
   roomAllowWeekend:number = 0;
   errorMsg:string = "";
   roomAllocations:RoomAllocations[] = [];
+
   ngOnInit(): void {
     this.roomAllocationList();
   }
@@ -142,7 +143,6 @@ export class RoomComponent {
     } else {
       this.errorMsg = "";
       this.roomAllocations.forEach(element => {
-        
         if (element.segment == 'Business' && element.weekday) 
           element.roomsAllocated = parseInt(this.form.value.weekDay1) * 17;
         if (element.segment == 'Business' && !element.weekday) 
@@ -182,8 +182,6 @@ export class RoomComponent {
           element.roomsAllocated = parseInt(this.form.value.weekDay8) * 17;
         if (element.segment == 'Association Meetings' && !element.weekday) 
           element.roomsAllocated = parseInt(this.form.value.Weekend8) * 13;
-
-      
       });
       this.studentService.RoomAllocationUpdate(this.roomAllocations).subscribe((x) => {
         console.log(x,"gg")
