@@ -438,7 +438,7 @@ namespace Service
                 foreach (var item in lstAttribute)
                 {
                     int groupID = i;
-                   // var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
+                    // var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
                     decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
                     AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
                     var obj1 = new AttributeDecision()
@@ -815,7 +815,7 @@ namespace Service
                     }
                 }
                 ////Go to next group
-                i++;
+
             }
             return 1;
         }
@@ -997,7 +997,7 @@ namespace Service
 
                      ).ToList();
 
-          
+
             decimal sindleRow = 0;
             if (data != null)
             {
@@ -1195,14 +1195,16 @@ namespace Service
             //return obj;
 
         }
-        public IncomeState GetDataBySingleRowIncomeState(HotelDbContext context, int MonthID, int groupID, int currentQuarter)
+        public decimal GetDataBySingleRowIncomeState(HotelDbContext context, int MonthID, int groupID, int currentQuarter)
         {
 
-
+            decimal TotReven = 0;
             var data = context.IncomeState.SingleOrDefault(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter);
             if (data == null)
-                throw new ValidationException("data not found ");
-            return data.Adapt<IncomeState>();
+                TotReven = 0;
+            else
+                TotReven = data.TotReven;
+            return TotReven;
 
             //var data = context.IncomeState.Where(x => x.MonthID == MonthID && x.GroupID == groupID && x.QuarterNo == currentQuarter)
             //        .ToList();

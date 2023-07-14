@@ -63,7 +63,7 @@ namespace Service
                     int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
                     if (currentQuarter == 0)
                     {
-                        objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, true);
+                        objFunMonth.CreateMonth(_context, classID, currentQuarter-1, totMarket, true);
                         resObj.Message = "A new month has been created.";
                     }
                     int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, false);

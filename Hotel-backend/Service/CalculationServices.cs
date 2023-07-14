@@ -2,6 +2,8 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Mysqlx.Resultset;
+using MySqlX.XDevAPI.Relational;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -32,1130 +34,1174 @@ namespace Service
         public async Task<ResponseData> Calculation(MonthDto month)
         {
             ResponseData resObj = new ResponseData();
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
 
-                List<MonthDto> listMonth = await GetMonthListByClassId(month.ClassId);
-                for (int i = 0; i < listMonth.Count; i++)
+                try
                 {
-                    FunMonth obj = new FunMonth();
-                    FunCalculation objCalculation = new FunCalculation();
-                    obj.UpdateClassStatus(_context, month.ClassId, "C");
-                    ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
-                    int currentQuarter = objclassSess.CurrentQuater;
-                    int hotelsCount = objclassSess.HotelsCount;
-                    int monthId = listMonth[i].MonthId;
 
-
-
-
-                    //int monthId = month.MonthId;
-                    List<MarketingDecisionDto> objListMd = objCalculation.GetDataByQuarterMarketDecision(_context, monthId, currentQuarter);
-                    double ratio = 0;
-                    double fourpercentOfRevenue;
-
-                    double spending = 0;
-                    double laborSpending = 0;
-                    double Qminus1 = 0;
-                    double Qminus2 = 0;
-                    double Qminus3 = 0;
-                    double Qminus4 = 0;
-                    double LQminus1 = 0;
-                    double LQminus2 = 0;
-                    double LQminus3 = 0;
-                    double LQminus4 = 0;
-                    double industryNorm = 0;
-                    if (objListMd.Count > 0)
+                    List<MonthDto> listMonth = await GetMonthListByClassId(month.ClassId);
+                    for (int i = 0; i < listMonth.Count; i++)
                     {
-                        foreach (MarketingDecisionDto mDRow in objListMd)
+                        FunMonth obj = new FunMonth();
+                        FunCalculation objCalculation = new FunCalculation();
+                        obj.UpdateClassStatus(_context, month.ClassId, "C");
+                        ClassSessionDto objclassSess = obj.GetClassDetailsById(month.ClassId, _context);
+                        int currentQuarter = objclassSess.CurrentQuater;
+                        int hotelsCount = objclassSess.HotelsCount;
+                        int monthId = listMonth[i].MonthId;
+
+
+
+
+                        //int monthId = month.MonthId;
+                        List<MarketingDecisionDto> objListMd = objCalculation.GetDataByQuarterMarketDecision(_context, monthId, currentQuarter);
+                        double ratio = 0;
+                        double fourpercentOfRevenue;
+
+                        double spending = 0;
+                        double laborSpending = 0;
+                        double Qminus1 = 0;
+                        double Qminus2 = 0;
+                        double Qminus3 = 0;
+                        double Qminus4 = 0;
+                        double LQminus1 = 0;
+                        double LQminus2 = 0;
+                        double LQminus3 = 0;
+                        double LQminus4 = 0;
+                        double industryNorm = 0;
+                        if (objListMd.Count > 0)
                         {
-                            int groupId = mDRow.GroupID;
-                            ////set the four percent of reveune when first quarter
-                            if (currentQuarter == 1)
+                            foreach (MarketingDecisionDto mDRow in objListMd)
                             {
-                                fourpercentOfRevenue = 251645.01 / 3;
-                            }
-                            else
-                            {
-
-                                fourpercentOfRevenue = Convert.ToDouble(obj.GetDataBySingleRowIncomeState(_context, monthId, groupId, currentQuarter).TotReven) * 0.04;
-                            }
-                            if (mDRow.QuarterNo == 1)
-                            {
-                                Qminus1 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment.Trim(), mDRow.MarketingTechniques.Trim()));
-                                Qminus2 = Qminus1;
-                                Qminus3 = Qminus1;
-                                Qminus4 = Qminus1;
-                                LQminus1 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment.Trim(), mDRow.MarketingTechniques.Trim()));
-                                LQminus2 = LQminus1;
-                                LQminus3 = LQminus1;
-                                LQminus4 = LQminus1;
-                            }
-                            if (mDRow.QuarterNo == 2)
-                            {
-                                Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus2 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                Qminus3 = Qminus2;
-                                Qminus4 = Qminus2;
-                                LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus2 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                LQminus3 = LQminus2;
-                                LQminus4 = LQminus2;
-
-                            }
-                            if (mDRow.QuarterNo == 3)
-                            {
-                                Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus3 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                Qminus4 = Qminus3;
-                                LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus3 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                LQminus4 = LQminus3;
-                            }
-                            if (mDRow.QuarterNo == 4)
-                            {
-                                Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus4 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus4 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-
-                            }
-                            if (mDRow.QuarterNo > 4)
-                            {
-                                Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                Qminus4 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                LQminus4 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                            }
-                            if (mDRow.MarketingTechniques == "Advertising")
-                            {
-                                spending = 0.75 * Qminus1 + 0.25 * Qminus2 + 0.15 * Qminus3;
-                                laborSpending = 0.75 * LQminus1 + 0.25 * LQminus2 + 0.15 * LQminus3;
-                            }
-                            if (mDRow.MarketingTechniques == "Sales Force")
-                            {
-                                spending = 0.5 * Qminus2 + 0.35 * Qminus3 + 0.25 * Qminus4;
-                                laborSpending = 0.5 * LQminus2 + 0.35 * LQminus3 + 0.25 * LQminus4;
-                            }
-                            if (mDRow.MarketingTechniques == "Promotions")
-                            {
-                                spending = 0.8 * Qminus1 + 0.15 * Qminus2 + 0.05 * Qminus3;
-                                laborSpending = 0.8 * LQminus1 + 0.15 * LQminus2 + 0.05 * LQminus3;
-                            }
-                            if (mDRow.MarketingTechniques == "Public Relations")
-                            {
-                                spending = 0.6 * Qminus1 + 0.35 * Qminus2 + 0.25 * Qminus3;
-                                laborSpending = 0.6 * LQminus1 + 0.35 * LQminus2 + 0.25 * LQminus3;
-                            }
-                            industryNorm = fourpercentOfRevenue * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                            double laborPercent = Convert.ToDouble(objCalculation.ScalarQueryLaborPercentMarketingDecision(_context, mDRow.MonthID, mDRow.MarketingTechniques, mDRow.Segment, mDRow.QuarterNo));
-                            double weightedSpending = laborSpending * laborPercent + spending * (1 - laborPercent);
-                            //////If weighted spending is greater than 14% of the total revenue from last month
-                            //////We force it cut it down to 14% of total revenue
-                            if (weightedSpending > fourpercentOfRevenue * 7 / 2)
-                            {
-                                weightedSpending = fourpercentOfRevenue * 7 / 2;
-                            }
-                            double fairmarket = Convert.ToDouble(objCalculation.ScalarQueryFairMarketMarketingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo));
-                            double AverageSpendingMarktingDecision = objCalculation.ScalarQueryAverageSpendingMarktingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo);
-                            if (AverageSpendingMarktingDecision > 0)
-                                ratio = (((weightedSpending * weightedSpending) / AverageSpendingMarktingDecision) / industryNorm);
-                            else
-                                ratio = 0;
-
-                            ////////To avoid ratio = and fairmarket=0 exceptions
-                            if (ratio == 0 || fairmarket == 0)
-                            {
-                                mDRow.ActualDemand = 0;
-                            }
-                            else if (ratio < 0)
-                            {
-                                mDRow.ActualDemand = 0;
-                            }
-                            else
-                            {
-                                try
+                                int groupId = mDRow.GroupID;
+                                ////set the four percent of reveune when first quarter
+                                if (currentQuarter == 1)
                                 {
-                                    mDRow.ActualDemand = Convert.ToInt32((-1 / ratio + 2) * fairmarket);
+                                    fourpercentOfRevenue = 251645.01 / 3;
                                 }
-                                catch
+                                else
                                 {
-                                    Trace.Write(mDRow.GroupID.ToString() + "Ratio" + ratio.ToString() + "/n" + "Fairmarket" + fairmarket.ToString());
+                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, monthId, groupId, currentQuarter);
+                                    fourpercentOfRevenue = Convert.ToDouble(totalRevTemp) * 0.04;
+                                }
+                                if (mDRow.QuarterNo == 1)
+                                {
+                                    Qminus1 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment.Trim(), mDRow.MarketingTechniques.Trim()));
+                                    Qminus2 = Qminus1;
+                                    Qminus3 = Qminus1;
+                                    Qminus4 = Qminus1;
+                                    LQminus1 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment.Trim(), mDRow.MarketingTechniques.Trim()));
+                                    LQminus2 = LQminus1;
+                                    LQminus3 = LQminus1;
+                                    LQminus4 = LQminus1;
+                                }
+                                if (mDRow.QuarterNo == 2)
+                                {
+                                    Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    Qminus3 = Qminus2;
+                                    Qminus4 = Qminus2;
+                                    LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    LQminus3 = LQminus2;
+                                    LQminus4 = LQminus2;
+
+                                }
+                                if (mDRow.QuarterNo == 3)
+                                {
+                                    Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus3 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    Qminus4 = Qminus3;
+                                    LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    LQminus4 = LQminus3;
+                                }
+                                if (mDRow.QuarterNo == 4)
+                                {
+                                    Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus4 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus4 = 251645.01 / 6 * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+
+                                }
+                                if (mDRow.QuarterNo > 4)
+                                {
+                                    Qminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus4 = Convert.ToDouble(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus4 = Convert.ToDouble(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                }
+                                if (mDRow.MarketingTechniques == "Advertising")
+                                {
+                                    spending = 0.75 * Qminus1 + 0.25 * Qminus2 + 0.15 * Qminus3;
+                                    laborSpending = 0.75 * LQminus1 + 0.25 * LQminus2 + 0.15 * LQminus3;
+                                }
+                                if (mDRow.MarketingTechniques == "Sales Force")
+                                {
+                                    spending = 0.5 * Qminus2 + 0.35 * Qminus3 + 0.25 * Qminus4;
+                                    laborSpending = 0.5 * LQminus2 + 0.35 * LQminus3 + 0.25 * LQminus4;
+                                }
+                                if (mDRow.MarketingTechniques == "Promotions")
+                                {
+                                    spending = 0.8 * Qminus1 + 0.15 * Qminus2 + 0.05 * Qminus3;
+                                    laborSpending = 0.8 * LQminus1 + 0.15 * LQminus2 + 0.05 * LQminus3;
+                                }
+                                if (mDRow.MarketingTechniques == "Public Relations")
+                                {
+                                    spending = 0.6 * Qminus1 + 0.35 * Qminus2 + 0.25 * Qminus3;
+                                    laborSpending = 0.6 * LQminus1 + 0.35 * LQminus2 + 0.25 * LQminus3;
+                                }
+                                industryNorm = fourpercentOfRevenue * Convert.ToDouble(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                double laborPercent = Convert.ToDouble(objCalculation.ScalarQueryLaborPercentMarketingDecision(_context, mDRow.MonthID, mDRow.MarketingTechniques, mDRow.Segment, mDRow.QuarterNo));
+                                double weightedSpending = laborSpending * laborPercent + spending * (1 - laborPercent);
+                                //////If weighted spending is greater than 14% of the total revenue from last month
+                                //////We force it cut it down to 14% of total revenue
+                                if (weightedSpending > fourpercentOfRevenue * 7 / 2)
+                                {
+                                    weightedSpending = fourpercentOfRevenue * 7 / 2;
+                                }
+                                double fairmarket = Convert.ToDouble(objCalculation.ScalarQueryFairMarketMarketingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo));
+                                double AverageSpendingMarktingDecision = objCalculation.ScalarQueryAverageSpendingMarktingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo);
+                                if (AverageSpendingMarktingDecision > 0)
+                                    ratio = (((weightedSpending * weightedSpending) / AverageSpendingMarktingDecision) / industryNorm);
+                                else
+                                    ratio = 0;
+
+                                ////////To avoid ratio = and fairmarket=0 exceptions
+                                if (ratio == 0 || fairmarket == 0)
+                                {
+                                    mDRow.ActualDemand = 0;
+                                }
+                                else if (ratio < 0)
+                                {
+                                    mDRow.ActualDemand = 0;
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        mDRow.ActualDemand = Convert.ToInt32((-1 / ratio + 2) * fairmarket);
+                                    }
+                                    catch
+                                    {
+                                        Trace.Write(mDRow.GroupID.ToString() + "Ratio" + ratio.ToString() + "/n" + "Fairmarket" + fairmarket.ToString());
+                                    }
+
+                                }
+                                //To avoid actual demand is less zero, we just set the less than zero value to be zero
+                                if (mDRow.ActualDemand < 0)
+                                {
+                                    mDRow.ActualDemand = 0;
+                                }
+                                MarketingDecisionUpdate(mDRow);
+                            }
+
+                            ////Slow down the calucation to give database more time to process, wait 1/10 second
+
+                        }
+
+                        {
+                            //Price Decision
+                            PriceDecision objPriceDecision = new PriceDecision();
+                            ratio = 0;
+                            decimal avergePrice;
+                            decimal expectedPrice;
+                            decimal fairMarketPD = 0;
+                            int actualDemand;
+                            //This get data need to change.
+                            List<PriceDecisionDto> listPd = await GetDataByQuarterPriceDecision(monthId, currentQuarter);
+                            foreach (PriceDecisionDto priceDecisionRow in listPd)
+                            {
+                                avergePrice = Convert.ToDecimal(ScalarQueryAvgPricePriceDecision(monthId, currentQuarter, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel.Trim(), priceDecisionRow.Segment.Trim()));
+                                expectedPrice = Convert.ToDecimal(ScalarQueryPriceExpectationPriceDecision(monthId, currentQuarter, priceDecisionRow.Segment, priceDecisionRow.Weekday));
+                                //////Lower expected price by 25 dollars, this is a change made on 3/18/2012, in version 4.5.5
+                                expectedPrice = expectedPrice - 25;
+                                if (avergePrice != 0)
+                                {
+                                    ratio = Convert.ToDouble(priceDecisionRow.Price * priceDecisionRow.Price / avergePrice / expectedPrice);
+                                }
+                                else
+                                {
+                                    ratio = 2;
                                 }
 
+                                fairMarketPD = Convert.ToDecimal(ScalarQueryFairMarketPriceDecision(priceDecisionRow.Segment, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel, monthId, currentQuarter));
+                                if (ratio == 2 || fairMarketPD == 0)
+                                { actualDemand = 0; }
+                                else if (ratio > 2)
+                                {
+                                    actualDemand = 0;
+                                }
+                                else
+                                {
+                                    actualDemand = Convert.ToInt32((1 / (ratio - 2) + 2) * Convert.ToDouble(fairMarketPD));
+                                }
+
+                                if (actualDemand < 0)
+                                {
+                                    actualDemand = 0;
+                                }
+                                priceDecisionRow.ActualDemand = actualDemand;
+                                //   PriceDecisionUpdate(priceDecisionRow);
+                                _context.ChangeTracker.Clear();
+                                _context.Update(priceDecisionRow.Adapt<PriceDecision>());
+                                _context.SaveChanges();
+
                             }
-                            //To avoid actual demand is less zero, we just set the less than zero value to be zero
-                            if (mDRow.ActualDemand < 0)
-                            {
-                                mDRow.ActualDemand = 0;
-                            }
-                            MarketingDecisionUpdate(mDRow);
+
                         }
 
-                        ////Slow down the calucation to give database more time to process, wait 1/10 second
-
-                    }
-
-                    {
-                        //Price Decision
-                        PriceDecision objPriceDecision = new PriceDecision();
-                        ratio = 0;
-                        decimal avergePrice;
-                        decimal expectedPrice;
-                        decimal fairMarketPD = 0;
-                        int actualDemand;
-                        //This get data need to change.
-                        List<PriceDecisionDto> listPd = await GetDataByQuarterPriceDecision(monthId, currentQuarter);
-                        foreach (PriceDecisionDto priceDecisionRow in listPd)
+                        List<IncomeStateDto> incomTableAfter = await GetDataByMonthIncomeState(monthId, currentQuarter);
+                        foreach (IncomeStateDto row in incomTableAfter)
                         {
-                            avergePrice = Convert.ToDecimal(ScalarQueryAvgPricePriceDecision(monthId, currentQuarter, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel.Trim(), priceDecisionRow.Segment.Trim()));
-                            expectedPrice = Convert.ToDecimal(ScalarQueryPriceExpectationPriceDecision(monthId, currentQuarter, priceDecisionRow.Segment, priceDecisionRow.Weekday));
-                            //////Lower expected price by 25 dollars, this is a change made on 3/18/2012, in version 4.5.5
-                            expectedPrice = expectedPrice - 25;
-                            if (avergePrice != 0)
+                            if (currentQuarter <= 1)
                             {
-                                ratio = Convert.ToDouble(priceDecisionRow.Price * priceDecisionRow.Price / avergePrice / expectedPrice);
+                                row.TotReven = 3162981;
                             }
                             else
                             {
-                                ratio = 2;
+                                IncomeStateDto objinsDto = await GetDataBySingleRowIncomeState(monthId - 1, currentQuarter - 1, row.GroupID);
+                                row.TotReven = objinsDto.TotReven;
                             }
 
-                            fairMarketPD = Convert.ToDecimal(ScalarQueryFairMarketPriceDecision(priceDecisionRow.Segment, priceDecisionRow.Weekday, priceDecisionRow.DistributionChannel, monthId, currentQuarter));
-                            if (ratio == 2 || fairMarketPD == 0)
-                            { actualDemand = 0; }
-                            else if (ratio > 2)
+                            if (row.TotReven == 0)
                             {
-                                actualDemand = 0;
+                                row.TotReven = 3585548;
+                            }
+                            // IncomeStateTotalRevenUpdate(row);
+
+                            _context.ChangeTracker.Clear();
+                            //_context.IncomeState.Add(row.Adapt<IncomeState>());
+                            //_context.Entry(row.Adapt<IncomeState>()).Property(x => x.TotReven).IsModified = true;
+                            _context.Update(row.Adapt<IncomeState>());
+                            _context.SaveChanges();
+                        }
+
+                        List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
+
+                        foreach (CustomerRawRatingDto row in rawRatingTable)
+                        {
+                            AttributeDecisionDto attriDeRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute.Trim());
+                            //In order to avoid divided by zero exception, if any of these spending is zero, 
+                            //we will skip the quary and set the rating as zero.
+                            if (attriDeRow.OperationBudget == 0 || attriDeRow.AccumulatedCapital == 0 || attriDeRow.LaborBudget == 0)
+                            {
+                                row.RawRating = 0;
                             }
                             else
                             {
-                                actualDemand = Convert.ToInt32((1 / (ratio - 2) + 2) * Convert.ToDouble(fairMarketPD));
+                                decimal ideal = ScalarAttriSegIdealRating(row.MonthID, row.QuarterNo, row.Attribute, row.Segment);
+                                row.RawRating = Convert.ToDecimal(ScalarQueryCustomerRawRating(row.MonthID, row.QuarterNo, row.GroupID, row.Attribute, row.Segment));
+                                if (row.RawRating > ideal)
+                                {
+                                    //////This one is tricky!
+                                    ///////This line I made changes to correct the captial over time effects
+                                    row.RawRating = ideal + Convert.ToDecimal(Math.Log(Convert.ToDouble(row.RawRating - ideal + 1), 2));
+                                }
                             }
-
-                            if (actualDemand < 0)
+                            if (row.RawRating < 0)
                             {
-                                actualDemand = 0;
+                                row.RawRating = 0;
                             }
-                            priceDecisionRow.ActualDemand = actualDemand;
-                            PriceDecisionUpdate(priceDecisionRow);
-
-                        }
-
-                    }
-
-                    List<IncomeStateDto> incomTableAfter = await GetDataByMonthIncomeState(monthId, currentQuarter);
-                    foreach (IncomeStateDto row in incomTableAfter)
-                    {
-                        if (currentQuarter <= 1)
-                        {
-                            row.TotReven = 3162981;
-                        }
-                        else
-                        {
-                            IncomeStateDto objinsDto = await GetDataBySingleRowIncomeState(monthId, currentQuarter - 1, row.GroupID);
-                            row.TotReven = objinsDto.TotReven;
-                        }
-
-                        if (row.TotReven == 0)
-                        {
-                            row.TotReven = 3585548;
-                        }
-                        IncomeStateTotalRevenUpdate(row);
-                    }
-
-                    List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
-
-                    foreach (CustomerRawRatingDto row in rawRatingTable)
-                    {
-                        AttributeDecisionDto attriDeRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute);
-                        //In order to avoid divided by zero exception, if any of these spending is zero, 
-                        //we will skip the quary and set the rating as zero.
-                        if (attriDeRow.OperationBudget == 0 || attriDeRow.AccumulatedCapital == 0 || attriDeRow.LaborBudget == 0)
-                        {
-                            row.RawRating = 0;
-                        }
-                        else
-                        {
-                            decimal ideal = ScalarAttriSegIdealRating(row.MonthID, row.QuarterNo, row.Attribute, row.Segment);
-                            row.RawRating = Convert.ToDecimal(ScalarQueryCustomerRawRating(row.MonthID, row.QuarterNo, row.GroupID, row.Attribute, row.Segment));
-                            if (row.RawRating > ideal)
+                            if (row.RawRating >= 10)
                             {
-                                //////This one is tricky!
-                                ///////This line I made changes to correct the captial over time effects
-                                row.RawRating = ideal + Convert.ToDecimal(Math.Log(Convert.ToDouble(row.RawRating - ideal + 1), 2));
+                                row.RawRating = Convert.ToDecimal(9.99);
                             }
+                            //CustomerRowRatingUpdate(row);
+                            _context.ChangeTracker.Clear();
+                            _context.Update(row.Adapt<CustomerRawRating>());
+                            _context.SaveChanges();
                         }
-                        if (row.RawRating < 0)
+                        // rawRatingAdapter.Update(rawRatingTable);
+
+                        // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
+                        List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
+                        decimal averageRating = 0;
+                        decimal fairMarket = 0;
+                        foreach (WeightedAttributeRatingDto row in overallRatingTable)
                         {
-                            row.RawRating = 0;
+                            row.CustomerRating = ScalarQueryRatingBySegmentCustomerRawRatting(row.MonthID, row.QuarterNo, row.GroupID, row.Segment);
+                            averageRating = Convert.ToDecimal(ScalarQueryGetAvageRatingWeightAttributeRating(row.MonthID, row.QuarterNo, row.Segment));
+                            fairMarket = Convert.ToDecimal(ScalarQueryFairMarketWeightAttributeRating(row.Segment, row.MonthID, row.QuarterNo));
+                            if (row.CustomerRating == 0 || averageRating == 0 || fairMarket == 0)
+                            { row.ActualDemand = 0; }
+                            else
+                            {
+                                row.ActualDemand = Convert.ToInt32(row.CustomerRating / averageRating * fairMarket);
+                            }
+                            //WeightedAttributeRatingUpdate(row);
+                            _context.ChangeTracker.Clear();
+                            _context.Update(row.Adapt<WeightedAttributeRating>());
+                            _context.SaveChanges();
                         }
-                        if (row.RawRating >= 10)
-                        {
-                            row.RawRating = Convert.ToDecimal(9.99);
-                        }
-                        CustomerRowRatingUpdate(row);
-                    }
-                    // rawRatingAdapter.Update(rawRatingTable);
-
-                    // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
-                    List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
-                    decimal averageRating = 0;
-                    decimal fairMarket = 0;
-                    foreach (WeightedAttributeRatingDto row in overallRatingTable)
-                    {
-                        row.CustomerRating = ScalarQueryRatingBySegmentCustomerRawRatting(row.MonthID, row.QuarterNo, row.GroupID, row.Segment);
-                        averageRating = Convert.ToDecimal(ScalarQueryGetAvageRatingWeightAttributeRating(row.MonthID, row.QuarterNo, row.Segment));
-                        fairMarket = Convert.ToDecimal(ScalarQueryFairMarketWeightAttributeRating(row.Segment, row.MonthID, row.QuarterNo));
-                        if (row.CustomerRating == 0 || averageRating == 0 || fairMarket == 0)
-                        { row.ActualDemand = 0; }
-                        else
-                        {
-                            row.ActualDemand = Convert.ToInt32(row.CustomerRating / averageRating * fairMarket);
-                        }
-                        WeightedAttributeRatingUpdate(row);
-                    }
 
 
-                    // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                    List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                        List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
 
-                    //Sum customer demand and set into database
-                    foreach (RoomAllocationDto row in table)
-                    {
-                        if (row.Weekday == true)
-                        {
-                            row.ActualDemand = Convert.ToInt32(4 * (
-                                Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
-                                Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
-                                Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
-                        }
-                        if (row.Weekday == false)
-                        {
-                            row.ActualDemand = Convert.ToInt32(3 * (
-                                Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
-                                Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
-                                Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
-                        }
-                        RoomAllocationActualDemandUpdate(row);
-                    }
-
-                    ////Slow down the calucation to give database more time to process, wait 1/10 second
-
-
-                    int maxGroup = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
-                    int groupID = 1;
-                    int roomPool = 0;
-
-                    /////////Do the sold room and Room Pools each group by each group
-                    while (groupID < maxGroup + 1)
-                    {
-                        /////////Do the sold room and Room Pools each group by each group for weekday
-                        table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
-                        //////First, we collect all the free rooms that is not used, or in another word, over-allocated.
-                        /////Different Segment will have different percentage that will "go bad"
-                        /////Business 60% goes bad
-                        /////Small Business 60% goes bad
-                        /////Corporate contract 60% goes bad
-                        /////Afluent Mature Travelers 40% goes bad
-                        /////International leisure travelers 40% goes bad
-                        /////Families 40% goes bad
-                        /////Corporate/Business Meetings 20% goes bad
-                        /////Association Meetings 20% goes bad
+                        //Sum customer demand and set into database
                         foreach (RoomAllocationDto row in table)
                         {
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
+                            if (row.Weekday == true)
                             {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
+                                row.ActualDemand = Convert.ToInt32(4 * (
+                                    Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
+                                    Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
+                                    Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
                             }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Small Business")
+                            if (row.Weekday == false)
                             {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
+                                row.ActualDemand = Convert.ToInt32(3 * (
+                                    Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
+                                    Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
+                                    Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
                             }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate contract")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
-                            }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Families")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
-                            }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Afluent Mature Travelers")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
-                            }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "International leisure travelers")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
-                            }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate/Business Meetings")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
-                            }
-                            if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Association Meetings")
-                            {
-                                roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
-                            }
-                            //    RoomAllocationUpdate(row);
-                            //}
-                            ////////////////Re-allocate the rooms that are free in such an order
-                            ////////////////Business, Corporate contract, Small Business,Afluent Mature Travelers,International leisure travelers,Families,Corporate/Business Meetings,Association Meetings  
-                            if (roomPool > 0)
-                            {
-                                // foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Business")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //  RoomAllocationUpdate(row);
-                                //}
-                                //////}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Corporate contract")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //  RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Small Business")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Afluent Mature Travelers")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "International leisure travelers")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Families")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Corporate/Business Meetings")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-                                //}
-                                //if (roomPool > 0)
-                                //{
-                                //foreach (RoomAllocationDto row in table)
-                                //{
-                                if (row.Segment == "Association Meetings")
-                                {
-                                    if (row.RoomsAllocated > row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated == row.ActualDemand)
-                                    {
-                                        row.RoomsSold = row.ActualDemand;
-                                    }
-                                    if (row.RoomsAllocated < row.ActualDemand)
-                                    {
-                                        if (currentQuarter <= 1)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool > row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
-                                            if (roomPool < 0)
-                                                roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool == row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.ActualDemand;
-                                            roomPool = 0;
-                                        }
-                                        else if (row.RoomsAllocated + roomPool < row.ActualDemand)
-                                        {
-                                            row.RoomsSold = row.RoomsAllocated + roomPool;
-                                            roomPool = 0;
-                                        }
-                                    }
-                                }
-                                //    RoomAllocationUpdate(row);
-                                //}
-
-                            }
-                            RoomAllocationRoomSoldUpdate(row);
-                        }
-                        // RoomAllocationUpdate(Row);
-                        groupID++;
-                    }
-                    {
-
-                        List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
-
-
-                        decimal directSold;
-                        decimal travelSold;
-                        decimal onlineSold;
-                        decimal opaqueSold;
-                        decimal thisSold;
-                        decimal roomAlloSold;
-
-                        decimal sum;
-
-                        foreach (SoldRoomByChannelDto row in soldChanTable)
-                        {
-                            directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment).ActualDemand;
-                            travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment).ActualDemand;
-                            onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment).ActualDemand;
-                            opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment).ActualDemand;
-                            thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment).ActualDemand;
-                            roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment).RoomsSold;
-
-                            sum = directSold + travelSold + onlineSold + opaqueSold;
-
-                            if (sum == 0)
-                            {
-                                row.SoldRoom = 0;
-                                row.Revenue = 0;
-                                row.Cost = 0;
-                            }
-                            else
-                            {
-                                row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
-                                row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-                                row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-
-                            }
-                            SoldRoomByChannelUpdate(row);
+                            //RoomAllocationActualDemandUpdate(row);
+                            _context.ChangeTracker.Clear();
+                            _context.Update(row.Adapt<RoomAllocation>());
+                            _context.SaveChanges();
                         }
 
                         ////Slow down the calucation to give database more time to process, wait 1/10 second
 
 
-                        /////////////////////////////////
-                        /////////Set revenue and cost
-                        //////////////////////////////
-                        //List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
-                        //foreach (SoldRoomByChannelDto row in soldChanTable)
-                        //{
-                        //    row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-                        //    row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
-                        //    SoldRoomByChannelUpdate(row);
-                        //}
+                        int maxGroup = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
+                        int groupID = 1;
+                        int roomPool = 0;
 
-                    }
-
-                    {
-
-
-                        //IncomeState incomStatAdpt = new IncomeState();
-                        //BalanceSheet balanTableAdpt = new BalanceSheet();
-                        //RoomAllocation roomAlloAdpt = new RoomAllocation();
-                        //SoldRoomByChannel roomChanAdpt = new SoldRoomByChannel();
-                        //ClassSession classAdapter = new ClassSession();
-
-                        BalanceSheetDto balanTableRow;
-
-                        List<IncomeStateDto> incoTable = await GetDataByMonthIncomeState(monthId, currentQuarter);
-
-                        int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(month.ClassId));
-                        if (incoTable.Count > 0)
+                        /////////Do the sold room and Room Pools each group by each group
+                        while (groupID < maxGroup + 1)
                         {
-                            for (int c = 1; c < groupNo + 1; c++)
+                            /////////Do the sold room and Room Pools each group by each group for weekday
+                            table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
+                            //////First, we collect all the free rooms that is not used, or in another word, over-allocated.
+                            /////Different Segment will have different percentage that will "go bad"
+                            /////Business 60% goes bad
+                            /////Small Business 60% goes bad
+                            /////Corporate contract 60% goes bad
+                            /////Afluent Mature Travelers 40% goes bad
+                            /////International leisure travelers 40% goes bad
+                            /////Families 40% goes bad
+                            /////Corporate/Business Meetings 20% goes bad
+                            /////Association Meetings 20% goes bad
+                            foreach (RoomAllocationDto row in table)
                             {
-                                IncomeStateDto incomStaRow = await GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
-
-                                int roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
-
-                                ///Revenue_Room Revenue
-                                incomStaRow.Room = roomRevenue;
-
-                                ///Revenue_Food and Beverage Total
-                                incomStaRow.FoodB1 = Convert.ToInt16(31 * roomRevenue / 52);
-
-                                ////revenue by attribute under Food and Beverage Section
-                                decimal restaurantScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Resturants"));
-                                decimal BarScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Bars"));
-                                decimal roomServiceScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Room Service"));
-                                decimal banquetScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering"));
-                                decimal meetRoomScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms"));
-                                decimal foodBTotalScore = restaurantScore + BarScore + roomServiceScore + banquetScore + meetRoomScore;
-
-                                if (foodBTotalScore == 0)
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
                                 {
-                                    ///////////////////////////////
-                                    ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
-                                    incomStaRow.FoodB1 = 0;
-                                    incomStaRow.FoodB2 = 0;
-                                    incomStaRow.FoodB3 = 0;
-                                    incomStaRow.FoodB4 = 0;
-                                    incomStaRow.FoodB5 = 0;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
                                 }
-                                else
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Small Business")
                                 {
-                                    incomStaRow.FoodB1 = incomStaRow.FoodB * restaurantScore / foodBTotalScore;
-                                    incomStaRow.FoodB2 = incomStaRow.FoodB * BarScore / foodBTotalScore;
-                                    incomStaRow.FoodB3 = incomStaRow.FoodB * roomServiceScore / foodBTotalScore;
-                                    incomStaRow.FoodB4 = incomStaRow.FoodB * banquetScore / foodBTotalScore;
-                                    incomStaRow.FoodB5 = incomStaRow.FoodB * meetRoomScore / foodBTotalScore;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
                                 }
-
-                                ///Revenue_Other Operated Departments
-                                incomStaRow.Other = 12 * roomRevenue / 52;
-
-                                decimal golfScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course"));
-                                decimal spaScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Spa"));
-                                decimal fitnessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center"));
-                                decimal businessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Business Center"));
-                                decimal otherRecreScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect"));
-                                decimal entertainScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment"));
-                                decimal otherOperatedTotal = golfScore + spaScore + fitnessScore + businessScore + otherRecreScore + entertainScore;
-
-                                if (otherOperatedTotal == 0)
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate contract")
                                 {
-                                    incomStaRow.Other1 = 0;
-                                    incomStaRow.Other2 = 0;
-                                    incomStaRow.Other3 = 0;
-                                    incomStaRow.Other4 = 0;
-                                    incomStaRow.Other5 = 0;
-                                    incomStaRow.Other6 = 0;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
                                 }
-                                else
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Families")
                                 {
-                                    ///////////////////////////////
-                                    ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
-                                    ///////////////////////////////////////////////////////////
-                                    incomStaRow.Other1 = incomStaRow.Other * golfScore / otherOperatedTotal;
-                                    incomStaRow.Other2 = incomStaRow.Other * spaScore / otherOperatedTotal;
-                                    incomStaRow.Other3 = incomStaRow.Other * fitnessScore / otherOperatedTotal;
-                                    incomStaRow.Other4 = incomStaRow.Other * businessScore / otherOperatedTotal;
-                                    incomStaRow.Other5 = incomStaRow.Other * otherRecreScore / otherOperatedTotal;
-                                    incomStaRow.Other6 = incomStaRow.Other * entertainScore / otherOperatedTotal;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
                                 }
-
-                                ///Revenue_Rental and other Income
-                                incomStaRow.Rent = 5 * roomRevenue / 52;
-
-                                ///Revenue_Total Revenue
-                                incomStaRow.TotReven = 100 * roomRevenue / 52;
-
-                                ///Departmental Expenses from Rooms
-                                // attributeDecisionTableAdapter attriDecisionAdpt = new attributeDecisionTableAdapter();
-                                //hotelSimulator.attributeDecisionRow attriDecisionRow;
-
-                                AttributeDecisionDto attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
-                                incomStaRow.Room1 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
-                                incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
-                                incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
-                                incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
-                                incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Maintanence and security")[0];
-                                //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
-                                //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy (Rooms)")[0];
-                                //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
-
-                                ///Departmental Expenses from Food and Beverage
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Resturants");
-                                incomStaRow.FoodB2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Bars");
-                                incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Room Service");
-                                incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering");
-                                incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms");
-                                incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Entertainment")[0];
-                                //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
-                                //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy(FB)")[0];
-                                //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
-
-                                ///Expenses from other operation department such as spa, fitness center etc.
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Spa");
-                                incomStaRow.Other2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center");
-                                incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Business Center");
-                                incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course");
-                                incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect");
-                                incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment");
-                                incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-
-                                ///Expenses TOTAL
-                                incomStaRow.TotExpen = incomStaRow.Room1 + incomStaRow.FoodB2 + incomStaRow.Other2;
-
-                                ///Total Departmental Income
-                                ///////room revenue *100/52 is the total revenue
-                                incomStaRow.TotDeptIncom = 100 * roomRevenue / 52 - incomStaRow.TotExpen;
-
-                                ///Undistributed Expenses from Administrative and General or mangement sales attention
-                                ///8% of the total revenue.
-                                //////Revision: according to Gursoy's email Monday, April 27, 2015 3:58 PM, 
-                                //////courtesy and management/sales attention should be listed under administrative and general (which is undisExpens1)
-                                //////incomStaRow._4UndisExpens1 = 2 * roomRevenue / 13;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy(FB)");
-                                incomStaRow.UndisExpens1 = 2 * roomRevenue / 13 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Management/Sales Attention");
-                                incomStaRow.UndisExpens1 = incomStaRow.UndisExpens1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-
-                                ///Undistributed Expenses from Salses and Marketing
-                                incomStaRow.UndisExpens2 = ScalarQueryTotalSpendingMarketingDecision(monthId, currentQuarter, incomStaRow.GroupID);
-
-                                ///Undistributed Expenses from Distributional Channels
-                                incomStaRow.UndisExpens3 = Convert.ToDecimal(ScalarGroupDistriCostByMonthSoldByChannel(monthId, currentQuarter, incomStaRow.GroupID));
-
-                                ///Undistributed Expenses Property Operation and Maintenance (5.5 % of total revenue plus the labor and other from mantainance and security, building)
-                                incomStaRow.UndisExpens4 = 11 * roomRevenue / 104;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Maintanence and security");
-                                incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-                                attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy (Rooms)");
-                                incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
-
-
-                                ///Undistributed Expenses from untilities
-                                incomStaRow.UndisExpens5 = 11 * roomRevenue / 130;
-
-                                ///Undistributed Expenses TOTAL
-                                incomStaRow.UndisExpens6 = incomStaRow.UndisExpens1 + incomStaRow.UndisExpens2 + incomStaRow.UndisExpens3 + incomStaRow.UndisExpens4 + incomStaRow.UndisExpens5;
-
-                                ///5.Gross operating profit
-                                incomStaRow.GrossProfit = incomStaRow.TotDeptIncom - incomStaRow.UndisExpens6;
-
-                                ///6.Managment Fee
-                                incomStaRow.MgtFee = 5 * roomRevenue / 104;
-
-                                ///7.Income before fixed charges
-                                incomStaRow.IncomBfCharg = incomStaRow.GrossProfit - incomStaRow.MgtFee;
-
-                                ///8.1 Property and other taxes
-                                incomStaRow.Property = 4 * roomRevenue / 65;
-
-                                ///8.2 Insurance
-                                incomStaRow.Insurance = 3 * roomRevenue / 104;
-
-                                ///8.3 Insterests 
-                                ///Right now is fake value, the real value should come from (currentquarter -1) balance sheet 
-                                balanTableRow = GetDataBySingleRowBallanceSheet(incomStaRow.MonthID, incomStaRow.QuarterNo, incomStaRow.GroupID);
-                                incomStaRow.Interest = balanTableRow.LongDebt * 7 / 1000 + balanTableRow.ShortDebt * 3 / 100;
-
-                                ///8.4 Depriciation
-                                incomStaRow.PropDepreciationerty = ScalarMonthDepreciationTotalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID);
-
-                                ///8 Fixed Charge Total
-                                incomStaRow.TotCharg = incomStaRow.Property + incomStaRow.Insurance + incomStaRow.Interest + incomStaRow.PropDepreciationerty;
-
-                                ///9. Net Operating Income (before TAX)
-                                incomStaRow.NetIncomBfTAX = incomStaRow.IncomBfCharg - incomStaRow.TotCharg;
-
-                                ///10.LESS: replacement reserves
-                                incomStaRow.Replace = Convert.ToDecimal(ScalarMonthlyTotalNewCapitalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID));
-
-                                ///11. Adjusted.......
-                                incomStaRow.AjstNetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.Replace;
-
-                                ///income TAX
-                                if (incomStaRow.NetIncomBfTAX < 0)
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Afluent Mature Travelers")
                                 {
-                                    incomStaRow.IncomTAX = 0;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
                                 }
-                                else
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "International leisure travelers")
                                 {
-                                    incomStaRow.IncomTAX = incomStaRow.NetIncomBfTAX / 4;
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
                                 }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate/Business Meetings")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Association Meetings")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
+                                }
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                ////////////////Re-allocate the rooms that are free in such an order
+                                ////////////////Business, Corporate contract, Small Business,Afluent Mature Travelers,International leisure travelers,Families,Corporate/Business Meetings,Association Meetings  
+                                if (roomPool > 0)
+                                {
+                                    // foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Business")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //  RoomAllocationUpdate(row);
+                                    //}
+                                    //////}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Corporate contract")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //  RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Small Business")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Afluent Mature Travelers")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "International leisure travelers")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Families")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Corporate/Business Meetings")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Association Meetings")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
 
-                                ///NET INCOME
-                                incomStaRow.NetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.IncomTAX;
-
-
-                                /////Repeat one more time to input the total Revenue
-                                incomStaRow.TotReven = 100 * roomRevenue / 52;
-
-                                ////////Update the income statement row by row rather than the entire table, to avoide the same total income issue. 
-                                IncomeStateUpdate(incomStaRow);
-                                ////Slow down the calucation to give database more time to process, wait 1/10 second
-
-
+                                }
+                                // RoomAllocationRoomSoldUpdate(row);
+                                _context.ChangeTracker.Clear();
+                                _context.Update(row.Adapt<RoomAllocation>());
+                                _context.SaveChanges();
                             }
+                            // RoomAllocationUpdate(Row);
+                            groupID++;
                         }
-                        //////////////////
-                        ///////Update Database///
-                        /////////incomStatAdpt.Update(incoTable);
-
-                        ////////////////////////////////////////
-                        ////The following code is just to ensure the Total Revenue is input correctly
-                        /////This check only makes sense when current month is greater than 1
-                        ////////////////////////////////////////
-
-                        if (currentQuarter > 1)
                         {
-                            //incomeState1TableAdapter income1Adpt = new incomeState1TableAdapter();
-                            decimal totalRevThisMonth;
-                            decimal totalRevPrevMonth;
 
-                            List<IncomeStateDto> income1Table = await GetDataByMonthIncomeState(monthId, currentQuarter);
-                            foreach (IncomeStateDto incom1StaRow in income1Table)
+                            List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+
+
+                            decimal directSold;
+                            decimal travelSold;
+                            decimal onlineSold;
+                            decimal opaqueSold;
+                            decimal thisSold;
+                            decimal roomAlloSold;
+
+                            decimal sum;
+
+                            foreach (SoldRoomByChannelDto row in soldChanTable)
                             {
-                                totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
-                                totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter - 1));
-                                if (totalRevPrevMonth == totalRevThisMonth)
+                                directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment).ActualDemand;
+                                travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment).ActualDemand;
+                                onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment).ActualDemand;
+                                opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment).ActualDemand;
+                                thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment).ActualDemand;
+                                roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment).RoomsSold;
+
+                                sum = directSold + travelSold + onlineSold + opaqueSold;
+
+                                if (sum == 0)
                                 {
-                                    decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));
-                                    incom1StaRow.TotReven = 100 * roomRevenue / 52;
-                                    IncomeStateTotalRevenUpdate(incom1StaRow);
+                                    row.SoldRoom = 0;
+                                    row.Revenue = 0;
+                                    row.Cost = 0;
+                                }
+                                else
+                                {
+                                    row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
+                                    row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                                    row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+
+                                }
+                                // SoldRoomByChannelUpdate(row);
+                                _context.ChangeTracker.Clear();
+                                _context.Update(row.Adapt<SoldRoomByChannel>());
+                                _context.SaveChanges();
+                            }
+
+                            ////Slow down the calucation to give database more time to process, wait 1/10 second
+
+
+                            /////////////////////////////////
+                            /////////Set revenue and cost
+                            //////////////////////////////
+                            //List<SoldRoomByChannelDto> soldChanTable = GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+                            //foreach (SoldRoomByChannelDto row in soldChanTable)
+                            //{
+                            //    row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                            //    row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
+                            //    SoldRoomByChannelUpdate(row);
+                            //}
+
+                        }
+
+                        {
+
+
+                            //IncomeState incomStatAdpt = new IncomeState();
+                            //BalanceSheet balanTableAdpt = new BalanceSheet();
+                            //RoomAllocation roomAlloAdpt = new RoomAllocation();
+                            //SoldRoomByChannel roomChanAdpt = new SoldRoomByChannel();
+                            //ClassSession classAdapter = new ClassSession();
+
+                            BalanceSheetDto balanTableRow;
+
+                            List<IncomeStateDto> incoTable = await GetDataByMonthIncomeState(monthId, currentQuarter);
+
+                            int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(month.ClassId));
+                            if (incoTable.Count > 0)
+                            {
+                                for (int c = 1; c < groupNo + 1; c++)
+                                {
+                                    IncomeStateDto incomStaRow = await GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
+
+                                    int roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
+
+                                    ///Revenue_Room Revenue
+                                    incomStaRow.Room = roomRevenue;
+
+                                    ///Revenue_Food and Beverage Total
+                                    incomStaRow.FoodB1 = Convert.ToInt16(31 * roomRevenue / 52);
+
+                                    ////revenue by attribute under Food and Beverage Section
+                                    decimal restaurantScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Resturants"));
+                                    decimal BarScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Bars"));
+                                    decimal roomServiceScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Room Service"));
+                                    decimal banquetScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering"));
+                                    decimal meetRoomScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms"));
+                                    decimal foodBTotalScore = restaurantScore + BarScore + roomServiceScore + banquetScore + meetRoomScore;
+
+                                    if (foodBTotalScore == 0)
+                                    {
+                                        ///////////////////////////////
+                                        ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
+                                        incomStaRow.FoodB1 = 0;
+                                        incomStaRow.FoodB2 = 0;
+                                        incomStaRow.FoodB3 = 0;
+                                        incomStaRow.FoodB4 = 0;
+                                        incomStaRow.FoodB5 = 0;
+                                    }
+                                    else
+                                    {
+                                        incomStaRow.FoodB1 = incomStaRow.FoodB * restaurantScore / foodBTotalScore;
+                                        incomStaRow.FoodB2 = incomStaRow.FoodB * BarScore / foodBTotalScore;
+                                        incomStaRow.FoodB3 = incomStaRow.FoodB * roomServiceScore / foodBTotalScore;
+                                        incomStaRow.FoodB4 = incomStaRow.FoodB * banquetScore / foodBTotalScore;
+                                        incomStaRow.FoodB5 = incomStaRow.FoodB * meetRoomScore / foodBTotalScore;
+                                    }
+
+                                    ///Revenue_Other Operated Departments
+                                    incomStaRow.Other = 12 * roomRevenue / 52;
+
+                                    decimal golfScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course"));
+                                    decimal spaScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Spa"));
+                                    decimal fitnessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center"));
+                                    decimal businessScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Business Center"));
+                                    decimal otherRecreScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect"));
+                                    decimal entertainScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment"));
+                                    decimal otherOperatedTotal = golfScore + spaScore + fitnessScore + businessScore + otherRecreScore + entertainScore;
+
+                                    if (otherOperatedTotal == 0)
+                                    {
+                                        incomStaRow.Other1 = 0;
+                                        incomStaRow.Other2 = 0;
+                                        incomStaRow.Other3 = 0;
+                                        incomStaRow.Other4 = 0;
+                                        incomStaRow.Other5 = 0;
+                                        incomStaRow.Other6 = 0;
+                                    }
+                                    else
+                                    {
+                                        ///////////////////////////////
+                                        ///////////To Avoid foodBTotal is zero, avoid divided by zero exception
+                                        ///////////////////////////////////////////////////////////
+                                        incomStaRow.Other1 = incomStaRow.Other * golfScore / otherOperatedTotal;
+                                        incomStaRow.Other2 = incomStaRow.Other * spaScore / otherOperatedTotal;
+                                        incomStaRow.Other3 = incomStaRow.Other * fitnessScore / otherOperatedTotal;
+                                        incomStaRow.Other4 = incomStaRow.Other * businessScore / otherOperatedTotal;
+                                        incomStaRow.Other5 = incomStaRow.Other * otherRecreScore / otherOperatedTotal;
+                                        incomStaRow.Other6 = incomStaRow.Other * entertainScore / otherOperatedTotal;
+                                    }
+
+                                    ///Revenue_Rental and other Income
+                                    incomStaRow.Rent = 5 * roomRevenue / 52;
+
+                                    ///Revenue_Total Revenue
+                                    incomStaRow.TotReven = 100 * roomRevenue / 52;
+
+                                    ///Departmental Expenses from Rooms
+                                    // attributeDecisionTableAdapter attriDecisionAdpt = new attributeDecisionTableAdapter();
+                                    //hotelSimulator.attributeDecisionRow attriDecisionRow;
+
+                                    AttributeDecisionDto attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
+                                    incomStaRow.Room1 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
+                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
+                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
+                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
+                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Maintanence and security")[0];
+                                    //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+                                    //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy (Rooms)")[0];
+                                    //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+
+                                    ///Departmental Expenses from Food and Beverage
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Resturants");
+                                    incomStaRow.FoodB2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Bars");
+                                    incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Room Service");
+                                    incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Banquet & Catering");
+                                    incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Meeting Rooms");
+                                    incomStaRow.FoodB2 = incomStaRow.FoodB2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Entertainment")[0];
+                                    //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+                                    //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy(FB)")[0];
+                                    //incomStaRow._2FoodB = incomStaRow._2FoodB + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
+
+                                    ///Expenses from other operation department such as spa, fitness center etc.
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Spa");
+                                    incomStaRow.Other2 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Fitness Center");
+                                    incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Business Center");
+                                    incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Golf Course");
+                                    incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Other Recreation Facilities - Pools, game rooms, tennis courts, ect");
+                                    incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Entertainment");
+                                    incomStaRow.Other2 = incomStaRow.Other2 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+                                    ///Expenses TOTAL
+                                    incomStaRow.TotExpen = incomStaRow.Room1 + incomStaRow.FoodB2 + incomStaRow.Other2;
+
+                                    ///Total Departmental Income
+                                    ///////room revenue *100/52 is the total revenue
+                                    incomStaRow.TotDeptIncom = 100 * roomRevenue / 52 - incomStaRow.TotExpen;
+
+                                    ///Undistributed Expenses from Administrative and General or mangement sales attention
+                                    ///8% of the total revenue.
+                                    //////Revision: according to Gursoy's email Monday, April 27, 2015 3:58 PM, 
+                                    //////courtesy and management/sales attention should be listed under administrative and general (which is undisExpens1)
+                                    //////incomStaRow._4UndisExpens1 = 2 * roomRevenue / 13;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy(FB)");
+                                    incomStaRow.UndisExpens1 = 2 * roomRevenue / 13 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Management/Sales Attention");
+                                    incomStaRow.UndisExpens1 = incomStaRow.UndisExpens1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+                                    ///Undistributed Expenses from Salses and Marketing
+                                    incomStaRow.UndisExpens2 = ScalarQueryTotalSpendingMarketingDecision(monthId, currentQuarter, incomStaRow.GroupID);
+
+                                    ///Undistributed Expenses from Distributional Channels
+                                    incomStaRow.UndisExpens3 = Convert.ToDecimal(ScalarGroupDistriCostByMonthSoldByChannel(monthId, currentQuarter, incomStaRow.GroupID));
+
+                                    ///Undistributed Expenses Property Operation and Maintenance (5.5 % of total revenue plus the labor and other from mantainance and security, building)
+                                    incomStaRow.UndisExpens4 = 11 * roomRevenue / 104;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Maintanence and security");
+                                    incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Courtesy (Rooms)");
+                                    incomStaRow.UndisExpens4 = incomStaRow.UndisExpens4 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+
+
+                                    ///Undistributed Expenses from untilities
+                                    incomStaRow.UndisExpens5 = 11 * roomRevenue / 130;
+
+                                    ///Undistributed Expenses TOTAL
+                                    incomStaRow.UndisExpens6 = incomStaRow.UndisExpens1 + incomStaRow.UndisExpens2 + incomStaRow.UndisExpens3 + incomStaRow.UndisExpens4 + incomStaRow.UndisExpens5;
+
+                                    ///5.Gross operating profit
+                                    incomStaRow.GrossProfit = incomStaRow.TotDeptIncom - incomStaRow.UndisExpens6;
+
+                                    ///6.Managment Fee
+                                    incomStaRow.MgtFee = 5 * roomRevenue / 104;
+
+                                    ///7.Income before fixed charges
+                                    incomStaRow.IncomBfCharg = incomStaRow.GrossProfit - incomStaRow.MgtFee;
+
+                                    ///8.1 Property and other taxes
+                                    incomStaRow.Property = 4 * roomRevenue / 65;
+
+                                    ///8.2 Insurance
+                                    incomStaRow.Insurance = 3 * roomRevenue / 104;
+
+                                    ///8.3 Insterests 
+                                    ///Right now is fake value, the real value should come from (currentquarter -1) balance sheet 
+                                    balanTableRow = GetDataBySingleRowBallanceSheet(incomStaRow.MonthID, incomStaRow.QuarterNo, incomStaRow.GroupID);
+                                    incomStaRow.Interest = balanTableRow.LongDebt * 7 / 1000 + balanTableRow.ShortDebt * 3 / 100;
+
+                                    ///8.4 Depriciation
+                                    incomStaRow.PropDepreciationerty = ScalarMonthDepreciationTotalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID);
+
+                                    ///8 Fixed Charge Total
+                                    incomStaRow.TotCharg = incomStaRow.Property + incomStaRow.Insurance + incomStaRow.Interest + incomStaRow.PropDepreciationerty;
+
+                                    ///9. Net Operating Income (before TAX)
+                                    incomStaRow.NetIncomBfTAX = incomStaRow.IncomBfCharg - incomStaRow.TotCharg;
+
+                                    ///10.LESS: replacement reserves
+                                    incomStaRow.Replace = Convert.ToDecimal(ScalarMonthlyTotalNewCapitalAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID));
+
+                                    ///11. Adjusted.......
+                                    incomStaRow.AjstNetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.Replace;
+
+                                    ///income TAX
+                                    if (incomStaRow.NetIncomBfTAX < 0)
+                                    {
+                                        incomStaRow.IncomTAX = 0;
+                                    }
+                                    else
+                                    {
+                                        incomStaRow.IncomTAX = incomStaRow.NetIncomBfTAX / 4;
+                                    }
+
+                                    ///NET INCOME
+                                    incomStaRow.NetIncom = incomStaRow.NetIncomBfTAX - incomStaRow.IncomTAX;
+
+
+                                    /////Repeat one more time to input the total Revenue
+                                    incomStaRow.TotReven = 100 * roomRevenue / 52;
+
+                                    ////////Update the income statement row by row rather than the entire table, to avoide the same total income issue. 
+                                    // IncomeStateUpdate(incomStaRow);
+                                    _context.ChangeTracker.Clear();
+                                    _context.Update(incomStaRow.Adapt<IncomeState>());
+                                    _context.SaveChanges();
                                     ////Slow down the calucation to give database more time to process, wait 1/10 second
 
+
                                 }
                             }
-                        }
-                    }
-                    ////////////////////////////////////
-                    //Set Revenue By segment////////////
-                    ////////////////////////////////////
+                            //////////////////
+                            ///////Update Database///
+                            /////////incomStatAdpt.Update(incoTable);
 
-                    List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
-                    foreach (RoomAllocationDto roRw in roTab)
-                    {
-                        roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
-                        RoomAllocationRevenueUpdate(roRw);
-                    }
-                    obj.UpdateClassStatus(_context, month.ClassId, "T");
+                            ////////////////////////////////////////
+                            ////The following code is just to ensure the Total Revenue is input correctly
+                            /////This check only makes sense when current month is greater than 1
+                            ////////////////////////////////////////
 
-                    {
-                        if (currentQuarter > 1)
-                        {
-                            //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                            int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
-                            int groupIDRA = 1;
-                            //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
-                            string schoolName = Convert.ToString(ScalarSchoolName(monthId));
-                            string groupName = null;
-
-                            decimal a;
-                            decimal b;
-                            decimal profiM;
-                            while (groupIDRA < maxGroupRA + 1)
+                            if (currentQuarter > 1)
                             {
-                                groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
-                                //////Profit Margin
-                                IncomeStateDto incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
-                                a = incomeRowCurrent.NetIncom;
-                                b = incomeRowCurrent.TotReven;
+                                //incomeState1TableAdapter income1Adpt = new incomeState1TableAdapter();
+                                decimal totalRevThisMonth;
+                                decimal totalRevPrevMonth;
 
-                                if (b == 0)
+                                List<IncomeStateDto> income1Table = await GetDataByMonthIncomeState(monthId, currentQuarter);
+                                foreach (IncomeStateDto incom1StaRow in income1Table)
                                 {
-                                    ////do nothing, keep the profit margin to be null.
-                                    profiM = 0;
-                                }
-                                else
-                                {
-                                    profiM = a / b;
-                                }
+                                    totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
+                                    totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId - 1, incom1StaRow.GroupID, currentQuarter - 1));
+                                    if (totalRevPrevMonth == totalRevThisMonth)
+                                    {
+                                        decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));
+                                        incom1StaRow.TotReven = 100 * roomRevenue / 52;
+                                        //IncomeStateTotalRevenUpdate(incom1StaRow);
+                                        _context.ChangeTracker.Clear();
+                                        _context.Update(incom1StaRow.Adapt<IncomeState>());
+                                        _context.SaveChanges();
+                                        ////Slow down the calucation to give database more time to process, wait 1/10 second
 
-                                ///////Insert or Update Performance Ranking
-                                /////First check if the instructor missed the the group Name
-                                if (groupName == "Null")
-                                {
-                                    groupName = "Group " + groupID.ToString();
+                                    }
                                 }
-                                if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID).ID == 0)
-                                {
-                                    InsertRank(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
-                                }
-                                else
-                                {
-                                    RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupID);
-                                    ranksR.Performance = profiM;
-                                    RankingUpdate(ranksR);
-                                    ////Slow down the calucation to give database more time to process, wait 1/10 second
+                            }
+                        }
+                        ////////////////////////////////////
+                        //Set Revenue By segment////////////
+                        ////////////////////////////////////
 
+                        List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        foreach (RoomAllocationDto roRw in roTab)
+                        {
+                            roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
+                            //RoomAllocationRevenueUpdate(roRw);
+                            _context.ChangeTracker.Clear();
+                            _context.Update(roRw.Adapt<RoomAllocation>());
+                            _context.SaveChanges();
+                        }
+                        obj.UpdateClassStatus(_context, month.ClassId, "T");
+
+                        {
+                            if (currentQuarter > 1)
+                            {
+                                //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                                int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
+                                int groupIDRA = 1;
+                                //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
+                                string schoolName = Convert.ToString(ScalarSchoolName(monthId));
+                                string groupName = null;
+
+                                decimal a;
+                                decimal b;
+                                decimal profiM;
+                                while (groupIDRA < maxGroupRA + 1)
+                                {
+                                    groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
+                                    //////Profit Margin
+                                    IncomeStateDto incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
+                                    a = incomeRowCurrent.NetIncom;
+                                    b = incomeRowCurrent.TotReven;
+
+                                    if (b == 0)
+                                    {
+                                        ////do nothing, keep the profit margin to be null.
+                                        profiM = 0;
+                                    }
+                                    else
+                                    {
+                                        profiM = a / b;
+                                    }
+
+                                    ///////Insert or Update Performance Ranking
+                                    /////First check if the instructor missed the the group Name
+                                    if (groupName == "Null")
+                                    {
+                                        groupName = "Group " + groupID.ToString();
+                                    }
+                                    if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID).ID == 0)
+                                    {
+                                        InsertRank(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
+                                    }
+                                    else
+                                    {
+                                        RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupID);
+                                        ranksR.Performance = profiM;
+                                        _context.ChangeTracker.Clear();
+                                        _context.Update(ranksR.Adapt<Rankings>());
+                                        _context.SaveChanges();
+                                        //RankingUpdate(ranksR);
+
+                                        ////Slow down the calucation to give database more time to process, wait 1/10 second
+
+                                    }
+                                    //////go to next group
+                                    groupIDRA++;
                                 }
-                                //////go to next group
-                                groupIDRA++;
                             }
                         }
                     }
+                    await transaction.CommitAsync();
+                    resObj.Message = "Calculation Success";
                 }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    String exp = ex.ToString();
+                    resObj.Message = ex.ToString();
 
+                }
             }
-            catch (Exception ex)
-            {
-                String exp = ex.ToString();
 
-            }
-            resObj.Message = "Calculation Success";
             resObj.StatusCode = 200;
-            string strjson = "{ monthID:" + month.ClassId + "}";
+            string strjson = "{ ClassId:" + month.ClassId + "}";
             var jobj = JsonConvert.DeserializeObject<MonthDto>(strjson)!;
             resObj.Data = jobj;
             return resObj;
@@ -1279,6 +1325,7 @@ namespace Service
         }
         private decimal ScalarQueryAvgPricePriceDecision(int monthId, int quarterNo, bool weekday, string distributionChannel, string segment)
         {
+
 
             var list = (from m in _context.PriceDecision.Where(x => x.MonthID == monthId
                         && x.QuarterNo == quarterNo
@@ -2010,14 +2057,16 @@ namespace Service
                     NetIncomBfTAX = (int)pObj.NetIncomBfTAX,
 
                 };
-                //_context.IncomeState.Add(objPd);
-                //_context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
-                //_context.Update(objPd);
-                //_context.SaveChanges();
-
-                _context.IncomeState.Attach(objPd);
+                _context.ChangeTracker.Clear();
+                _context.IncomeState.Add(objPd);
                 _context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
+                _context.Update(objPd);
                 _context.SaveChanges();
+                //_context.ChangeTracker.Clear();
+                //_context.IncomeState.Attach(objPd);
+                //_context.Entry(objPd).Property(x => x.TotReven).IsModified = true;
+
+                //_context.SaveChanges();
 
 
                 result = true;
@@ -2858,7 +2907,7 @@ namespace Service
             var data = _context.Rankings.SingleOrDefault(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno);
             if (data == null)
             {
-                throw new ValidationException("data not found ");
+                return new RankingsDto();
             }
             return data.Adapt<RankingsDto>();
 
@@ -2891,7 +2940,7 @@ namespace Service
 
         public async Task<List<MonthDto>> GetMonthListByClassId(int classID)
         {
-            var data = await _context.Months.Where(x => x.IsComplete == false).ToListAsync();
+            var data = await _context.Months.Where(x => x.ClassId == classID && x.IsComplete == false).ToListAsync();
             if (data == null)
             {
                 throw new ValidationException("data not found ");
