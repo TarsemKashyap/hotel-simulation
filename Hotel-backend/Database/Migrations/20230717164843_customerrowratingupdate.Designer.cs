@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230717164843_customerrowratingupdate")]
+    partial class customerrowratingupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -651,74 +653,74 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ADRM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ADRM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ADRY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ADRY")
+                        .HasColumnType("int");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("MgtEfficiencyM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("MgtEfficiencyM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("MgtEfficiencyY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("MgtEfficiencyY")
+                        .HasColumnType("int");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("OccupancyM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OccupancyM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("OccupancyY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OccupancyY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ProfitMarginM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ProfitMarginM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ProfitMarginY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ProfitMarginY")
+                        .HasColumnType("int");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RevparM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RevparM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RevparY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RevparY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RoomRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RoomRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RoomRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RoomRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRoomM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRoomM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRoomY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRoomY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("TotalRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("TotalRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("TotalRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("TotalRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("YieldMgtM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("YieldMgtM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("YieldMgtY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("YieldMgtY")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -913,8 +915,8 @@ namespace Database.Migrations
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("LaborSpending")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("LaborSpending")
+                        .HasColumnType("int");
 
                     b.Property<string>("MarketingTechniques")
                         .IsRequired()
@@ -929,8 +931,8 @@ namespace Database.Migrations
                     b.Property<string>("Segment")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Spending")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Spending")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -963,17 +965,17 @@ namespace Database.Migrations
                     b.Property<int>("ConfigID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("LaborPercent")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("LaborPercent")
+                        .HasColumnType("double");
 
                     b.Property<string>("MarketingTechniques")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Percentage")
+                    b.Property<double>("Percentage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("double")
+                        .HasDefaultValue(0.0);
 
                     b.Property<string>("Segment")
                         .IsRequired()
@@ -1142,8 +1144,8 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ActualDemand")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ActualDemand")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Confirmed")
                         .ValueGeneratedOnAdd()
@@ -1160,8 +1162,8 @@ namespace Database.Migrations
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
@@ -1320,10 +1322,10 @@ namespace Database.Migrations
                     b.Property<int>("ConfigID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Percentage")
+                    b.Property<double>("Percentage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("double")
+                        .HasDefaultValue(0.0);
 
                     b.Property<string>("Segment")
                         .IsRequired()

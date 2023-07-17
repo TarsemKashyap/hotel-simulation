@@ -17,8 +17,8 @@ public class PriceDecision
     public bool Weekday { get; set; }
     public string DistributionChannel { get; set; }
     public string Segment { get; set; }
-    public int Price { get; set; }
-    public int ActualDemand { get; set; }
+    public decimal Price { get; set; }
+    public decimal ActualDemand { get; set; }
     public bool Confirmed { get; set; }
     public virtual Month Month { get; set; }
 
