@@ -28,7 +28,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HotelDbContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DbConn"));
+    string conn=builder.Configuration.GetConnectionString("DbConn");
+    options.UseMySQL(conn);
 });
 
 builder.Services.AddIdentity<AppUser, AppUserRole>(options =>
