@@ -1,4 +1,5 @@
 ﻿using Database;
+using Database.Migrations;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -136,10 +137,10 @@ namespace Service
                                     Qminus2 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     Qminus3 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     Qminus4 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus1 =(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus2 =(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus3 =(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus4 =(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus4 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                 }
                                 if (mDRow.MarketingTechniques == "Advertising")
                                 {
@@ -285,16 +286,17 @@ namespace Service
                             }
                             // IncomeStateTotalRevenUpdate(row);
 
-                            _context.ChangeTracker.Clear();
+                            //  _context.ChangeTracker.Clear();
                             //_context.IncomeState.Add(row.Adapt<IncomeState>());
                             //_context.Entry(row.Adapt<IncomeState>()).Property(x => x.TotReven).IsModified = true;
                             _context.Update(row);
 
                         }
                         _context.SaveChanges();
-                        List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
 
-                        foreach (CustomerRawRatingDto row in rawRatingTable)
+                        // List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
+                        var datarawRatingTable = await _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+                        foreach (CustomerRawRating row in datarawRatingTable)
                         {
                             AttributeDecisionDto attriDeRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, row.GroupID, row.Attribute.Trim());
                             //In order to avoid divided by zero exception, if any of these spending is zero, 
@@ -323,19 +325,32 @@ namespace Service
                                 row.RawRating = Convert.ToDecimal(9.99);
                             }
                             //CustomerRowRatingUpdate(row);
-                            _context.ChangeTracker.Clear();
-                            _context.Update(row.Adapt<CustomerRawRating>());
-                            _context.SaveChanges();
-                        }
-                        // rawRatingAdapter.Update(rawRatingTable);
+                            // _context.ChangeTracker.Clear();
+                            _context.Update(row);
 
-                        // hotelSimulator.weightedAttributeRatingDataTable overallRatingTable;
-                        List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
+                        }
+                        _context.SaveChanges();
+
+                        //  List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
+
+                        var dataoverallRatingTable = await _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+
                         decimal averageRating = 0;
                         decimal fairMarket = 0;
-                        foreach (WeightedAttributeRatingDto row in overallRatingTable)
+                        foreach (WeightedAttributeRating row in dataoverallRatingTable)
                         {
                             row.CustomerRating = ScalarQueryRatingBySegmentCustomerRawRatting(row.MonthID, row.QuarterNo, row.GroupID, row.Segment);
+                            _context.Add(row);
+                            _context.Update(row);
+
+                        }
+                        _context.SaveChanges();
+
+                        var dataoverallRatingTable1 = await _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+
+                        foreach (WeightedAttributeRating row in dataoverallRatingTable1)
+                        {
+
                             averageRating = Convert.ToDecimal(ScalarQueryGetAvageRatingWeightAttributeRating(row.MonthID, row.QuarterNo, row.Segment));
                             fairMarket = Convert.ToDecimal(ScalarQueryFairMarketWeightAttributeRating(row.Segment, row.MonthID, row.QuarterNo));
                             if (row.CustomerRating == 0 || averageRating == 0 || fairMarket == 0)
@@ -345,17 +360,18 @@ namespace Service
                                 row.ActualDemand = Convert.ToInt32(row.CustomerRating / averageRating * fairMarket);
                             }
                             //WeightedAttributeRatingUpdate(row);
-                            _context.ChangeTracker.Clear();
-                            _context.Update(row.Adapt<WeightedAttributeRating>());
-                            _context.SaveChanges();
-                        }
+                            //_context.ChangeTracker.Clear();
+                            _context.Add(row);
+                            _context.Update(row);
 
+                        }
+                        _context.SaveChanges();
 
                         // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                        List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
-
+                        //   List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        var datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                         //Sum customer demand and set into database
-                        foreach (RoomAllocationDto row in table)
+                        foreach (RoomAllocation row in datatable)
                         {
                             if (row.Weekday == true)
                             {
@@ -372,11 +388,11 @@ namespace Service
                                     Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
                             }
                             //RoomAllocationActualDemandUpdate(row);
-                            _context.ChangeTracker.Clear();
-                            _context.Update(row.Adapt<RoomAllocation>());
-                            _context.SaveChanges();
-                        }
 
+                            _context.Update(row);
+
+                        }
+                        _context.SaveChanges();
                         ////Slow down the calucation to give database more time to process, wait 1/10 second
 
 
@@ -388,7 +404,8 @@ namespace Service
                         while (groupID < maxGroup + 1)
                         {
                             /////////Do the sold room and Room Pools each group by each group for weekday
-                            table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
+                            //table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
+                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == true).ToListAsync();
                             //////First, we collect all the free rooms that is not used, or in another word, over-allocated.
                             /////Different Segment will have different percentage that will "go bad"
                             /////Business 60% goes bad
@@ -399,7 +416,7 @@ namespace Service
                             /////Families 40% goes bad
                             /////Corporate/Business Meetings 20% goes bad
                             /////Association Meetings 20% goes bad
-                            foreach (RoomAllocationDto row in table)
+                            foreach (RoomAllocation row in datatable)
                             {
                                 if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
                                 {
@@ -775,17 +792,18 @@ namespace Service
 
                                 }
                                 // RoomAllocationRoomSoldUpdate(row);
-                                _context.ChangeTracker.Clear();
-                                _context.Update(row.Adapt<RoomAllocation>());
-                                _context.SaveChanges();
+                                //_context.ChangeTracker.Clear();
+                                _context.Update(row);
+
                             }
+                            _context.SaveChanges();
                             // RoomAllocationUpdate(Row);
                             groupID++;
                         }
                         {
 
-                            List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
-
+                            // List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
+                            var datasoldChanTable = await _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
 
                             decimal directSold;
                             decimal travelSold;
@@ -796,7 +814,7 @@ namespace Service
 
                             decimal sum;
 
-                            foreach (SoldRoomByChannelDto row in soldChanTable)
+                            foreach (SoldRoomByChannel row in datasoldChanTable)
                             {
                                 directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment).ActualDemand;
                                 travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment).ActualDemand;
@@ -821,11 +839,11 @@ namespace Service
 
                                 }
                                 // SoldRoomByChannelUpdate(row);
-                                _context.ChangeTracker.Clear();
-                                _context.Update(row.Adapt<SoldRoomByChannel>());
-                                _context.SaveChanges();
-                            }
 
+                                _context.Update(row);
+
+                            }
+                            _context.SaveChanges();
                             ////Slow down the calucation to give database more time to process, wait 1/10 second
 
 
@@ -1076,13 +1094,12 @@ namespace Service
 
                                     ////////Update the income statement row by row rather than the entire table, to avoide the same total income issue. 
                                     // IncomeStateUpdate(incomStaRow);
-                                    _context.ChangeTracker.Clear();
-                                    _context.Update(incomStaRow.Adapt<IncomeState>());
-                                    _context.SaveChanges();
+                                    // _context.ChangeTracker.Clear();
+                                    _context.Update(incomStaRow);
+
                                     ////Slow down the calucation to give database more time to process, wait 1/10 second
-
-
                                 }
+                                _context.SaveChanges();
                             }
                             //////////////////
                             ///////Update Database///
@@ -1099,8 +1116,9 @@ namespace Service
                                 decimal totalRevThisMonth;
                                 decimal totalRevPrevMonth;
 
-                                List<IncomeStateDto> income1Table = await GetDataByMonthIncomeState(monthId, currentQuarter);
-                                foreach (IncomeStateDto incom1StaRow in income1Table)
+                                //List<IncomeStateDto> income1Table = await GetDataByMonthIncomeState(monthId, currentQuarter);
+                                var dataincome1Table = await _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+                                foreach (IncomeState incom1StaRow in dataincome1Table)
                                 {
                                     totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
                                     totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId - 1, incom1StaRow.GroupID, currentQuarter - 1));
@@ -1109,28 +1127,31 @@ namespace Service
                                         decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));
                                         incom1StaRow.TotReven = 100 * roomRevenue / 52;
                                         //IncomeStateTotalRevenUpdate(incom1StaRow);
-                                        _context.ChangeTracker.Clear();
-                                        _context.Update(incom1StaRow.Adapt<IncomeState>());
-                                        _context.SaveChanges();
+                                        // _context.ChangeTracker.Clear();
+                                        _context.Update(incom1StaRow);
+
                                         ////Slow down the calucation to give database more time to process, wait 1/10 second
 
                                     }
                                 }
+                                _context.SaveChanges();
                             }
                         }
                         ////////////////////////////////////
                         //Set Revenue By segment////////////
                         ////////////////////////////////////
 
-                        List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
-                        foreach (RoomAllocationDto roRw in roTab)
+                        //  List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        var dataroTab = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+                        foreach (RoomAllocation roRw in dataroTab)
                         {
                             roRw.Revenue = Convert.ToDecimal(ScalarQueryRevenueByWeekSegmentRoomAllocation(roRw.MonthID, roRw.GroupID, roRw.QuarterNo, roRw.Segment, roRw.Weekday));
                             //RoomAllocationRevenueUpdate(roRw);
-                            _context.ChangeTracker.Clear();
-                            _context.Update(roRw.Adapt<RoomAllocation>());
-                            _context.SaveChanges();
+                            // _context.ChangeTracker.Clear();
+                            _context.Update(roRw);
+
                         }
+                        _context.SaveChanges();
                         obj.UpdateClassStatus(_context, month.ClassId, "T");
 
                         {
@@ -1179,8 +1200,8 @@ namespace Service
                                     {
                                         RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupID);
                                         ranksR.Performance = profiM;
-                                        _context.ChangeTracker.Clear();
-                                        _context.Update(ranksR.Adapt<Rankings>());
+                                        // _context.ChangeTracker.Clear();
+                                        _context.Update(ranksR);
                                         _context.SaveChanges();
                                         //RankingUpdate(ranksR);
 
@@ -1685,16 +1706,23 @@ namespace Service
                         where (irawc.Segment == crr.Segment && m.MonthId == crr.MonthID && m.Sequence == crr.QuarterNo
                         && crr.MonthID == monthID && crr.QuarterNo == quarterNo && crr.GroupID == groupID && crr.Segment == segment
                         )
-                        group new { crr, irawc } by new { crr.RawRating, irawc.Weight } into grp
                         select new
                         {
-                            WeightedRating = grp.Sum(x => (x.crr.RawRating * x.irawc.Weight)),
+                            //RawRating= crr.RawRating,
+                            //Weight= irawc.Weight
+                            WeightedRating = crr.RawRating * irawc.Weight,
 
                         }).ToList();
+            //group new { crr, irawc } by new { crr.RawRating, irawc.Weight } into grp
+            //select new
+            //{
+            //    WeightedRating = grp.Sum(x => (x.crr.RawRating * x.irawc.Weight)),
+
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                WeightedRating = list[0].WeightedRating;
+                WeightedRating = list.Sum(a => a.WeightedRating);
             }
             return WeightedRating;
 
@@ -1705,18 +1733,23 @@ namespace Service
 
             var list = (from w in _context.WeightedAttributeRating
                         .Where(x => x.MonthID == monthID && x.QuarterNo == quarterNo && x.Segment == segment)
-                        group w by w.CustomerRating into grp
                         select new
                         {
-                            AverageRating = grp.Average(x => (x.CustomerRating))
+                            CustomerRating = w.CustomerRating
                         }).ToList();
+
+            //group w by w.CustomerRating into grp
+            //select new
+            //{
+            //    AverageRating = grp.Average(x => (x.CustomerRating))
+            //}).ToList();
 
 
 
             decimal AverageRating = 0;
             if (list.Count > 0)
             {
-                AverageRating = Convert.ToDecimal(list[0].AverageRating);
+                AverageRating = list.Average(x => x.CustomerRating);
             }
             return AverageRating;
 
@@ -2614,16 +2647,17 @@ namespace Service
             decimal groupRevenue = 0;
             var list = (from c in _context.SoldRoomByChannel
                         where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
-                        group c by c.Revenue into gpc
-                        select new
-                        {
-                            groupRevenue = gpc.Sum(x => x.Revenue)
+                        select new { Revenue = c.Revenue }).ToList();
+            //group c by c.Revenue into gpc
+            //select new
+            //{
+            //    groupRevenue = gpc.Sum(x => x.Revenue)
 
-                        }).ToList();
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                groupRevenue = list[0].groupRevenue;
+                groupRevenue = list.Sum(x => x.Revenue);
             }
             return groupRevenue;
 
@@ -2864,19 +2898,19 @@ namespace Service
                         where (m.Sequence == pd.QuarterNo && r.GroupID == Convert.ToInt16(pd.GroupID) && dcvsc.DistributionChannel == pd.DistributionChannel
                         && r.Segment == pd.Segment && r.Weekday == pd.Weekday && r.MonthID == monthId && r.QuarterNo == quarterNo
                         && r.GroupID == groupId && r.Segment == segment && r.Weekday == weekday)
+                        select new { roomAllocation = r.RoomsSold * dcvsc.Percentage * pd.Price }).ToList();
 
+            //group new { r, pd, dcvsc } by new { r.RoomsSold, dcvsc.Percentage, pd.Price } into gpc
 
-                        group new { r, pd, dcvsc } by new { r.RoomsSold, dcvsc.Percentage, pd.Price } into gpc
+            //select new
+            //{
+            //    roomAllocation = gpc.Sum(x => (x.r.RoomsSold * x.dcvsc.Percentage * x.pd.Price))
 
-                        select new
-                        {
-                            roomAllocation = gpc.Sum(x => (x.r.RoomsSold * x.dcvsc.Percentage * x.pd.Price))
-
-                        }).ToList();
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                roomAllocation = list[0].roomAllocation;
+                roomAllocation = list.Sum(x => x.roomAllocation);
             }
             return roomAllocation;
 
