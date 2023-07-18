@@ -270,7 +270,7 @@ namespace Service
                         {
                             MonthID = monthID,
                             QuarterNo = currentQuarter + 1,
-                            GroupID = i.ToString(),
+                            GroupID = i,
                             Weekday = weekday,
                             DistributionChannel = channel.Channel,
                             Segment = segment.SegmentName,

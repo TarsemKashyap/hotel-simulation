@@ -862,7 +862,7 @@ namespace Service
                                 {
                                     IncomeState incomStaRow = await GetDataBySingleRowIncomeState(monthId, currentQuarter, c);
 
-                                    int roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
+                                    decimal roomRevenue = ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incomStaRow.GroupID);
 
                                     ///Revenue_Room Revenue
                                     incomStaRow.Room = roomRevenue;
@@ -2434,7 +2434,7 @@ namespace Service
         private PriceDecisionDto GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
         {
             var data = _context.PriceDecision.
-                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId.ToString()
+                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
                 && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday);
             if (data == null)
             {
@@ -2534,7 +2534,7 @@ namespace Service
                         join pd in _context.PriceDecision on m.MonthId equals pd.MonthID
                         where (m.Sequence == pd.QuarterNo)
                         join sbr in _context.SoldRoomByChannel on pd.MonthID equals sbr.MonthID
-                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID.ToString() && pd.DistributionChannel == sbr.Channel
+                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID && pd.DistributionChannel == sbr.Channel
                         && pd.Segment == sbr.Segment && pd.Weekday == sbr.Weekday && dcvsc.Segment == sbr.Segment && dcvsc.DistributionChannel == sbr.Channel
                        && sbr.MonthID == monthId && sbr.GroupID == groupID && sbr.QuarterNo == quarterNo && sbr.Segment == segment
                        && sbr.Channel == channel && sbr.Weekday == weekday)
@@ -2564,7 +2564,7 @@ namespace Service
                         join pd in _context.PriceDecision on m.MonthId equals pd.MonthID
                         where (m.Sequence == pd.QuarterNo)
                         join sbr in _context.SoldRoomByChannel on pd.MonthID equals sbr.MonthID
-                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID.ToString() && pd.DistributionChannel == sbr.Channel
+                        where (pd.QuarterNo == sbr.QuarterNo && pd.GroupID == sbr.GroupID && pd.DistributionChannel == sbr.Channel
                         && pd.Segment == sbr.Segment && pd.Weekday == sbr.Weekday && dcvsc.Segment == sbr.Segment && dcvsc.DistributionChannel == sbr.Channel
                        && sbr.MonthID == monthId && sbr.GroupID == groupID && sbr.QuarterNo == quarterNo && sbr.Segment == segment
                        && sbr.Channel == channel && sbr.Weekday == weekday)
@@ -2608,10 +2608,10 @@ namespace Service
 
         }
 
-        private int ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int quarterNo, int groupId)
+        private decimal ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int quarterNo, int groupId)
         {
 
-            int groupRevenue = 0;
+            decimal groupRevenue = 0;
             var list = (from c in _context.SoldRoomByChannel
                         where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
                         group c by c.Revenue into gpc
@@ -2628,10 +2628,10 @@ namespace Service
             return groupRevenue;
 
         }
-        private int ScalarAttributeRevenueScoreRoomAllocation(int monthId, int quarterNo, int groupId, string attribute)
+        private decimal ScalarAttributeRevenueScoreRoomAllocation(int monthId, int quarterNo, int groupId, string attribute)
         {
 
-            int groupRevenue = 0;
+            decimal groupRevenue = 0;
             var list = (from c in _context.SoldRoomByChannel
                         where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
                         group c by c.Revenue into gpc
