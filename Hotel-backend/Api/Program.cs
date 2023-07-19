@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HotelDbContext>(options =>
 {
-    string conn=builder.Configuration.GetConnectionString("DbConn");
+    string conn = builder.Configuration.GetConnectionString("DbConn");
     options.UseMySQL(conn);
 });
 
@@ -79,7 +79,7 @@ using (var scope = app.Services.CreateScope())
     var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
     try
     {
-        accountService.CreateAdminAccount();
+        await accountService.CreateAdminAccount();
     }
     catch (System.Exception ex)
     {

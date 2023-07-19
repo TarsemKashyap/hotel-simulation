@@ -9,7 +9,6 @@ namespace Common.ReportDto
     public class GoalReportDto
     {
 
-       
         public string Indicators { get; set; }
         public decimal M_P { get; set; }
         public decimal M_M { get; set; }
@@ -18,17 +17,29 @@ namespace Common.ReportDto
         public decimal M_PG => M_P - M_G;
 
         public string Formatter { get; set; }
+
+        public GoalReportResponse ToGoalReportResponse()
+        {
+            return new GoalReportResponse
+            {
+
+                Indicators = Indicators,
+                Performance = M_P,
+                MarketAverage = M_M,
+                Objective = M_G,
+                Formatter = Formatter
+            };
+        }
     }
 
-    public static class ReportFormatExtension
+    public class GoalReportResponse
     {
-        public static string ToPercentage(this decimal value)
-        {
-            return value.ToString("P");
-        }
-        public static string Currency(this decimal value)
-        {
-            return value.ToString("C0");
-        }
+        public string Indicators { get; set; }
+        public decimal Performance { get; set; }
+        public decimal MarketAverage { get; set; }
+        public decimal PerfMarketAvgerage => Performance - MarketAverage;
+        public decimal Objective { get; set; }
+        public decimal PrefObjective => Performance - Objective;
+        public string Formatter { get; set; }
     }
 }
