@@ -816,12 +816,12 @@ namespace Service
 
                             foreach (SoldRoomByChannel row in datasoldChanTable)
                             {
-                                directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment).ActualDemand;
-                                travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment).ActualDemand;
-                                onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment).ActualDemand;
-                                opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment).ActualDemand;
-                                thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment).ActualDemand;
-                                roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment).RoomsSold;
+                                directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment);
+                                travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment);
+                                onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment);
+                                opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment);
+                                thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment);
+                                roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment);
 
                                 sum = directSold + travelSold + onlineSold + opaqueSold;
 
@@ -834,6 +834,37 @@ namespace Service
                                 else
                                 {
                                     row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
+
+                                }
+                                // SoldRoomByChannelUpdate(row);
+
+                                _context.Update(row);
+
+                            }
+                            _context.SaveChanges();
+
+                            var datasoldChanTable1 = await _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+
+                            foreach (SoldRoomByChannel row in datasoldChanTable1)
+                            {
+                                directSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Direct", row.Segment);
+                                travelSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Travel Agent", row.Segment);
+                                onlineSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Online Travel Agent", row.Segment);
+                                opaqueSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, "Opaque", row.Segment);
+                                thisSold = GetDataBySingleRowPriceDecision(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Channel, row.Segment);
+                                roomAlloSold = GetDataByEachDecisionRoomAllocation(row.MonthID, row.QuarterNo, row.GroupID, row.Weekday, row.Segment);
+
+                                sum = directSold + travelSold + onlineSold + opaqueSold;
+
+                                if (sum == 0)
+                                {
+                                    row.SoldRoom = 0;
+                                    row.Revenue = 0;
+                                    row.Cost = 0;
+                                }
+                                else
+                                {
+                                    //row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
                                     row.Revenue = Convert.ToInt16(ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
                                     row.Cost = Convert.ToInt16(ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday));
 
@@ -886,7 +917,7 @@ namespace Service
                                     incomStaRow.Room = roomRevenue;
 
                                     ///Revenue_Food and Beverage Total
-                                    incomStaRow.FoodB1 = Convert.ToInt16(31 * roomRevenue / 52);
+                                    incomStaRow.FoodB1 = Convert.ToDecimal(31 * roomRevenue / 52);
 
                                     ////revenue by attribute under Food and Beverage Section
                                     decimal restaurantScore = Convert.ToDecimal(ScalarAttributeRevenueScoreRoomAllocation(monthId, currentQuarter, incomStaRow.GroupID, "Resturants"));
@@ -2464,16 +2495,18 @@ namespace Service
             //_context.ChangeTracker.Clear();
             //return list;
         }
-        private PriceDecisionDto GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
+        private decimal GetDataBySingleRowPriceDecision(int monthId, int quarterNo, int groupId, bool weekday, string distributionChannel, string segment)
         {
-            var data = _context.PriceDecision.
-                Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
-                && x.DistributionChannel == distributionChannel && x.Segment == segment && x.Weekday == weekday);
-            if (data == null)
+            var data = (from m in _context.PriceDecision
+                        where (m.MonthID == monthId && m.QuarterNo == quarterNo && m.GroupID == groupId
+                        && m.DistributionChannel == distributionChannel && m.Segment == segment && m.Weekday == weekday)
+                        select new { ActualDemand = m.ActualDemand }).ToList();
+            decimal ActualDemand = 0;
+            if (data.Count > 0)
             {
-                throw new ValidationException("data not found ");
+                ActualDemand = data[0].ActualDemand;
             }
-            return data.Adapt<PriceDecisionDto>();
+            return ActualDemand;
 
 
 
@@ -2508,16 +2541,18 @@ namespace Service
 
 
 
-        private RoomAllocationDto GetDataByEachDecisionRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday, string segment)
+        private decimal GetDataByEachDecisionRoomAllocation(int monthId, int quarterNo, int groupId, bool weekday, string segment)
         {
-            var data = _context.RoomAllocation.
-                SingleOrDefault(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId
-                && x.Segment == segment && x.Weekday == weekday);
-            if (data == null)
+            var data = (from m in _context.RoomAllocation
+                        where (m.MonthID == monthId && m.QuarterNo == quarterNo && m.GroupID == groupId
+                        && m.Segment == segment && m.Weekday == weekday)
+                        select new { RoomsSold = m.RoomsSold }).ToList();
+            decimal RoomsSold = 0;
+            if (data.Count > 0)
             {
-                throw new ValidationException("data not found ");
+                RoomsSold = data[0].RoomsSold;
             }
-            return data.Adapt<RoomAllocationDto>();
+            return RoomsSold;
 
 
 
@@ -2571,18 +2606,22 @@ namespace Service
                         && pd.Segment == sbr.Segment && pd.Weekday == sbr.Weekday && dcvsc.Segment == sbr.Segment && dcvsc.DistributionChannel == sbr.Channel
                        && sbr.MonthID == monthId && sbr.GroupID == groupID && sbr.QuarterNo == quarterNo && sbr.Segment == segment
                        && sbr.Channel == channel && sbr.Weekday == weekday)
-
-                        group new { pd, dcvsc, sbr } by new { pd.Price, dcvsc.CostPercent, sbr.SoldRoom } into dps
-
                         select new
                         {
-                            Revenue = dps.Sum(x => (x.pd.Price * x.sbr.SoldRoom))
+                            Revenue = pd.Price * sbr.SoldRoom
 
                         }).ToList();
+            //group new { pd, dcvsc, sbr } by new { pd.Price, dcvsc.CostPercent, sbr.SoldRoom } into dps
+
+            //            select new
+            //            {
+            //                Revenue = dps.Sum(x => (x.pd.Price * x.sbr.SoldRoom))
+
+            //            }).ToList();
 
             if (list.Count > 0)
             {
-                Revenue = list[0].Revenue;
+                Revenue = list.Sum(x => x.Revenue);
             }
             return Revenue;
 
@@ -2668,16 +2707,17 @@ namespace Service
             decimal groupRevenue = 0;
             var list = (from c in _context.SoldRoomByChannel
                         where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
-                        group c by c.Revenue into gpc
-                        select new
-                        {
-                            groupRevenue = gpc.Sum(x => x.Revenue)
+                        select new { Revenue = c.Revenue }).ToList();
+            //group c by c.Revenue into gpc
+            //select new
+            //{
+            //    groupRevenue = gpc.Sum(x => x.Revenue)
 
-                        }).ToList();
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                groupRevenue = list[0].groupRevenue;
+                groupRevenue = list.Sum(x => x.Revenue);
             }
             return groupRevenue;
 
