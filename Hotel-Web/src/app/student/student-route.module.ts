@@ -8,6 +8,8 @@ import { checkAccessPermission } from '../shared/auth.gurad';
 import { DecisionComponent } from './decision/decision.component';
 import { RoomComponent } from './room/room.component';
 import { AttributeComponent } from './attribute/attribute.component';
+import { PriceComponent } from './price/price.component';
+import { MarketingComponent } from './marketing/marketing.component';
 
 const routes: Routes = [
   {
@@ -21,6 +23,8 @@ const routes: Routes = [
       { path: 'decision', component: DecisionComponent },
       { path: 'room', component: RoomComponent },
       { path: 'attribute', component: AttributeComponent },
+      { path: 'price', component: PriceComponent },
+      { path: 'marketing', component: MarketingComponent }
     ],
     canActivate:[]
   },

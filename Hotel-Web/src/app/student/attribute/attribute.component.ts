@@ -35,7 +35,6 @@ export class AttributeComponent {
     private studentService: StudentService, private fb: FormBuilder, private sessionStore: SessionStore, private router: Router) {
     this.form = this.createForm();
     this.currentRole = this.sessionStore.GetCurrentRole();
-    console.log(this.currentRole)
     if (this.currentRole === undefined || this.currentRole === '') {
       this.router.navigate(['']);
     }

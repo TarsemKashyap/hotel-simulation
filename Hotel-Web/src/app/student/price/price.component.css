@@ -1,0 +1,20 @@
+:host::ng-deep .rag-red {
+    /* background-color: red; */
+    border: 3px solid red !important;
+  }
+  table {
+    width: 100%;
+  }
+  tr {
+  height: 50px;
+  }
+
+  .is-invalid {
+    border: 2px solid red;
+  }
+  .tableHeader
+  {
+      width:100%;
+      border-style: none none inset none;
+      text-align: center;
+  }

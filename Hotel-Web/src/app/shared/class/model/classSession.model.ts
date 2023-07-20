@@ -67,3 +67,32 @@ export interface AttributeDecision {
   quarterForecast: number;
   monthID: number;
 }
+
+export interface PriceDecision {
+  ID: number;
+  monthID : number;
+  quarterNo : number;
+  groupID : number;
+  weekday : boolean;
+  distributionChannel : string;
+  segment : string;
+  price : number;
+  actualDemand : number;
+  confirmed : boolean;
+  priceNOFormat : string;
+}
+
+export interface MarketingDecision {
+  iD: number;
+  monthID: number;
+  quarterNo: number;
+  groupID: number;
+  marketingTechniques: string;
+  segment: string;
+  spendingFormatN0: string;
+  laborSpendingFormatN0: string;
+  spending: number;
+  laborSpending: number;
+  actualDemand: number;
+  confirmed: boolean;
+}

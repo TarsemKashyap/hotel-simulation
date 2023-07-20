@@ -14,8 +14,8 @@ public class MarketingDecision
     public int GroupID { get; set; }
     public string MarketingTechniques { get; set; }
     public string Segment { get; set; }
-    public int Spending { get; set; }
-    public int LaborSpending { get; set; }
+    public decimal Spending { get; set; }
+    public decimal LaborSpending { get; set; }
     public int ActualDemand { get; set; }
     public bool Confirmed { get; set; }
     public virtual Month Month { get; set; }

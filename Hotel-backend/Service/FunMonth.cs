@@ -246,7 +246,7 @@ namespace Service
                         {
                             MonthID = monthID,
                             QuarterNo = currentQuarter + 1,
-                            GroupID = i.ToString(),
+                            GroupID = Convert.ToInt32(i),
                             Weekday = true,
                             DistributionChannel = channel.Channel,
                             Segment = segment.SegmentName,

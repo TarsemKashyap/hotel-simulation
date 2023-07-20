@@ -120,6 +120,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
         services.AddScoped<IRoomAllocationService, RoomAllocationService>();
         services.AddScoped<IAttributeDecisionService, AttributeDecisionService>();
+        services.AddScoped<IPriceDecisionService, PriceDecisionService>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)

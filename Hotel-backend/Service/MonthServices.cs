@@ -220,7 +220,7 @@ namespace Service
 
         public async Task<MonthDto> GetMonthDtlsByClassId(int classId)
         {
-            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId).Take(1).OrderByDescending(o=>o.ClassId);
+            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId).Take(1).OrderByDescending(o => o.ClassId);
             var result = query.Select(x => new MonthDto
             {
                 MonthId = x.MonthId,
@@ -230,6 +230,7 @@ namespace Service
                 ConfigId = x.ConfigId,
                 IsComplete = x.IsComplete
             }).ToList();
+
             MonthDto obj = new MonthDto();
             if (result.Count > 0)
             {
@@ -242,7 +243,7 @@ namespace Service
             }
             return obj;
         }
-            public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
+        public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
         {
 
             FunMonth obj = new FunMonth();

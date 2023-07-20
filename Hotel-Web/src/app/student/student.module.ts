@@ -13,9 +13,11 @@ import { AccountService } from '../public/account';
 import { DecisionComponent } from './decision/decision.component';
 import { RoomComponent } from './room/room.component';
 import { AttributeComponent } from './attribute/attribute.component';
+import { PriceComponent } from './price/price.component';
+import { MarketingComponent } from './marketing/marketing.component';
 
 @NgModule({
-  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent],
+  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent],
   imports: [
     CommonModule,
     SharedModule,
