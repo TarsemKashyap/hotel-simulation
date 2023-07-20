@@ -1937,39 +1937,39 @@ namespace Service
             return result;
 
         }
-        private bool PriceDecisionUpdate(PriceDecisionDto pObj)
-        {
-            bool result = false;
-            try
-            {
-                PriceDecision objPd = new PriceDecision
-                {
-                    ID = pObj.ID,
-                    MonthID = pObj.MonthID,
-                    QuarterNo = pObj.QuarterNo,
-                    GroupID = pObj.GroupID,
-                    Weekday = pObj.Weekday,
-                    Segment = pObj.Segment,
-                    DistributionChannel = pObj.DistributionChannel,
-                    Price = pObj.Price,
-                    ActualDemand = pObj.ActualDemand,
-                    Confirmed = pObj.Confirmed,
-                };
-                _context.PriceDecision.Attach(objPd);
-                //_context.Entry(objPd).State = EntityState.Modified;
-                _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
-                _context.SaveChanges();
-                // _context.Update(objPd);
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                string exp = ex.ToString();
-                result = false;
-            }
-            return result;
+        // private bool PriceDecisionUpdate(PriceDecisionDto pObj)
+        // {
+        //     bool result = false;
+        //     try
+        //     {
+        //         PriceDecision objPd = new PriceDecision
+        //         {
+        //             ID = pObj.ID,
+        //             MonthID = pObj.MonthID,
+        //             QuarterNo = pObj.QuarterNo,
+        //             GroupID = pObj.GroupID,
+        //             Weekday = pObj.Weekday,
+        //             Segment = pObj.Segment,
+        //             DistributionChannel = pObj.DistributionChannel,
+        //             Price = pObj.Price,
+        //             ActualDemand = pObj.ActualDemand,
+        //             Confirmed = pObj.Confirmed,
+        //         };
+        //         _context.PriceDecision.Attach(objPd);
+        //         //_context.Entry(objPd).State = EntityState.Modified;
+        //         _context.Entry(objPd).Property(x => x.ActualDemand).IsModified = true;
+        //         _context.SaveChanges();
+        //         // _context.Update(objPd);
+        //         result = true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         string exp = ex.ToString();
+        //         result = false;
+        //     }
+        //     return result;
 
-        }
+        // }
         private bool IncomeStateUpdate(IncomeStateDto pObj)
         {
             bool result = false;

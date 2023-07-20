@@ -9,9 +9,13 @@ import { TextboxEditor } from './editors';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MaterialModule } from '../material.module';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog.component';
+import { NumericEditor } from './editors';
+import { CustomTooltip } from './editors';
+import { CellRenderComponent } from './render';
+
 
 @NgModule({
-  declarations: [TextboxEditor, ConfirmDialogComponent],
+  declarations: [TextboxEditor, ConfirmDialogComponent,NumericEditor,CustomTooltip,CellRenderComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

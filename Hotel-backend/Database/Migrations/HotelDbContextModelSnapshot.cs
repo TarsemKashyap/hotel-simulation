@@ -613,7 +613,7 @@ namespace Database.Migrations
                     b.ToTable("DistributionChannels", (string)null);
                 });
 
-            modelBuilder.Entity("DistributionChannelVSsegmentConfig", b =>
+            modelBuilder.Entity("Goal", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -727,7 +727,7 @@ namespace Database.Migrations
                     b.ToTable("Goal", (string)null);
                 });
 
-            modelBuilder.Entity("IdealRatingAttributeWeightConfig", b =>
+            modelBuilder.Entity("IncomeState", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -954,36 +954,6 @@ namespace Database.Migrations
                     b.ToTable("MarketingTechniques", (string)null);
                 });
 
-            modelBuilder.Entity("MarketingVSsegmentConfig", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConfigID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("LaborPercent")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("MarketingTechniques")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Percentage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("Segment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("MarketingVSsegmentConfig", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -1135,6 +1105,28 @@ namespace Database.Migrations
 
                     b.ToTable("ClassMonth", (string)null);
                 });
+                
+                modelBuilder.Entity("StudentRoleMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentRoleMapping", (string)null);
+                });
 
             modelBuilder.Entity("PriceDecision", b =>
                 {
@@ -1142,40 +1134,60 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ActualDemand")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ConfigID")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("Confirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("DistributionChannel")
+                    b.Property<string>("PMA")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("GroupID")
+                    b.Property<decimal>("Percentage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<string>("Segment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("PriceMarketingAttributeSegmentConfig", (string)null);
+                });
+
+            modelBuilder.Entity("Rankings", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Indicator")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Institution")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Month")
                         .HasColumnType("int");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("Performance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("QuarterNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Segment")
+                    b.Property<string>("TeamName")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Weekday")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("TeamNo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MonthID");
-
-                    b.ToTable("PriceDecision", (string)null);
+                    b.ToTable("Rankings", (string)null);
                 });
 
             modelBuilder.Entity("PriceMarketingAttributeSegmentConfig", b =>
@@ -1310,29 +1322,6 @@ namespace Database.Migrations
                     b.ToTable("Segment", (string)null);
                 });
 
-            modelBuilder.Entity("SegmentConfig", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConfigID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Percentage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("Segment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("SegmentConfig", (string)null);
-                });
-
             modelBuilder.Entity("SoldRoomByChannel", b =>
                 {
                     b.Property<int>("ID")
@@ -1371,54 +1360,6 @@ namespace Database.Migrations
                     b.HasIndex("MonthID");
 
                     b.ToTable("SoldRoomByChannel", (string)null);
-                });
-
-            modelBuilder.Entity("StudentRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentRoleMapping", (string)null);
-                });
-
-            modelBuilder.Entity("WeekdayVSsegmentConfig", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConfigID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Percentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PriceExpectation")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Segment")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("WeekDay")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("WeekdayVSsegmentConfig", (string)null);
                 });
 
             modelBuilder.Entity("WeightedAttributeRating", b =>

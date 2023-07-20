@@ -10,9 +10,11 @@ import { SharedModule } from '../shared/shared.module';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ChangePasswordService } from '../admin/change-password/change-password.service';
 import { AccountService } from '../public/account';
+import { DecisionComponent } from './decision/decision.component';
+import { RoomComponent } from './room/room.component';
 
 @NgModule({
-  declarations: [StudentDashboard],
+  declarations: [StudentDashboard, DecisionComponent, RoomComponent],
   imports: [
     CommonModule,
     SharedModule,

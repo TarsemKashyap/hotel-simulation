@@ -1,0 +1,8 @@
+
+    <input
+    [formControl]="numericEditor"
+      #input
+      (keydown)="onKeyDown($event)"
+      [(ngModel)]="value"
+      style="width: 100%"
+      class="numeric-input"/>
