@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230625065551_WeekdayVSsegmentConfig")]
+    partial class WeekdayVSsegmentConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,8 +174,8 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("AccumulatedCapital")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("AccumulatedCapital")
+                        .HasColumnType("int");
 
                     b.Property<string>("Attribute")
                         .HasColumnType("longtext");
@@ -186,17 +188,17 @@ namespace Database.Migrations
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("LaborBudget")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("LaborBudget")
+                        .HasColumnType("int");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("NewCapital")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("NewCapital")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("OperationBudget")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OperationBudget")
+                        .HasColumnType("int");
 
                     b.Property<int>("QuarterForecast")
                         .HasColumnType("int");
@@ -613,38 +615,6 @@ namespace Database.Migrations
                     b.ToTable("DistributionChannels", (string)null);
                 });
 
-            modelBuilder.Entity("DistributionChannelVSsegmentConfig", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConfigID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("CostPercent")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("DistributionChannel")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Percentage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("Segment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DistributionChannelVSsegmentConfig", (string)null);
-                });
-
             modelBuilder.Entity("Goal", b =>
                 {
                     b.Property<int>("ID")
@@ -725,33 +695,6 @@ namespace Database.Migrations
                     b.HasIndex("MonthID");
 
                     b.ToTable("Goal", (string)null);
-                });
-
-            modelBuilder.Entity("IdealRatingAttributeWeightConfig", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Attribute")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ConfigID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("IdealRating")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Segment")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("IdealRatingAttributeWeightConfig", (string)null);
                 });
 
             modelBuilder.Entity("IncomeState", b =>
@@ -1204,41 +1147,6 @@ namespace Database.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("PriceMarketingAttributeSegmentConfig", (string)null);
-                });
-
-            modelBuilder.Entity("Rankings", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Indicator")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Institution")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MonthID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Performance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TeamName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TeamNo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Rankings", (string)null);
                 });
 
             modelBuilder.Entity("RoomAllocation", b =>

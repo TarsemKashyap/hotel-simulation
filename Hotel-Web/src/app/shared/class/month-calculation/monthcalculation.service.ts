@@ -1,28 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ClassDto, MonthDto } from './month.model';
+import { ClassDto, MonthDto } from './month-calculation.model';
 import { Observable } from 'rxjs';
 //import { QuarterlyMarketDto } from './quarterly-market.model';
-
+//MonthCalculationService
 
 @Injectable({
   providedIn: 'root'
 })
-export class MonthService {
+export class MonthCalculationService {
 
   constructor(private httpClient: HttpClient) {}
 
-  monthList(): Observable<MonthDto[]> {
-    return this.httpClient.get<MonthDto[]>('month/list');
+  monthList(apiBody:any): Observable<any> {
+    return this.httpClient.post<MonthDto[]>('month/calculationList',apiBody);
+  }
+  monthCalculate(apiBody:any): Observable<any> {
+    return this.httpClient.post<MonthDto[]>('month/Calculation',apiBody);
   }
 
-  deleteUser(userId: string) {
-    return this.httpClient.delete(
-      `account/instructor/${userId}`
-    );
-  }
-  quarterlyMarketList(apiBody:any): Observable<MonthDto[]> {
-    return this.httpClient.post<MonthDto[]>('month/list',apiBody);
+  
+  quarterlyMarketList(): Observable<MonthDto[]> {
+    return this.httpClient.get<MonthDto[]>('month/list');
   }
   createNewMonth(apiBody:any): Observable<any> {
     return this.httpClient.post('month/Create',apiBody);
