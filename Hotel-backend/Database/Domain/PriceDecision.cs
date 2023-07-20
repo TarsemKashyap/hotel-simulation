@@ -18,7 +18,7 @@ public class PriceDecision
     public string DistributionChannel { get; set; }
     public string Segment { get; set; }
     public decimal Price { get; set; }
-    public int ActualDemand { get; set; }
+    public decimal ActualDemand { get; set; }
     public bool Confirmed { get; set; }
     public virtual Month Month { get; set; }
 
