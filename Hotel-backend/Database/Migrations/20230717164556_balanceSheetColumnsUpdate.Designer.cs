@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230717164556_balanceSheetColumnsUpdate")]
+    partial class balanceSheetColumnsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -415,8 +417,8 @@ namespace Database.Migrations
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RawRating")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RawRating")
+                        .HasColumnType("int");
 
                     b.Property<string>("Segment")
                         .HasColumnType("longtext");
@@ -613,7 +615,7 @@ namespace Database.Migrations
                     b.ToTable("DistributionChannels", (string)null);
                 });
 
-            modelBuilder.Entity("Goal", b =>
+            modelBuilder.Entity("DistributionChannelVSsegmentConfig", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -651,74 +653,74 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ADRM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ADRM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ADRY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ADRY")
+                        .HasColumnType("int");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("MgtEfficiencyM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("MgtEfficiencyM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("MgtEfficiencyY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("MgtEfficiencyY")
+                        .HasColumnType("int");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("OccupancyM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OccupancyM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("OccupancyY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OccupancyY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ProfitMarginM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ProfitMarginM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ProfitMarginY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ProfitMarginY")
+                        .HasColumnType("int");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RevparM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RevparM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RevparY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RevparY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RoomRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RoomRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RoomRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("RoomRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRoomM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRoomM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("ShareRoomY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("ShareRoomY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("TotalRevenM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("TotalRevenM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("TotalRevenY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("TotalRevenY")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("YieldMgtM")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("YieldMgtM")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("YieldMgtY")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("YieldMgtY")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -727,7 +729,7 @@ namespace Database.Migrations
                     b.ToTable("Goal", (string)null);
                 });
 
-            modelBuilder.Entity("IncomeState", b =>
+            modelBuilder.Entity("IdealRatingAttributeWeightConfig", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -913,8 +915,8 @@ namespace Database.Migrations
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("LaborSpending")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("LaborSpending")
+                        .HasColumnType("int");
 
                     b.Property<string>("MarketingTechniques")
                         .IsRequired()
@@ -929,8 +931,8 @@ namespace Database.Migrations
                     b.Property<string>("Segment")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Spending")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Spending")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -952,6 +954,36 @@ namespace Database.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("MarketingTechniques", (string)null);
+                });
+
+            modelBuilder.Entity("MarketingVSsegmentConfig", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConfigID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("LaborPercent")
+                        .HasColumnType("double");
+
+                    b.Property<string>("MarketingTechniques")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<double>("Percentage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double")
+                        .HasDefaultValue(0.0);
+
+                    b.Property<string>("Segment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("MarketingVSsegmentConfig", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1105,28 +1137,6 @@ namespace Database.Migrations
 
                     b.ToTable("ClassMonth", (string)null);
                 });
-                
-                modelBuilder.Entity("StudentRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentRoleMapping", (string)null);
-                });
 
             modelBuilder.Entity("PriceDecision", b =>
                 {
@@ -1134,60 +1144,41 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ConfigID")
+                    b.Property<int>("ActualDemand")
                         .HasColumnType("int");
 
-                    b.Property<string>("PMA")
+                    b.Property<bool>("Confirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("DistributionChannel")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GroupID")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<decimal>("Percentage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("Segment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("PriceMarketingAttributeSegmentConfig", (string)null);
-                });
-
-            modelBuilder.Entity("Rankings", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Indicator")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Institution")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Performance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TeamName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TeamNo")
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("QuarterNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Segment")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Weekday")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Rankings", (string)null);
+                    b.HasIndex("MonthID");
+
+                    b.ToTable("PriceDecision", (string)null);
                 });
 
             modelBuilder.Entity("PriceMarketingAttributeSegmentConfig", b =>
@@ -1278,8 +1269,8 @@ namespace Database.Migrations
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Revenue")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Revenue")
+                        .HasColumnType("int");
 
                     b.Property<int>("RoomsAllocated")
                         .HasColumnType("int");
@@ -1322,6 +1313,29 @@ namespace Database.Migrations
                     b.ToTable("Segment", (string)null);
                 });
 
+            modelBuilder.Entity("SegmentConfig", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConfigID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Percentage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double")
+                        .HasDefaultValue(0.0);
+
+                    b.Property<string>("Segment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SegmentConfig", (string)null);
+                });
+
             modelBuilder.Entity("SoldRoomByChannel", b =>
                 {
                     b.Property<int>("ID")
@@ -1331,8 +1345,8 @@ namespace Database.Migrations
                     b.Property<string>("Channel")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -1343,8 +1357,8 @@ namespace Database.Migrations
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Revenue")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Revenue")
+                        .HasColumnType("int");
 
                     b.Property<string>("Segment")
                         .HasColumnType("longtext");
@@ -1362,6 +1376,54 @@ namespace Database.Migrations
                     b.ToTable("SoldRoomByChannel", (string)null);
                 });
 
+            modelBuilder.Entity("StudentRoleMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentRoleMapping", (string)null);
+                });
+
+            modelBuilder.Entity("WeekdayVSsegmentConfig", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConfigID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Percentage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PriceExpectation")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Segment")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("WeekDay")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("WeekdayVSsegmentConfig", (string)null);
+                });
+
             modelBuilder.Entity("WeightedAttributeRating", b =>
                 {
                     b.Property<int>("ID")
@@ -1371,8 +1433,8 @@ namespace Database.Migrations
                     b.Property<int>("ActualDemand")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("CustomerRating")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("CustomerRating")
+                        .HasColumnType("int");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");

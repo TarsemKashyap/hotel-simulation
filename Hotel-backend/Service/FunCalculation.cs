@@ -32,9 +32,9 @@ namespace Service
 
             return listMD;
         }
-        public double ScalarQueryIndustrialNormPercentMarketingDecision(HotelDbContext context, int monthId, int currentQuarter, string segment, string marketTech)
+        public decimal ScalarQueryIndustrialNormPercentMarketingDecision(HotelDbContext context, int monthId, int currentQuarter, string segment, string marketTech)
         {
-            double Proportion = 0;
+            decimal Proportion = 0;
 
             var list = (from m in context.Months
                         join sc in context.SegmentConfig on m.ConfigId equals sc.ConfigID
@@ -70,7 +70,7 @@ namespace Service
             return Proportion;
         }
 
-        public double ScalarQueryPastSpendingMarketingDecision(HotelDbContext context, int monthId, int quarterNo, int groupID, string marketingTechniques, string segment)
+        public decimal ScalarQueryPastSpendingMarketingDecision(HotelDbContext context, int monthId, int quarterNo, int groupID, string marketingTechniques, string segment)
         {
             var lst = (from m in context.MarketingDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupID && x.MarketingTechniques == marketingTechniques.Trim() && x.Segment == segment.Trim())
                        select new
@@ -78,7 +78,7 @@ namespace Service
                            PastSpending = m.Spending
                        }).ToList();
 
-            double PastSpending = 0;
+            decimal PastSpending = 0;
             if (lst.Count > 0)
             {
                 PastSpending = lst[0].PastSpending;
@@ -86,7 +86,7 @@ namespace Service
             return PastSpending;
         }
 
-        public double ScalarQueryPastLaborSpendingMarketingDecision(HotelDbContext context, int monthId, int quarterNo, int groupID, string marketingTechniques, string segment)
+        public decimal ScalarQueryPastLaborSpendingMarketingDecision(HotelDbContext context, int monthId, int quarterNo, int groupID, string marketingTechniques, string segment)
         {
             var lst = (from m in context.MarketingDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupID && x.MarketingTechniques == marketingTechniques.Trim() && x.Segment == segment.Trim())
                        select new
@@ -94,7 +94,7 @@ namespace Service
                            LaborSpending = m.LaborSpending
                        }).ToList();
 
-            double LaborSpending = 0;
+            decimal LaborSpending = 0;
             if (lst.Count > 0)
             {
                 LaborSpending = lst[0].LaborSpending;
@@ -103,7 +103,7 @@ namespace Service
 
         }
 
-        public double ScalarQueryLaborPercentMarketingDecision(HotelDbContext context, int monthId, string marketingTechniques, string segment, int quarterNo)
+        public decimal ScalarQueryLaborPercentMarketingDecision(HotelDbContext context, int monthId, string marketingTechniques, string segment, int quarterNo)
         {
 
 
@@ -127,7 +127,7 @@ namespace Service
             //
             //.ToList();
             // lst = lst[0].Where(x => x.MonthID == monthId && x.Quarter == quarterNo && x.MarketingTechniques == marketingTechniques.Trim() && x.Segment == segment)
-            double LaborPercent = 0;
+            decimal LaborPercent = 0;
             if (lst.Count > 0)
             {
                 LaborPercent = lst[0].laborPercent;
@@ -190,7 +190,7 @@ WHERE     (priceMarketingAttributeSegmentConfig.PMA = N'Marketing') AND (marketi
 
         }
 
-        public double ScalarQueryAverageSpendingMarktingDecision(HotelDbContext context, string segment, string marketingTechniques, int monthID, int quarterNo)
+        public decimal ScalarQueryAverageSpendingMarktingDecision(HotelDbContext context, string segment, string marketingTechniques, int monthID, int quarterNo)
         {
 
             /*SELECT              AVG(marketingDecision.spending * (1 - marketingVSsegmentConfig.laborPercent) + marketingDecision.laborSpending * marketingVSsegmentConfig.laborPercent) 
@@ -207,7 +207,7 @@ WHERE              (marketingDecision.segment = @segment) AND (marketingDecision
             AND (marketingDecision.sessionID = @sessionID) AND 
                                 (marketingDecision.quarterNo = @quarterNo)
 GROUP BY       marketingDecision.segment, marketingDecision.marketingTechniques, marketingDecision.sessionID, marketingDecision.quarterNo*/
-            double AverageSpending = 0;
+            decimal AverageSpending = 0;
             var list = (from md in context.MarketingDecision
                         join m in context.Months on md.MonthID equals m.MonthId
                         where (md.QuarterNo == m.Sequence)

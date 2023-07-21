@@ -17,7 +17,7 @@ public class CustomerRawRating
     public int GroupID { get; set; }
     public string Attribute { get; set; }
     public string Segment { get; set; }
-    public int RawRating { get; set; }
+    public decimal RawRating { get; set; }
     public virtual Month Month { get; set; }
 
 }

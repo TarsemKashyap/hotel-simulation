@@ -10,7 +10,7 @@ public class PriceDecisionDto
     public int ID { get; set; }
     public int MonthID { get; set; }
     public int QuarterNo { get; set; }
-    public string GroupID { get; set; }
+    public int GroupID { get; set; }
     public bool Weekday { get; set; }
     public string DistributionChannel { get; set; }
     public string Segment { get; set; }

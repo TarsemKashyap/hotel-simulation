@@ -12,7 +12,7 @@ public class SegmentConfig
     public int ID { get; set; }
     public int ConfigID { get; set; }
     public string Segment { get; set; }
-    public double Percentage { get; set; }
+    public decimal Percentage { get; set; }
 
 }
 public class SegmentConfigEntityConfig : IEntityTypeConfiguration<SegmentConfig>

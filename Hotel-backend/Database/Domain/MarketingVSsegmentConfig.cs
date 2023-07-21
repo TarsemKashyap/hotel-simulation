@@ -13,8 +13,8 @@ public class MarketingVSsegmentConfig
     public int ConfigID { get; set; }
     public string Segment { get; set; }
     public string MarketingTechniques { get; set; }
-    public double Percentage { get; set; }
-    public double LaborPercent { get; set; }
+    public decimal Percentage { get; set; }
+    public decimal LaborPercent { get; set; }
 
 
 }

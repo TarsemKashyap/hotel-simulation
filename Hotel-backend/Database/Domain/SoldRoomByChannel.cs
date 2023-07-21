@@ -16,9 +16,9 @@ public class SoldRoomByChannel
     public string Segment { get; set; }
     public string Channel { get; set; }
     public bool Weekday { get; set; }
-    public int Revenue { get; set; }
+    public decimal Revenue { get; set; }
     public int SoldRoom { get; set; }
-    public int Cost { get; set; }
+    public decimal Cost { get; set; }
     public virtual Month Month { get; set; }
 }
 public class SoldRoomByChannelConfig : IEntityTypeConfiguration<SoldRoomByChannel>

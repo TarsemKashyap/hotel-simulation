@@ -16,7 +16,7 @@ public class WeightedAttributeRating
     public int QuarterNo { get; set; }
     public int GroupID { get; set; }
     public string Segment { get; set; }
-    public int CustomerRating { get; set; }
+    public decimal CustomerRating { get; set; }
     public int ActualDemand { get; set; }
     public virtual Month Month { get; set; }
 }
