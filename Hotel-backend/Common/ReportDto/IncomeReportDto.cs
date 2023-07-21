@@ -1,16 +1,20 @@
-﻿using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-
-namespace Common.ReportDto
+﻿namespace Common.ReportDto
 {
-    public class StatisticsDto
+    public class IncomeReportDto
     {
-        public AbstractDecimal MonthlyProfit { get; set; }
-        public AbstractDecimal AccumulativeProfit { get; set; }
-        public AbstractDecimal MarketShareRevenueBased { get; set; }
-        public AbstractDecimal MarketShareRoomSoldBased { get; set; }
-        public AbstractDecimal Occupancy { get; set; }
-        public AbstractDecimal REVPAR { get; set; }
+        public Revenue Revenue { get; set; }
+        public DepartmentalExpenses DepartmentalExpenses { get; set; }
+        public ReportAttribute TotalDepartIncome => new ReportAttribute { Label = "TOTAL DEPARTMENTAL INCOME" };
+        public UndistOperatingExpenses UndistOperatingExpenses { get; set; }
+        public ReportAttribute GrossOperatingProfit => new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
+        public ReportAttribute ManagmentFees => new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
+        public ReportAttribute IncomeBeforeFixedCharges => new ReportAttribute { Label = "INCOME BEFORE FIXED CHARGES" };
+        public FixedCharges FixedCharges { get; set; }
+        public ReportAttribute NetOperatingIncome => new ReportAttribute { Label = "NET OPERATING INCOME (BEFORE TAX)" };
+        public ReportAttribute IncomeTax => new ReportAttribute { Label = "Income Tax" };
+        public ReportAttribute NetIncome => new ReportAttribute { Label = "NET INCOME" };
+
+
 
     }
 
@@ -101,4 +105,5 @@ namespace Common.ReportDto
         public void Utilities(decimal? value) => AddKey("Utilities", value);
         public void TotalUnderdistributed(decimal? value) => AddKey("TOTAL UNDISTRIBUTED OPERATING EXPENSES", value);
     }
+
 }
