@@ -26,7 +26,7 @@ public class GoalReportService : IGoalReportService
 
     private IQueryable<SoldRoomByChannel> SoldRoomQueryAsync => _context.SoldRoomByChannel.AsNoTracking();
 
-    public async Task<List<GoalReportResponse>> GenerateReport(GoalReportParams goalArgs)
+    public async Task<List<GoalReportResponse>> GenerateReport(ReportParams goalArgs)
     {
         AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
 

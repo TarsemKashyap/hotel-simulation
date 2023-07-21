@@ -6,6 +6,6 @@ namespace Service
 {
     public interface IGoalReportService
     {
-        Task<List<GoalReportResponse>> GenerateReport(GoalReportParams goalArgs);
+        Task<List<GoalReportResponse>> GenerateReport(ReportParams goalArgs);
     }
 }

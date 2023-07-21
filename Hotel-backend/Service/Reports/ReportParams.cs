@@ -1,6 +1,6 @@
 ﻿namespace Service;
 
-public record GoalReportParams
+public record ReportParams
 {
     public string UserId { get; set; }
     public int ClassId { get; set; }

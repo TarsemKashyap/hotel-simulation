@@ -120,6 +120,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
         services.AddScoped<ICalculationServices, CalculationServices>();
         services.AddScoped<IGoalReportService, GoalReportService>();
+        services.AddScoped<IPerformanceReportService, PerformanceReportService>();
 
 
     }
