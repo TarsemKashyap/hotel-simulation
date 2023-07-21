@@ -37,7 +37,7 @@ namespace Api.Controllers
         [HttpPost("studentRolelist")]
         public async Task<ActionResult> GetStudentRoles(StudentAssignmentRequestParam parms)
         {
-            var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(parms.StudentId);
+            var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(this.LoggedUserId);
             return Ok(studentRoleResult);
         }
 
