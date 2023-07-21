@@ -274,8 +274,8 @@ namespace Service
                             Weekday = weekday,
                             DistributionChannel = channel.Channel,
                             Segment = segment.SegmentName,
-                            Price = (int)obj.Price,
-                            ActualDemand = (int)obj.ActualDemand,
+                            Price = obj.Price,
+                            ActualDemand = Math.Round(obj.ActualDemand),
                             Confirmed = false
                         });
                         // context.PriceDecision.Add(obj1);

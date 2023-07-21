@@ -53,7 +53,7 @@ namespace Service
                         int monthId = listMonth[i].MonthId;
 
 
-
+                        #region MarketingDecision
 
                         //int monthId = month.MonthId;
                         List<MarketingDecisionDto> objListMd = objCalculation.GetDataByQuarterMarketDecision(_context, monthId, currentQuarter);
@@ -210,9 +210,10 @@ namespace Service
                             ////Slow down the calucation to give database more time to process, wait 1/10 second
 
                         }
-
+                        #endregion
+                        #region Price Decision
                         {
-                            //Price Decision
+
                             PriceDecision objPriceDecision = new PriceDecision();
                             ratio = 0;
                             decimal avergePrice;
@@ -255,7 +256,7 @@ namespace Service
                                 {
                                     actualDemand = 0;
                                 }
-                                priceDecisionRow.ActualDemand = actualDemand;
+                                priceDecisionRow.ActualDemand = Math.Round(actualDemand);
                                 //   PriceDecisionUpdate(priceDecisionRow);
                                 // _context.ChangeTracker.Clear();
                                 // var PriceDec = priceDecisionRow.Adapt<PriceDecision>();
@@ -265,7 +266,8 @@ namespace Service
                             }
                             _context.SaveChanges();
                         }
-
+                        #endregion
+                        #region IncomeState
                         // List<IncomeStateDto> incomTableAfter = await GetDataByMonthIncomeState(monthId, currentQuarter);
                         var dataIncomTableAfter = await _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                         foreach (IncomeState row in dataIncomTableAfter)
@@ -293,7 +295,9 @@ namespace Service
 
                         }
                         _context.SaveChanges();
+                        #endregion
 
+                        #region CustomerRawRating
                         // List<CustomerRawRatingDto> rawRatingTable = await GetDataByQuarterCustomerRowRatting(monthId, currentQuarter);
                         var datarawRatingTable = await _context.CustomerRawRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                         foreach (CustomerRawRating row in datarawRatingTable)
@@ -330,9 +334,10 @@ namespace Service
 
                         }
                         _context.SaveChanges();
-
+                        #endregion
                         //  List<WeightedAttributeRatingDto> overallRatingTable = await GetDataByQuarterWeightAttributeRating(monthId, currentQuarter);
 
+                        #region WeightedAttributeRating customerRating
                         var dataoverallRatingTable = await _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
 
                         decimal averageRating = 0;
@@ -345,7 +350,8 @@ namespace Service
 
                         }
                         _context.SaveChanges();
-
+                        #endregion
+                        #region weightedAttributeRatting Actualdemand
                         var dataoverallRatingTable1 = await _context.WeightedAttributeRating.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
 
                         foreach (WeightedAttributeRating row in dataoverallRatingTable1)
@@ -366,6 +372,8 @@ namespace Service
 
                         }
                         _context.SaveChanges();
+                        #endregion
+
 
                         // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
                         //   List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
@@ -865,7 +873,7 @@ namespace Service
                                 else
                                 {
                                     //row.SoldRoom = Convert.ToInt32(roomAlloSold * thisSold / sum);
-                                    row.Revenue =ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday);
+                                    row.Revenue = ScalarSingleRevenueSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday);
                                     row.Cost = ScalarSingleCostSoldRoomByChannel(row.MonthID, row.QuarterNo, row.GroupID, row.Segment, row.Channel, row.Weekday);
 
                                 }
@@ -1650,7 +1658,7 @@ namespace Service
 
             if (list.Count > 0)
             {
-                ideal = list[0].Ideal;
+                ideal = list.Average(x=>x.Ideal);
             }
             return ideal;
         }
@@ -1843,17 +1851,22 @@ namespace Service
         WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment)*/
             decimal MarketingDemand = 0;
             var list = (from md in _context.MarketingDecision
-                        where (md.MonthID == monthId && md.Segment == segment && md.MonthID == monthId && md.GroupID == groupID)
-                        group md by new { md.ActualDemand, md.GroupID } into gp
+                        where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && md.GroupID == groupID)
                         select new
                         {
-                            MarketingDemand = gp.Sum(x => x.ActualDemand),
+                            MarketingDemand = md.ActualDemand
 
                         }).ToList();
+            //group md by new { md.ActualDemand, md.GroupID } into gp
+            //            select new
+            //            {
+            //                MarketingDemand = gp.Sum(x => x.ActualDemand),
+
+            //            }).ToList();
 
             if (list.Count > 0)
             {
-                MarketingDemand = list[0].MarketingDemand;
+                MarketingDemand = list.Sum(x => x.MarketingDemand);
             }
             return MarketingDemand;
 
@@ -1867,16 +1880,21 @@ namespace Service
             decimal AttributeDemand = 0;
             var list = (from md in _context.WeightedAttributeRating
                         where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && md.GroupID == groupID)
-                        group md by md.ActualDemand into gp
                         select new
                         {
-                            AttributeDemand = gp.Sum(x => x.ActualDemand),
+                            AttributeDemand = md.ActualDemand,
 
                         }).ToList();
+            //group md by md.ActualDemand into gp
+            //            select new
+            //            {
+            //                AttributeDemand = gp.Sum(x => x.ActualDemand),
+
+            //            }).ToList();
 
             if (list.Count > 0)
             {
-                AttributeDemand = list[0].AttributeDemand;
+                AttributeDemand = list.Sum(x => x.AttributeDemand);
             }
             return AttributeDemand;
 
@@ -1889,7 +1907,8 @@ namespace Service
         WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID) AND (segment = @segment) AND (weekday = @weekday)*/
             decimal PriceDemand = 0;
             var list = (from md in _context.PriceDecision
-                        where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && Convert.ToInt16(md.GroupID) == groupID)
+                        where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && Convert.ToInt16(md.GroupID) == groupID
+                        && md.Weekday==weekday)
 
                         select new
                         {
@@ -1899,7 +1918,7 @@ namespace Service
 
             if (list.Count > 0)
             {
-                PriceDemand = list[0].PriceDemand;
+                PriceDemand = list.Sum(x => x.PriceDemand);
             }
             return PriceDemand;
 
