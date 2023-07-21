@@ -12,7 +12,7 @@
         public int ActualDemand { get; set; }
         public int RoomsSold { get; set; }
         public bool Confirmed { get; set; }
-        public int Revenue { get; set; }
+        public decimal Revenue { get; set; }
         public int QuarterForecast { get; set; }
       
     }

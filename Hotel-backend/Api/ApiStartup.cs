@@ -123,7 +123,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IPriceDecisionService, PriceDecisionService>();
         services.AddScoped<ICalculationServices, CalculationServices>();
 
-
+        services.AddScoped<IMarketingService, MarketingService>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)

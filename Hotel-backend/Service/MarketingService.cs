@@ -50,8 +50,8 @@ public class MarketingService : IMarketingService
             QuarterNo = s.QuarterNo,
             Spending = s.Spending,
             LaborSpending = s.LaborSpending,
-            SpendingFormatN0 = s.Spending.ToString("n0"),
-            LaborSpendingFormatN0 = s.LaborSpending.ToString("n0"),
+            SpendingFormatN0 = s.Spending.ToString("n0").Replace(",",""),
+            LaborSpendingFormatN0 = s.LaborSpending.ToString("n0").Replace(",", ""),
             Segment = s.Segment.Replace("\t", "").Trim(),
             ID = s.ID
         }).ToList();

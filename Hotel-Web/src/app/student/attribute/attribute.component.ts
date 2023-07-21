@@ -22,12 +22,8 @@ export class AttributeComponent {
   selectedRoles: any = [];
   selectedRoleList: any = [];
   currentRole: any = '';
-  ngOnInit(): void {
-    // this.selectedRoles = this.sessionStore.studentAssignRoleList;
-    // if(this.selectedRoles) {
-    // this.selectedRoles.array.forEach((element : any) => {
-    //   this.selectedRoleList.push(element?.roleName);
 
+  ngOnInit(): void {
     this.attributeDecisionList();
   }
 
@@ -131,7 +127,6 @@ export class AttributeComponent {
         var golfCourseAttribute = this.attributeDecisions.find(d => d.attribute === 'Golf Course');
 
         var recreationFacilitiesAttribute = this.attributeDecisions.find(d => d.attribute === 'Other Recreation Facilities - Pools, game rooms, tennis courts, ect');
-
 
         var salesAttentionAttribute = this.attributeDecisions.find(d => d.attribute === 'Management/Sales Attention');
 
@@ -320,7 +315,6 @@ export class AttributeComponent {
         totalAccumu = totalAccumu + parseFloat(courtesyRoomsAttribute?.accumulatedCapital === undefined ? '0' : courtesyRoomsAttribute?.accumulatedCapital.toString());
         this.totalAccumulated = totalAccumu.toString();
         this.sum();
-        console.log(spaAttribute, "this.attributeDecisions", this.attributeDecisions)
       });
   }
 
