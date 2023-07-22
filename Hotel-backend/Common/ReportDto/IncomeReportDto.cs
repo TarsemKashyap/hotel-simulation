@@ -4,15 +4,15 @@
     {
         public Revenue Revenue { get; set; }
         public DepartmentalExpenses DepartmentalExpenses { get; set; }
-        public ReportAttribute TotalDepartIncome => new ReportAttribute { Label = "TOTAL DEPARTMENTAL INCOME" };
+        public ReportAttribute TotalDepartIncome { get; set; } = new ReportAttribute { Label = "TOTAL DEPARTMENTAL INCOME" };
         public UndistOperatingExpenses UndistOperatingExpenses { get; set; }
-        public ReportAttribute GrossOperatingProfit => new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
-        public ReportAttribute ManagmentFees => new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
-        public ReportAttribute IncomeBeforeFixedCharges => new ReportAttribute { Label = "INCOME BEFORE FIXED CHARGES" };
+        public ReportAttribute GrossOperatingProfit { get; set; } = new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
+        public ReportAttribute ManagmentFees { get; set; } = new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
+        public ReportAttribute IncomeBeforeFixedCharges { get; set; } = new ReportAttribute { Label = "INCOME BEFORE FIXED CHARGES" };
         public FixedCharges FixedCharges { get; set; }
-        public ReportAttribute NetOperatingIncome => new ReportAttribute { Label = "NET OPERATING INCOME (BEFORE TAX)" };
-        public ReportAttribute IncomeTax => new ReportAttribute { Label = "Income Tax" };
-        public ReportAttribute NetIncome => new ReportAttribute { Label = "NET INCOME" };
+        public ReportAttribute NetOperatingIncome { get; set; } = new ReportAttribute { Label = "NET OPERATING INCOME (BEFORE TAX)" };
+        public ReportAttribute IncomeTax { get; set; } = new ReportAttribute { Label = "Income Tax" };
+        public ReportAttribute NetIncome { get; set; } = new ReportAttribute { Label = "NET INCOME" };
 
 
 
@@ -32,13 +32,16 @@
     {
         public string Label { get; set; }
         public AbstractDecimal Value { get; set; }
-        public Dictionary<string, AbstractDecimal> ChildAttribute { get; set; } = new Dictionary<string, AbstractDecimal>();
+        public List<ReportAttribute> ChildAttribute { get; private set; }
         protected void AddMoney(string label, decimal? money)
         {
-            ChildAttribute.Add(label, money.HasValue ? new Currency(money.Value) : null);
+            if (ChildAttribute == null)
+                ChildAttribute = new List<ReportAttribute>();
+
+            var currency = money.HasValue ? new Currency(money.Value) : null;
+            ChildAttribute.Add(new ReportAttribute { Label = label, Value = currency });
         }
 
-        public decimal Sum => ChildAttribute.Values.Sum(x => x.Value);
     }
 
     public class DepartmentalExpenses : ReportAttribute
@@ -47,7 +50,7 @@
         {
             this.Label = "DEPARTMENTAL EXPENSES";
         }
-        public ReportAttribute TotalDepartmentalIncome => new ReportAttribute() { Label = "TOTAL DEPARTMENTAL INCOME", Value = new Currency(Sum) };
+        public ReportAttribute TotalDepartmentalIncome => new ReportAttribute() { Label = "TOTAL DEPARTMENTAL INCOME" };
         public void Rooms(decimal? money) => AddMoney("Rooms", money);
         public void FoodAndBeverage(decimal? money) => AddMoney("Food and Beverage", money);
         public void OtherOperatedDepartment(decimal? money) => AddMoney("Other Operated Departments", money);
