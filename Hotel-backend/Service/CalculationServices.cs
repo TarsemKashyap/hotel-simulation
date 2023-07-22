@@ -413,7 +413,6 @@ namespace Service
                         {
                             /////////Do the sold room and Room Pools each group by each group for weekday
                             //table = await GetDataByGroupWeekdayRoomAllocation(monthId, currentQuarter, groupID, true);
-                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == true).ToListAsync();
                             //////First, we collect all the free rooms that is not used, or in another word, over-allocated.
                             /////Different Segment will have different percentage that will "go bad"
                             /////Business 60% goes bad
@@ -424,6 +423,10 @@ namespace Service
                             /////Families 40% goes bad
                             /////Corporate/Business Meetings 20% goes bad
                             /////Association Meetings 20% goes bad
+                            ///
+                            #region RoomAllocation WeekDay true
+                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == true).ToListAsync();
+
                             foreach (RoomAllocation row in datatable)
                             {
                                 if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
@@ -805,10 +808,400 @@ namespace Service
 
                             }
                             _context.SaveChanges();
+                            #endregion
+                            #region RoomAllocation weekDay False
+                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == false).ToListAsync();
+
+                            foreach (RoomAllocation row in datatable)
+                            {
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Small Business")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate contract")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 2 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Families")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Afluent Mature Travelers")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "International leisure travelers")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 3 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Corporate/Business Meetings")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
+                                }
+                                if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Association Meetings")
+                                {
+                                    roomPool = (row.RoomsAllocated - row.ActualDemand) * 4 / 5 + roomPool;
+                                }
+                                //    RoomAllocationUpdate(row);
+                                //}
+                                ////////////////Re-allocate the rooms that are free in such an order
+                                ////////////////Business, Corporate contract, Small Business,Afluent Mature Travelers,International leisure travelers,Families,Corporate/Business Meetings,Association Meetings  
+                                if (roomPool > 0)
+                                {
+                                    // foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Business")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //  RoomAllocationUpdate(row);
+                                    //}
+                                    //////}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Corporate contract")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //  RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Small Business")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Afluent Mature Travelers")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "International leisure travelers")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Families")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Corporate/Business Meetings")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+                                    //}
+                                    //if (roomPool > 0)
+                                    //{
+                                    //foreach (RoomAllocationDto row in table)
+                                    //{
+                                    if (row.Segment == "Association Meetings")
+                                    {
+                                        if (row.RoomsAllocated > row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated == row.ActualDemand)
+                                        {
+                                            row.RoomsSold = row.ActualDemand;
+                                        }
+                                        if (row.RoomsAllocated < row.ActualDemand)
+                                        {
+                                            if (currentQuarter <= 1)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool > row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = roomPool - row.ActualDemand + row.RoomsAllocated;
+                                                if (roomPool < 0)
+                                                    roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool == row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.ActualDemand;
+                                                roomPool = 0;
+                                            }
+                                            else if (row.RoomsAllocated + roomPool < row.ActualDemand)
+                                            {
+                                                row.RoomsSold = row.RoomsAllocated + roomPool;
+                                                roomPool = 0;
+                                            }
+                                        }
+                                    }
+                                    //    RoomAllocationUpdate(row);
+                                    //}
+
+                                }
+                                // RoomAllocationRoomSoldUpdate(row);
+                                //_context.ChangeTracker.Clear();
+                                _context.Update(row);
+
+                            }
+                            _context.SaveChanges();
+                            #endregion
+
+
+
                             // RoomAllocationUpdate(Row);
                             groupID++;
                         }
                         {
+                            #region SoldRoomByChannel
 
                             // List<SoldRoomByChannelDto> soldChanTable = await GetDataByMonthSoldRoomByChannel(monthId, currentQuarter);
                             var datasoldChanTable = await _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
@@ -851,6 +1244,8 @@ namespace Service
                             }
                             _context.SaveChanges();
 
+                            #endregion
+                            #region SoldRoombyChannel 
                             var datasoldChanTable1 = await _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
 
                             foreach (SoldRoomByChannel row in datasoldChanTable1)
@@ -883,6 +1278,7 @@ namespace Service
 
                             }
                             _context.SaveChanges();
+                            #endregion
                             ////Slow down the calucation to give database more time to process, wait 1/10 second
 
 
@@ -911,6 +1307,7 @@ namespace Service
                             BalanceSheetDto balanTableRow;
 
                             //List<IncomeStateDto> incoTable = await GetDataByMonthIncomeState(monthId, currentQuarter);
+                            #region   IncomeState
                             var dataIncoTable = await _context.IncomeState.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                             int groupNo = Convert.ToInt32(ScalarQueryFindNoOfHotels(month.ClassId));
                             if (dataIncoTable.Count > 0)
@@ -1175,12 +1572,15 @@ namespace Service
                                 }
                                 _context.SaveChanges();
                             }
+                            #endregion
+
                         }
                         ////////////////////////////////////
                         //Set Revenue By segment////////////
                         ////////////////////////////////////
 
                         //  List<RoomAllocationDto> roTab = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        #region RoomAllocation
                         var dataroTab = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                         foreach (RoomAllocation roRw in dataroTab)
                         {
@@ -1191,9 +1591,11 @@ namespace Service
 
                         }
                         _context.SaveChanges();
+                        #endregion
                         obj.UpdateClassStatus(_context, month.ClassId, "T");
 
                         {
+                            #region Ranking
                             if (currentQuarter > 1)
                             {
                                 //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
@@ -1251,6 +1653,7 @@ namespace Service
                                     groupIDRA++;
                                 }
                             }
+                            #endregion
                         }
                     }
                     await transaction.CommitAsync();
@@ -1658,7 +2061,7 @@ namespace Service
 
             if (list.Count > 0)
             {
-                ideal = list.Average(x=>x.Ideal);
+                ideal = list.Average(x => x.Ideal);
             }
             return ideal;
         }
@@ -1683,8 +2086,8 @@ namespace Service
                             && crr.QuarterNo == quarterNo && crr.GroupID == groupId && crr.Attribute == attribute && crr.Segment == segment)
                             select new
                             {
-                                RawRating = (decimal?)((ad.AccumulatedCapital + ad.NewCapital / ((amcoc.MaxNewCapital))
-                                * irawc.IdealRating * amcoc.NewCapitalPortion + ad.OperationBudget)
+                                RawRating = (decimal?)(((ad.AccumulatedCapital + ad.NewCapital) / amcoc.MaxNewCapital)
+                                * irawc.IdealRating * amcoc.NewCapitalPortion + ad.OperationBudget
                                 / amcoc.MaxOperation
                           * irawc.IdealRating * amcoc.OperationPortion + ad.LaborBudget
                           / ins.TotReven
@@ -1747,9 +2150,9 @@ namespace Service
                         )
                         select new
                         {
-                            //RawRating= crr.RawRating,
-                            //Weight= irawc.Weight
-                            WeightedRating = crr.RawRating * irawc.Weight,
+                            RawRating = crr.RawRating,
+                            Weight = irawc.Weight,
+                            //  WeightedRating = crr.RawRating * irawc.Weight,
 
                         }).ToList();
             //group new { crr, irawc } by new { crr.RawRating, irawc.Weight } into grp
@@ -1761,7 +2164,7 @@ namespace Service
 
             if (list.Count > 0)
             {
-                WeightedRating = list.Sum(a => a.WeightedRating);
+                WeightedRating = list.Sum(a => (a.RawRating * a.Weight));
             }
             return WeightedRating;
 
@@ -1908,7 +2311,7 @@ namespace Service
             decimal PriceDemand = 0;
             var list = (from md in _context.PriceDecision
                         where (md.MonthID == monthId && md.Segment == segment && md.QuarterNo == quarterNo && Convert.ToInt16(md.GroupID) == groupID
-                        && md.Weekday==weekday)
+                        && md.Weekday == weekday)
 
                         select new
                         {
@@ -2442,16 +2845,21 @@ namespace Service
             int MaxGroup = 0;
             var list = (from r in _context.RoomAllocation
                         where (r.MonthID == monthID && r.QuarterNo == quarterNo)
-                        group r by r.GroupID into g
                         select new
                         {
-                            MaxGroup = g.Max(x => x.GroupID)
+                            MaxGroup = r.GroupID
 
                         }).ToList();
+            //group r by r.GroupID into g
+            //select new
+            //{
+            //    MaxGroup = g.Max(x => x.GroupID)
+
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                MaxGroup = list[0].MaxGroup;
+                MaxGroup = list.Max(x => x.MaxGroup);
             }
             return MaxGroup;
 
