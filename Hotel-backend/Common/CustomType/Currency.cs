@@ -1,4 +1,5 @@
-﻿namespace Common.ReportDto
+﻿
+namespace Common
 {
     public class Currency : AbstractDecimal
     {
@@ -7,8 +8,5 @@
 
         }
     }
-
-
-
 
 }

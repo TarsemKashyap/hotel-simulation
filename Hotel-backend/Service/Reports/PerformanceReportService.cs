@@ -4,6 +4,7 @@ using Common.ReportDto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Common;
 
 namespace Service;
 

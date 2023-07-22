@@ -1,4 +1,5 @@
-﻿using Common.ReportDto;
+﻿using Common;
+using Common.ReportDto;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Tls;

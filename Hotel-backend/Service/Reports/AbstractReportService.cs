@@ -1,5 +1,5 @@
-﻿using Common.ReportDto;
-using Google.Protobuf.WellKnownTypes;
+﻿using Common;
+using Common.ReportDto;
 
 namespace Service;
 
@@ -21,6 +21,12 @@ public abstract class AbstractReportService
 
 
 }
+
+public class BalanceReportService : AbstractReportService
+{
+
+}
+
 
 
 

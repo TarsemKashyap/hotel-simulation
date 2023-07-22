@@ -1,4 +1,4 @@
-﻿namespace Common.ReportDto
+﻿namespace Common
 {
     public class Number : AbstractDecimal
     {
