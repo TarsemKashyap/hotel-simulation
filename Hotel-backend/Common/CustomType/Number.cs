@@ -2,7 +2,7 @@
 {
     public class Number : AbstractDecimal
     {
-        public Number(decimal value) : base(value, "n")
+        public Number(decimal value) : base(value, "N")
         {
 
         }

@@ -26,8 +26,8 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
 
     public async Task<IncomeReportDto> Report(ReportParams reportParams)
     {
-        int quater = reportParams.CurrentQuarter, groupId = reportParams.GroupId;
-        IncomeState incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.QuarterNo == quater && x.GroupID == groupId).FirstOrDefaultAsync();
+        int quater = reportParams.CurrentQuarter, groupId = reportParams.GroupId,monthId=reportParams.MonthId;
+        IncomeState incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quater && x.GroupID == groupId).FirstOrDefaultAsync();
         IncomeReportDto report = new IncomeReportDto();
         report.Revenue = new Revenue()
         {
@@ -42,19 +42,19 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
 
         report.UndistOperatingExpenses = UndistOperatingExpense(incomeState);
         //gross profit
-        report.GrossOperatingProfit.Value = Money(incomeState.GrossProfit);
+        report.GrossOperatingProfit.Data = Money(incomeState.GrossProfit);
 
         //mgmt fee
-        report.ManagmentFees.Value = Money(incomeState.IncomBfCharg);
+        report.ManagmentFees.Data = Money(incomeState.IncomBfCharg);
         // income before fixed charge
-        report.IncomeBeforeFixedCharges.Value = Money(incomeState.MgtFee);
+        report.IncomeBeforeFixedCharges.Data = Money(incomeState.MgtFee);
         //Fixed Charges
 
 
         report.FixedCharges = FixedCharges(incomeState);
-        report.NetOperatingIncome.Value = Money(incomeState.NetIncomBfTAX);
-        report.IncomeTax.Value = Money(incomeState.IncomTAX);
-        report.NetIncome.Value = Money(incomeState.NetIncom);
+        report.NetOperatingIncome.Data = Money(incomeState.NetIncomBfTAX);
+        report.IncomeTax.Data = Money(incomeState.IncomTAX);
+        report.NetIncome.Data = Money(incomeState.NetIncom);
 
         return report;
 
@@ -92,19 +92,19 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
         expenses.FoodAndBeverage(incomeState.Food2B);
         expenses.OtherOperatedDepartment(incomeState.Other7);
         expenses.TotalDepartmentalExpenses(incomeState.TotExpen);
-        expenses.TotalDepartmentalIncome.Value = Money(incomeState.TotDeptIncom);
+        expenses.TotalDepartmentalIncome.Data = Money(incomeState.TotDeptIncom);
         return expenses;
     }
 
     private ReportAttribute GetTotalReveue(IncomeState incomeState)
     {
         decimal totalRevnew = incomeState.Room1 + incomeState.FoodB1 + incomeState.Other1 + incomeState.Rent;
-        return new ReportAttribute { Label = "TOTAL REVENUE", Value = new Currency(totalRevnew) };
+        return new ReportAttribute { Label = "TOTAL REVENUE", Data = new Currency(totalRevnew) };
     }
 
     private OtherOperatedDocs GetOperateDept(IncomeState incomeState)
     {
-        OtherOperatedDocs OtherOperatedDocs = new OtherOperatedDocs() { Label = "Other Operated Departments", Value = new Currency(incomeState.Other) };
+        OtherOperatedDocs OtherOperatedDocs = new OtherOperatedDocs() { Label = "Other Operated Departments", Data = new Currency(incomeState.Other) };
         OtherOperatedDocs.GolfCourse(incomeState.Other1);
         OtherOperatedDocs.Spa(incomeState.Other2);
         OtherOperatedDocs.FitnessCenter(incomeState.Other3);
@@ -118,7 +118,7 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
     {
         var foodBeverage = new FoodBeverage
         {
-            Value = new Currency(incomeState.FoodB),
+            Data = new Currency(incomeState.FoodB),
         };
         foodBeverage.Restaurants(incomeState.FoodB1);
         foodBeverage.Bars(incomeState.FoodB2);

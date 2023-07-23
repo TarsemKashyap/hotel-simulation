@@ -31,6 +31,7 @@ public class PerformanceReportService : IPerformanceReportService
     public async Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs)
     {
         AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
+        int monthId = goalArgs.MonthId;
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
             .Include(x => x.Months)
@@ -64,7 +65,7 @@ public class PerformanceReportService : IPerformanceReportService
             REVPAR = new Currency(ScalarGroupRomSoldByMonth == 0 ? 0 : (ScalarGroupRoomRevenueByMonth / 15000))
         };
 
-        BalanceSheet currentMonthBalSheet = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == groupId);
+        BalanceSheet currentMonthBalSheet = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == groupId);
         FinancialRatio liquidtyRatios = new FinancialRatio("Liquidity Ratios");
         {
             // Current Ratio
@@ -146,7 +147,7 @@ public class PerformanceReportService : IPerformanceReportService
 
                 if (quarter > 1)
                 {
-                    var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+                    var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
                     b = (currentMonthBalSheet.TotAsset + lastMonthBalSheet.TotAsset) / 2;
                 }
                 b = currentMonthBalSheet.TotAsset;
@@ -168,7 +169,7 @@ public class PerformanceReportService : IPerformanceReportService
 
                 if (quarter > 1)
                 {
-                    var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+                    var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
                     b = (currentMonthBalSheet.RetainedEarn + 35000000 + lastMonthBalSheet.RetainedEarn + 35000000) / 2;
                 }
                 else

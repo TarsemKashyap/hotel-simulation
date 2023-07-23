@@ -122,6 +122,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IGoalReportService, GoalReportService>();
         services.AddScoped<IPerformanceReportService, PerformanceReportService>();
         services.AddScoped<IIncomeReportService, IncomeReportService>();
+        services.AddScoped<IBalanceReportService, BalanceReportService>();
 
 
     }
