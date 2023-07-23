@@ -12,3 +12,9 @@
   .is-invalid {
     border: 2px solid red;
   }
+  .tableHeader
+  {
+      width:100%;
+      border-style: none none inset none;
+      text-align: center;
+  }

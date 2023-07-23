@@ -11,7 +11,8 @@ import { SessionStore } from 'src/app/store';
   styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboard {
-  studentId: string = '';
+
+  studentId:  string = '';
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   constructor(
@@ -32,27 +33,52 @@ export class StudentDashboard {
     this.router.navigate([`login`]);
   }
 
-  private studentRolesList() {
-    // this.studentId = '01b96b31-649a-4b87-a4a4-4c63f6c4d636';
-    this.studentService
-      .StudentRoleslist({ studentId: this.studentId })
-      .subscribe((data) => {
-        this.studentRoleList = data;
-        this.sessionStore.SetStudentRole(this.studentRoleList);
-        //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
-        this.studentRolePageList = JSON.parse(
-          this.sessionStore.GetStudentRole()
-        );
-        console.log(
-          this.studentRolePageList,
-          this.sessionStore.GetStudentRole()
-        );
-      });
+  // private studentRolesList() {
+  //   // this.studentId = '01b96b31-649a-4b87-a4a4-4c63f6c4d636';
+  //   this.studentService
+  //     .StudentRoleslist({ studentId: this.studentId })
+  //     .subscribe((data) => {
+  //       this.studentRoleList = data;
+  //       this.sessionStore.SetStudentRole(this.studentRoleList);
+  //       //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
+  //       this.studentRolePageList = JSON.parse(
+  //         this.sessionStore.GetStudentRole()
+  //       );
+  //       console.log(
+  //         this.studentRolePageList,
+  //         this.sessionStore.GetStudentRole()
+  //       );
+  //     });
+  // }
+
+
+private studentRolesList() {
+  this.studentService
+    .StudentRoleslist().subscribe((data) => {
+      this.studentRoleList = data;
+      this.sessionStore.SetStudentRole(this.studentRoleList);
+      //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
+      this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
+     // console.log(this.studentRolePageList,this.sessionStore.GetStudentRole());
+    });
+}
+
+  openLink(studentRolePage:RolePagesDtl) {
+    console.log("studentRolePage",studentRolePage)
+    this.sessionStore.SetCurrentRole(studentRolePage.roleName);
+    //this.router.navigate([studentRolePage.childPageLink]);
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([studentRolePage.childPageLink]);
+  });
+    // this.router.navigate([studentRolePage.childPageLink]).then(() => {
+    //   this.reloadCurrentRoute();
+    // });
   }
 
-  openLink(studentRolePage: RolePagesDtl) {
-    this.router.navigate(['decision'], {
-      queryParams: { role: studentRolePage.roleName },
-    });
+reloadCurrentRoute() {
+  let currentUrl = this.router.url;
+  this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+  });
   }
 }

@@ -39,3 +39,60 @@ export interface AddRemoveClassDto {
 export interface ClassInformation extends ClassSession {
   totalStudentCount : number;
 }
+
+export interface RoomAllocations {
+  id:number;
+  monthID : number;
+  quarterNo : number;
+  groupID : number;
+  weekday : boolean;
+  segment : string;
+  roomsAllocated : number;
+  actualDemand : number;
+  roomsSold : number;
+  confirmed : boolean;
+  revenue : number;
+}
+
+export interface AttributeDecision {
+  iD: number;
+  quarterNo: number;
+  groupID: number;
+  attribute: string;
+  accumulatedCapital: number;
+  newCapital: number;
+  operationBudget: number;
+  laborBudget: number;
+  confirmed: boolean;
+  quarterForecast: number;
+  monthID: number;
+}
+
+export interface PriceDecision {
+  ID: number;
+  monthID : number;
+  quarterNo : number;
+  groupID : number;
+  weekday : boolean;
+  distributionChannel : string;
+  segment : string;
+  price : number;
+  actualDemand : number;
+  confirmed : boolean;
+  priceNOFormat : string;
+}
+
+export interface MarketingDecision {
+  iD: number;
+  monthID: number;
+  quarterNo: number;
+  groupID: number;
+  marketingTechniques: string;
+  segment: string;
+  spendingFormatN0: string;
+  laborSpendingFormatN0: string;
+  spending: number;
+  laborSpending: number;
+  actualDemand: number;
+  confirmed: boolean;
+}

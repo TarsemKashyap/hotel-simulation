@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SessionStore } from 'src/app/store';
 
 @Component({
   selector: 'app-decision',
@@ -7,12 +8,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./decision.component.css']
 })
 export class DecisionComponent {
-  constructor(private route: ActivatedRoute) {
+  currentRoleName : string;
+  constructor(private route: ActivatedRoute , private sessionStore: SessionStore) {
+    this.currentRoleName = this.sessionStore.GetCurrentRole() || '';
   }
   
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-     console.log(params['role'],"rolena");
-    });
+    
   }
 }

@@ -1,0 +1,7 @@
+.decision-link {
+    cursor: pointer;
+}
+
+.decision-link:hover {
+    font-weight: bold;
+}

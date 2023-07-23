@@ -1,0 +1,651 @@
+<section class="bg-[#F4F7FF]">
+    <div class="container">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <table class="table-auto">
+                <tr>
+                    <td colspan="3" class="tableHeader">
+                        <h2 class="style2">Marketing: Operating Other Expenditures
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-style: none none inset none;width: 15%;">
+                        &nbsp;</td>
+                    <td style="border-style: none none inset none;width: 25%;">
+                        Advertising</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Sales Force</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Promotions</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Public Relations</td>
+                </tr>
+                <tr>
+                    <td>
+                        Business
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising1.errors">
+                            <div *ngIf="f.Advertising1.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce1.errors">
+                            <div *ngIf="f.SalesForce1.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions1.errors">
+                            <div *ngIf="f.Promotions1.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations1.errors">
+                            <div *ngIf="f.PublicRelations1.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Small Business
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising2.errors">
+                            <div *ngIf="f.Advertising2.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce2.errors">
+                            <div *ngIf="f.SalesForce2.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions2.errors">
+                            <div *ngIf="f.Promotions2.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations2.errors">
+                            <div *ngIf="f.PublicRelations2.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Corporate contract
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising3.errors">
+                            <div *ngIf="f.Advertising3.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce3.errors">
+                            <div *ngIf="f.SalesForce3.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions3.errors">
+                            <div *ngIf="f.Promotions3.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations3.errors">
+                            <div *ngIf="f.PublicRelations3.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Families
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising4.errors">
+                            <div *ngIf="f.Advertising4.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce4.errors">
+                            <div *ngIf="f.SalesForce4.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions4.errors">
+                            <div *ngIf="f.Promotions4.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations4.errors">
+                            <div *ngIf="f.PublicRelations4.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Affluent Mature Travelers
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising5.errors">
+                            <div *ngIf="f.Advertising5.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce5.errors">
+                            <div *ngIf="f.SalesForce5.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions5.errors">
+                            <div *ngIf="f.Promotions5.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations5.errors">
+                            <div *ngIf="f.PublicRelations5.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        International leisure travelers
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising6.errors">
+                            <div *ngIf="f.Advertising6.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce6.errors">
+                            <div *ngIf="f.SalesForce6.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions6.errors">
+                            <div *ngIf="f.Promotions6.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations6.errors">
+                            <div *ngIf="f.PublicRelations6.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Corporate/Business Meetings
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising7.errors">
+                            <div *ngIf="f.Advertising7.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce7.errors">
+                            <div *ngIf="f.SalesForce7.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions7.errors">
+                            <div *ngIf="f.Promotions7.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations7.errors">
+                            <div *ngIf="f.PublicRelations7.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Association Meetings
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Advertising8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Advertising8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Advertising8.errors">
+                            <div *ngIf="f.Advertising8.errors.required">Value is required</div>
+                            <div *ngIf="f.Advertising8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="SalesForce8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.SalesForce8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.SalesForce8.errors">
+                            <div *ngIf="f.SalesForce8.errors.required">Value is required</div>
+                            <div *ngIf="f.SalesForce8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="Promotions8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Promotions8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.Promotions8.errors">
+                            <div *ngIf="f.Promotions8.errors.required">Value is required</div>
+                            <div *ngIf="f.Promotions8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="PublicRelations8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.PublicRelations8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.PublicRelations8.errors">
+                            <div *ngIf="f.PublicRelations8.errors.required">Value is required</div>
+                            <div *ngIf="f.PublicRelations8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <p>Total: {{totalOtherExpen}}</p>
+            <table class="table-auto">
+                <tr>
+                    <td colspan="3" class="tableHeader">
+                        <h2 class="style2">Marketing: Operating Other Expenditures
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-style: none none inset none;width: 15%;">
+                        &nbsp;</td>
+                    <td style="border-style: none none inset none;width: 25%;">
+                        Advertising</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Sales Force</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Promotions</td>
+                    <td style="border-style: none none inset none;width: 30%;">
+                        Public Relations</td>
+                </tr>
+                <tr>
+                    <td>
+                        Business
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising1.errors">
+                            <div *ngIf="f.LaborAdvertising1.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce1.errors">
+                            <div *ngIf="f.LaborSalesForce1.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions1.errors">
+                            <div *ngIf="f.LaborPromotions1.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations1"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations1.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations1.errors">
+                            <div *ngIf="f.LaborPublicRelations1.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations1.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Small Business
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising2.errors">
+                            <div *ngIf="f.LaborAdvertising2.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce2.errors">
+                            <div *ngIf="f.LaborSalesForce2.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions2.errors">
+                            <div *ngIf="f.LaborPromotions2.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations2"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations2.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations2.errors">
+                            <div *ngIf="f.LaborPublicRelations2.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations2.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Corporate contract
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising3.errors">
+                            <div *ngIf="f.LaborAdvertising3.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce3.errors">
+                            <div *ngIf="f.LaborSalesForce3.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions3.errors">
+                            <div *ngIf="f.LaborPromotions3.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations3"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations3.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations3.errors">
+                            <div *ngIf="f.LaborPublicRelations3.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations3.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Families
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising4.errors">
+                            <div *ngIf="f.LaborAdvertising4.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce4.errors">
+                            <div *ngIf="f.LaborSalesForce4.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions4.errors">
+                            <div *ngIf="f.LaborPromotions4.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations4"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations4.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations4.errors">
+                            <div *ngIf="f.LaborPublicRelations4.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations4.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Affluent Mature Travelers
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising5.errors">
+                            <div *ngIf="f.LaborAdvertising5.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce5.errors">
+                            <div *ngIf="f.LaborSalesForce5.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions5.errors">
+                            <div *ngIf="f.LaborPromotions5.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations5"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations5.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations5.errors">
+                            <div *ngIf="f.LaborPublicRelations5.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations5.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        International leisure travelers
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising6.errors">
+                            <div *ngIf="f.LaborAdvertising6.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce6.errors">
+                            <div *ngIf="f.LaborSalesForce6.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions6.errors">
+                            <div *ngIf="f.LaborPromotions6.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations6"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations6.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations6.errors">
+                            <div *ngIf="f.LaborPublicRelations6.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations6.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Corporate/Business Meetings
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising7.errors">
+                            <div *ngIf="f.LaborAdvertising7.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce7.errors">
+                            <div *ngIf="f.LaborSalesForce7.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions7.errors">
+                            <div *ngIf="f.LaborPromotions7.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations7"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations7.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations7.errors">
+                            <div *ngIf="f.LaborPublicRelations7.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations7.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Association Meetings
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborAdvertising8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborAdvertising8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborAdvertising8.errors">
+                            <div *ngIf="f.LaborAdvertising8.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborAdvertising8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborSalesForce8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborSalesForce8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborSalesForce8.errors">
+                            <div *ngIf="f.LaborSalesForce8.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborSalesForce8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPromotions8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPromotions8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPromotions8.errors">
+                            <div *ngIf="f.LaborPromotions8.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPromotions8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="LaborPublicRelations8"
+                            (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.LaborPublicRelations8.errors }" class="input-field" />
+                        <div *ngIf="submitted && f.LaborPublicRelations8.errors">
+                            <div *ngIf="f.LaborPublicRelations8.errors.required">Value is required</div>
+                            <div *ngIf="f.LaborPublicRelations8.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <p>Total: {{totalOperatingExpen}} </p>
+            <div class="footer">
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/2"></div>
+                    <div class="md:w-4/3">
+                      <button type="submit"
+                        class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
+                        Save
+                      </button>
+                    </div>
+                  </div>
+              </div>
+        </form>
+    </div>
+</section>

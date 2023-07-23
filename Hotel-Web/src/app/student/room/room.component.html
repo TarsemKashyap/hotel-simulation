@@ -1,19 +1,205 @@
 <section class="bg-[#F4F7FF] py-14 lg:py-20">
     <div class="container">
-        <ag-grid-angular
-        style="height: 300px"
-        class="ag-theme-alpine"
-        [rowData]="$rows"
-        [defaultColDef]="defaultColDef"
-        (gridReady)="onGridReady($event)"
-        [groupIncludeTotalFooter]="true"
-        [statusBar]="statusBar"
-        [columnDefs]="columnDefs">
-      </ag-grid-angular>
-    </div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <table class="table-auto">
+          <tr>
+              <td style="border-style: none none inset none">
+                  &nbsp;</td>
+              <td style="border-style: none none inset none">
+                  Weekday</td>
+              <td style="border-style: none none inset none">
+                  Weekend</td>
+          </tr>
+          <tr>
+              <td >
+                  Business
+              </td>
+              <td >
+                <input type="text" formControlName="weekDay1"  (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay1.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay1.errors" >
+                    <div *ngIf="f.weekDay1.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay1.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend1" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend1.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend1.errors" >
+                    <div *ngIf="f.Weekend1.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend1.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Small Business</td>
+              <td > 
+                <input type="text"  formControlName="weekDay2" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay2.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay2.errors" >
+                    <div *ngIf="f.weekDay2.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay2.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend2" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend2.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend2.errors" >
+                    <div *ngIf="f.Weekend2.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend2.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Corporate contract</td>
+              <td >
+                <input type="text"  formControlName="weekDay3" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay3.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay3.errors" >
+                    <div *ngIf="f.weekDay3.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay3.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend3" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend3.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend3.errors" >
+                    <div *ngIf="f.Weekend3.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend3.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Families</td>
+              <td >
+                <input type="text"  formControlName="weekDay4" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay4.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay4.errors" >
+                    <div *ngIf="f.weekDay4.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay4.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend4" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend4.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend4.errors" >
+                    <div *ngIf="f.Weekend4.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend4.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Afluent Mature Travelers</td>
+              <td >
+                <input type="text"  formControlName="weekDay5" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay5.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay5.errors" >
+                    <div *ngIf="f.weekDay5.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay5.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend5" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend5.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend5.errors" >
+                    <div *ngIf="f.Weekend5.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend5.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  International leisure travelers
+              </td>
+              <td >
+                <input type="text"  formControlName="weekDay6" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay6.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay6.errors" >
+                    <div *ngIf="f.weekDay6.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay6.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend6" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend6.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend6.errors" >
+                    <div *ngIf="f.Weekend6.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend6.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Corporate/Business Meetings
+              </td>
+              <td >
+                <input type="text"  formControlName="weekDay7" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay7.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay7.errors" >
+                    <div *ngIf="f.weekDay7.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay7.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend7" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend7.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend7.errors" >
+                    <div *ngIf="f.Weekend7.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend7.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td >
+                  Association Meetings
+              </td>
+              <td >
+                <input type="text"  formControlName="weekDay8" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.weekDay8.errors }" class="input-field" />
+                <div *ngIf="submitted && f.weekDay8.errors" >
+                    <div *ngIf="f.weekDay8.errors.required">Value is required</div>
+                    <div *ngIf="f.weekDay8.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+              <td >
+                <input type="text"  formControlName="Weekend8" (change)="sum();"
+                [ngClass]="{ 'is-invalid': submitted && f.Weekend8.errors }" class="input-field" />
+                <div *ngIf="submitted && f.Weekend8.errors" >
+                    <div *ngIf="f.Weekend8.errors.required">Value is required</div>
+                    <div *ngIf="f.Weekend8.errors.pattern">Invalid value</div>
+                </div>
+              </td>
+          </tr>
+        </table>
+      <p>
+        Maximum Room Number Weekday:&nbsp; {{WeekdayTotal}}
+        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekdays}}
+        <br />
+        Maximum Room Number Weekend:&nbsp; {{WeekendTotal}}
+        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekend}}
+    </p>
+    <p>{{errorMsg}}</p>
+        <div class="mb-6">
+            <div *ngIf="form.errors && form.errors.apiError">
+                {{ form.errors.apiError }}
+              </div>
+            </div>
+           
     <div class="footer">
-      <div class="buton-group fr">
-        <button mat-raised-button color="primary" class="save-button" (click)="onSave()">Save</button>
+      <div class="md:flex md:items-center mb-6">
+        <div class="md:w-1/2"></div>
+        <div class="md:w-4/3">
+          <button type="submit"
+            class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
+            Save
+          </button>
+        </div>
       </div>
     </div>
+  </form>
+</div>
 </section>
