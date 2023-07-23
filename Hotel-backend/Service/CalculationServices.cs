@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Service
 {
@@ -377,6 +378,7 @@ namespace Service
 
                         // roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
                         //   List<RoomAllocationDto> table = GetDataByQuarterRoomAllocation(monthId, currentQuarter);
+                        #region room Allowcation 
                         var datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
                         //Sum customer demand and set into database
                         foreach (RoomAllocation row in datatable)
@@ -401,8 +403,9 @@ namespace Service
 
                         }
                         _context.SaveChanges();
+                        #endregion
                         ////Slow down the calucation to give database more time to process, wait 1/10 second
-
+                        #region RoomAllocation
 
                         int maxGroup = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
                         int groupID = 1;
@@ -1200,6 +1203,7 @@ namespace Service
                             // RoomAllocationUpdate(Row);
                             groupID++;
                         }
+                        #endregion
                         {
                             #region SoldRoomByChannel
 
@@ -1395,15 +1399,15 @@ namespace Service
                                     //hotelSimulator.attributeDecisionRow attriDecisionRow;
 
                                     AttributeDecisionDto attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Rooms");
-                                    incomStaRow.Room1 = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    incomStaRow.Room = attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                     attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Reservations");
-                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    incomStaRow.Room = incomStaRow.Room + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                     attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Guest Check in/Guest Check out");
-                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    incomStaRow.Room = incomStaRow.Room + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                     attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Concierge");
-                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    incomStaRow.Room = incomStaRow.Room + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                     attriDecisionRow = await GetDataBySingleRowAttributeDecision(monthId, currentQuarter, incomStaRow.GroupID, "Housekeeping");
-                                    incomStaRow.Room1 = incomStaRow.Room1 + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
+                                    incomStaRow.Room = incomStaRow.Room + attriDecisionRow.LaborBudget + attriDecisionRow.OperationBudget;
                                     //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Maintanence and security")[0];
                                     //incomStaRow._2Room = incomStaRow._2Room + attriDecisionRow.laborBudget + attriDecisionRow.operationBudget;
                                     //attriDecisionRow = GetDataBySingleRow(sessionID, quarterNo, incomStaRow.groupID, "Courtesy (Rooms)")[0];
@@ -1575,6 +1579,100 @@ namespace Service
                             #endregion
 
                         }
+                        #region BalanceSheet Update 
+
+                        {
+
+                            // incomeState incoAdpt = new incomeState();
+                            //balanceSheet balanAdpt = new balanceSheet();
+                            //attributeDecision attriAdpt = new attributeDecision();
+                            //soldRoomByChannel soldRomAdpt = new soldRoomByChannel();
+                            //hotelSimulator.incomeStateRow incoRow;
+
+                            //hotelSimulator.balanceSheetDataTable balanTable = balanAdpt.GetDataByMonth((Guid)Session["session"], (int)Session["quarter"]);
+
+                            /*SELECT              sessionID, quarterNo, groupID, cash, acctReceivable, inventories, totCurrentAsset, netPrptyEquip, totAsset, totCurrentLiab, longDebt, longDebtPay, shortDebt, shortDebtPay, totLiab, 
+                                retainedEarn
+FROM                  balanceSheet
+WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
+                            var dataBalanceSheet = await _context.BalanceSheet.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter).ToListAsync();
+                            foreach (BalanceSheet row in dataBalanceSheet)
+                            {
+
+                                IncomeState incoRow = await GetDataBySingleRowIncomeState(row.MonthID, row.QuarterNo, row.GroupID);
+
+
+                                //////Before we can calculate the balance, we first pay the money we decided to pay
+                                ///////////////////////////////////////////////////////////////////////////////////
+                                /////////////////////////////////////
+                                /////////Set the debt and pay
+                                /////////////////////////////////////
+                                row.LongDebt = row.LongDebt - row.LongDebtPay;
+                                row.ShortDebt = row.ShortDebt - row.ShortDebtPay;
+
+                                ///*delet the following two lines to enable re-calculation 12-8-2013*/
+                                //row.longDebtPay = 0;
+                                //row.shortDebtPay = 0;
+                                ///*delet the above two lines to enable re-calculation 12-8-2013*/
+
+
+                                /////////////////calculate the total liability, account receivable and inventory for current month
+                                /////////////////In order to calculate cash 
+                                row.AcctReceivable = incoRow.FoodB1 / 20 + incoRow.FoodB2 / 20 + incoRow.FoodB3 / 20 + 3 * incoRow.FoodB4 / 20 + 3 * incoRow.FoodB5 / 20 + 3 * incoRow.Other1 / 20 + 7 * incoRow.Other2 / 100 + 7 * incoRow.Other3 / 100 + 7 * (incoRow.Other4 + incoRow.Other5 + incoRow.Other6) / 100 + incoRow.Rent / 10;
+                                row.Inventories = await ScalarTotalOtherExpenAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID);
+                                //row.totCurrentLiab = 4 * row.inventories / 5 + incoRow._1Room / 20 + 3 * row.longDebt / 200;
+                                //row.totCurrentLiab = row.acctReceivable + incoRow._1Room / 20 + incoRow._12IncomTAX;
+                                ////Gursoy change the formula "total current liability" = account payable + advanced deposite + tax payable 2015/04
+
+                                decimal payable = await ScalarTotalOtherExpenAttributeDecision(monthId, row.QuarterNo, row.GroupID) / 5;
+
+                                decimal advanceDeposite = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, row.QuarterNo, row.GroupID)) / 20;
+                                // incomeStateTableAdapter incomeAdpt = new incomeStateTableAdapter();
+                                row.TotCurrentLiab = payable + advanceDeposite + incoRow.IncomTAX;
+
+                                row.TotLiab = row.TotCurrentLiab + row.LongDebt + row.ShortDebt;
+                                row.NetPrptyEquip = await ScalarTotalAccumuCapitalInAMonthAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID);
+
+                                /////////////////Calculate the cash, this should be the same with value in cash flow.
+                                {
+                                    BalanceSheetDto balanceRowPrevious = GetDataBySingleRowBallanceSheet(row.MonthID - 1, row.QuarterNo - 1, row.GroupID);
+                                    decimal previousCash = balanceRowPrevious.Cash;
+                                    decimal netIncome = incoRow.NetIncom;
+                                    decimal changeInNetReceivableInventory = (row.AcctReceivable - balanceRowPrevious.AcctReceivable) * 97 / 100 + row.Inventories - balanceRowPrevious.Inventories;
+                                    //decimal changeInCurrentLiabi = row.totCurrentLiab - balanceRowPrevious.totCurrentLiab;
+                                    decimal changeInTotalLiabi = row.TotLiab - balanceRowPrevious.TotLiab;
+                                    /////add new investment or Change of net property to the cash
+                                    //////Changed net property change to property change on 3/19/2012
+                                    ///////Property and Equip change = new investment in current month
+                                    //////decimal changeInNetPropertyEquip = row.netPrptyEquip - balanceRowPrevious.netPrptyEquip;
+                                    decimal changeInPropertyEquip = Convert.ToDecimal(ScalarMonthlyTotalNewCapitalAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID));
+                                    row.Cash = previousCash + netIncome - changeInNetReceivableInventory + changeInTotalLiabi + incoRow.PropDepreciationerty - changeInPropertyEquip;
+                                }
+
+                                /////////////////////////
+                                /////if cash is less than zero, then add to zero and borrow emergence money
+
+                                if (row.Cash < 0)
+                                {
+                                    row.ShortDebt = row.ShortDebt - row.Cash;
+                                    row.Cash = 0;
+
+                                    ////re-calculate the total liabitiliy becuase the emergence loan has changed.
+                                    row.TotLiab = row.TotCurrentLiab + row.LongDebt + row.ShortDebt;
+                                }
+                                row.TotCurrentAsset = 97 * row.AcctReceivable / 100 + row.Inventories + row.Cash;
+                                row.TotAsset = row.TotCurrentAsset + row.NetPrptyEquip + 5000000;
+                                ////2020-03-29 intial value of SHAREHOLDERS' EQUITY changed to 10000000
+                                ////2020-03-29 previous formula (row.retainedEarn = row.totAsset - 10000000 - row.totCurrentLiab)was wrong.
+                                row.RetainedEarn = row.TotAsset - 10000000 - row.TotLiab;
+                                _context.Update(row);
+                            }
+                            _context.SaveChanges();
+
+                        }
+
+
+                        #endregion
                         ////////////////////////////////////
                         //Set Revenue By segment////////////
                         ////////////////////////////////////
@@ -1592,8 +1690,9 @@ namespace Service
                         }
                         _context.SaveChanges();
                         #endregion
+                        #region class status update 
                         obj.UpdateClassStatus(_context, month.ClassId, "T");
-
+                        #endregion
                         {
                             #region Ranking
                             if (currentQuarter > 1)
@@ -1610,10 +1709,10 @@ namespace Service
                                 decimal profiM;
                                 while (groupIDRA < maxGroupRA + 1)
                                 {
-                                    groupName = Convert.ToString(ScalarGroupName(monthId, groupID));
+                                    groupName = Convert.ToString(ScalarGroupName(monthId, groupIDRA));
                                     //////Profit Margin
                                     ///
-                                    IncomeState incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupID);
+                                    IncomeState incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupIDRA);
                                     a = incomeRowCurrent.NetIncom;
                                     b = incomeRowCurrent.TotReven;
 
@@ -1631,15 +1730,15 @@ namespace Service
                                     /////First check if the instructor missed the the group Name
                                     if (groupName == "Null")
                                     {
-                                        groupName = "Group " + groupID.ToString();
+                                        groupName = "Group " + groupIDRA.ToString();
                                     }
-                                    if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupID).ID == 0)
+                                    if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA).ID == 0)
                                     {
-                                        InsertRank(monthId, currentQuarter, groupID, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
+                                        InsertRank(monthId, currentQuarter, groupIDRA, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
                                     }
                                     else
                                     {
-                                        RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupID);
+                                        RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA);
                                         ranksR.Performance = profiM;
                                         // _context.ChangeTracker.Clear();
                                         _context.Update(ranksR);
@@ -3212,7 +3311,8 @@ namespace Service
                 );
             if (data == null)
             {
-                throw new ValidationException("data not found ");
+                // throw new ValidationException("data not found ");
+                return new BalanceSheetDto();
             }
             return data.Adapt<BalanceSheetDto>();
 
@@ -3279,24 +3379,25 @@ namespace Service
         private decimal ScalarMonthlyTotalNewCapitalAttributeDecision(int monthId, int quarterNo, int groupId)
         {
 
-            decimal totalNewCapital = 0;
+            decimal TotalNewCapital = 0;
             var list = (from r in _context.AttributeDecision
 
                         where (r.MonthID == monthId && r.QuarterNo == quarterNo
                         && r.GroupID == groupId)
-                        group r by new { r.NewCapital } into gpc
+                        select new { TotalNewCapital = r.NewCapital }).ToList();
+            //group r by new { r.NewCapital } into gpc
 
-                        select new
-                        {
-                            totalNewCapital = gpc.Sum(x => x.NewCapital)
+            //select new
+            //{
+            //    totalNewCapital = gpc.Sum(x => x.NewCapital)
 
-                        }).ToList();
+            //}).ToList();
 
             if (list.Count > 0)
             {
-                totalNewCapital = list[0].totalNewCapital;
+                TotalNewCapital = list.Sum(x => x.TotalNewCapital);
             }
-            return totalNewCapital;
+            return TotalNewCapital;
 
         }
 
@@ -3466,8 +3567,41 @@ namespace Service
 
         }
 
+        public async Task<decimal> ScalarTotalOtherExpenAttributeDecision(int monthId, int quarterNo, int groupId)
+        {
+            /*SELECT              SUM(operationBudget) AS TotalOtherExpens
+FROM                  attributeDecision
+WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
+            var data = await (from a in _context.AttributeDecision.
+                         Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId)
+                              select new { TotalOtherExpens = a.OperationBudget }).ToListAsync();
+            decimal TotalOtherExpens = 0;
+            if (data.Count > 0)
+            {
+                TotalOtherExpens = data.Sum(x => x.TotalOtherExpens);
+
+            }
 
 
+            return TotalOtherExpens;
+        }
+        public async Task<decimal> ScalarTotalAccumuCapitalInAMonthAttributeDecision(int monthId, int quarterNo, int groupId)
+        {
+            /*SELECT     SUM(accumulatedCapital) AS totalAccumuCapital
+FROM         attributeDecision
+WHERE     (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
+            var data = await (from a in _context.AttributeDecision.
+                         Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId)
+                              select new { TotalAccumuCapital = a.AccumulatedCapital }).ToListAsync();
+            decimal TotalAccumuCapital = 0;
+            if (data.Count > 0)
+            {
+                TotalAccumuCapital = data.Sum(x => x.TotalAccumuCapital);
+
+            }
+
+            return TotalAccumuCapital;
+        }
     }
     public class CalculationResponse
 
