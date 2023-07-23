@@ -1,7 +1,8 @@
 <div class="flex">
   <aside
-    class="relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
+    class=" relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
   >
+  <div class="roles-menu">
     <div class="p-6">
       <a
         href="/student"
@@ -9,7 +10,7 @@
         >Student</a
       >
     </div>
-    <nav  *ngFor="let studentRolePage of studentRolePageList" class="text-white text-base font-semibold pt-3">
+    <nav *ngFor="let studentRolePage of studentRolePageList" class=" text-white text-base font-semibold pt-3">
       <!-- <a
         routerLink="change-password"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
@@ -30,7 +31,7 @@
         Instructor Create
       </a> -->
      
-      <a (click)="openLink(studentRolePage)" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+      <a (click)="openLink(studentRolePage)" style="cursor: pointer;" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
         <button>
           <mat-icon
             class="text-white-500"
@@ -51,6 +52,7 @@
       Change Password
     </a> -->
     </nav>
+  </div>
   </aside>
 
   <div class="w-full flex flex-col h-screen overflow-y-hidden">

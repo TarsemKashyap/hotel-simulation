@@ -14,7 +14,7 @@ public class WeekdayVSsegmentConfig
     public bool WeekDay { get; set; }
     public string Segment { get; set; }
     public decimal Percentage { get; set; }
-    public int PriceExpectation { get; set; }
+    public decimal PriceExpectation { get; set; }
 
 }
 public class WeekdayVSsegmentConfigEntityConfig : IEntityTypeConfiguration<WeekdayVSsegmentConfig>

@@ -16,19 +16,19 @@ public class BalanceSheet
     public int MonthID { get; set; }
     public int QuarterNo { get; set; }
     public int GroupID { get; set; }
-    public int Cash { get; set; }
-    public int AcctReceivable { get; set; }
-    public int Inventories { get; set; }
-    public int TotCurrentAsset { get; set; }
-    public int NetPrptyEquip { get; set; }
-    public int TotAsset { get; set; }
-    public int TotCurrentLiab { get; set; }
-    public int LongDebt { get; set; }
-    public int LongDebtPay { get; set; }
-    public int ShortDebt { get; set; }
-    public int ShortDebtPay { get; set; }
-    public int TotLiab { get; set; }
-    public int RetainedEarn { get; set; }
+    public decimal Cash { get; set; }
+    public decimal AcctReceivable { get; set; }
+    public decimal Inventories { get; set; }
+    public decimal TotCurrentAsset { get; set; }
+    public decimal NetPrptyEquip { get; set; }
+    public decimal TotAsset { get; set; }
+    public decimal TotCurrentLiab { get; set; }
+    public decimal LongDebt { get; set; }
+    public decimal LongDebtPay { get; set; }
+    public decimal ShortDebt { get; set; }
+    public decimal ShortDebtPay { get; set; }
+    public decimal TotLiab { get; set; }
+    public decimal RetainedEarn { get; set; }
     public virtual Month Month { get; set; }
 
 }

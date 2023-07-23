@@ -9,7 +9,7 @@ export interface StudentRoles {
     pageName:string="";
     pageKey:string="";
     roleName:string="";
-
+    childPageLink : string = "";
   }
 
   export interface StudentGroupList {

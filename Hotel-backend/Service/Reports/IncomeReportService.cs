@@ -99,12 +99,12 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
     private ReportAttribute GetTotalReveue(IncomeState incomeState)
     {
         decimal totalRevnew = incomeState.Room1 + incomeState.FoodB1 + incomeState.Other1 + incomeState.Rent;
-        return new ReportAttribute { Label = "TOTAL REVENUE", Data = new Currency(totalRevnew) };
+        return new ReportAttribute { Label = "TOTAL REVENUE", Data = new Common.Currency(totalRevnew) };
     }
 
     private OtherOperatedDocs GetOperateDept(IncomeState incomeState)
     {
-        OtherOperatedDocs OtherOperatedDocs = new OtherOperatedDocs() { Label = "Other Operated Departments", Data = new Currency(incomeState.Other) };
+        OtherOperatedDocs OtherOperatedDocs = new OtherOperatedDocs() { Label = "Other Operated Departments", Data = new Common.Currency(incomeState.Other) };
         OtherOperatedDocs.GolfCourse(incomeState.Other1);
         OtherOperatedDocs.Spa(incomeState.Other2);
         OtherOperatedDocs.FitnessCenter(incomeState.Other3);
@@ -118,7 +118,7 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
     {
         var foodBeverage = new FoodBeverage
         {
-            Data = new Currency(incomeState.FoodB),
+            Data = new Common.Currency(incomeState.FoodB),
         };
         foodBeverage.Restaurants(incomeState.FoodB1);
         foodBeverage.Bars(incomeState.FoodB2);

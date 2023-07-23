@@ -1,7 +1,4 @@
-﻿using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-
-namespace Common.ReportDto
+﻿namespace Common.ReportDto
 {
     public class StatisticsDto
     {
