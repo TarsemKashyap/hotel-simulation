@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Transactions;
 
 public class GoalReportService : IGoalReportService
@@ -35,21 +36,22 @@ public class GoalReportService : IGoalReportService
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
         int quarter = goalArgs.CurrentQuarter;
+        int monthId = goalArgs.MonthId;
         int hotelCount = classSession.HotelsCount;
 
 
 
-        int ScalarQueryMarketRoomAllocated = _context.RoomAllocation.AsNoTracking().Where(x => x.QuarterNo == quarter).Sum(x => x.RoomsAllocated);
+        int ScalarQueryMarketRoomAllocated = _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter).Sum(x => x.RoomsAllocated);
 
 
 
 
-        decimal soldRoomsByMonthGroup = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.SoldRoom);
-        decimal ScalarMarketRomSoldByMonth = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
+        decimal soldRoomsByMonthGroup = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.SoldRoom);
+        decimal ScalarMarketRomSoldByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
         // decimal soldRoomsMarketAverage = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
         decimal perf = soldRoomsByMonthGroup / 500 / 30;
         decimal marketAverage = (ScalarMarketRomSoldByMonth / 500 / 30) / classSession.Groups.Count;
-        Goal goalByMonthGroup = _context.Goal.AsNoTracking().Where(x => x.MonthID == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefault();
+        Goal goalByMonthGroup = _context.Goal.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefault();
         decimal occupancyM = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.OccupancyM);
         GoalReportDto occupancyPercentage = new GoalReportDto
         {
@@ -61,8 +63,8 @@ public class GoalReportService : IGoalReportService
             Formatter = "P"
         };
 
-        var incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefaultAsync();
-        var incomeStateMonthlyList = await _context.IncomeState.AsNoTracking().Where(x => x.QuarterNo == quarter).ToListAsync();
+        var incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefaultAsync();
+        var incomeStateMonthlyList = await _context.IncomeState.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter).ToListAsync();
         GoalReportDto roomRevenue = new GoalReportDto
         {
             Indicators = "Room revenue",
@@ -91,8 +93,8 @@ public class GoalReportService : IGoalReportService
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ShareRoomM),
             Formatter = "P"
         };
-        decimal roomSoldByRevenue = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
-        decimal roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.Revenue);
+        var roomSoldByRevenue = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
+        var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.Revenue);
         GoalReportDto marketShareByRevenue = new GoalReportDto
         {
             Indicators = "Market Share based on Revenues",
@@ -102,8 +104,8 @@ public class GoalReportService : IGoalReportService
             Formatter = "P"
         };
         var groupIds = classSession.Groups.Select(x => x.GroupId).ToList();
-        int revParRoomSold = await _context.RoomAllocation.AsNoTracking().Where(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.RoomsAllocated);
-        decimal groupRoomAllocatedsum = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).SumAsync(x => x.Revenue);
+        int revParRoomSold = await _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.RoomsAllocated);
+        var groupRoomAllocatedsum = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).SumAsync(x => x.Revenue);
         int roomAllocatedRevPar = 15000 * classSession.Groups.Count;
 
         GoalReportDto RevPar = new GoalReportDto
@@ -115,8 +117,8 @@ public class GoalReportService : IGoalReportService
             Formatter = "P"
         };
 
-        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
-        decimal adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
+        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
+        var adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
         int adrRoomSold = adRSoldRoomList.Sum(x => x.SoldRoom);
         GoalReportDto ADR = new GoalReportDto
         {
@@ -142,8 +144,8 @@ public class GoalReportService : IGoalReportService
         };
 
 
-        var incomState = await _context.IncomeState.AsNoTracking().FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId);
-        decimal roomSoldIncomestate = incomState.Room1 == 0 ? 0 : incomState.Room1 * 100 / 52;
+        var incomState = await _context.IncomeState.AsNoTracking().FirstOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId);
+        var roomSoldIncomestate = incomState.Room1 == 0 ? 0 : incomState.Room1 * 100 / 52;
 
         var ScalarMonthAvgIncomeBFcharge = incomeStateMonthlyList.Average(x => x.IncomBfCharg);
         var ScalarMonthAvgRoomRevenue = incomeStateMonthlyList.Average(x => x.Room1);
@@ -160,7 +162,7 @@ public class GoalReportService : IGoalReportService
 
         var ScalarMonthAvgProfit = incomeStateMonthlyList.Average(x => x.NetIncom);
         var ScalarMonthAvgTotalRevenue = incomeStateMonthlyList.Average(x => x.TotReven);
-        decimal profit = (incomeState.Room1 * 100 / 52);
+        var profit = (incomeState.Room1 * 100 / 52);
         GoalReportDto profitMargin = new GoalReportDto
         {
             Indicators = "Profit Margin",

@@ -11,8 +11,7 @@ import { SessionStore } from 'src/app/store';
   styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboard {
-
-  studentId:  string = '';
+  studentId: string = '';
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   constructor(

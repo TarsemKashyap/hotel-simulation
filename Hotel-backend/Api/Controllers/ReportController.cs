@@ -14,11 +14,15 @@ namespace Api.Controllers
     {
         private readonly IGoalReportService _goalReportService;
         private readonly IPerformanceReportService _performanceReportService;
+        private readonly IIncomeReportService _incomeReportService;
+        private readonly IBalanceReportService _balanceReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
+            _incomeReportService = incomeReportService;
+            _balanceReportService = balanceReportService;
         }
 
         [HttpPost("goal")]
@@ -32,6 +36,18 @@ namespace Api.Controllers
         public async Task<PerformanceReportDto> PerformanceReport(ReportParams goalReport)
         {
             return await _performanceReportService.PerformanceReport(goalReport);
+        }
+
+        [HttpPost("income")]
+        public async Task<IncomeReportDto> IncomeReport(ReportParams goalReport)
+        {
+            return await _incomeReportService.Report(goalReport);
+        }
+
+        [HttpPost("balance")]
+        public async Task<BalanceReportDto> BalanceReport(ReportParams goalReport)
+        {
+            return await _balanceReportService.Report(goalReport);
         }
     }
 }
