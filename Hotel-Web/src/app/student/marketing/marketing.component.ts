@@ -178,7 +178,7 @@ export class MarketingComponent {
           default: break;
         }
       });
-      this._snackBar.open('Marketing details added successfully');
+      
       this.marketDecisionList();
     });
   }
@@ -444,6 +444,7 @@ export class MarketingComponent {
       }
     });
     this.studentService.UpdateMarketingDetails(this.marketingDecisionList).subscribe((x) => {
+      this._snackBar.open('Marketing details added successfully');
       this.marketDecisionList();
     });
   }

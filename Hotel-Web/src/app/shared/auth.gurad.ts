@@ -23,6 +23,7 @@ export class AuthGuard {
   ) {}
 
   async validateSession(routeData: AuthRouteData) {
+    
     const tokenValid = await this.isJwtTokenValid();
     const hasRole = this.authService.userHasRole(routeData.role);
     if (tokenValid && hasRole) {

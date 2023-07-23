@@ -64,7 +64,21 @@ private studentRolesList() {
 }
 
   openLink(studentRolePage:RolePagesDtl) {
+    console.log("studentRolePage",studentRolePage)
     this.sessionStore.SetCurrentRole(studentRolePage.roleName);
-    this.router.navigate(['decision']);
+    //this.router.navigate([studentRolePage.childPageLink]);
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([studentRolePage.childPageLink]);
+  });
+    // this.router.navigate([studentRolePage.childPageLink]).then(() => {
+    //   this.reloadCurrentRoute();
+    // });
+  }
+
+reloadCurrentRoute() {
+  let currentUrl = this.router.url;
+  this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+  });
   }
 }
