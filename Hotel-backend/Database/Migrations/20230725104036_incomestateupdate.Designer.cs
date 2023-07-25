@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725104036_incomestateupdate")]
+    partial class incomestateupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,65 +266,52 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AcctReceivable")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Cash")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Inventories")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LongDebt")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LongDebtPay")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("NetPrptyEquip")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
                     b.Property<decimal>("RetainedEarn")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ShortDebt")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ShortDebtPay")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotAsset")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotCurrentAsset")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotCurrentLiab")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotLiab")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ID");
 

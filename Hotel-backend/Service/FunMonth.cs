@@ -652,58 +652,120 @@ namespace Service
         public async Task<int> CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
-
-            for (int i = 1; i <= noOfHotels; i++)
+            if (currentQuarter == 0)
             {
-
-                var obj1 = new IncomeState()
+                for (int i = 1; i <= noOfHotels; i++)
                 {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter + 1,
-                    GroupID = i,
-                    Room1 = 814530,
-                    FoodB = 485585,
-                    FoodB1 = 1000000,
-                    FoodB2 = 1000000,
-                    FoodB3 = 1000000,
-                    FoodB4 = 1000000,
-                    FoodB5 = 1000000,
-                    Other = 1000000,
-                    Other1 = 1000000,
-                    Other2 = 1000000,
-                    Other3 = 1000000,
-                    Other4 = 1000000,
-                    Other5 = 1000000,
-                    Other6 = 1000000,
-                    Rent = 1000000,
-                    TotReven = 1000000,
-                    Room = 1000000,
-                    Food2B = 1000000,
-                    Other7 = 1000000,
-                    TotDeptIncom = 1000000,
-                    UndisExpens1 = 1000000,
-                    UndisExpens2 = 1000000,
-                    UndisExpens3 = 1000000,
-                    UndisExpens4 = 1000000,
-                    UndisExpens5 = 1000000,
-                    UndisExpens6 = 1000000,
-                    GrossProfit = 1000000,
-                    MgtFee = 1000000,
-                    IncomBfCharg = 1000000,
-                    Property = 1000000,
-                    Insurance = 1000000,
-                    PropDepreciationerty = 1000000,
-                    TotCharg = 1000000,
-                    NetIncomBfTAX = 1000000,
-                    Replace = 1000000,
-                    AjstNetIncom = 1000000,
-                    IncomTAX = 1000000,
-                    NetIncom = 1000000
-                };
-                context.IncomeState.Add(obj1);
-                int status = await context.SaveChangesAsync();
+
+                    var obj1 = new IncomeState()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter + 1,
+                        GroupID = i,
+                        Room1 = 814530,
+                        FoodB = 485585,
+                        FoodB1 = 1000000,
+                        FoodB2 = 1000000,
+                        FoodB3 = 1000000,
+                        FoodB4 = 1000000,
+                        FoodB5 = 1000000,
+                        Other = 1000000,
+                        Other1 = 1000000,
+                        Other2 = 1000000,
+                        Other3 = 1000000,
+                        Other4 = 1000000,
+                        Other5 = 1000000,
+                        Other6 = 1000000,
+                        Rent = 1000000,
+                        TotReven = 1000000,
+                        Room = 1000000,
+                        Food2B = 1000000,
+                        Other7 = 1000000,
+                        TotDeptIncom = 1000000,
+                        UndisExpens1 = 1000000,
+                        UndisExpens2 = 1000000,
+                        UndisExpens3 = 1000000,
+                        UndisExpens4 = 1000000,
+                        UndisExpens5 = 1000000,
+                        UndisExpens6 = 1000000,
+                        GrossProfit = 1000000,
+                        MgtFee = 1000000,
+                        IncomBfCharg = 1000000,
+                        Property = 1000000,
+                        Insurance = 1000000,
+                        PropDepreciationerty = 1000000,
+                        TotCharg = 1000000,
+                        NetIncomBfTAX = 1000000,
+                        Replace = 1000000,
+                        AjstNetIncom = 1000000,
+                        IncomTAX = 1000000,
+                        NetIncom = 1000000,
+                        Interest = 1000000,
+                        TotExpen = 1000000
+                    };
+                    context.IncomeState.Add(obj1);
+                    int status = await context.SaveChangesAsync();
 
 
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= noOfHotels; i++)
+                {
+
+                    decimal totalRevenBefore = GetDataBySingleRowIncomeState(context, monthID, i, currentQuarter);
+                    var obj1 = new IncomeState()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter + 1,
+                        GroupID = i,
+                        Room1 = 0,
+                        FoodB = 0,
+                        FoodB1 = 0,
+                        FoodB2 = 0,
+                        FoodB3 = 0,
+                        FoodB4 = 0,
+                        FoodB5 = 0,
+                        Other = 0,
+                        Other1 = 0,
+                        Other2 = 0,
+                        Other3 = 0,
+                        Other4 = 0,
+                        Other5 = 0,
+                        Other6 = 0,
+                        Rent = 0,
+                        TotReven = totalRevenBefore,
+                        Room = 0,
+                        Food2B = 0,
+                        Other7 = 0,
+                        TotDeptIncom = 0,
+                        UndisExpens1 = 0,
+                        UndisExpens2 = 0,
+                        UndisExpens3 = 0,
+                        UndisExpens4 = 0,
+                        UndisExpens5 = 0,
+                        UndisExpens6 = 0,
+                        GrossProfit = 0,
+                        MgtFee = 0,
+                        IncomBfCharg = 0,
+                        Property = 0,
+                        Insurance = 0,
+                        PropDepreciationerty = 0,
+                        TotCharg = 0,
+                        NetIncomBfTAX = 0,
+                        Replace = 0,
+                        AjstNetIncom = 0,
+                        IncomTAX = 0,
+                        NetIncom = 0,
+                        Interest = 0,
+                        TotExpen = 0
+                    };
+                    context.IncomeState.Add(obj1);
+                    int status = await context.SaveChangesAsync();
+
+
+                }
             }
             return 1;
         }
