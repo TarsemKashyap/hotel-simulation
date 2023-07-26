@@ -16,6 +16,9 @@ using Org.BouncyCastle.Asn1.Cms;
 using Mysqlx.Expr;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SendGrid.Helpers.Mail;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using System.Diagnostics.Eventing.Reader;
+using System.Net.Http;
 //using EFCore.BulkExtensions;
 
 namespace Service
@@ -433,32 +436,67 @@ namespace Service
         {
 
             List<AttributeDto> lstAttribute = await GetAttribute(context);
+
             for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var item in lstAttribute)
                 {
                     int groupID = i;
                     // var datafi = GetDataBySingleRowAttributeDecision(context, groupID, monthID, currentQuarter, item.AttributeName.Trim());
-                    decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
-                    AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
-                    var obj1 = new AttributeDecision()
+                    if (currentQuarter == 0)
                     {
-                        MonthID = monthID,
-                        QuarterNo = currentQuarter + 1,
-                        GroupID = groupID,
-                        Attribute = item.AttributeName,
-                        AccumulatedCapital = (int)accumuCapital,
-                        NewCapital = AttPlist.NewCapital,
-                        OperationBudget = AttPlist.OperationBudget,
-                        LaborBudget = AttPlist.LaborBudget,
-                        Confirmed = false,
-                        QuarterForecast = currentQuarter
-                    };
-                    context.AttributeDecision.Add(obj1);
+                        decimal accumuCapital = ScalarQueryInitialCapitalInvestAttributeConfig(context, monthID, currentQuarter, item.AttributeName);
+                        AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
+                        var obj1 = new AttributeDecision()
+                        {
+                            MonthID = monthID,
+                            QuarterNo = currentQuarter + 1,
+                            GroupID = groupID,
+                            Attribute = item.AttributeName,
+                            AccumulatedCapital = (int)accumuCapital,
+                            NewCapital = AttPlist.NewCapital,
+                            OperationBudget = AttPlist.OperationBudget,
+                            LaborBudget = AttPlist.LaborBudget,
+                            Confirmed = false,
+                            QuarterForecast = currentQuarter
+                        };
+                        context.AttributeDecision.Add(obj1);
+                    }
+                    else
+                    {
+                        AttributeDecisionDto row = GetDataBySingleRowAttributeDecision(context, monthID - 1, currentQuarter, i, item.AttributeName);
+                        decimal depreciationRate = Convert.ToDecimal(ScalarDepreciRateMonthlyAttributeConfig(context, monthID, currentQuarter, item.AttributeName));
+                        decimal accumuCapital = (row.AccumulatedCapital + row.NewCapital) * (1 - depreciationRate);
+                        AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
+                        var obj1 = new AttributeDecision()
+                        {
+                            MonthID = monthID,
+                            QuarterNo = currentQuarter + 1,
+                            GroupID = groupID,
+                            Attribute = item.AttributeName,
+                            AccumulatedCapital = (int)accumuCapital,
+                            NewCapital = AttPlist.NewCapital,
+                            OperationBudget = AttPlist.OperationBudget,
+                            LaborBudget = AttPlist.LaborBudget,
+                            Confirmed = false,
+                            QuarterForecast = currentQuarter
+                        };
+                        context.AttributeDecision.Add(obj1);
+
+
+
+                        //attributeAdapter.Insert(sessionID, currentQuarter + 1, i, "Spa", accumuCapital, row.newCapital, row.operationBudget, row.laborBudget, false, currentQuarter);
+
+                    }
                 }
+
+
 
                 int status = context.SaveChanges();
             }
+
+
+
             return 1;
         }
         /*
@@ -714,7 +752,7 @@ namespace Service
                 for (int i = 1; i <= noOfHotels; i++)
                 {
 
-                    decimal totalRevenBefore = GetDataBySingleRowIncomeState(context, monthID, i, currentQuarter);
+                    decimal totalRevenBefore = GetDataBySingleRowIncomeState(context, monthID - 1, i, currentQuarter);
                     var obj1 = new IncomeState()
                     {
                         MonthID = monthID,
@@ -891,49 +929,80 @@ namespace Service
 
             for (int i = 1; i <= noOfHotels; i++)
             {
-
-
-                var obj1 = new BalanceSheet()
+                if (currentQuarter == 0)
                 {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter,
-                    GroupID = i,
-                    Cash = 1000000,
-                    AcctReceivable = 400000,
-                    Inventories = 500000,
-                    TotCurrentAsset = 1888000,
-                    NetPrptyEquip = 45335000,
-                    TotAsset = 52223000,
-                    TotCurrentLiab = 0,
-                    LongDebt = 40000000,
-                    LongDebtPay = 0,
-                    ShortDebt = 0,
-                    ShortDebtPay = 0,
-                    TotLiab = 40896010,
-                    RetainedEarn = 1326990
-                };
-                var obj2 = new BalanceSheet()
+
+                    var obj1 = new BalanceSheet()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter,
+                        GroupID = i,
+                        Cash = 1000000,
+                        AcctReceivable = 400000,
+                        Inventories = 500000,
+                        TotCurrentAsset = 1888000,
+                        NetPrptyEquip = 45335000,
+                        TotAsset = 52223000,
+                        TotCurrentLiab = 0,
+                        LongDebt = 40000000,
+                        LongDebtPay = 0,
+                        ShortDebt = 0,
+                        ShortDebtPay = 0,
+                        TotLiab = 40896010,
+                        RetainedEarn = 1326990
+                    };
+                    var obj2 = new BalanceSheet()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter + 1,
+                        GroupID = i,
+                        Cash = 1000000,
+                        AcctReceivable = 400000,
+                        Inventories = 500000,
+                        TotCurrentAsset = 1888000,
+                        NetPrptyEquip = 45335000,
+                        TotAsset = 52223000,
+                        TotCurrentLiab = 0,
+                        LongDebt = 40000000,
+                        LongDebtPay = 0,
+                        ShortDebt = 0,
+                        ShortDebtPay = 0,
+                        TotLiab = 40896010,
+                        RetainedEarn = 1326990
+                    };
+                    context.BalanceSheet.Add(obj1);
+                    context.BalanceSheet.Add(obj2);
+                    int status = await context.SaveChangesAsync();
+                }
+                else
                 {
-                    MonthID = monthID,
-                    QuarterNo = currentQuarter + 1,
-                    GroupID = i,
-                    Cash = 1000000,
-                    AcctReceivable = 400000,
-                    Inventories = 500000,
-                    TotCurrentAsset = 1888000,
-                    NetPrptyEquip = 45335000,
-                    TotAsset = 52223000,
-                    TotCurrentLiab = 0,
-                    LongDebt = 40000000,
-                    LongDebtPay = 0,
-                    ShortDebt = 0,
-                    ShortDebtPay = 0,
-                    TotLiab = 40896010,
-                    RetainedEarn = 1326990
-                };
-                context.BalanceSheet.Add(obj1);
-                context.BalanceSheet.Add(obj2);
-                int status = await context.SaveChangesAsync();
+
+                    BalanceSheet balanceRow = await GetDataBySingleRowBalanceSheet(context, monthID - 1, currentQuarter, i);
+
+                    var obj1 = new BalanceSheet()
+                    {
+                        MonthID = monthID,
+                        QuarterNo = currentQuarter + 1,
+                        GroupID = i,
+                        Cash = balanceRow.Cash,
+                        AcctReceivable = 0,
+                        Inventories = 0,
+                        TotCurrentAsset = 0,
+                        NetPrptyEquip = 0,
+                        TotAsset = 0,
+                        TotCurrentLiab = 0,
+                        LongDebt = balanceRow.LongDebt,
+                        LongDebtPay = 0,
+                        ShortDebt = balanceRow.ShortDebt,
+                        ShortDebtPay = 0,
+                        TotLiab = 0,
+                        RetainedEarn = 0
+                    };
+
+                    context.BalanceSheet.Add(obj1);
+
+                    int status = await context.SaveChangesAsync();
+                }
             }
             return 1;
         }
@@ -1106,7 +1175,7 @@ namespace Service
             //}
             //return obj;
         }
-        public AttributeDecisionDto GetDataBySingleRowAttributeDecision(HotelDbContext context, int groupID, int monthID, int currentQuarter, string attributeName)
+        public AttributeDecisionDto GetDataBySingleRowAttributeDecision(HotelDbContext context, int monthID, int currentQuarter, int groupID, string attributeName)
         {
 
             var data = context.AttributeDecision.SingleOrDefault(x => (x.GroupID == groupID && x.MonthID == monthID && x.QuarterNo == currentQuarter
@@ -1185,6 +1254,23 @@ namespace Service
             //return obj;
         }
 
+        public async Task<BalanceSheet> GetDataBySingleRowBalanceSheet(HotelDbContext context, int monthId, int quarterNo, int groupId)
+        {
+            /*SELECT              sessionID, quarterNo, groupID, cash, acctReceivable, inventories, totCurrentAsset, netPrptyEquip, totAsset, totCurrentLiab, longDebt, longDebtPay, shortDebt, shortDebtPay, totLiab, 
+                                    retainedEarn
+    FROM                  balanceSheet
+    WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo) AND (groupID = @groupID)*/
+            var data = await context.BalanceSheet.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).ToListAsync();
+            if (data == null)
+            {
+                return new BalanceSheet();
+            }
+            else
+            {
+                BalanceSheet bal = data[0];
+                return bal;
+            }
+        }
         public PriceDecisionPriceList GetPriceDecisionPriceList(string distributionChannel, string segment, bool weekday)
         {
 

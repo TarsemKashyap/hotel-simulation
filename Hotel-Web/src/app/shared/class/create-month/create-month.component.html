@@ -122,7 +122,10 @@
                   </a> -->
 
                   <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >{{btnCreateNewMonth}}</button>
+                  <a class="bg-primary float-left px-6 py-2 m-2 text-white" [routerLink]="['../month-calculation']" routerLinkActive="router-link-active">Calculation</a
+                >
                 </dd>
+                
               </div>
             </dl>
           </div>
