@@ -21,10 +21,12 @@
     >
     </ag-grid-angular>
   </div>
+  <div><a class="bg-primary float-left px-6 py-2 m-2 text-white" [routerLink]="['../month-calculation']" routerLinkActive="router-link-active">Calculation Current Month</a></div>
 
-
-  <section style="margin-top: 40px;">
+  <section style="margin-top: 55px;">
+   
   <div>
+    
     <h2>Finalize The Current Month</h2>
     <div class="card">
       <div class="card-body">You can't create new month before finalizing current 
@@ -122,8 +124,7 @@
                   </a> -->
 
                   <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >{{btnCreateNewMonth}}</button>
-                  <a class="bg-primary float-left px-6 py-2 m-2 text-white" [routerLink]="['../month-calculation']" routerLinkActive="router-link-active">Calculation</a
-                >
+                 
                 </dd>
                 
               </div>
