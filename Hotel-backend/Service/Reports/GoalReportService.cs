@@ -118,7 +118,7 @@ public class GoalReportService : IGoalReportService
         };
 
         var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
-        int adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
+        var adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
         int adrRoomSold = adRSoldRoomList.Sum(x => x.SoldRoom);
         GoalReportDto ADR = new GoalReportDto
         {
