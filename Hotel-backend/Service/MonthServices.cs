@@ -28,6 +28,7 @@ namespace Service
         Task<MonthDto> GetMonthInfoById(int classId, int quarterNo);
         Task<Boolean> updateMonthCompletedStatus(MonthDto mdt);
         Task<bool> UpdateClassStatus(ClassSessionDto csdt);
+        Task<MonthDto> GetMonthDtlsByClassId(int classId);
     }
     public class MonthServices : IMonthService
     {
@@ -275,6 +276,32 @@ namespace Service
             FunMonth obj = new FunMonth();
             bool result = obj.UpdateMonthCompletedStatus(_context, mdt.ClassId, mdt.Sequence);
             return result;
+        }
+
+        public async Task<MonthDto> GetMonthDtlsByClassId(int classId)
+        {
+            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId).Take(1).OrderByDescending(o => o.ClassId);
+            var result = query.Select(x => new MonthDto
+            {
+                MonthId = x.MonthId,
+                ClassId = x.ClassId,
+                Sequence = x.Sequence,
+                TotalMarket = x.TotalMarket,
+                ConfigId = x.ConfigId,
+                IsComplete = x.IsComplete
+            }).ToList();
+
+            MonthDto obj = new MonthDto();
+            if (result.Count > 0)
+            {
+                obj.MonthId = result[0].MonthId;
+                obj.ClassId = result[0].ClassId;
+                obj.Sequence = result[0].Sequence;
+                obj.TotalMarket = result[0].TotalMarket;
+                obj.ConfigId = result[0].ConfigId;
+                obj.IsComplete = result[0].IsComplete;
+            }
+            return obj;
         }
         public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
         {

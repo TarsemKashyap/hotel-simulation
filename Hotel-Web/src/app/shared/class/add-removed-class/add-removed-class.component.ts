@@ -79,6 +79,7 @@ export class AddRemovedClassComponent {
   ) {}
 
   ngOnInit(): void {
+    console.log("loaded")
     this.loadClasses();
   }
 

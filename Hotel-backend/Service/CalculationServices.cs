@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using Common.Dto;
+using Database;
 using Database.Migrations;
 using Mapster;
 using MapsterMapper;
@@ -106,6 +107,8 @@ namespace Service
                                     Qminus4 = Qminus2;
                                     LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     LQminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     LQminus3 = LQminus2;
                                     LQminus4 = LQminus2;
 
@@ -2262,6 +2265,8 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
 
             //}).ToList();
 
+            //}).ToList();
+
             if (list.Count > 0)
             {
                 WeightedRating = list.Sum(a => (a.RawRating * a.Weight));
@@ -2285,6 +2290,7 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
             //{
             //    AverageRating = grp.Average(x => (x.CustomerRating))
             //}).ToList();
+
 
 
 

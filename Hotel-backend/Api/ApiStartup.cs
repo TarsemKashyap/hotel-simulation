@@ -118,9 +118,15 @@ public static class ApiStartupExtensions
         services.AddScoped<IStudentClassMappingService, StudentClassMappingService>();
         services.AddScoped<IStudentRolesMappingService, StudentRolesMappingService>();
         services.AddScoped<IStudentGroupMappingService, StudentGroupMappingService>();
+        services.AddScoped<IRoomAllocationService, RoomAllocationService>();
+        services.AddScoped<IAttributeDecisionService, AttributeDecisionService>();
+        services.AddScoped<IPriceDecisionService, PriceDecisionService>();
         services.AddScoped<ICalculationServices, CalculationServices>();
-
-
+        services.AddScoped<IGoalReportService, GoalReportService>();
+        services.AddScoped<IPerformanceReportService, PerformanceReportService>();
+        services.AddScoped<IIncomeReportService, IncomeReportService>();
+        services.AddScoped<IBalanceReportService, BalanceReportService>();
+        services.AddScoped<IMarketingService, MarketingService>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)
