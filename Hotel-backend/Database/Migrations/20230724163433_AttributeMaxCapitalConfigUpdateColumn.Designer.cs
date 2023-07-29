@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230724163433_AttributeMaxCapitalConfigUpdateColumn")]
+    partial class AttributeMaxCapitalConfigUpdateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,65 +266,52 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AcctReceivable")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Cash")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Inventories")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LongDebt")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LongDebtPay")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("NetPrptyEquip")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
                     b.Property<decimal>("RetainedEarn")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ShortDebt")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ShortDebtPay")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotAsset")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotCurrentAsset")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotCurrentLiab")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotLiab")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ID");
 
@@ -628,7 +617,7 @@ namespace Database.Migrations
                     b.ToTable("DistributionChannels", (string)null);
                 });
 
-            modelBuilder.Entity("Goal", b =>
+            modelBuilder.Entity("DistributionChannelVSsegmentConfig", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -742,7 +731,7 @@ namespace Database.Migrations
                     b.ToTable("Goal", (string)null);
                 });
 
-            modelBuilder.Entity("IncomeState", b =>
+            modelBuilder.Entity("IdealRatingAttributeWeightConfig", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -776,173 +765,133 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AjstNetIncom")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Food2B")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB1")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB2")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB3")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB4")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FoodB5")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("GrossProfit")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("IncomBfCharg")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("IncomTAX")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Insurance")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Interest")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MgtFee")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MonthID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("NetIncom")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NetIncomBfTAX")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other1")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other2")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other3")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other4")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other5")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other6")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Other7")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PropDepreciationerty")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Property")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Rent")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Replace")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Room")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Room1")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotCharg")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotDeptIncom")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotExpen")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotReven")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens1")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens2")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens3")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens4")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens5")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UndisExpens6")
-                        .HasPrecision(19, 4)
-                        .HasColumnType("decimal(19,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ID");
 
@@ -1190,28 +1139,6 @@ namespace Database.Migrations
 
                     b.ToTable("ClassMonth", (string)null);
                 });
-                
-                modelBuilder.Entity("StudentRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("IX_StudentRoleMapping_RoleId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentRoleMapping", (string)null);
-                });
 
             modelBuilder.Entity("PriceDecision", b =>
                 {
@@ -1222,57 +1149,37 @@ namespace Database.Migrations
                     b.Property<decimal>("ActualDemand")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("PMA")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Percentage")
+                    b.Property<bool>("Confirmed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
-                    b.Property<string>("Segment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("PriceMarketingAttributeSegmentConfig", (string)null);
-                });
-
-            modelBuilder.Entity("Rankings", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Indicator")
+                    b.Property<string>("DistributionChannel")
                         .HasColumnType("longtext");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Month")
+                    b.Property<int>("MonthID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Performance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TeamName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TeamNo")
+                    b.Property<int>("QuarterNo")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Segment")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Weekday")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Rankings", (string)null);
+                    b.HasIndex("MonthID");
+
+                    b.ToTable("PriceDecision", (string)null);
                 });
 
             modelBuilder.Entity("PriceMarketingAttributeSegmentConfig", b =>

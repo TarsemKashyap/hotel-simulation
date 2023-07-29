@@ -43,19 +43,19 @@ public class BalanceSheetConfig : IEntityTypeConfiguration<BalanceSheet>
         builder.HasOne(x => x.Month).WithMany(x => x.BalanceSheet);
         builder.Property(x => x.QuarterNo).IsRequired();
         builder.Property(x => x.GroupID).IsRequired();
-        builder.Property(x => x.Cash);
-        builder.Property(x => x.AcctReceivable);
-        builder.Property(x => x.Inventories);
-        builder.Property(x => x.TotCurrentAsset);
-        builder.Property(x => x.NetPrptyEquip);
-        builder.Property(x => x.TotAsset);
-        builder.Property(x => x.TotCurrentLiab);
-        builder.Property(x => x.LongDebt);
-        builder.Property(x => x.LongDebtPay);
-        builder.Property(x => x.ShortDebt);
-        builder.Property(x => x.ShortDebtPay);
-        builder.Property(x => x.TotLiab);
-        builder.Property(x => x.RetainedEarn);
+        builder.Property(x => x.Cash).HasPrecision(19,4);
+        builder.Property(x => x.AcctReceivable).HasPrecision(19, 4);
+        builder.Property(x => x.Inventories).HasPrecision(19, 4);
+        builder.Property(x => x.TotCurrentAsset).HasPrecision(19, 4);
+        builder.Property(x => x.NetPrptyEquip).HasPrecision(19, 4);
+        builder.Property(x => x.TotAsset).HasPrecision(19, 4);
+        builder.Property(x => x.TotCurrentLiab).HasPrecision(19, 4);
+        builder.Property(x => x.LongDebt).HasPrecision(19, 4);
+        builder.Property(x => x.LongDebtPay).HasPrecision(19, 4);
+        builder.Property(x => x.ShortDebt).HasPrecision(19, 4);
+        builder.Property(x => x.ShortDebtPay).HasPrecision(19, 4);
+        builder.Property(x => x.TotLiab).HasPrecision(19, 4);
+        builder.Property(x => x.RetainedEarn).HasPrecision(19, 4);
     }
 }
 

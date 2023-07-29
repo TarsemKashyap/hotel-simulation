@@ -18,7 +18,7 @@ namespace Service
             List<MarketingDecisionDto> listMD = context.MarketingDecision.Where(x => x.QuarterNo == quarterNo && x.MonthID == monthId).
                 Select(x => new MarketingDecisionDto
                 {
-                    ID=x.ID,
+                    ID = x.ID,
                     GroupID = x.GroupID,
                     QuarterNo = x.QuarterNo,
                     MonthID = x.MonthID,
@@ -34,31 +34,44 @@ namespace Service
         }
         public decimal ScalarQueryIndustrialNormPercentMarketingDecision(HotelDbContext context, int monthId, int currentQuarter, string segment, string marketTech)
         {
+            /*SELECT segmentConfig.percentage * marketingVSsegmentConfig.percentage AS proportion
+FROM  quarterlyMarket INNER JOIN
+               segmentConfig ON quarterlyMarket.configID = segmentConfig.configID INNER JOIN
+               marketingVSsegmentConfig ON quarterlyMarket.configID = marketingVSsegmentConfig.configID AND 
+               segmentConfig.segment = marketingVSsegmentConfig.segment
+WHERE (quarterlyMarket.sessionID = @sessionID) AND (quarterlyMarket.quarterNo = @quarterNo) AND (marketingVSsegmentConfig.segment = @segment) 
+               AND (marketingVSsegmentConfig.marketingTechniques = @marketingTechnique)
+GROUP BY segmentConfig.percentage, marketingVSsegmentConfig.percentage*/
+
             decimal Proportion = 0;
 
             var list = (from m in context.Months
+                        where (m.MonthId == monthId && m.Sequence == currentQuarter)
                         join sc in context.SegmentConfig on m.ConfigId equals sc.ConfigID
                         join msc in context.MarketingVSsegmentConfig on sc.Segment equals msc.Segment
+                        where (msc.Segment.Trim() == segment.Trim() && msc.MarketingTechniques.Trim() == marketTech.Trim()
+                               )
                         select new
                         {
                             Proportion = sc.Percentage * msc.Percentage,
-                            ClassId = m.ClassId,
-                            ConfigId = m.ConfigId,
-                            Segment = sc.Segment,
-                            QuarterNo = m.Sequence,
-                            MarketTechniques = msc.MarketingTechniques,
-                            SCPercentage = sc.Percentage,
-                            MSCPercentage = msc.Percentage,
-                            MonthID = m.MonthId
+                            scPercentage = sc.Percentage,
+                            mscPercentage = msc.Percentage
+                            //ClassId = m.ClassId,
+                            //ConfigId = m.ConfigId,
+                            //Segment = sc.Segment,
+                            //QuarterNo = m.Sequence,
+                            //MarketTechniques = msc.MarketingTechniques,
+                            //SCPercentage = sc.Percentage,
+                            //MSCPercentage = msc.Percentage,
+                            //MonthID = m.MonthId
                         })
-                        .Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter
-                                  && x.Segment.Trim() == segment.Trim() && x.MarketTechniques.Trim() == marketTech.Trim()
-                               )
+
 
                        .ToList();
             if (list.Count > 0)
             {
-                Proportion = list[0].Proportion;
+                var GroupByProportion = list.GroupBy(x => new { x.scPercentage, x.mscPercentage }).Select(g => new { Proportion = g.Key.scPercentage * g.Key.mscPercentage }).ToList();
+                Proportion = GroupByProportion[0].Proportion;
             }
             else
             {

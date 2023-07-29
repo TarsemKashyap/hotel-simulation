@@ -33,3 +33,6 @@
     margin: 4px 2px;
     cursor: pointer;
   }
+  .br1px{
+    border: solid 1px black;
+  }
