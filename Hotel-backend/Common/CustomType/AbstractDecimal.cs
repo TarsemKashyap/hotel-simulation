@@ -1,14 +1,14 @@
-﻿namespace Common.ReportDto
+﻿namespace Common
 {
     public abstract class AbstractDecimal : IEquatable<decimal>
     {
         private readonly decimal _value;
-        public AbstractDecimal(decimal value, string formatter)
+        public AbstractDecimal(decimal value, string format)
         {
             _value = value;
-            Formatter = formatter;
+            Format = format;
         }
-        public string Formatter { get; set; }
+        public string Format { get; set; }
         public decimal Value => _value;
         public override int GetHashCode()
         {

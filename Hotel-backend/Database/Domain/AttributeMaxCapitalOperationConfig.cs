@@ -39,8 +39,8 @@ public class AttributeMaxCapitalOperationConfigEntityConfig : IEntityTypeConfigu
         builder.Property(x => x.MaxOperation);
         builder.Property(x => x.OperationPortion);
         builder.Property(x => x.LaborPortion);
-        builder.Property(x => x.PreCapitalPercent);
-        builder.Property(x => x.PreLaborPercent);
+        builder.Property(x => x.PreCapitalPercent).HasPrecision(5, 5);
+        builder.Property(x => x.PreLaborPercent).HasPrecision(8, 8);
         builder.Property(x => x.InitialCapital);
         builder.Property(x => x.DepreciationYearly);
 

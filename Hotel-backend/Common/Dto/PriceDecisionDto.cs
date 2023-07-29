@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Dto
-{
+
     public class PriceDecisionDto
     {
         public int ID { get; set; }
@@ -20,4 +19,4 @@ namespace Common.Dto
         public bool Confirmed { get; set; }
         public string priceNOFormat { get; set; }
     }
-}
+

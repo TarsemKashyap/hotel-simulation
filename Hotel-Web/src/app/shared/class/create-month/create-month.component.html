@@ -21,17 +21,19 @@
     >
     </ag-grid-angular>
   </div>
+  <div><a class="bg-primary float-left px-6 py-2 m-2 text-white" [routerLink]="['../month-calculation']" routerLinkActive="router-link-active">Calculation Current Month</a></div>
 
-
-  <section style="margin-top: 40px;">
+  <section style="margin-top: 55px;">
+   
   <div>
+    
     <h2>Finalize The Current Month</h2>
     <div class="card">
       <div class="card-body">You can't create new month before finalizing current 
         month. Be careful, once 
         you finalize current month, it is not allowed to rollback. You can only review 
         finalized months.</div>
-        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md mt-5" 
+        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bg-primary float-left px-6 py-2 m-2 text-white py-3 px-5 hover:shadow-md mt-5" 
         [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">{{btnfinltext}}</button>
     </div>
   </div>
@@ -55,9 +57,9 @@
     </p>
     </div> -->
 
-    <section style="margin-top: 40px;">
+    <section style="margin-top: 75px;">
         <div>
-          <div class="px-4 sm:px-0">
+          <div class="px-1 sm:px-0">
             <h2 >Create A New Month</h2>
           </div>
           <div class="mt-6 border-t border-gray-100">
@@ -81,7 +83,7 @@
                 >
                 <div class="mb-3">
                    
-                    <input type="number" class="form-control" id="MarketTextBox" placeholder="Enter Number Value" [(ngModel)]="MarketTextBox" required>
+                    <input type="number" class="form-control br1px"  id="MarketTextBox" placeholder="Enter Number Value" [(ngModel)]="MarketTextBox" required>
                     <span id="ErrorMsg" [hidden]="!isError" style="color: red;">Enter Number Value </span>  
                 </div>
                   <!-- <span><input type="number" ID="MarketTextBox"[(ngModel)]="MarketTextBox" required ></span> -->
@@ -122,7 +124,9 @@
                   </a> -->
 
                   <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >{{btnCreateNewMonth}}</button>
+                 
                 </dd>
+                
               </div>
             </dl>
           </div>
