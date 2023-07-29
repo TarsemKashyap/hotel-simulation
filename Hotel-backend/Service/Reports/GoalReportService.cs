@@ -117,7 +117,7 @@ public class GoalReportService : IGoalReportService
             Formatter = "P"
         };
 
-        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
+        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
         var adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
         int adrRoomSold = adRSoldRoomList.Sum(x => x.SoldRoom);
         GoalReportDto ADR = new GoalReportDto
