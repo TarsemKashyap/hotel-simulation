@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Mysqlx.Resultset;
 using MySqlX.XDevAPI.Relational;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Cmp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,7 +84,7 @@ namespace Service
                                 }
                                 else
                                 {
-                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, monthId, groupId, currentQuarter);
+                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, monthId - 1, groupId, currentQuarter - 1);
                                     fourpercentOfRevenue = Convert.ToDecimal(totalRevTemp * Convert.ToDecimal(0.04));
                                 }
                                 if (mDRow.QuarterNo == 1)
@@ -104,7 +105,7 @@ namespace Service
                                     Qminus3 = Qminus2;
                                     Qminus4 = Qminus2;
                                     LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
+                                    LQminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     LQminus3 = LQminus2;
                                     LQminus4 = LQminus2;
 
@@ -279,6 +280,7 @@ namespace Service
                             }
                             else
                             {
+                                //Puneet
                                 IncomeState objinsDto = await GetDataBySingleRowIncomeState(monthId - 1, currentQuarter - 1, row.GroupID);
                                 row.TotReven = objinsDto.TotReven;
                             }
@@ -385,17 +387,15 @@ namespace Service
                         {
                             if (row.Weekday == true)
                             {
-                                row.ActualDemand = Convert.ToInt32(4 * (
-                                    Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
-                                    Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
-                                    Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
+                                row.ActualDemand = Convert.ToInt32(4 * (Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) + Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) + Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
                             }
                             if (row.Weekday == false)
                             {
-                                row.ActualDemand = Convert.ToInt32(3 * (
-                                    Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) +
-                                    Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) +
-                                    Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
+                                row.ActualDemand = Convert.ToInt32(3 * (Convert.ToInt32(ScalarQueryMarketingDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment)) + Convert.ToInt32(ScalarQueryAttributeDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment))) / 7) + Convert.ToInt32(ScalarQueryPriceDemandBySegment(monthId, currentQuarter, row.GroupID, row.Segment, row.Weekday));
+                            }
+                            if (row.RoomsAllocated < row.ActualDemand)
+                            {
+                                string Value = "Wrong Value";
                             }
                             //RoomAllocationActualDemandUpdate(row);
 
@@ -428,9 +428,9 @@ namespace Service
                             /////Association Meetings 20% goes bad
                             ///
                             #region RoomAllocation WeekDay true
-                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == true).ToListAsync();
+                            var datatableWeektrue = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == true).ToListAsync();
 
-                            foreach (RoomAllocation row in datatable)
+                            foreach (RoomAllocation row in datatableWeektrue)
                             {
                                 if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
                                 {
@@ -803,19 +803,20 @@ namespace Service
                                     }
                                     //    RoomAllocationUpdate(row);
                                     //}
-
+                                    _context.Update(row);
                                 }
                                 // RoomAllocationRoomSoldUpdate(row);
                                 //_context.ChangeTracker.Clear();
-                                _context.Update(row);
+                               
 
                             }
                             _context.SaveChanges();
                             #endregion
                             #region RoomAllocation weekDay False
-                            datatable = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == false).ToListAsync();
+                            roomPool = 0;
+                            var datatableWeekfalse = await _context.RoomAllocation.Where(x => x.MonthID == monthId && x.QuarterNo == currentQuarter && x.GroupID == groupID && x.Weekday == false).ToListAsync();
 
-                            foreach (RoomAllocation row in datatable)
+                            foreach (RoomAllocation row in datatableWeekfalse)
                             {
                                 if (row.RoomsAllocated > row.ActualDemand && row.Segment == "Business")
                                 {
@@ -1188,14 +1189,13 @@ namespace Service
                                     }
                                     //    RoomAllocationUpdate(row);
                                     //}
-
+                                    _context.Update(row);
                                 }
-                                // RoomAllocationRoomSoldUpdate(row);
-                                //_context.ChangeTracker.Clear();
-                                _context.Update(row);
+
+                                _context.SaveChanges();
 
                             }
-                            _context.SaveChanges();
+
                             #endregion
 
 
@@ -1693,67 +1693,68 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
                         #region class status update 
                         obj.UpdateClassStatus(_context, month.ClassId, "T");
                         #endregion
+
+                        #region Ranking
+                        if (currentQuarter > 1)
                         {
-                            #region Ranking
-                            if (currentQuarter > 1)
+                            //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
+                            int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
+                            int groupIDRA = 1;
+                            //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
+                            string schoolName = Convert.ToString(ScalarSchoolName(monthId));
+                            string groupName = null;
+
+                            decimal a;
+                            decimal b;
+                            decimal profiM;
+                            while (groupIDRA < maxGroupRA + 1)
                             {
-                                //roomAllocationTableAdapter adapter = new roomAllocationTableAdapter();
-                                int maxGroupRA = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
-                                int groupIDRA = 1;
-                                //rankingsTableAdapter ranksAdpt = new rankingsTableAdapter();
-                                string schoolName = Convert.ToString(ScalarSchoolName(monthId));
-                                string groupName = null;
+                                groupName = Convert.ToString(ScalarGroupName(monthId, groupIDRA));
+                                //////Profit Margin
+                                ///
+                                IncomeState incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupIDRA);
+                                a = incomeRowCurrent.NetIncom;
+                                b = incomeRowCurrent.TotReven;
 
-                                decimal a;
-                                decimal b;
-                                decimal profiM;
-                                while (groupIDRA < maxGroupRA + 1)
+                                if (b == 0)
                                 {
-                                    groupName = Convert.ToString(ScalarGroupName(monthId, groupIDRA));
-                                    //////Profit Margin
-                                    ///
-                                    IncomeState incomeRowCurrent = await GetDataBySingleRowIncomeState(monthId, currentQuarter, groupIDRA);
-                                    a = incomeRowCurrent.NetIncom;
-                                    b = incomeRowCurrent.TotReven;
-
-                                    if (b == 0)
-                                    {
-                                        ////do nothing, keep the profit margin to be null.
-                                        profiM = 0;
-                                    }
-                                    else
-                                    {
-                                        profiM = a / b;
-                                    }
-
-                                    ///////Insert or Update Performance Ranking
-                                    /////First check if the instructor missed the the group Name
-                                    if (groupName == "Null")
-                                    {
-                                        groupName = "Group " + groupIDRA.ToString();
-                                    }
-                                    if (GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA).ID == 0)
-                                    {
-                                        InsertRank(monthId, currentQuarter, groupIDRA, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
-                                    }
-                                    else
-                                    {
-                                        RankingsDto ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA);
-                                        ranksR.Performance = profiM;
-                                        // _context.ChangeTracker.Clear();
-                                        _context.Update(ranksR);
-                                        _context.SaveChanges();
-                                        //RankingUpdate(ranksR);
-
-                                        ////Slow down the calucation to give database more time to process, wait 1/10 second
-
-                                    }
-                                    //////go to next group
-                                    groupIDRA++;
+                                    ////do nothing, keep the profit margin to be null.
+                                    profiM = 0;
                                 }
+                                else
+                                {
+                                    profiM = a / b;
+                                }
+
+                                ///////Insert or Update Performance Ranking
+                                /////First check if the instructor missed the the group Name
+                                if (groupName == "Null")
+                                {
+                                    groupName = "Group " + groupIDRA.ToString();
+                                }
+                                Rankings ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA);
+                                if (ranksR.ID == 0)
+                                {
+                                    InsertRank(monthId, currentQuarter, groupIDRA, groupName, schoolName, "Profit Margin", profiM, DateTime.Now);
+                                }
+                                else
+                                {
+                                    // Rankings ranksR = GetDataBySingleRowRanking(monthId, "Profit Margin", groupIDRA);
+                                    ranksR.Performance = profiM;
+                                    _context.ChangeTracker.Clear();
+                                    _context.Update(ranksR);
+                                    _context.SaveChanges();
+                                    //RankingUpdate(ranksR);
+
+                                    ////Slow down the calucation to give database more time to process, wait 1/10 second
+
+                                }
+                                //////go to next group
+                                groupIDRA++;
                             }
-                            #endregion
                         }
+                        #endregion
+
                     }
                     await transaction.CommitAsync();
                     resObj.Message = "Calculation Success";
@@ -2359,12 +2360,7 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
                             MarketingDemand = md.ActualDemand
 
                         }).ToList();
-            //group md by new { md.ActualDemand, md.GroupID } into gp
-            //            select new
-            //            {
-            //                MarketingDemand = gp.Sum(x => x.ActualDemand),
 
-            //            }).ToList();
 
             if (list.Count > 0)
             {
@@ -2387,12 +2383,7 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
                             AttributeDemand = md.ActualDemand,
 
                         }).ToList();
-            //group md by md.ActualDemand into gp
-            //            select new
-            //            {
-            //                AttributeDemand = gp.Sum(x => x.ActualDemand),
 
-            //            }).ToList();
 
             if (list.Count > 0)
             {
@@ -3134,8 +3125,11 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
                        && sbr.Channel == channel && sbr.Weekday == weekday)
                         select new
                         {
-                            Revenue = pd.Price * sbr.SoldRoom
 
+                            //Revenue = pd.Price * sbr.SoldRoom
+                            Price = pd.Price,
+                            SoldRoom = sbr.SoldRoom,
+                            CostPercentage = dcvsc.CostPercent
                         }).ToList();
             //group new { pd, dcvsc, sbr } by new { pd.Price, dcvsc.CostPercent, sbr.SoldRoom } into dps
 
@@ -3144,10 +3138,17 @@ WHERE              (sessionID = @sessionID) AND (quarterNo = @quarterNo)*/
             //                Revenue = dps.Sum(x => (x.pd.Price * x.sbr.SoldRoom))
 
             //            }).ToList();
+            if (segment == "Small Business" && channel == "Opaque" && weekday == false)
+            {
+                string Value = "Testing For Same Value ";
+            }
+
 
             if (list.Count > 0)
             {
-                Revenue = list.Sum(x => x.Revenue);
+                // Revenue = list.Sum(x => x.Revenue);
+                var listReven = list.GroupBy(x => new { x.Price, x.CostPercentage, x.SoldRoom }).Select(g => new { Revenue = g.Key.Price * g.Key.SoldRoom }).ToList();
+                Revenue = listReven[0].Revenue;
             }
             return Revenue;
 
@@ -3379,13 +3380,13 @@ AND (attributeDecision.groupID = 1)          */
             decimal TotalDepreciation = 0;
             var list = (from ad in _context.AttributeDecision
                         join m in _context.Months on ad.MonthID equals m.MonthId
-                        where (ad.QuarterNo == m.Sequence )
+                        where (ad.QuarterNo == m.Sequence)
                         join amcoc in _context.AttributeMaxCapitalOperationConfig on m.ConfigId equals amcoc.ConfigID
                         where (ad.Attribute == amcoc.Attribute && ad.MonthID == monthId && ad.QuarterNo == quarter && ad.GroupID == groupID)
                         select new
                         {
 
-                             // TotalDepreciation = (ad.AccumulatedCapital + ad.NewCapital) * amcoc.DepreciationYearly
+                            // TotalDepreciation = (ad.AccumulatedCapital + ad.NewCapital) * amcoc.DepreciationYearly
                             AccumulatedCapital = ad.AccumulatedCapital,
                             NewCapital = ad.NewCapital,
                             DepreciationYearly = amcoc.DepreciationYearly
@@ -3394,7 +3395,7 @@ AND (attributeDecision.groupID = 1)          */
 
             if (list.Count > 0)
             {
-                TotalDepreciation = list.Sum(x => ((x.AccumulatedCapital + x.NewCapital) * x.DepreciationYearly/12));
+                TotalDepreciation = list.Sum(x => ((x.AccumulatedCapital + x.NewCapital) * x.DepreciationYearly / 12));
             }
             return TotalDepreciation;
         }
@@ -3531,15 +3532,15 @@ AND (attributeDecision.groupID = 1)          */
 
             return "HardCode";
         }
-        private RankingsDto GetDataBySingleRowRanking(int monthId, string indicator, int teamno)
+        private Rankings GetDataBySingleRowRanking(int monthId, string indicator, int teamno)
         {
 
             var data = _context.Rankings.SingleOrDefault(x => x.MonthID == monthId && x.Indicator == indicator && x.TeamNo == teamno);
             if (data == null)
             {
-                return new RankingsDto();
+                return new Rankings();
             }
-            return data.Adapt<RankingsDto>();
+            return data.Adapt<Rankings>();
 
 
             /*SELECT indicator, institution, month, performance, session, teamName, teamNo, time 
