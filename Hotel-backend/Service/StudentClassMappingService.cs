@@ -96,11 +96,12 @@ namespace Service
             return studentList;
         }
 
-        
+
 
         public async Task<StudentClassMappingDto> GetDefaultByStudentID(string studentID)
         {
             var studentSignup = _context.StudentClassMapping.Include(x => x.Class)
+                .Include(x => x.ClassGroup)
                 .Include(x => x.Student).FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
             if (studentSignup == null)
                 throw new ValidationException("student not found for given student id");
@@ -108,7 +109,8 @@ namespace Service
             {
                 Id = studentSignup.Id,
                 ClassId = studentSignup.ClassId,
-                GroupId = studentSignup.GroupId
+                GroupId = studentSignup.GroupId,
+                GroupSerial = studentSignup.ClassGroup.Serial
             };
 
             return studentSignupDto;
