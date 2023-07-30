@@ -79,7 +79,7 @@ namespace Api.Controllers
         public async Task<ActionResult> RoomAllocationDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -93,7 +93,7 @@ namespace Api.Controllers
         public async Task<ActionResult> AttributeDecisionDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -114,7 +114,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GoalSettingDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -135,7 +135,7 @@ namespace Api.Controllers
         public async Task<ActionResult> PriceDecisionDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -156,7 +156,7 @@ namespace Api.Controllers
         public async Task<ActionResult> MarketingDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -177,7 +177,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GetBalanceSheet()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupId;
+            var groupId = studenClassMappingDtls.GroupSerial;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;

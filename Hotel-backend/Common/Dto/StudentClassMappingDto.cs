@@ -32,8 +32,7 @@ namespace Common.Dto
         public bool IsDefault { get; set; }
         public string GroupName { get; set; }
 
+        public int? GroupSerial { get; set; }
         public int? GroupId { get; set; }
-
-
     }
 }
