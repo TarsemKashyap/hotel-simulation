@@ -95,7 +95,7 @@ if (builder.Configuration.GetValue<bool>("RunMigration"))
             .GetRequiredService<HotelDbContext>();
 
         // Here is the migration executed
-        //dbContext.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 }
 app.Run();
