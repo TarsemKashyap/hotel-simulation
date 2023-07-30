@@ -179,7 +179,6 @@ export class MarketingComponent {
         }
       });
       
-      this.marketDecisionList();
     });
   }
 
