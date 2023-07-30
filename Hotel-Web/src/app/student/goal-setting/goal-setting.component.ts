@@ -1,21 +1,35 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Goal } from 'src/app/shared/class/model/classSession.model';
 
 @Component({
   selector: 'app-goal-setting',
   templateUrl: './goal-setting.component.html',
   styleUrls: ['./goal-setting.component.css']
 })
+
 export class GoalSettingComponent {
   form: FormGroup;
   submitted = false;
   errorMsg: string = "";
+  goalDetail : any;
+
+  ngOnInit(): void {
+    this.goalDetailList();
+  }
 
   constructor(
     private studentService: StudentService, private fb: FormBuilder, private _snackBar: MatSnackBar) {
     this.form = this.createForm();
+  }
+
+  private goalDetailList() {
+    this.studentService.GoalDetails().subscribe((data) => {
+      this.goalDetail = data;
+        this.form.patchValue({ Occupancy: this.goalDetail.occupancyM, RoomsRevenue: this.goalDetail.roomRevenM , TotalRevenue : this.goalDetail.totalRevenM , NoOfRoomSold : this.goalDetail.shareRoomM , MarketRevenue : this.goalDetail.shareRevenM ,REVPAR :this.goalDetail.revparM , ADR : this.goalDetail.adrm ,yieldManagement : this.goalDetail.yieldMgtM , efficiencyRatio : this.goalDetail.mgtEfficiencyM , profitMargin :this.goalDetail.profitMarginM  });
+    });
   }
 
   onSubmit(): void {
@@ -23,6 +37,22 @@ export class GoalSettingComponent {
     if (this.form.invalid) {
       return;
     }
+    
+      this.goalDetail.occupancyM = parseFloat(this.form.value.Occupancy);
+      this.goalDetail.roomRevenM = parseFloat(this.form.value.RoomsRevenue);
+      this.goalDetail.totalRevenM = parseFloat(this.form.value.TotalRevenue);
+      this.goalDetail.shareRoomM = parseFloat(this.form.value.NoOfRoomSold);
+      this.goalDetail.shareRevenM = parseFloat(this.form.value.MarketRevenue);
+      this.goalDetail.revparM = parseFloat(this.form.value.REVPAR);
+      this.goalDetail.adrm = parseFloat(this.form.value.ADR);
+      this.goalDetail.yieldMgtM = parseFloat(this.form.value.yieldManagement);
+      this.goalDetail.mgtEfficiencyM = parseFloat(this.form.value.efficiencyRatio);
+      this.goalDetail.profitMarginM = parseFloat(this.form.value.profitMargin);
+   
+    this.studentService.UpdateGoalDetails(this.goalDetail).subscribe((x) => {
+      this._snackBar.open('Goal details added successfully');
+      this.goalDetailList();
+    });
   }
   
   get f(): { [key: string]: AbstractControl } {
@@ -31,70 +61,16 @@ export class GoalSettingComponent {
 
   private createForm(): FormGroup {
      return this.fb.group({
-    //   Advertising1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Advertising8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   SalesForce8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   Promotions8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   PublicRelations8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborAdvertising8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborSalesForce8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPromotions8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations1: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations3: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations4: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations5: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations2: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations6: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations7: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    //   LaborPublicRelations8: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      Occupancy: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      RoomsRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      TotalRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      NoOfRoomSold: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      MarketRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      REVPAR: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      ADR: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      yieldManagement: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      efficiencyRatio: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      profitMargin: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
      });
   }
 }

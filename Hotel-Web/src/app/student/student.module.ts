@@ -16,9 +16,10 @@ import { AttributeComponent } from './attribute/attribute.component';
 import { PriceComponent } from './price/price.component';
 import { MarketingComponent } from './marketing/marketing.component';
 import { GoalSettingComponent } from './goal-setting/goal-setting.component';
+import { LoanComponent } from './loan/loan.component';
 
 @NgModule({
-  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent, GoalSettingComponent],
+  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent, GoalSettingComponent, LoanComponent],
   imports: [
     CommonModule,
     SharedModule,

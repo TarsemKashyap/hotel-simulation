@@ -15,7 +15,7 @@
                   Business
               </td>
               <td >
-                <input type="text" formControlName="weekDay1"  (change)="sum();"
+               <input type="text" formControlName="weekDay1"  [value]="f.weekDay1.value |currency" (change)="sum();"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay1.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay1.errors" >
                     <div *ngIf="f.weekDay1.errors.required">Value is required</div>
@@ -23,8 +23,8 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend1" (change)="sum();"
-                [ngClass]="{ 'is-invalid': submitted && f.Weekend1.errors }" class="input-field" />
+                <input type="text"  formControlName="Weekend1"  [value]="f.Weekend1.value |currency"
+                (change)="sum();" [ngClass]="{ 'is-invalid': submitted && f.Weekend1.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend1.errors" >
                     <div *ngIf="f.Weekend1.errors.required">Value is required</div>
                     <div *ngIf="f.Weekend1.errors.pattern">Invalid value</div>
@@ -35,7 +35,7 @@
               <td >
                   Small Business</td>
               <td > 
-                <input type="text"  formControlName="weekDay2" (change)="sum();"
+                <input type="text" formControlName="weekDay2" (change)="sum();" [value]="f.weekDay2.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay2.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay2.errors" >
                     <div *ngIf="f.weekDay2.errors.required">Value is required</div>
@@ -43,7 +43,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend2" (change)="sum();"
+                <input type="text"  formControlName="Weekend2" (change)="sum();" [value]="f.Weekend2.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend2.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend2.errors" >
                     <div *ngIf="f.Weekend2.errors.required">Value is required</div>
@@ -55,7 +55,7 @@
               <td >
                   Corporate contract</td>
               <td >
-                <input type="text"  formControlName="weekDay3" (change)="sum();"
+                <input type="text"  formControlName="weekDay3" (change)="sum();" [value]="f.weekDay3.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay3.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay3.errors" >
                     <div *ngIf="f.weekDay3.errors.required">Value is required</div>
@@ -63,7 +63,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend3" (change)="sum();"
+                <input type="text"  formControlName="Weekend3" (change)="sum();"  [value]="f.Weekend3.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend3.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend3.errors" >
                     <div *ngIf="f.Weekend3.errors.required">Value is required</div>
@@ -75,7 +75,7 @@
               <td >
                   Families</td>
               <td >
-                <input type="text"  formControlName="weekDay4" (change)="sum();"
+                <input type="text"  formControlName="weekDay4" (change)="sum();" [value]="f.weekDay4.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay4.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay4.errors" >
                     <div *ngIf="f.weekDay4.errors.required">Value is required</div>
@@ -83,7 +83,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend4" (change)="sum();"
+                <input type="text"  formControlName="Weekend4" (change)="sum();" [value]="f.Weekend4.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend4.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend4.errors" >
                     <div *ngIf="f.Weekend4.errors.required">Value is required</div>
@@ -95,7 +95,7 @@
               <td >
                   Afluent Mature Travelers</td>
               <td >
-                <input type="text"  formControlName="weekDay5" (change)="sum();"
+                <input type="text"  formControlName="weekDay5" (change)="sum();" [value]="f.weekDay5.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay5.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay5.errors" >
                     <div *ngIf="f.weekDay5.errors.required">Value is required</div>
@@ -103,7 +103,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend5" (change)="sum();"
+                <input type="text"  formControlName="Weekend5" (change)="sum();" [value]="f.Weekend5.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend5.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend5.errors" >
                     <div *ngIf="f.Weekend5.errors.required">Value is required</div>
@@ -116,7 +116,7 @@
                   International leisure travelers
               </td>
               <td >
-                <input type="text"  formControlName="weekDay6" (change)="sum();"
+                <input type="text"  formControlName="weekDay6" (change)="sum();" [value]="f.weekDay6.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay6.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay6.errors" >
                     <div *ngIf="f.weekDay6.errors.required">Value is required</div>
@@ -124,7 +124,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend6" (change)="sum();"
+                <input type="text"  formControlName="Weekend6" (change)="sum();" 
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend6.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend6.errors" >
                     <div *ngIf="f.Weekend6.errors.required">Value is required</div>
@@ -137,7 +137,7 @@
                   Corporate/Business Meetings
               </td>
               <td >
-                <input type="text"  formControlName="weekDay7" (change)="sum();"
+                <input type="text"  formControlName="weekDay7" (change)="sum();" [value]="f.weekDay7.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay7.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay7.errors" >
                     <div *ngIf="f.weekDay7.errors.required">Value is required</div>
@@ -145,7 +145,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend7" (change)="sum();"
+                <input type="text"  formControlName="Weekend7" (change)="sum();" [value]="f.Weekend7.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend7.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend7.errors" >
                     <div *ngIf="f.Weekend7.errors.required">Value is required</div>
@@ -158,7 +158,7 @@
                   Association Meetings
               </td>
               <td >
-                <input type="text"  formControlName="weekDay8" (change)="sum();"
+                <input type="text"  formControlName="weekDay8" (change)="sum();" [value]="f.weekDay8.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay8.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay8.errors" >
                     <div *ngIf="f.weekDay8.errors.required">Value is required</div>
@@ -166,7 +166,7 @@
                 </div>
               </td>
               <td >
-                <input type="text"  formControlName="Weekend8" (change)="sum();"
+                <input type="text"  formControlName="Weekend8" (change)="sum();" [value]="f.Weekend8.value |currency"
                 [ngClass]="{ 'is-invalid': submitted && f.Weekend8.errors }" class="input-field" />
                 <div *ngIf="submitted && f.Weekend8.errors" >
                     <div *ngIf="f.Weekend8.errors.required">Value is required</div>
@@ -176,11 +176,11 @@
           </tr>
         </table>
       <p>
-        Maximum Room Number Weekday:&nbsp; {{WeekdayTotal}}
-        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekdays}}
+        Maximum Room Number Weekday:&nbsp; {{WeekdayTotal |currency}}
+        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekdays |currency}}
         <br />
-        Maximum Room Number Weekend:&nbsp; {{WeekendTotal}}
-        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekend}}
+        Maximum Room Number Weekend:&nbsp; {{WeekendTotal |currency}}
+        &nbsp;Room Allocated:&nbsp; {{roomAllowWeekend |currency}}
     </p>
     <p>{{errorMsg}}</p>
         <div class="mb-6">

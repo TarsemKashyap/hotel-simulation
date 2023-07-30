@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { StudentRoles } from '../shared/class/model/Roles';
 import { RoomList } from '../shared/class/model/RoomList';
-import { AttributeDecision, MarketingDecision, PriceDecision, RoomAllocations } from '../shared/class/model/classSession.model';
+import { AttributeDecision, BalanceSheet, Goal, MarketingDecision, PriceDecision, RoomAllocations } from '../shared/class/model/classSession.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,22 @@ export class StudentService {
 
   MarketingDetails(): Observable<MarketingDecision[]> {
     return this.httpClient.get<MarketingDecision[]>('roleMapping/MarketingDetails');
+  }
+
+  GoalDetails(): Observable<Goal> {
+    return this.httpClient.get<Goal>('roleMapping/GoalSettingDetails');
+  }
+
+  UpdateBalanceSheetDetails( balanceSheet: BalanceSheet): Observable<any> {
+    return this.httpClient.post(`roleMapping/UpdateBalanceSheet`, balanceSheet);
+  }
+
+  BalanceSheetDetails(): Observable<BalanceSheet> {
+    return this.httpClient.get<BalanceSheet>('roleMapping/GetBalanceSheet');
+  }
+
+  UpdateGoalDetails( goalList: Goal): Observable<any> {
+    return this.httpClient.post(`roleMapping/UpdateGoalSetting`, goalList);
   }
  
   UpdateMarketingDetails( marketingDecisionList: MarketingDecision[]): Observable<any> {

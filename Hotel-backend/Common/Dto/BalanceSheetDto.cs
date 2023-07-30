@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-public class BalanceSheetDto
+﻿public class BalanceSheetDto
 {
     public int ID { get; set; }
     public int MonthID { get; set; }
@@ -18,10 +11,12 @@ public class BalanceSheetDto
     public int NetPrptyEquip { get; set; }
     public int TotAsset { get; set; }
     public int TotCurrentLiab { get; set; }
-    public int LongDebt { get; set; }
-    public int LongDebtPay { get; set; }
-    public int ShortDebt { get; set; }
-    public int ShortDebtPay { get; set; }
+    public decimal LongDebt { get; set; }
+    public decimal LongDebtPay { get; set; }
+    public decimal ShortDebt { get; set; }
+    public decimal ShortDebtPay { get; set; }
+
+    public decimal longBorrow { get; set; }
     public int TotLiab { get; set; }
     public int RetainedEarn { get; set; }
 }
