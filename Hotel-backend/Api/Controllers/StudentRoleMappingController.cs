@@ -20,10 +20,12 @@ namespace Api.Controllers
         private readonly IAttributeDecisionService _attributeDecisionService;
         private readonly IPriceDecisionService _priceDecisionService;
         private readonly IMarketingService _marketingService;
+        private readonly IGoalSettingService _goalSettingService;
+        private readonly IBalanceSheetService _balanceSheetService;
 
         public StudentRoleMappingController(IStudentRolesMappingService studentRolesMappingService,
             IStudentClassMappingService studentClassMappingService, IClassSessionService classSessionService, IMonthService monthService,
-            IStudentGroupMappingService studentGroupMappingService, IRoomAllocationService roomAllocationService, IAttributeDecisionService attributeDecisionService, IPriceDecisionService priceDecisionService, IMarketingService marketingService)
+            IStudentGroupMappingService studentGroupMappingService, IRoomAllocationService roomAllocationService, IAttributeDecisionService attributeDecisionService, IPriceDecisionService priceDecisionService, IMarketingService marketingService, IGoalSettingService goalSettingService, IBalanceSheetService balanceSheetService)
         {
             _studentRolesMappingService = studentRolesMappingService;
             _studentClassMappingService = studentClassMappingService;
@@ -34,6 +36,8 @@ namespace Api.Controllers
             _attributeDecisionService = attributeDecisionService;
             _priceDecisionService = priceDecisionService;
             _marketingService = marketingService;
+            _goalSettingService = goalSettingService;
+            _balanceSheetService = balanceSheetService;
         }
 
         [HttpPost("list")]
@@ -106,6 +110,27 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [HttpGet("GoalSettingDetails"), AllowAnonymous]
+        public async Task<ActionResult> GoalSettingDetails()
+        {
+            var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            var groupId = studenClassMappingDtls.GroupId;
+            var classId = studenClassMappingDtls.ClassId;
+            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
+            var monthId = monthsDtls.MonthId;
+            var classDtls = await _classSessionService.GetById(classId);
+            var currentQuarter = classDtls.CurrentQuater;
+            var goalSettingDetails = await _goalSettingService.GoalSettingDetails(monthId, groupId, currentQuarter);
+            return Ok(goalSettingDetails);
+        }
+
+        [HttpPost("UpdateGoalSetting")]
+        public async Task<ActionResult> UpdateGoalSetting(GoalDto goalDtos)
+        {
+            await _goalSettingService.UpdateGoalSettings(goalDtos);
+            return Ok();
+        }
+
         [HttpGet("PriceDecisionDetails"), AllowAnonymous]
         public async Task<ActionResult> PriceDecisionDetails()
         {
@@ -145,6 +170,27 @@ namespace Api.Controllers
         public async Task<ActionResult> UpdateMarketingDetails(List<MarketingDecisionDto> marketingDecisionDtos)
         {
             await _marketingService.UpdateMarketingDetails(marketingDecisionDtos);
+            return Ok();
+        }
+
+        [HttpGet("GetBalanceSheet"), AllowAnonymous]
+        public async Task<ActionResult> GetBalanceSheet()
+        {
+            var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            var groupId = studenClassMappingDtls.GroupId;
+            var classId = studenClassMappingDtls.ClassId;
+            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
+            var monthId = monthsDtls.MonthId;
+            var classDtls = await _classSessionService.GetById(classId);
+            var currentQuarter = classDtls.CurrentQuater;
+            var balanceSheetDetails = await _balanceSheetService.BalanceSheetDetails(monthId, groupId, currentQuarter);
+            return Ok(balanceSheetDetails);
+        }
+
+        [HttpPost("UpdateBalanceSheet")]
+        public async Task<ActionResult> UpdateBalanceSheet(BalanceSheetDto balanceSheetDto)
+        {
+            await _balanceSheetService.UpdateBalanceSheetDetails(balanceSheetDto);
             return Ok();
         }
 

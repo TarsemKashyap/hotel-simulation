@@ -291,7 +291,7 @@ namespace Service
                 IsComplete = x.IsComplete
             }).ToList();
 
-            MonthDto obj = new MonthDto();
+            var obj = new MonthDto();
             if (result.Count > 0)
             {
                 obj.MonthId = result[0].MonthId;

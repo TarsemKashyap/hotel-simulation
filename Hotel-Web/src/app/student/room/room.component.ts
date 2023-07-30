@@ -30,9 +30,7 @@ export class RoomComponent {
   }
 
   private roomAllocationList() {
-    this.studentService
-      .RoomAllocationList()
-      .subscribe((data) => {
+    this.studentService.RoomAllocationList().subscribe((data) => {
         this.roomAllocations =  data;
        
        var weekday1RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Business' && d.weekday == true)?.roomsAllocated;
@@ -85,8 +83,7 @@ export class RoomComponent {
 
        this.form.patchValue({weekDay1: weekday1RoomAllocated,Weekend1 : weekend1RoomAllocated,weekDay2: weekday2RoomAllocated,Weekend2 : weekend2RoomAllocated , weekDay3: weekday3RoomAllocated,Weekend3 : weekend3RoomAllocated , weekDay4: weekday4RoomAllocated,Weekend4 : weekend4RoomAllocated , weekDay5: weekday5RoomAllocated,Weekend5 : weekend5RoomAllocated , weekDay6: weekday6RoomAllocated,Weekend6 : weekend6RoomAllocated , weekDay7: weekday7RoomAllocated,Weekend7 : weekend7RoomAllocated , weekDay8: weekday8RoomAllocated,Weekend8 : weekend8RoomAllocated});
       
-       console.log(this.roomAllocations,"this.roomAllocationsff", this.form.value);
-
+    this.sum();
     var sumTheAlloW = 0;
     var sumTheAlloE = 0;
     sumTheAlloW = parseInt(this.form.value.weekDay1 === '' ? 0 : this.form.value.weekDay1);
@@ -184,10 +181,8 @@ export class RoomComponent {
           element.roomsAllocated = parseInt(this.form.value.Weekend8) * 13;
       });
       this.studentService.RoomAllocationUpdate(this.roomAllocations).subscribe((x) => {
-        console.log(x,"gg")
        // this._snackBar.open('Instructor Account successfully updated');
       });
-      console.log("this.roomAllocations after update",this.roomAllocations)
     }
   }
 
