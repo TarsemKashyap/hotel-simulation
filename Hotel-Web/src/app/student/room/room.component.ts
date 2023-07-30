@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { StudentService } from '../student.service';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { RoomAllocations } from 'src/app/shared/class/model/classSession.model';
+import { DecimalValidator, RoomAllocations } from 'src/app/shared/class/model/classSession.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-room',
@@ -25,12 +26,13 @@ export class RoomComponent {
   }
 
   constructor(
-    private studentService: StudentService, private fb: FormBuilder,) {
+    private studentService: StudentService, private fb: FormBuilder,private _snackBar: MatSnackBar) {
       this.form = this.createForm();
   }
 
   private roomAllocationList() {
     this.studentService.RoomAllocationList().subscribe((data) => {
+     
         this.roomAllocations =  data;
        
        var weekday1RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Business' && d.weekday == true)?.roomsAllocated;
@@ -103,7 +105,11 @@ export class RoomComponent {
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend6 === '' ? 0 : this.form.value.Weekend6);
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend7 === '' ? 0 : this.form.value.Weekend7);
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend8 === '' ? 0 : this.form.value.Weekend8);
-      });
+    },
+    (error) => {                              
+      console.error('error caught in component',error.error);
+      this._snackBar.open(error.error);
+    });
   }
 
   onSubmit(): void {
@@ -214,22 +220,22 @@ export class RoomComponent {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      weekDay1: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay2: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay3: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay4: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay5: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay6: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay7: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay8: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend1: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend3: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend4: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend5: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend2: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend6: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend7: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend8: ['', [Validators.required,Validators.pattern("^[0-9]*$")]]
+      weekDay1: ['', [Validators.required,DecimalValidator]],
+      weekDay2: ['', [Validators.required,DecimalValidator]],
+      weekDay3: ['', [Validators.required,DecimalValidator]],
+      weekDay4: ['', [Validators.required,DecimalValidator]],
+      weekDay5: ['', [Validators.required,DecimalValidator]],
+      weekDay6: ['', [Validators.required,DecimalValidator]],
+      weekDay7: ['', [Validators.required,DecimalValidator]],
+      weekDay8: ['', [Validators.required,DecimalValidator]],
+      Weekend1: ['', [Validators.required,DecimalValidator]],
+      Weekend3: ['', [Validators.required,DecimalValidator]],
+      Weekend4: ['', [Validators.required,DecimalValidator]],
+      Weekend5: ['', [Validators.required,DecimalValidator]],
+      Weekend2: ['', [Validators.required,DecimalValidator]],
+      Weekend6: ['', [Validators.required,DecimalValidator]],
+      Weekend7: ['', [Validators.required,DecimalValidator]],
+      Weekend8: ['', [Validators.required,DecimalValidator]]
     });
   }
 

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Goal } from 'src/app/shared/class/model/classSession.model';
+import { DecimalValidator, Goal } from 'src/app/shared/class/model/classSession.model';
 
 @Component({
   selector: 'app-goal-setting',
@@ -61,16 +61,16 @@ export class GoalSettingComponent {
 
   private createForm(): FormGroup {
      return this.fb.group({
-      Occupancy: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      RoomsRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      TotalRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      NoOfRoomSold: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      MarketRevenue: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      REVPAR: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      ADR: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      yieldManagement: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      efficiencyRatio: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      profitMargin: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      Occupancy: ['', [Validators.required, DecimalValidator]],
+      RoomsRevenue: ['', [Validators.required, DecimalValidator]],
+      TotalRevenue: ['', [Validators.required, DecimalValidator]],
+      NoOfRoomSold: ['', [Validators.required, DecimalValidator]],
+      MarketRevenue: ['', [Validators.required, DecimalValidator]],
+      REVPAR: ['', [Validators.required, DecimalValidator]],
+      ADR: ['', [Validators.required, DecimalValidator]],
+      yieldManagement: ['', [Validators.required, DecimalValidator]],
+      efficiencyRatio: ['', [Validators.required, DecimalValidator]],
+      profitMargin: ['', [Validators.required, DecimalValidator]],
      });
   }
 }
