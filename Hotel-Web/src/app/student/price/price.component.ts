@@ -638,7 +638,10 @@ export class PriceComponent {
     });
 
     this.studentService.PriceDecisionUpdate(this.priceDecision).subscribe((x) => {
-      this._snackBar.open('Price successfully updated');
+      this._snackBar.open('Price successfully updated', 'Undo', {
+        duration: 3000
+      });
+      
     });
 }
 

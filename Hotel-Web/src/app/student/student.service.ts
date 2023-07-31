@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { StudentRoles } from '../shared/class/model/Roles';
 import { RoomList } from '../shared/class/model/RoomList';
-import { AttributeDecision, BalanceSheet, Goal, MarketingDecision, PriceDecision, RoomAllocations } from '../shared/class/model/classSession.model';
+import { AttributeDecision, BalanceSheet, Goal, MarketingDecision, PriceDecision, RoomAllocationDetails, RoomAllocations } from '../shared/class/model/classSession.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class StudentService {
     return this.httpClient.post<StudentRoles[]>('roleMapping/studentRolelist',"");
   }
 
-  RoomAllocationList(): Observable<RoomAllocations[]> {
-    return this.httpClient.get<RoomAllocations[]>('roleMapping/RoomAllocationDetails');
+  RoomAllocationList(): Observable<RoomAllocationDetails> {
+    return this.httpClient.get<RoomAllocationDetails>('roleMapping/RoomAllocationDetails');
   }
 
   AttributeDecisionList(): Observable<AttributeDecision[]> {

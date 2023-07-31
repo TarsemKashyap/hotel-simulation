@@ -1,20 +1,33 @@
 :host::ng-deep .rag-red {
-    /* background-color: red; */
-    border: 3px solid red !important;
-  }
-  table {
-    width: 100%;
-  }
-  tr {
-  height: 50px;
-  }
+  /* background-color: red; */
+  border: 3px solid red !important;
+}
 
-  .is-invalid {
-    border: 2px solid red;
-  }
-  .tableHeader
-  {
-      width:100%;
-      border-style: none none inset none;
-      text-align: center;
-  }
+table {
+  width: 100%;
+}
+
+tr {
+  height: 50px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+#attributeTable input[type=text]:disabled {
+  border: 1px solid #e8e5e5;
+  padding: 5px;
+}
+
+.is-invalid {
+  border: 2px solid red !important;
+}
+
+.tableHeader {
+  width: 100%;
+  border-style: none none inset none;
+  text-align: center;
+}
+
+.input-field {
+  border: 1px solid #e8e5e5;
+  padding: 5px;
+}

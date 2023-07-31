@@ -444,7 +444,9 @@ export class MarketingComponent {
       }
     });
     this.studentService.UpdateMarketingDetails(this.marketingDecisionList).subscribe((x) => {
-      this._snackBar.open('Marketing details added successfully');
+      this._snackBar.open('Marketing details updated successfully', 'Close', {
+        duration: 3000
+      });     
       this.marketDecisionList();
     });
   }

@@ -95,7 +95,12 @@ namespace Api.Controllers
             }
             var currentQuarter = classDtls.CurrentQuater;
             var roomAllocationDetails = await _roomAllocationService.RoomAllocationDetails(monthId, groupId, currentQuarter);
-            return Ok(roomAllocationDetails);
+            return Ok(new RoomAllocationDetailsDto
+            {
+                RoomAllocation = roomAllocationDetails.ToList(),
+                WeekdayTotal = classDtls.RoomInEachHotel,
+                WeekendTotal = classDtls.RoomInEachHotel
+            });
         }
 
         [HttpGet("AttributeDecisionDetails")]
