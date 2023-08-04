@@ -16,6 +16,7 @@ using Common.Dto;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Linq.Expressions;
 
     public interface IClassSessionService
@@ -28,7 +29,10 @@ using System.Linq.Expressions;
         Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
         Task DeleteId(int classId);
         Task<IList<ClassGroupDto>> StudentGroupList();
-    }
+
+        Task<IList<MonthDto>> MonthFilterList(int classId);
+        Task<IList<ClassGroupDto>> GetGroupList(int classId);
+}
 
 public class ClassSessionService : IClassSessionService
 {
@@ -107,6 +111,18 @@ public class ClassSessionService : IClassSessionService
         return users.Adapt<IList<ClassGroupDto>>();
 
     }
+
+    public async Task<IList<ClassGroupDto>> GetGroupList(int classId)
+    {
+        var groups = _context.ClassGroups.Where(c => c.ClassId == classId).ToList();
+        return groups.Adapt<IList<ClassGroupDto>>();
+    }
+    public async Task<IList<MonthDto>> MonthFilterList(int classId)
+    {
+        var sequence = _context.Months.Where(c => c.ClassId == classId).OrderBy(s => s.Sequence).ToList();
+        return sequence.Adapt<IList<MonthDto>>();
+
+    }
     public async Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup)
     {
         ClassSession classSession = await _context.ClassSessions.FindAsync(classId);
@@ -170,4 +186,5 @@ public class ClassSessionService : IClassSessionService
         }
     }
 
+   
 }

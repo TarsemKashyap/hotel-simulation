@@ -30,7 +30,7 @@ public class PerformanceReportService : IPerformanceReportService
 
     public async Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs)
     {
-        AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
+       // AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
         int monthId = goalArgs.MonthId;
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)

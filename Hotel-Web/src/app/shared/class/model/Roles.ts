@@ -27,3 +27,8 @@ export interface StudentRoles {
     selectedRoles : StudentRoles[];
     selectedGroup : ClassGroup;
   }
+
+  export interface MonthFilter {
+    Value : string;
+    Text : string;
+  }

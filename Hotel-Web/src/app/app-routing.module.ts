@@ -26,6 +26,13 @@ export const appRoutes: Routes = [
     data: { role: AppRoles.Student } as AuthRouteData,
   },
   {
+    path: 'report/:id',
+    loadChildren: () =>
+      import('./Report/report.module').then((x) => x.ReportModule),
+    canActivate: [checkAccessPermission],
+    data: { role: AppRoles.Student } as AuthRouteData,
+  },
+  {
     path: 'instructor',
     loadChildren: () =>
       import('./instructor/instructor.module').then((x) => x.InstructorModule),
