@@ -68,5 +68,11 @@ namespace Api.Controllers
         {
             return await _balanceReportService.Report(goalReport);
         }
+
+        [HttpPost("cashflow")]
+        public async Task<BalanceReportDto> CashFlowReport(ReportParams goalReport)
+        {
+            return new BalanceReportDto();
+        }
     }
 }
