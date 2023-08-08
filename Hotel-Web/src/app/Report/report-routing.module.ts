@@ -4,6 +4,7 @@ import { AuthRouteData, checkAccessPermission } from '../shared/auth.gurad';
 import { AppRoles } from '../public/account';
 import { ReportListComponent } from './report-list/report-list.component';
 import { ObjectiveReportComponent } from './objective-report/objective-report.component';
+import { PerformanceComponent } from './performance/performance.component';
 
 export const reportRoutes: Routes = [
   {
@@ -12,6 +13,7 @@ export const reportRoutes: Routes = [
     children: [
       { path: ':id/list', component: ReportListComponent },
       { path: ':id/objective-report', component: ObjectiveReportComponent },
+      { path: ':id/performance-report', component: PerformanceComponent },
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,

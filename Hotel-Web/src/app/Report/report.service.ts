@@ -5,6 +5,7 @@ import { MonthDto } from '../shared/class/create-month/month.model';
 import { ClassGroup } from '../shared/class/model/classSession.model';
 import { ReportParams } from './model/ReportParams.model';
 import { GoalReportResponse } from './model/GoalReportResponse.model';
+import { PerformanceResponse } from './model/PerformanceResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class ReportService {
 
   objectiveReportDetails(reportParams:ReportParams): Observable<GoalReportResponse[]> {
     return this.httpClient.post<GoalReportResponse[]>(`Reports/goal`,reportParams);
+  }
+
+  performanceReportDetails(reportParams:ReportParams): Observable<PerformanceResponse> {
+    return this.httpClient.post<PerformanceResponse>(`Reports/performance`,reportParams);
   }
   
 }

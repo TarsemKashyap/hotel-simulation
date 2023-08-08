@@ -34,20 +34,18 @@ export class ObjectiveReportComponent {
   ngOnInit(): void {
     this.classId = this.activeRoute.snapshot.params['id'];
     this.loadMonths();
-    
-    
+ 
   }
 
    onOptionChange() {
      this.loadObjectiveDetails();
    }
 
-   async loadObjectiveDetails() {
-    console.log(this.selectedMonth,"this.selectedMonth")
+  loadObjectiveDetails() {    
     this.reportParam.ClassId =  this.classId!;
     this.reportParam.GroupId =this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter = 1;
+    this.reportParam.CurrentQuarter = 0;
     this.reportService.objectiveReportDetails(this.reportParam).subscribe((reportData) => {
         this.goalReportResponse = reportData;        
     });

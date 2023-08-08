@@ -7,13 +7,15 @@ import { ReportListComponent } from './report-list/report-list.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import {ValueFormatterPipe} from 'src/app/shared/value-formatter.pipe';
+import { PerformanceComponent } from './performance/performance.component';
 
 
 @NgModule({
   declarations: [
     ObjectiveReportComponent,
     ReportListComponent,
-    ValueFormatterPipe
+    ValueFormatterPipe,
+    PerformanceComponent
   ],
   imports: [
     CommonModule,

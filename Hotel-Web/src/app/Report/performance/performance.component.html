@@ -1,0 +1,75 @@
+<span class="inline-grid grid-cols-3 gap-8">
+    <mat-form-field class="align-right">
+        <mat-label>
+          <i *ngIf="MonthList.length"> Select Month</i>
+          <i *ngIf="!MonthList.length"> No month available</i>
+        </mat-label>
+        <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+          <mat-label>Choose an month</mat-label>
+          <mat-option *ngFor="let month of MonthList" [value]="month">
+            {{ month.sequence }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="align-right">
+        <mat-label>
+          <i *ngIf="groups.length"> Select Hotel</i>
+          <i *ngIf="!groups.length"> No hotel available</i>
+        </mat-label>
+        <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+          <mat-label>Choose an month</mat-label>
+          <mat-option *ngFor="let group of groups" [value]="group">
+            {{ group.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+      <table class="style1">
+        <tr >
+            <td class="style2">
+                Monthly Profit</td>
+            <td style="border-style: none none inset none; border-width: thin">
+                {{performancereportResponse.statstics.monthlyProfit.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Accumulated Profit</td>
+            <td style="border-style: none none inset none; border-width: thin">
+                {{performancereportResponse.statstics.accumulativeProfit.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Market Share based on Revenue</td>
+            <td class="style2">
+                {{performancereportResponse.statstics.marketShareRevenueBased.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Market Share based on Rooms Sold</td>
+            <td class="style2">
+                {{performancereportResponse.statstics.marketShareRoomSoldBased.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Occupancy 
+                Percentage</td>
+            <td class="style2">
+                {{performancereportResponse.statstics.occupancy.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                REVPAR</td>
+            <td class="style2">
+                {{performancereportResponse.statstics.revpar.value}}
+            </td>
+        </tr>
+      </table>
+      <h2>Financial Ratio</h2>
+<br />
+   
+    

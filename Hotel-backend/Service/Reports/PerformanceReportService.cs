@@ -14,7 +14,7 @@ public interface IPerformanceReportService
     Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs);
 }
 
-public class PerformanceReportService : IPerformanceReportService
+public class PerformanceReportService : AbstractReportService , IPerformanceReportService
 {
     private readonly HotelDbContext _context;
     private readonly UserManager<AppUser> _userManager;
@@ -37,7 +37,7 @@ public class PerformanceReportService : IPerformanceReportService
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = goalArgs.CurrentQuarter;
+        int quarter = classSession.CurrentQuater;
         int groupId = goalArgs.GroupId;
         int hotelCount = classSession.HotelsCount;
         var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId);
@@ -66,13 +66,20 @@ public class PerformanceReportService : IPerformanceReportService
         };
 
         BalanceSheet currentMonthBalSheet = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == groupId);
-        FinancialRatio liquidtyRatios = new FinancialRatio("Liquidity Ratios");
-        {
-            // Current Ratio
-            liquidtyRatios.Add("Current Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? null : new Number(currentMonthBalSheet.TotCurrentAsset / currentMonthBalSheet.TotCurrentLiab));
-            // Quick (Acid Test) Ration
-            decimal quickAcidTest = (currentMonthBalSheet.TotCurrentAsset - currentMonthBalSheet.Inventories);
-            liquidtyRatios.Add("Quick (Acid Test) Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? null : new Number(quickAcidTest / currentMonthBalSheet.TotCurrentLiab));
+
+        FinancialRatio finacialRatio = new FinancialRatio();
+
+        finacialRatio.LiquidtyRatios.AddChild(Number("Current Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? 0 :  currentMonthBalSheet.TotCurrentAsset / currentMonthBalSheet.TotCurrentLiab));
+        decimal quickAcidTest = (currentMonthBalSheet.TotCurrentAsset - currentMonthBalSheet.Inventories);
+        finacialRatio.LiquidtyRatios.AddChild(Number("Quick (Acid Test) Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? 0 : quickAcidTest / currentMonthBalSheet.TotCurrentLiab));
+
+        //FinancialRatio liquidtyRatios = new FinancialRatio();
+        
+            //// Current Ratio
+            //liquidtyRatios.Add("Current Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? null : new Number(currentMonthBalSheet.TotCurrentAsset / currentMonthBalSheet.TotCurrentLiab));
+            //// Quick (Acid Test) Ration
+            
+            //liquidtyRatios.Add("Quick (Acid Test) Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? null : new Number(quickAcidTest / currentMonthBalSheet.TotCurrentLiab));
             //Accounts Receivable Percentage
 
             decimal b = incomeState.Room1 * 100 / 52;
@@ -83,38 +90,38 @@ public class PerformanceReportService : IPerformanceReportService
                 a = (currentMonthBalSheet.AcctReceivable + lastMonthBalSheet.AcctReceivable) / 2;
             }
             Number AccountsReceivablePercentage = b == 0 ? null : new Number(a / b);
-
-            liquidtyRatios.Add("Accounts Receivable Percentage", AccountsReceivablePercentage);
             Number AccountsReceivableTurnover = a == 0 ? null : new Number(b / a);
-            liquidtyRatios.Add("Accounts Receivable Turnover", AccountsReceivableTurnover);
+            finacialRatio.LiquidtyRatios.AddChild(Number("Accounts Receivable Percentage", AccountsReceivablePercentage));
+            finacialRatio.LiquidtyRatios.AddChild(Number("Accounts Receivable Turnover", AccountsReceivableTurnover));
+            
 
-        }
+        
 
-        FinancialRatio solvencyRatios = new FinancialRatio("Solvency Ratios");
-        {
+        
+        
             /*
              * Total Assets to Total Liabilities
              * Total Liabilities to Total Assests 
              */
-            {
-                decimal a = currentMonthBalSheet.TotAsset;
-                decimal b = currentMonthBalSheet.TotLiab;
-                solvencyRatios.Add("Total Assets to Total Liabilities", b == 0 ? null : new Number(a / b));
-                solvencyRatios.Add("Total Liabilities to Total Assests", a == 0 ? null : new Number(b / a));
-            }
+            
+                decimal aSolvency = currentMonthBalSheet.TotAsset;
+                decimal bSolvency = currentMonthBalSheet.TotLiab;
+                finacialRatio.SolvencyRatios.AddChild(Number("Total Assets to Total Liabilities", bSolvency == 0 ? null : new Number(aSolvency / bSolvency)));
+                finacialRatio.SolvencyRatios.AddChild(Number("Total Liabilities to Total Assests", aSolvency == 0 ? null : new Number(bSolvency / aSolvency)));
+            
             //  Total Liabilities to Total Equity
             // Stockholder Equity
-            {
-                decimal a = currentMonthBalSheet.TotLiab;
-                decimal b = currentMonthBalSheet.RetainedEarn + 35000000;
-                solvencyRatios.Add("Total Liabilities to Total Equity", b == 0 ? null : new Number(a / b));
-                //todo: find misssing piece
-                solvencyRatios.Add("Stockholder Equity", null);
-            }
-        }
+            
+                decimal aLiab = currentMonthBalSheet.TotLiab;
+                decimal bRetained = currentMonthBalSheet.RetainedEarn + 35000000;
+    finacialRatio.SolvencyRatios.AddChild(Number("Total Liabilities to Total Equity", bRetained == 0 ? null : new Number(aLiab / bRetained)));
+        //todo: find misssing piece
+        finacialRatio.SolvencyRatios.AddChild(Number("Stockholder Equity", null));
+            
+        
 
-        FinancialRatio ProfitablityRation = new FinancialRatio("Profitablity Ratios");
-        {
+        //FinancialRatio ProfitablityRation = new FinancialRatio();
+        
             /*
               Operating Efficenty Ratio
             Net Income to Revenue (Profit Margin)
@@ -125,67 +132,67 @@ public class PerformanceReportService : IPerformanceReportService
              */
 
             //Operating Efficenty Ratio
-            {
-                decimal a = incomeState.IncomBfCharg;
-                decimal b = incomeState.Room1 * 100 / 52;
+            
+                decimal abfCharg = incomeState.IncomBfCharg;
+                decimal bRooml = incomeState.Room1 * 100 / 52;
 
-                ProfitablityRation.Add("Operating Efficenty Ratio", b == 0 ? null : new Number(a / b));
-            }
+        finacialRatio.ProfitablityRation.AddChild(Number("Operating Efficenty Ratio", bRooml == 0 ? null : (abfCharg / bRooml)));
+            
 
             //Net Income to Revenue (Profit Margin)
-            {
-                decimal a = incomeState.NetIncom;
-                decimal b = incomeState.Room1 * 100 / 52;
-                ProfitablityRation.Add("Net Income to Revenue (Profit Margin)", b == 0 ? null : new Number(a / b));
-            }
+            
+                decimal aIncom = incomeState.NetIncom;
+                decimal bIncomeStateRooml = incomeState.Room1 * 100 / 52;
+        finacialRatio.ProfitablityRation.AddChild(Number("Net Income to Revenue (Profit Margin)", b == 0 ? null : new Number(a / b)));
+            
             //Gross Return on Assests (Gross ROA)
             //Net Returun on Assests (Net ROA)
-            {
-                decimal a = incomeState.AjstNetIncom;
-                decimal b = 0;
+            
+                decimal aAjstNetIncom = incomeState.AjstNetIncom;
+                decimal bAjstNetIncom = 0;
 
 
                 if (quarter > 1)
                 {
                     var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
-                    b = (currentMonthBalSheet.TotAsset + lastMonthBalSheet.TotAsset) / 2;
+            bAjstNetIncom = (currentMonthBalSheet.TotAsset + lastMonthBalSheet.TotAsset) / 2;
                 }
-                b = currentMonthBalSheet.TotAsset;
-                if (b == 0)
+        bAjstNetIncom = currentMonthBalSheet.TotAsset;
+                if (bAjstNetIncom == 0)
                 {
-                    ProfitablityRation.Add("Gross Return on Assests (Gross ROA)", null);
-                    ProfitablityRation.Add("Net Returun on Assests (Net ROA)", null);
+            finacialRatio.ProfitablityRation.AddChild(Number("Gross Return on Assests (Gross ROA)", null));
+            finacialRatio.ProfitablityRation.AddChild(Number("Net Returun on Assests (Net ROA)", null));
                 }
                 {
-                    ProfitablityRation.Add("Gross Return on Assests (Gross ROA)", new Number(a / b));
-                    ProfitablityRation.Add("Net Returun on Assests (Net ROA)", new Number(incomeState.NetIncom / b));
+            finacialRatio.ProfitablityRation.AddChild(Number("Gross Return on Assests (Gross ROA)", new Number(aAjstNetIncom / bAjstNetIncom)));
+            finacialRatio.ProfitablityRation.AddChild(Number("Net Returun on Assests (Net ROA)", new Number(incomeState.NetIncom / bAjstNetIncom)));
                 }
-            }
+            
             //Return on Equity (ROE)
-            {
-                decimal a = incomeState.NetIncom;
-                decimal b = 0;
-                decimal c = 0;
+            
+                decimal aNetIncom = incomeState.NetIncom;
+                decimal bNetIncom = 0;
+                decimal cNetIncom = 0;
 
                 if (quarter > 1)
                 {
                     var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
-                    b = (currentMonthBalSheet.RetainedEarn + 35000000 + lastMonthBalSheet.RetainedEarn + 35000000) / 2;
+            bNetIncom = (currentMonthBalSheet.RetainedEarn + 35000000 + lastMonthBalSheet.RetainedEarn + 35000000) / 2;
                 }
                 else
                 {
-                    b = currentMonthBalSheet.RetainedEarn + 35000000;
+                    bNetIncom = currentMonthBalSheet.RetainedEarn + 35000000;
                 }
 
-                ProfitablityRation.Add("Return on Equity (ROE)", b == 0 ? null : new Number(a / b));
-            }
+        finacialRatio.ProfitablityRation.AddChild(Number("Return on Equity (ROE)", b == 0 ? null : new Number(aNetIncom / bNetIncom)));
+            
 
-        }
+        
 
         return new PerformanceReportDto
         {
             Statstics = statisticsDto,
-            FinancialRatios = new() { liquidtyRatios, solvencyRatios, ProfitablityRation }
+            FinancialRatios = finacialRatio
         };
 
     }
