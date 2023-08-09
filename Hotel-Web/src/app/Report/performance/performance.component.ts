@@ -32,7 +32,7 @@ export class PerformanceComponent {
   }
 
   onOptionChange() {
-    
+    this.loadMonths();
   }
 
   loadPerformanceDetails() {    
@@ -41,8 +41,7 @@ export class PerformanceComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = 0;
     this.reportService.performanceReportDetails(this.reportParam).subscribe((reportData) => {
-        this.performancereportResponse = reportData;  
-        console.log( this.performancereportResponse," this.performancereportResponse")      
+        this.performancereportResponse = reportData;        
     });
   }
 

@@ -71,5 +71,84 @@
       </table>
       <h2>Financial Ratio</h2>
 <br />
-   
+    <table class="style1">
+        <tr>
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                &nbsp;</td>
+            <td style="border-style: none none inset none; border-width: thin">
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Liquidity Ratios</td>
+            <td class="style2">
+                &nbsp;</td>
+            <td style="border-style: none none inset none; border-width: thin">
+                &nbsp;</td>
+        </tr>
+       
+        <tr *ngFor="let liquidData of performancereportResponse.financialRatios.liquidtyRatios.childern">
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                {{liquidData.label}}</td>
+            <td class="style3">
+                {{liquidData.data.value}}
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="style2">
+                Solvency Ratios</td>
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                &nbsp;</td>
+        </tr>
+        <tr *ngFor="let solvancyData of performancereportResponse.financialRatios.solvencyRatios.childern">
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                {{solvancyData.label}}</td>
+            <td class="style3">
+                {{solvancyData.data.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Profitablity Ratios</td>
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                &nbsp;</td>
+        </tr>
+        <tr *ngFor="let profitablityData of performancereportResponse.financialRatios.profitablityRation.childern">
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                {{profitablityData.label}}</td>
+            <td class="style3">
+                {{profitablityData.data.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="style2">
+                Turn Over Ratios</td>
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                &nbsp;</td>
+        </tr>
+        <tr *ngFor="let turnOverData of performancereportResponse.financialRatios.turnOverRatio.childern">
+            <td class="style2">
+                &nbsp;</td>
+            <td class="style2">
+                {{turnOverData.label}}</td>
+            <td class="style3">
+                {{turnOverData.data.value}}
+            </td>
+        </tr>
+    </table>
     

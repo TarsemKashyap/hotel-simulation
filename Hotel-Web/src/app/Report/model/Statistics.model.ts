@@ -8,7 +8,7 @@ export interface StatisticsDto {
     revpar: StatisticsType;
 }
 
-export interface StatisticsType{
-    format:string,
-    value:number
+export interface StatisticsType {
+    format: string,
+    value: number
 }
