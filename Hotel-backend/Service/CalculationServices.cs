@@ -379,8 +379,8 @@ namespace Service
                         }
                         _context.SaveChanges();
                         #endregion
-
                         #region RoomAllocation
+
 
                         int maxGroup = Convert.ToInt32(ScalarQueryMaxGroupNoRommAllocation(monthId, currentQuarter));
                         int groupID = 1;
@@ -1762,6 +1762,8 @@ namespace Service
 
                         }).ToList();
 
+            //}).ToList();
+
             if (list.Count > 0)
             {
                 WeightedRating = list.Sum(a => (a.RawRating * a.Weight));
@@ -1779,6 +1781,7 @@ namespace Service
                         {
                             CustomerRating = w.CustomerRating
                         }).ToList();
+
 
 
             decimal AverageRating = 0;
@@ -2383,6 +2386,12 @@ namespace Service
                             MaxGroup = r.GroupID
 
                         }).ToList();
+            //group r by r.GroupID into g
+            //select new
+            //{
+            //    MaxGroup = g.Max(x => x.GroupID)
+
+            //}).ToList();
 
 
             if (list.Count > 0)
@@ -2764,7 +2773,6 @@ namespace Service
             if (data.Count > 0)
             {
                 TotalAccumuCapital = data.Sum(x => x.TotalAccumuCapital);
-
             }
 
             return TotalAccumuCapital;

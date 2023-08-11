@@ -1,29 +1,31 @@
-<section class="bg-[#F4F7FF]">
+<section >
+
+
     <div class="container">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <h2>Make Atttibutes and Amenities Expenditures Decisions</h2>
-        <table class="table-auto">
+        <table id="attributeTable" class="table-auto">
             <tr>
-                <th style="border-style: none none inset none;width: 10%;">
+                <th style="border-style: none none inset none;width: 25%;">
                     &nbsp;</th>
-                <th style="border-style: none none inset none;width: 30%;">
+                <th style="border-style: none none inset none;width: 25%;">
                   &nbsp;</th>
-                <th style="border-style: none none inset none;width: 30%;">
+                <th style="border-style: none none inset none;width: 25%;">
                     Capital Investment</th>
-                <th style="border-style: none none inset none;width: 10%;" colspan="2">
+                <th style="border-style: none none inset none;width: 25%;" colspan="2">
                     Operating Expenditures</th> 
             </tr>
            
           <tr>
-              <th style="border-style: none none inset none;width: 10%;">
+              <th style="border-style: none none inset none;">
                   &nbsp;</th>
-              <th style="border-style: none none inset none;width: 30%;">
+              <th style="border-style: none none inset none;">
                 Accumulated upto current month</th>
-              <th style="border-style: none none inset none;width: 30%;">
+              <th style="border-style: none none inset none;">
                 Attributes and Amenities Investment for next month</th>
-              <th style="border-style: none none inset none;width: 10%;">
+              <th style="border-style: none none inset none;">
                     Other</th>
-              <th style="border-style: none none inset none;width: 10%;">
+              <th style="border-style: none none inset none;">
                     Labor</th>
           </tr>
           <tr>
@@ -691,8 +693,14 @@
       Total expenses allocated:&nbsp;${{totalExpensesAllocated}}
       </p>
     <div class="footer">
-      <div class="buton-group fr">
-        <button type="submit" class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">Save</button>
+      <div class="md:flex md:items-center mb-6">
+        <div class="md:w-1/2"></div>
+        <div class="md:w-4/3">
+          <button type="submit"
+            class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
+            Save
+          </button>
+        </div>
       </div>
     </div>
   </form>

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Dto;
 using Common.ReportDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Route("Reports")]
     // [Authorize(Roles = RoleType.Student)]
     public class ReportController : AbstractBaseController
     {
@@ -16,13 +18,30 @@ namespace Api.Controllers
         private readonly IPerformanceReportService _performanceReportService;
         private readonly IIncomeReportService _incomeReportService;
         private readonly IBalanceReportService _balanceReportService;
+        private readonly IClassSessionService _classSessionService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
             _incomeReportService = incomeReportService;
             _balanceReportService = balanceReportService;
+            _classSessionService = classSessionService;
+        }
+
+
+        [HttpGet("monthFilterDetails/{classId}")]
+        public async Task<ActionResult> MonthFilterDetails(int classId)
+        {
+            var monthData = await _classSessionService.MonthFilterList(classId);
+            return Ok(monthData);
+        }
+
+        [HttpGet("groupFilterDetails/{classId}")]
+        public async Task<ActionResult> GroupFilterDetails(int classId)
+        {
+            var groupData = await _classSessionService.GetGroupList(classId);
+            return Ok(groupData);
         }
 
         [HttpPost("goal")]
@@ -48,6 +67,12 @@ namespace Api.Controllers
         public async Task<BalanceReportDto> BalanceReport(ReportParams goalReport)
         {
             return await _balanceReportService.Report(goalReport);
+        }
+
+        [HttpPost("cashflow")]
+        public async Task<BalanceReportDto> CashFlowReport(ReportParams goalReport)
+        {
+            return new BalanceReportDto();
         }
     }
 }

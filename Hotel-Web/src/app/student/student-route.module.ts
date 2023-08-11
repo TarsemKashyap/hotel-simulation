@@ -11,6 +11,10 @@ import { AttributeComponent } from './attribute/attribute.component';
 import { PriceComponent } from './price/price.component';
 import { MarketingComponent } from './marketing/marketing.component';
 import { AppRoles } from '../public/account';
+import { GoalSettingComponent } from './goal-setting/goal-setting.component';
+import { LoanComponent } from './loan/loan.component';
+
+import { reportRoutes } from '../Report/report-routing.module';
 
 const routes: Routes = [
   {
@@ -25,7 +29,11 @@ const routes: Routes = [
       { path: 'room', component: RoomComponent },
       { path: 'attribute', component: AttributeComponent },
       { path: 'price', component: PriceComponent },
-      { path: 'marketing', component: MarketingComponent }
+      { path: 'marketing', component: MarketingComponent },
+      { path: 'goalSetting', component: GoalSettingComponent },
+      { path: 'loan', component: LoanComponent },
+      ...reportRoutes
+      
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,

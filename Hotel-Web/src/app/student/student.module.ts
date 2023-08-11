@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StudentRouteModule } from './student-route.module';
 import { ChangePasswordComponent } from '../admin';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AgGridModule } from 'ag-grid-angular';
 import { MaterialModule } from '../material.module';
@@ -16,9 +16,11 @@ import { AttributeComponent } from './attribute/attribute.component';
 import { PriceComponent } from './price/price.component';
 import { MarketingComponent } from './marketing/marketing.component';
 import { GoalSettingComponent } from './goal-setting/goal-setting.component';
+import { LoanComponent } from './loan/loan.component';
+
 
 @NgModule({
-  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent, GoalSettingComponent],
+  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent, GoalSettingComponent, LoanComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -26,7 +28,8 @@ import { GoalSettingComponent } from './goal-setting/goal-setting.component';
     HttpClientModule,
     AgGridModule,
     MaterialModule,
-    StudentRouteModule
+    StudentRouteModule,
+    FormsModule
   ],
   providers: [ChangePasswordService,AccountService],
   bootstrap: [StudentDashboard],

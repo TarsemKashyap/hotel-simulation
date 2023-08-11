@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { StudentService } from '../student.service';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { RoomAllocations } from 'src/app/shared/class/model/classSession.model';
+import { DecimalValidator, RoomAllocationDetails, RoomAllocations } from 'src/app/shared/class/model/classSession.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-room',
@@ -18,75 +19,74 @@ export class RoomComponent {
   roomAllowWeekdays:number = 0;
   roomAllowWeekend:number = 0;
   errorMsg:string = "";
-  roomAllocations:RoomAllocations[] = [];
+  roomAllocations:RoomAllocationDetails = {} as RoomAllocationDetails;
 
   ngOnInit(): void {
     this.roomAllocationList();
   }
 
   constructor(
-    private studentService: StudentService, private fb: FormBuilder,) {
+    private studentService: StudentService, private fb: FormBuilder,private _snackBar: MatSnackBar) {
       this.form = this.createForm();
   }
 
   private roomAllocationList() {
-    this.studentService
-      .RoomAllocationList()
-      .subscribe((data) => {
-        this.roomAllocations =  data;
-       
-       var weekday1RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Business' && d.weekday == true)?.roomsAllocated;
+    this.studentService.RoomAllocationList().subscribe((data) => {
+
+        this.roomAllocations = data;
+       this.WeekdayTotal = this.roomAllocations.weekdayTotal;
+       this.WeekendTotal = this.roomAllocations.weekendTotal;
+       var weekday1RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Business' && d.weekday == true)?.roomsAllocated;
        weekday1RoomAllocated = weekday1RoomAllocated == undefined ? 0 : weekday1RoomAllocated / 17;
 
-       var weekend1RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Business' && d.weekday == false)?.roomsAllocated;
+       var weekend1RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Business' && d.weekday == false)?.roomsAllocated;
        weekend1RoomAllocated = weekend1RoomAllocated == undefined ? 0 : weekend1RoomAllocated / 13;
 
-       var weekday2RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Small Business' && d.weekday == true)?.roomsAllocated;
+       var weekday2RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Small Business' && d.weekday == true)?.roomsAllocated;
        weekday2RoomAllocated = weekday2RoomAllocated == undefined ? 0 : weekday2RoomAllocated / 17;
 
-       var weekend2RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Small Business' && d.weekday == false)?.roomsAllocated;
+       var weekend2RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Small Business' && d.weekday == false)?.roomsAllocated;
        weekend2RoomAllocated = weekend2RoomAllocated == undefined ? 0 : weekend2RoomAllocated / 13;
 
-       var weekday3RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Corporate contract' && d.weekday == true)?.roomsAllocated;
+       var weekday3RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate contract' && d.weekday == true)?.roomsAllocated;
        weekday3RoomAllocated = weekday3RoomAllocated == undefined ? 0 : weekday3RoomAllocated / 17;
 
-       var weekend3RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Corporate contract' && d.weekday == false)?.roomsAllocated;
+       var weekend3RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate contract' && d.weekday == false)?.roomsAllocated;
        weekend3RoomAllocated = weekend3RoomAllocated == undefined ? 0 : weekend3RoomAllocated / 13;
 
-       var weekday4RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Families' && d.weekday == true)?.roomsAllocated;
+       var weekday4RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Families' && d.weekday == true)?.roomsAllocated;
        weekday4RoomAllocated = weekday4RoomAllocated == undefined ? 0 : weekday4RoomAllocated / 17;
 
-       var weekend4RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Families' && d.weekday == false)?.roomsAllocated;
+       var weekend4RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Families' && d.weekday == false)?.roomsAllocated;
        weekend4RoomAllocated = weekend4RoomAllocated == undefined ? 0 : weekend4RoomAllocated / 13;
 
-       var weekday5RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == true)?.roomsAllocated;
+       var weekday5RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == true)?.roomsAllocated;
        weekday5RoomAllocated = weekday5RoomAllocated == undefined ? 0 : weekday5RoomAllocated / 17;
 
-       var weekend5RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == false)?.roomsAllocated;
+       var weekend5RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == false)?.roomsAllocated;
        weekend5RoomAllocated = weekend5RoomAllocated == undefined ? 0 : weekend5RoomAllocated / 13;
 
-       var weekday6RoomAllocated =  this.roomAllocations.find(d => d.segment === 'International leisure travelers' && d.weekday == true)?.roomsAllocated;
+       var weekday6RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'International leisure travelers' && d.weekday == true)?.roomsAllocated;
        weekday6RoomAllocated = weekday6RoomAllocated == undefined ? 0 : weekday6RoomAllocated / 17;
 
-       var weekend6RoomAllocated =  this.roomAllocations.find(d => d.segment === 'International leisure travelers' && d.weekday == false)?.roomsAllocated;
+       var weekend6RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'International leisure travelers' && d.weekday == false)?.roomsAllocated;
        weekend6RoomAllocated = weekend6RoomAllocated == undefined ? 0 : weekend6RoomAllocated / 13;
 
-       var weekday7RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == true)?.roomsAllocated;
+       var weekday7RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == true)?.roomsAllocated;
        weekday7RoomAllocated = weekday7RoomAllocated == undefined ? 0 : weekday7RoomAllocated / 17;
 
-       var weekend7RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == false)?.roomsAllocated;
+       var weekend7RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == false)?.roomsAllocated;
        weekend7RoomAllocated = weekend7RoomAllocated == undefined ? 0 : weekend7RoomAllocated / 13;
 
-       var weekday8RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Association Meetings' && d.weekday == true)?.roomsAllocated;
+       var weekday8RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Association Meetings' && d.weekday == true)?.roomsAllocated;
        weekday8RoomAllocated = weekday8RoomAllocated == undefined ? 0 : weekday8RoomAllocated / 17;
 
-       var weekend8RoomAllocated =  this.roomAllocations.find(d => d.segment === 'Association Meetings' && d.weekday == false)?.roomsAllocated;
+       var weekend8RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Association Meetings' && d.weekday == false)?.roomsAllocated;
        weekend8RoomAllocated = weekend8RoomAllocated == undefined ? 0 : weekend8RoomAllocated / 13;
 
        this.form.patchValue({weekDay1: weekday1RoomAllocated,Weekend1 : weekend1RoomAllocated,weekDay2: weekday2RoomAllocated,Weekend2 : weekend2RoomAllocated , weekDay3: weekday3RoomAllocated,Weekend3 : weekend3RoomAllocated , weekDay4: weekday4RoomAllocated,Weekend4 : weekend4RoomAllocated , weekDay5: weekday5RoomAllocated,Weekend5 : weekend5RoomAllocated , weekDay6: weekday6RoomAllocated,Weekend6 : weekend6RoomAllocated , weekDay7: weekday7RoomAllocated,Weekend7 : weekend7RoomAllocated , weekDay8: weekday8RoomAllocated,Weekend8 : weekend8RoomAllocated});
       
-       console.log(this.roomAllocations,"this.roomAllocationsff", this.form.value);
-
+    this.sum();
     var sumTheAlloW = 0;
     var sumTheAlloE = 0;
     sumTheAlloW = parseInt(this.form.value.weekDay1 === '' ? 0 : this.form.value.weekDay1);
@@ -106,7 +106,11 @@ export class RoomComponent {
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend6 === '' ? 0 : this.form.value.Weekend6);
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend7 === '' ? 0 : this.form.value.Weekend7);
     sumTheAlloE = sumTheAlloE + parseInt(this.form.value.Weekend8 === '' ? 0 : this.form.value.Weekend8);
-      });
+    },
+    (error) => {                              
+      console.error('error caught in component',error.error);
+      this._snackBar.open(error.error);
+    });
   }
 
   onSubmit(): void {
@@ -142,7 +146,7 @@ export class RoomComponent {
         this.roomAllowWeekend = sumTheAlloE;
     } else {
       this.errorMsg = "";
-      this.roomAllocations.forEach(element => {
+      this.roomAllocations.roomAllocation.forEach(element => {
         if (element.segment == 'Business' && element.weekday) 
           element.roomsAllocated = parseInt(this.form.value.weekDay1) * 17;
         if (element.segment == 'Business' && !element.weekday) 
@@ -183,11 +187,11 @@ export class RoomComponent {
         if (element.segment == 'Association Meetings' && !element.weekday) 
           element.roomsAllocated = parseInt(this.form.value.Weekend8) * 13;
       });
-      this.studentService.RoomAllocationUpdate(this.roomAllocations).subscribe((x) => {
-        console.log(x,"gg")
-       // this._snackBar.open('Instructor Account successfully updated');
+      this.studentService.RoomAllocationUpdate(this.roomAllocations.roomAllocation).subscribe((x) => {
+        this._snackBar.open('Room details updated successfully', 'Close', {
+          duration: 3000
+        });
       });
-      console.log("this.roomAllocations after update",this.roomAllocations)
     }
   }
 
@@ -219,22 +223,22 @@ export class RoomComponent {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      weekDay1: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay2: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay3: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay4: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay5: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay6: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay7: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      weekDay8: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend1: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend3: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend4: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend5: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend2: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend6: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend7: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      Weekend8: ['', [Validators.required,Validators.pattern("^[0-9]*$")]]
+      weekDay1: ['', [Validators.required,DecimalValidator]],
+      weekDay2: ['', [Validators.required,DecimalValidator]],
+      weekDay3: ['', [Validators.required,DecimalValidator]],
+      weekDay4: ['', [Validators.required,DecimalValidator]],
+      weekDay5: ['', [Validators.required,DecimalValidator]],
+      weekDay6: ['', [Validators.required,DecimalValidator]],
+      weekDay7: ['', [Validators.required,DecimalValidator]],
+      weekDay8: ['', [Validators.required,DecimalValidator]],
+      Weekend1: ['', [Validators.required,DecimalValidator]],
+      Weekend3: ['', [Validators.required,DecimalValidator]],
+      Weekend4: ['', [Validators.required,DecimalValidator]],
+      Weekend5: ['', [Validators.required,DecimalValidator]],
+      Weekend2: ['', [Validators.required,DecimalValidator]],
+      Weekend6: ['', [Validators.required,DecimalValidator]],
+      Weekend7: ['', [Validators.required,DecimalValidator]],
+      Weekend8: ['', [Validators.required,DecimalValidator]]
     });
   }
 

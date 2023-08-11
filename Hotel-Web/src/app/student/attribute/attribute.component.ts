@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../student.service';
-import { AttributeDecision } from 'src/app/shared/class/model/classSession.model';
+import { AttributeDecision, DecimalValidator } from 'src/app/shared/class/model/classSession.model';
 import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-attribute',
@@ -28,7 +29,7 @@ export class AttributeComponent {
   }
 
   constructor(
-    private studentService: StudentService, private fb: FormBuilder, private sessionStore: SessionStore, private router: Router) {
+    private studentService: StudentService, private fb: FormBuilder, private sessionStore: SessionStore, private router: Router, private _snackBar: MatSnackBar) {
     this.form = this.createForm();
     this.currentRole = this.sessionStore.GetCurrentRole();
     if (this.currentRole === undefined || this.currentRole === '') {
@@ -469,6 +470,9 @@ export class AttributeComponent {
       }
     });
     this.studentService.AttributeDecisionUpdate(this.attributeDecisions).subscribe((x) => {
+      this._snackBar.open('Attribute Updated successfully', 'Close', {
+        duration: 3000
+      });
       this.attributeDecisionList();
     });
   }
@@ -495,66 +499,66 @@ export class AttributeComponent {
       Accumulated18: [{ value: '', disabled: true }],
       Accumulated19: [{ value: '', disabled: true }],
       Accumulated20: [{ value: '', disabled: true }],
-      Amenities1: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities2: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities3: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities4: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities5: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities6: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities7: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities8: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities9: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities10: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities11: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities12: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities13: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities14: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities15: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities16: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities17: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities18: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities19: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Amenities20: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other1: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other2: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other3: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other4: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other5: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other6: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other7: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other8: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other9: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other10: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other11: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other12: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other13: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other14: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other15: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other16: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other17: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other18: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other19: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Other20: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour1: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour2: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour3: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour4: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour5: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour6: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour7: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour8: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour9: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour10: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour11: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour12: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour13: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour14: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour15: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour16: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour17: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour18: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour19: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
-      Labour20: ['', [Validators.required, Validators.pattern("[0-9]+[.,]?[0-9]*")]],
+      Amenities1: ['', [Validators.required, DecimalValidator]],
+      Amenities2: ['', [Validators.required, DecimalValidator]],
+      Amenities3: ['', [Validators.required, DecimalValidator]],
+      Amenities4: ['', [Validators.required, DecimalValidator]],
+      Amenities5: ['', [Validators.required, DecimalValidator]],
+      Amenities6: ['', [Validators.required, DecimalValidator]],
+      Amenities7: ['', [Validators.required, DecimalValidator]],
+      Amenities8: ['', [Validators.required, DecimalValidator]],
+      Amenities9: ['', [Validators.required, DecimalValidator]],
+      Amenities10: ['', [Validators.required, DecimalValidator]],
+      Amenities11: ['', [Validators.required, DecimalValidator]],
+      Amenities12: ['', [Validators.required, DecimalValidator]],
+      Amenities13: ['', [Validators.required, DecimalValidator]],
+      Amenities14: ['', [Validators.required, DecimalValidator]],
+      Amenities15: ['', [Validators.required, DecimalValidator]],
+      Amenities16: ['', [Validators.required, DecimalValidator]],
+      Amenities17: ['', [Validators.required, DecimalValidator]],
+      Amenities18: ['', [Validators.required, DecimalValidator]],
+      Amenities19: ['', [Validators.required, DecimalValidator]],
+      Amenities20: ['', [Validators.required, DecimalValidator]],
+      Other1: ['', [Validators.required, DecimalValidator]],
+      Other2: ['', [Validators.required, DecimalValidator]],
+      Other3: ['', [Validators.required, DecimalValidator]],
+      Other4: ['', [Validators.required, DecimalValidator]],
+      Other5: ['', [Validators.required, DecimalValidator]],
+      Other6: ['', [Validators.required, DecimalValidator]],
+      Other7: ['', [Validators.required, DecimalValidator]],
+      Other8: ['', [Validators.required, DecimalValidator]],
+      Other9: ['', [Validators.required, DecimalValidator]],
+      Other10: ['', [Validators.required, DecimalValidator]],
+      Other11: ['', [Validators.required, DecimalValidator]],
+      Other12: ['', [Validators.required, DecimalValidator]],
+      Other13: ['', [Validators.required, DecimalValidator]],
+      Other14: ['', [Validators.required, DecimalValidator]],
+      Other15: ['', [Validators.required, DecimalValidator]],
+      Other16: ['', [Validators.required, DecimalValidator]],
+      Other17: ['', [Validators.required, DecimalValidator]],
+      Other18: ['', [Validators.required, DecimalValidator]],
+      Other19: ['', [Validators.required, DecimalValidator]],
+      Other20: ['', [Validators.required, DecimalValidator]],
+      Labour1: ['', [Validators.required, DecimalValidator]],
+      Labour2: ['', [Validators.required, DecimalValidator]],
+      Labour3: ['', [Validators.required, DecimalValidator]],
+      Labour4: ['', [Validators.required, DecimalValidator]],
+      Labour5: ['', [Validators.required, DecimalValidator]],
+      Labour6: ['', [Validators.required, DecimalValidator]],
+      Labour7: ['', [Validators.required, DecimalValidator]],
+      Labour8: ['', [Validators.required, DecimalValidator]],
+      Labour9: ['', [Validators.required, DecimalValidator]],
+      Labour10: ['', [Validators.required, DecimalValidator]],
+      Labour11: ['', [Validators.required, DecimalValidator]],
+      Labour12: ['', [Validators.required, DecimalValidator]],
+      Labour13: ['', [Validators.required, DecimalValidator]],
+      Labour14: ['', [Validators.required, DecimalValidator]],
+      Labour15: ['', [Validators.required, DecimalValidator]],
+      Labour16: ['', [Validators.required, DecimalValidator]],
+      Labour17: ['', [Validators.required, DecimalValidator]],
+      Labour18: ['', [Validators.required, DecimalValidator]],
+      Labour19: ['', [Validators.required, DecimalValidator]],
+      Labour20: ['', [Validators.required, DecimalValidator]],
     });
   }
 }

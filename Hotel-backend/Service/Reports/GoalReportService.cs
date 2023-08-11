@@ -29,13 +29,13 @@ public class GoalReportService : IGoalReportService
 
     public async Task<List<GoalReportResponse>> GenerateReport(ReportParams goalArgs)
     {
-        AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
+      //  AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = goalArgs.CurrentQuarter;
+        int quarter = classSession.CurrentQuater;
         int monthId = goalArgs.MonthId;
         int hotelCount = classSession.HotelsCount;
 
@@ -117,7 +117,7 @@ public class GoalReportService : IGoalReportService
             Formatter = "P"
         };
 
-        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
+        var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
         var adrGroupRevenuSum = adRSoldRoomList.Sum(x => x.Revenue);
         int adrRoomSold = adRSoldRoomList.Sum(x => x.SoldRoom);
         GoalReportDto ADR = new GoalReportDto

@@ -1,0 +1,29 @@
+:host::ng-deep .rag-red {
+    /* background-color: red; */
+    border: 3px solid red !important;
+  }
+  table {
+    width: 100%;
+  }
+  tr {
+  height: 50px;
+  border-bottom: 1px solid #f1f1f1;
+  }
+
+  #attributeTable input[type=text]:disabled {
+    border: 1px solid #e8e5e5;
+    padding: 5px;
+  }
+
+  .is-invalid {
+    border: 2px solid red !important;
+  }
+
+  .style1 {
+    width: 300px;
+  }
+
+.input-field {
+  border: 1px solid #e8e5e5;
+    padding: 5px;
+}

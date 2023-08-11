@@ -1,4 +1,4 @@
-<section class="bg-[#F4F7FF]">
+<section >
     <div class="container">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <table class="table-auto">
@@ -20,8 +20,7 @@
                         Occupancy
                     </td>
                     <td>
-                        <input type="text" formControlName="Occupancy"
-                             [ngClass]="{ 'is-invalid': submitted && f.Occupancy.errors }" class="input-field" />
+                        <input type="text" formControlName="Occupancy" [ngClass]="{ 'is-invalid': submitted && f.Occupancy.errors }" class="input-field" />&nbsp;&nbsp;%
                         <div *ngIf="submitted && f.Occupancy.errors">
                             <div *ngIf="f.Occupancy.errors.required">Value is required</div>
                             <div *ngIf="f.Occupancy.errors.pattern">Invalid value</div>
@@ -33,7 +32,7 @@
                         Rooms Revenue
                     </td>
                     <td>
-                        <input type="text" formControlName="RoomsRevenue"
+                       <input type="text" formControlName="RoomsRevenue" 
                              [ngClass]="{ 'is-invalid': submitted && f.RoomsRevenue.errors }" class="input-field" />
                         <div *ngIf="submitted && f.RoomsRevenue.errors">
                             <div *ngIf="f.RoomsRevenue.errors.required">Value is required</div>
@@ -59,8 +58,7 @@
                         Market Share based on Number of Rooms Sold
                     </td>
                     <td>
-                        <input type="text" formControlName="NoOfRoomSold"
-                             [ngClass]="{ 'is-invalid': submitted && f.NoOfRoomSold.errors }" class="input-field" />
+                        <input type="text" formControlName="NoOfRoomSold" [ngClass]="{ 'is-invalid': submitted && f.NoOfRoomSold.errors }" class="input-field" />&nbsp;&nbsp;%
                         <div *ngIf="submitted && f.NoOfRoomSold.errors">
                             <div *ngIf="f.NoOfRoomSold.errors.required">Value is required</div>
                             <div *ngIf="f.NoOfRoomSold.errors.pattern">Invalid value</div>
@@ -73,7 +71,7 @@
                     </td>
                     <td>
                         <input type="text" formControlName="MarketRevenue"
-                             [ngClass]="{ 'is-invalid': submitted && f.MarketRevenue.errors }" class="input-field" />
+                             [ngClass]="{ 'is-invalid': submitted && f.MarketRevenue.errors }" class="input-field" />&nbsp;&nbsp;%
                         <div *ngIf="submitted && f.MarketRevenue.errors">
                             <div *ngIf="f.MarketRevenue.errors.required">Value is required</div>
                             <div *ngIf="f.MarketRevenue.errors.pattern">Invalid value</div>
@@ -106,8 +104,47 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        Yield Management
+                    </td>
+                    <td>
+                        <input type="text" formControlName="yieldManagement"
+                             [ngClass]="{ 'is-invalid': submitted && f.yieldManagement.errors }" class="input-field" />&nbsp;&nbsp;%
+                        <div *ngIf="submitted && f.yieldManagement.errors">
+                            <div *ngIf="f.yieldManagement.errors.required">Value is required</div>
+                            <div *ngIf="f.yieldManagement.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Operating Efficiency Ratio
+                    </td>
+                    <td>
+                        <input type="text" formControlName="efficiencyRatio"
+                             [ngClass]="{ 'is-invalid': submitted && f.efficiencyRatio.errors }" class="input-field" />&nbsp;&nbsp;%
+                        <div *ngIf="submitted && f.efficiencyRatio.errors">
+                            <div *ngIf="f.efficiencyRatio.errors.required">Value is required</div>
+                            <div *ngIf="f.efficiencyRatio.errors.pattern">Invalid value</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                <td>
+                    Profit Margin
+                </td>
+                <td>
+                    <input type="text" formControlName="profitMargin"
+                         [ngClass]="{ 'is-invalid': submitted && f.profitMargin.errors }" class="input-field" />&nbsp;&nbsp;%
+                    <div *ngIf="submitted && f.profitMargin.errors">
+                        <div *ngIf="f.profitMargin.errors.required">Value is required</div>
+                        <div *ngIf="f.profitMargin.errors.pattern">Invalid value</div>
+                    </div>
+                </td>
+            </tr>
             </table>
-            <p>Total:  </p>
+          
             <div class="footer">
                 <div class="md:flex md:items-center mb-6">
                     <div class="md:w-1/2"></div>

@@ -64,7 +64,7 @@ namespace Service
                     int totMarket = marketPercentage * numberOfHotels * 500 * 30 / 100;
                     if (currentQuarter == 0)
                     {
-                        objFunMonth.CreateMonth(_context, classID, currentQuarter-1, totMarket, true);
+                        objFunMonth.CreateMonth(_context, classID, currentQuarter - 1, totMarket, true);
                         resObj.Message = "A new month has been created.";
                     }
                     int monthID = objFunMonth.CreateMonth(_context, classID, currentQuarter, totMarket, false);
@@ -280,28 +280,8 @@ namespace Service
 
         public async Task<MonthDto> GetMonthDtlsByClassId(int classId)
         {
-            IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId).Take(1).OrderByDescending(o => o.ClassId);
-            var result = query.Select(x => new MonthDto
-            {
-                MonthId = x.MonthId,
-                ClassId = x.ClassId,
-                Sequence = x.Sequence,
-                TotalMarket = x.TotalMarket,
-                ConfigId = x.ConfigId,
-                IsComplete = x.IsComplete
-            }).ToList();
-
-            MonthDto obj = new MonthDto();
-            if (result.Count > 0)
-            {
-                obj.MonthId = result[0].MonthId;
-                obj.ClassId = result[0].ClassId;
-                obj.Sequence = result[0].Sequence;
-                obj.TotalMarket = result[0].TotalMarket;
-                obj.ConfigId = result[0].ConfigId;
-                obj.IsComplete = result[0].IsComplete;
-            }
-            return obj;
+            var month = _context.Months.Where(x => x.ClassId == classId).OrderByDescending(o => o.MonthId).FirstOrDefault();
+            return month.Adapt<MonthDto>();
         }
         public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)
         {

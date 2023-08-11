@@ -11,7 +11,8 @@ import { SessionStore } from 'src/app/store';
   styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboard {
-  studentId: string = '';
+
+  studentId:  string = '';
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   constructor(
@@ -56,22 +57,18 @@ private studentRolesList() {
     .StudentRoleslist().subscribe((data) => {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);
-      //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
+      
       this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
-     // console.log(this.studentRolePageList,this.sessionStore.GetStudentRole());
+      this.studentRolePageList.unshift({pageKey:"menu",pageName:"Menu",roleName:"",childPageLink:"menu"},{pageKey:"ChangePwd",pageName:"Change your password",roleName:"",childPageLink:"change-password"})
     });
 }
 
   openLink(studentRolePage:RolePagesDtl) {
-    console.log("studentRolePage",studentRolePage)
     this.sessionStore.SetCurrentRole(studentRolePage.roleName);
-    //this.router.navigate([studentRolePage.childPageLink]);
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
       this.router.navigate([studentRolePage.childPageLink]);
   });
-    // this.router.navigate([studentRolePage.childPageLink]).then(() => {
-    //   this.reloadCurrentRoute();
-    // });
+
   }
 
 reloadCurrentRoute() {

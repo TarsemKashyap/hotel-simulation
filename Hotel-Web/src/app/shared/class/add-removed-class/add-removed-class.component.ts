@@ -4,7 +4,7 @@ import { ColDef, IRowNode } from 'ag-grid-community';
 import { Utility } from '../../utility';
 import { ClassMapping, ClassSession } from '../model/classSession.model';
 import { ClassService } from '../class.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { GridActionComponent } from '../grid-action/grid-action.component';
@@ -54,6 +54,13 @@ export class AddRemovedClassComponent {
       cellRendererParams: {
         actions: [
           {
+            placeHolder: 'visibility',
+            mode: 'icon',
+            cssClass: 'hover:text-primary mr-1 mt-1',
+            onClick: this.loadReport(),
+            hide: () => false,
+          },
+          {
             placeHolder: 'Set as default',
             mode: 'text',
             onClick: this.setAsDefault(),
@@ -75,11 +82,11 @@ export class AddRemovedClassComponent {
   constructor(
     private classService: ClassService,
     private router: Router,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public activeRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    console.log("loaded")
+  ngOnInit(): void {    
     this.loadClasses();
   }
 
@@ -99,6 +106,15 @@ export class AddRemovedClassComponent {
       this.snackBar.open('Student Assign Class Saved Successfully');
     });
   }
+
+  loadReport() : ($event: Event , row: any) => void {
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      this.router.navigate(['../report', row.data?.classId,'list'], {
+        relativeTo: this.activeRoute,
+      });
+    }
+  }
+
   setAsDefault(): ($event: Event, row: any) => void {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       this.classService.setAsDefault(row.data!).subscribe((data) => {

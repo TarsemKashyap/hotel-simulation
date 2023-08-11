@@ -3,7 +3,7 @@
         <div class="-mx-4 flex flex-wrap">
             <mat-list>
                 <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RO'"><a [routerLink]="['../room']" class="decision-link"> Room Allocation</a></mat-list-item>
-                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RO' || currentRoleName == 'FB'"><a [routerLink]="['../attribute']" class="decision-link"> Hotel Attributes and Amenities</a></mat-list-item>
+                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RO' || currentRoleName == 'FB' || currentRoleName == 'RT'"><a [routerLink]="['../attribute']" class="decision-link"> Hotel Attributes and Amenities</a></mat-list-item>
                 <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RM'"><a [routerLink]="['../price']" class="decision-link"> Room Rate Decisions</a></mat-list-item>
                 <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'MM'"><a [routerLink]="['../marketing']" class="decision-link"> Marketing Decisions</a></mat-list-item>
             </mat-list>
