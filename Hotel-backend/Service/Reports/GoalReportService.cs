@@ -29,13 +29,13 @@ public class GoalReportService : IGoalReportService
 
     public async Task<List<GoalReportResponse>> GenerateReport(ReportParams goalArgs)
     {
-        AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
+      //  AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = goalArgs.CurrentQuarter;
+        int quarter = classSession.CurrentQuater;
         int monthId = goalArgs.MonthId;
         int hotelCount = classSession.HotelsCount;
 

@@ -89,7 +89,9 @@ export class LoanComponent implements OnInit {
     this.balanceSheetDetails.shortDebtPay = parseFloat(this.form.value.payEmergencyLoan);
     this.balanceSheetDetails.longBorrow = parseFloat(this.form.value.borrowLongTermLoan);
     this.studentService.UpdateBalanceSheetDetails(this.balanceSheetDetails).subscribe((x) => {
-      this._snackBar.open('Balance Sheet updated successfully');
+      this._snackBar.open('Balance Sheet updated successfully', 'Close', {
+        duration: 3000
+      });
       this.getBalanceSheetDetail();
     });
   };

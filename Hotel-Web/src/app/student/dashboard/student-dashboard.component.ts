@@ -64,15 +64,11 @@ private studentRolesList() {
 }
 
   openLink(studentRolePage:RolePagesDtl) {
-    console.log("studentRolePage",studentRolePage)
     this.sessionStore.SetCurrentRole(studentRolePage.roleName);
-    //this.router.navigate([studentRolePage.childPageLink]);
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
       this.router.navigate([studentRolePage.childPageLink]);
   });
-    // this.router.navigate([studentRolePage.childPageLink]).then(() => {
-    //   this.reloadCurrentRoute();
-    // });
+
   }
 
 reloadCurrentRoute() {

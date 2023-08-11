@@ -56,6 +56,14 @@ export interface RoomAllocations {
   revenue : number;
 }
 
+
+
+export interface RoomAllocationDetails {
+    roomAllocation: RoomAllocations[];
+    weekdayTotal: number;
+    weekendTotal: number;
+}
+
 export interface AttributeDecision {
   iD: number;
   quarterNo: number;

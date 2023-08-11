@@ -4,6 +4,7 @@ import { StudentService } from '../student.service';
 import { AttributeDecision, DecimalValidator } from 'src/app/shared/class/model/classSession.model';
 import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-attribute',
@@ -28,7 +29,7 @@ export class AttributeComponent {
   }
 
   constructor(
-    private studentService: StudentService, private fb: FormBuilder, private sessionStore: SessionStore, private router: Router) {
+    private studentService: StudentService, private fb: FormBuilder, private sessionStore: SessionStore, private router: Router, private _snackBar: MatSnackBar) {
     this.form = this.createForm();
     this.currentRole = this.sessionStore.GetCurrentRole();
     if (this.currentRole === undefined || this.currentRole === '') {
@@ -469,6 +470,9 @@ export class AttributeComponent {
       }
     });
     this.studentService.AttributeDecisionUpdate(this.attributeDecisions).subscribe((x) => {
+      this._snackBar.open('Attribute Updated successfully', 'Close', {
+        duration: 3000
+      });
       this.attributeDecisionList();
     });
   }

@@ -50,7 +50,9 @@ export class GoalSettingComponent {
       this.goalDetail.profitMarginM = parseFloat(this.form.value.profitMargin);
    
     this.studentService.UpdateGoalDetails(this.goalDetail).subscribe((x) => {
-      this._snackBar.open('Goal details added successfully');
+      this._snackBar.open('Goal details updated successfully', 'Close', {
+        duration: 3000
+      });
       this.goalDetailList();
     });
   }

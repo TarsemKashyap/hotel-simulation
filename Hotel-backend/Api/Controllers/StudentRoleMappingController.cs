@@ -95,7 +95,12 @@ namespace Api.Controllers
             }
             var currentQuarter = classDtls.CurrentQuater;
             var roomAllocationDetails = await _roomAllocationService.RoomAllocationDetails(monthId, groupId, currentQuarter);
-            return Ok(roomAllocationDetails);
+            return Ok(new RoomAllocationDetailsDto
+            {
+                RoomAllocation = roomAllocationDetails.ToList(),
+                WeekdayTotal = classDtls.RoomInEachHotel,
+                WeekendTotal = classDtls.RoomInEachHotel
+            });
         }
 
         [HttpGet("AttributeDecisionDetails")]
@@ -123,7 +128,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GoalSettingDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupSerial;
+            var groupId = studenClassMappingDtls.GroupId;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;
@@ -186,7 +191,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GetBalanceSheet()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupSerial;
+            var groupId = studenClassMappingDtls.GroupId;
             var classId = studenClassMappingDtls.ClassId;
             var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
             var monthId = monthsDtls.MonthId;

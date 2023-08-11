@@ -14,6 +14,8 @@ import { AppRoles } from '../public/account';
 import { GoalSettingComponent } from './goal-setting/goal-setting.component';
 import { LoanComponent } from './loan/loan.component';
 
+import { reportRoutes } from '../Report/report-routing.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -30,6 +32,7 @@ const routes: Routes = [
       { path: 'marketing', component: MarketingComponent },
       { path: 'goalSetting', component: GoalSettingComponent },
       { path: 'loan', component: LoanComponent },
+      ...reportRoutes
       
     ],
     canActivate:[checkAccessPermission],

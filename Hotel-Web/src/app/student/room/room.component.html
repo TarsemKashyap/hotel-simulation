@@ -1,4 +1,4 @@
-<section class="bg-[#F4F7FF] py-14 lg:py-20">
+<section>
     <div class="container">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <table class="table-auto">
@@ -75,7 +75,7 @@
               <td >
                   Families</td>
               <td >
-                <input type="text"  formControlName="weekDay4" (change)="sum();" [value]="f.weekDay4.value |currency"
+                <input type="text"  formControlName="weekDay4" (change)="sum();"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay4.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay4.errors" >
                     <div *ngIf="f.weekDay4.errors.required">Value is required</div>
@@ -95,7 +95,7 @@
               <td >
                   Afluent Mature Travelers</td>
               <td >
-                <input type="text"  formControlName="weekDay5" (change)="sum();" [value]="f.weekDay5.value |currency"
+                <input type="text"  formControlName="weekDay5" (change)="sum();"
                 [ngClass]="{ 'is-invalid': submitted && f.weekDay5.errors }" class="input-field" />
                 <div *ngIf="submitted && f.weekDay5.errors" >
                     <div *ngIf="f.weekDay5.errors.required">Value is required</div>

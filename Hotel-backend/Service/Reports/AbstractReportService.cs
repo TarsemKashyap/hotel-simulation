@@ -19,6 +19,12 @@ public abstract class AbstractReportService
     }
 
 
+    protected virtual ReportAttribute Number(string label, decimal? money)
+    {
+        Number currency = money.HasValue ? new Number(money.Value) : null;
+        return new ReportAttribute() { Label = label, Data = currency };
+    }
+
 }
 
 
