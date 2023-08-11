@@ -34,7 +34,7 @@ public class CustomerRawRatingEntityConfig : IEntityTypeConfiguration<CustomerRa
         builder.Property(x => x.GroupID).IsRequired();
         builder.Property(x => x.Attribute);
         builder.Property(x => x.Segment);
-        builder.Property(x => x.RawRating);
+        builder.Property(x => x.RawRating).HasPrecision(4, 2);
     }
 }
 
