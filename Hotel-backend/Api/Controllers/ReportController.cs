@@ -10,7 +10,6 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Route("Reports")]
     // [Authorize(Roles = RoleType.Student)]
     public class ReportController : AbstractBaseController
     {
@@ -19,14 +18,16 @@ namespace Api.Controllers
         private readonly IIncomeReportService _incomeReportService;
         private readonly IBalanceReportService _balanceReportService;
         private readonly IClassSessionService _classSessionService;
+        private readonly ICashFlowReportService _cashFlowReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
             _incomeReportService = incomeReportService;
             _balanceReportService = balanceReportService;
             _classSessionService = classSessionService;
+            _cashFlowReportService = cashFlowReportService;
         }
 
 
@@ -70,9 +71,9 @@ namespace Api.Controllers
         }
 
         [HttpPost("cashflow")]
-        public async Task<BalanceReportDto> CashFlowReport(ReportParams goalReport)
+        public async Task<CashFlowDto> CashFlowReport(ReportParams goalReport)
         {
-            return new BalanceReportDto();
+            return await _cashFlowReportService.GenerateReport(goalReport);
         }
     }
 }

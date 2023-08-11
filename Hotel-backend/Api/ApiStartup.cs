@@ -131,7 +131,7 @@ public static class ApiStartupExtensions
 
         services.AddScoped<IIncomeReportService, IncomeReportService>();
         services.AddScoped<IBalanceReportService, BalanceReportService>();
-        services.AddScoped<IMarketingService, MarketingService>();
+        services.AddScoped<ICashFlowReportService, CashFlowReportService>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)
