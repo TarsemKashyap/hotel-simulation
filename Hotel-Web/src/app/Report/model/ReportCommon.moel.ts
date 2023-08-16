@@ -16,3 +16,20 @@ export interface AbstractDecimal {
     format: string,
     value: number,
 }
+export interface IncomeReport{
+    revenue:revenue
+
+}
+export interface revenue{
+    rooms:ReportAttribute,
+    foodBeverage:ReportAttribute,
+    otherOperatedDocs:ReportAttribute
+    rentelOtherIncome:ReportAttribute,
+    totalRevenue:ReportAttribute,
+    
+}
+export interface departmentalExpenses{
+    departmentalExpenses:ReportAttribute,
+    totalDepartmentalIncome:ReportAttribute		
+
+}

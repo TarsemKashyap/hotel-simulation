@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import {ValueFormatterPipe} from 'src/app/shared/value-formatter.pipe';
 import { PerformanceComponent } from './performance/performance.component';
+import { IncomeComponent } from './income/income.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { PerformanceComponent } from './performance/performance.component';
     ObjectiveReportComponent,
     ReportListComponent,
     ValueFormatterPipe,
-    PerformanceComponent
+    PerformanceComponent,
+    IncomeComponent
   ],
   imports: [
     CommonModule,

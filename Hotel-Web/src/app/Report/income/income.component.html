@@ -1,0 +1,166 @@
+<h1>Income Report</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+<mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+  <h2>Income for the Month</h2>
+  <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.revenue.rooms.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.revenue.rooms.data.value}}
+          </td>
+      </tr>
+      <tr>
+          <td class="style2">
+            {{incomereportResponse.revenue.foodBeverage.label}}</td>
+            <td style="border-style: none none inset none; border-width: thin">
+              {{incomereportResponse.revenue.foodBeverage.data.value}}
+            </td>
+      </tr>
+            <tr> <td><table>
+              <tr *ngFor="let foodBeverageData of incomereportResponse.revenue.foodBeverage.childern">
+                <td class="style2">
+                    &nbsp;</td>
+                <td class="style2">
+                    {{foodBeverageData.label}}</td>
+                <td class="style3">
+                    {{foodBeverageData.data.value}}
+                </td>
+            </tr>
+          </table></td> </tr>
+      <tr>
+          <td class="style2">
+            {{incomereportResponse.revenue.otherOperatedDocs.label}}</td>
+            <td class="style3">
+              {{incomereportResponse.revenue.otherOperatedDocs.data.value}}
+          </td>
+        </tr>
+            <tr> <td></td><td><table>
+              <tr *ngFor="let otherOperatedDocsData of incomereportResponse.revenue.otherOperatedDocs.childern">
+                <td class="style2">
+                    &nbsp;</td>
+                <td class="style2">
+                    {{otherOperatedDocsData.label}}</td>
+                <td class="style3">
+                    {{otherOperatedDocsData.data.value}}
+                </td>
+            </tr>
+          </table></td></tr>
+      
+      <tr>
+          <td class="style2">
+            {{incomereportResponse.revenue.rentelOtherIncome.label}}</td>
+          <td class="style2">
+            {{incomereportResponse.revenue.rentelOtherIncome.data.value}}
+          </td>
+      </tr>
+      <tr>
+          <td class="style2">
+            {{incomereportResponse.revenue.totalRevenue.label}}</td>
+          <td class="style2">
+              {{incomereportResponse.revenue.totalRevenue.data.value}}
+          </td>
+      </tr>
+      <!-- <tr>
+          <td class="style2">
+              REVPAR</td>
+          <td class="style2">
+              {{performancereportResponse.statstics.revpar.value}}
+          </td>
+      </tr> -->
+    </table>
+   
+    <table class="style1">
+      <tr>
+        <td class="style2">
+          {{incomereportResponse.departmentalExpenses.label}}</td>
+      <td class="style2">
+      </td>
+       
+      </tr>
+      
+      <tr>
+            <td>
+              <table border="1" >
+                  <tr *ngFor="let departmentalExpensesData of incomereportResponse.departmentalExpenses.childern">
+                    
+                    <td class="style2">
+                        {{departmentalExpensesData.label}}
+                      </td>
+                    <td class="style2">
+                        {{departmentalExpensesData.data.value}}
+                    </td>
+                </tr>
+              </table>
+            </td>
+  </tr>
+      <!-- <tr >
+          <td class="style2">
+            {{incomereportResponse.departmentalExpenses.totalDepartmentalIncome.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.departmentalExpenses.totalDepartmentalIncome.data.value}}
+          </td>
+      </tr> -->
+    </table>
+    <!-- <tr *ngFor="let incomeData of incomereportResponse.revenue">
+      <td class="style3">
+         {{incomeData}}
+      </td>
+    </tr> -->
+
+    
+    <!-- <tr *ngFor="let goalData of reportResponse">
+      <td class="style3">
+         {{goalData.indicators}}
+        </td>
+      <td style="border-style: none none inset none; border-width: thin">
+        {{goalData.performance | ValueFormatterPipe: goalData.formatter}}
+      </td>
+
+      <td style="border-style: none none inset none; border-width: thin">
+        {{goalData.marketAverage | ValueFormatterPipe: goalData.formatter}}
+        
+      </td>
+
+      <td style="border-style: none none inset none; border-width: thin">
+        {{goalData.perfMarketAvgerage | ValueFormatterPipe: goalData.formatter}}
+       
+      </td>
+
+      <td style="border-style: none none inset none; border-width: thin">
+        {{goalData.objective | ValueFormatterPipe: goalData.formatter}}
+        
+      </td>
+
+      <td style="border-style: none none inset none; border-width: thin">
+        {{goalData.prefObjective | ValueFormatterPipe: goalData.formatter}}
+        
+      </td>
+
+  </tr> -->
+    
+    <!-- </table> -->

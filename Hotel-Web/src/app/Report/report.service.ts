@@ -6,6 +6,7 @@ import { ClassGroup } from '../shared/class/model/classSession.model';
 import { ReportParams } from './model/ReportParams.model';
 import { GoalReportResponse } from './model/GoalReportResponse.model';
 import { PerformanceResponse } from './model/PerformanceResponse.model';
+import { IncomeReportResponse } from './model/IncomeResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,4 +32,8 @@ export class ReportService {
     return this.httpClient.post<PerformanceResponse>(`Reports/performance`,reportParams);
   }
   
+  incomeReportDetails(reportParams:ReportParams): Observable<IncomeReportResponse> {
+    return this.httpClient.post<IncomeReportResponse>(`Reports/income`,reportParams);
+  }
+
 }
