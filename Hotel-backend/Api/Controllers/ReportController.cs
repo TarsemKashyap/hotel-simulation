@@ -1,10 +1,7 @@
-﻿using Common;
-using Common.Dto;
-using Common.ReportDto;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Common.ReportDto;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.Reports;
 
 namespace Api.Controllers
 {
@@ -19,8 +16,9 @@ namespace Api.Controllers
         private readonly IBalanceReportService _balanceReportService;
         private readonly IClassSessionService _classSessionService;
         private readonly ICashFlowReportService _cashFlowReportService;
+        private readonly IOccupancyPercentageReport _occupancyPercentageReport;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -28,6 +26,7 @@ namespace Api.Controllers
             _balanceReportService = balanceReportService;
             _classSessionService = classSessionService;
             _cashFlowReportService = cashFlowReportService;
+            _occupancyPercentageReport = occupancyPercentageReport;
         }
 
 
@@ -74,6 +73,12 @@ namespace Api.Controllers
         public async Task<CashFlowDto> CashFlowReport(ReportParams goalReport)
         {
             return await _cashFlowReportService.GenerateReport(goalReport);
+        }
+
+        [HttpPost("occupancy")]
+        public async Task<OccupancyReportDto> OccupancyReport(ReportParams goalReport)
+        {
+            return await _occupancyPercentageReport.Report(goalReport);
         }
     }
 }

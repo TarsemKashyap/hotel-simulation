@@ -10,6 +10,7 @@ using System.Text;
 using Mapster;
 using MapsterMapper;
 using System.Reflection;
+using Service.Reports;
 
 namespace Api;
 public static class ApiStartupExtensions
@@ -132,6 +133,7 @@ public static class ApiStartupExtensions
         services.AddScoped<IIncomeReportService, IncomeReportService>();
         services.AddScoped<IBalanceReportService, BalanceReportService>();
         services.AddScoped<ICashFlowReportService, CashFlowReportService>();
+        services.AddScoped<IOccupancyPercentageReport, OccupancyPercentageReport>();
 
     }
     public static void RegisterMapster(this IServiceCollection services)
