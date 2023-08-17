@@ -4,6 +4,16 @@ import { ReportCommon,IncomeReport,revenue,departmentalExpenses,ReportAttribute 
 export interface IncomeReportResponse {
    
     revenue :revenue,
-    departmentalExpenses:ReportAttribute
+    departmentalExpenses:ReportAttribute,
+    totalDepartIncome:ReportAttribute,
+    undistOperatingExpenses:ReportAttribute,
+    grossOperatingProfit:ReportAttribute,
+    managmentFees:ReportAttribute,
+    incomeBeforeFixedCharges:ReportAttribute,
+    fixedCharges:ReportAttribute,
+    netOperatingIncome:ReportAttribute,
+    incomeTax:ReportAttribute,
+    netIncome:ReportAttribute
+
 }
 

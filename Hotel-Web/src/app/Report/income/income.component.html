@@ -41,7 +41,7 @@
               {{incomereportResponse.revenue.foodBeverage.data.value}}
             </td>
       </tr>
-            <tr> <td><table>
+            <!-- <tr> <td><table> -->
               <tr *ngFor="let foodBeverageData of incomereportResponse.revenue.foodBeverage.childern">
                 <td class="style2">
                     &nbsp;</td>
@@ -51,7 +51,7 @@
                     {{foodBeverageData.data.value}}
                 </td>
             </tr>
-          </table></td> </tr>
+          <!-- </table></td> </tr> -->
       <tr>
           <td class="style2">
             {{incomereportResponse.revenue.otherOperatedDocs.label}}</td>
@@ -59,7 +59,7 @@
               {{incomereportResponse.revenue.otherOperatedDocs.data.value}}
           </td>
         </tr>
-            <tr> <td></td><td><table>
+            <!-- <tr> <td></td><td><table> -->
               <tr *ngFor="let otherOperatedDocsData of incomereportResponse.revenue.otherOperatedDocs.childern">
                 <td class="style2">
                     &nbsp;</td>
@@ -69,7 +69,7 @@
                     {{otherOperatedDocsData.data.value}}
                 </td>
             </tr>
-          </table></td></tr>
+          <!-- </table></td></tr> -->
       
       <tr>
           <td class="style2">
@@ -118,14 +118,124 @@
               </table>
             </td>
   </tr>
-      <!-- <tr >
+  
+      <tr >
           <td class="style2">
-            {{incomereportResponse.departmentalExpenses.totalDepartmentalIncome.label}}</td>
+            {{incomereportResponse.totalDepartIncome.label}}</td>
           <td style="border-style: none none inset none; border-width: thin">
-            {{incomereportResponse.departmentalExpenses.totalDepartmentalIncome.data.value}}
+          0000  <!-- {{incomereportResponse.totalDepartIncome.data.value}} -->
           </td>
-      </tr> -->
+      </tr>
     </table>
+
+    <table class="style1">
+      <tr>
+        <td class="style2">
+          {{incomereportResponse.undistOperatingExpenses.label}}</td>
+      <td class="style2">
+      </td>
+       
+      </tr>
+      
+      <tr>
+            <td>
+              <table  >
+                  <tr *ngFor="let undistOperatingExpensesData of incomereportResponse.undistOperatingExpenses.childern">
+                    
+                    <td class="style2">
+                        {{undistOperatingExpensesData.label}}
+                      </td>
+                    <td class="style2">
+                        {{undistOperatingExpensesData.data.value}}
+                    </td>
+                </tr>
+              </table>
+            </td>
+  </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.grossOperatingProfit.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.grossOperatingProfit.data.value}}
+          </td>
+      </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.managmentFees.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.managmentFees.data.value}}
+          </td>
+      </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.incomeBeforeFixedCharges.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.incomeBeforeFixedCharges.data.value}}
+          </td>
+      </tr>
+    </table>
+    <table class="style1">
+      <tr>
+        <td class="style2">
+          {{incomereportResponse.fixedCharges.label}}</td>
+      <td class="style2">
+      </td>
+       
+      </tr>
+      
+      <tr>
+            <td>
+              <table  >
+                  <tr *ngFor="let fixedChargesData of incomereportResponse.fixedCharges.childern">
+                    
+                    <td class="style2">
+                        {{fixedChargesData.label}}
+                      </td>
+                    <td class="style2">
+                        {{fixedChargesData.data.value}}
+                    </td>
+                </tr>
+              </table>
+            </td>
+  </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.netOperatingIncome.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.netOperatingIncome.data.value}}
+          </td>
+      </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.incomeTax.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.incomeTax.data.value}}
+          </td>
+      </tr>
+    </table>
+    <table class="style1">
+      <tr >
+          <td class="style2">
+            {{incomereportResponse.netIncome.label}}</td>
+          <td style="border-style: none none inset none; border-width: thin">
+            {{incomereportResponse.netIncome.data.value}}
+          </td>
+      </tr>
+    </table>
+
+
+
+
     <!-- <tr *ngFor="let incomeData of incomereportResponse.revenue">
       <td class="style3">
          {{incomeData}}

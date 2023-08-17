@@ -29,7 +29,6 @@ export interface revenue{
     
 }
 export interface departmentalExpenses{
-    departmentalExpenses:ReportAttribute,
     totalDepartmentalIncome:ReportAttribute		
 
 }
