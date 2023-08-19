@@ -18,8 +18,9 @@ namespace Api.Controllers
         private readonly ICashFlowReportService _cashFlowReportService;
         private readonly IOccupancyPercentageReport _occupancyPercentageReport;
         private readonly IAverageDailyRateReportService _averageDailyRateReportService;
+        private readonly IRevParGoParReportService _revParGoParReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -29,6 +30,7 @@ namespace Api.Controllers
             _cashFlowReportService = cashFlowReportService;
             _occupancyPercentageReport = occupancyPercentageReport;
             _averageDailyRateReportService = averageDailyRateReportService;
+            _revParGoParReportService = revParGoParReportService;
         }
 
 
@@ -82,10 +84,17 @@ namespace Api.Controllers
         {
             return await _occupancyPercentageReport.Report(goalReport);
         }
+
         [HttpPost("avg-daily-rate")]
         public async Task<AverageDailyRateDto> AvgDailyRate(ReportParams dto)
         {
             return await _averageDailyRateReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("rev-par-gopar")]
+        public async Task<RevparReportDto> RevParGoPar(ReportParams dto)
+        {
+            return await _revParGoParReportService.ReportAsync(dto);
         }
     }
 }
