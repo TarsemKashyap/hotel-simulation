@@ -17,8 +17,9 @@ namespace Api.Controllers
         private readonly IClassSessionService _classSessionService;
         private readonly ICashFlowReportService _cashFlowReportService;
         private readonly IOccupancyPercentageReport _occupancyPercentageReport;
+        private readonly IAverageDailyRateReportService _averageDailyRateReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -27,6 +28,7 @@ namespace Api.Controllers
             _classSessionService = classSessionService;
             _cashFlowReportService = cashFlowReportService;
             _occupancyPercentageReport = occupancyPercentageReport;
+            _averageDailyRateReportService = averageDailyRateReportService;
         }
 
 
@@ -79,6 +81,11 @@ namespace Api.Controllers
         public async Task<OccupancyReportDto> OccupancyReport(ReportParams goalReport)
         {
             return await _occupancyPercentageReport.Report(goalReport);
+        }
+        [HttpPost("avg-daily-rate")]
+        public async Task<AverageDailyRateDto> AvgDailyRate(ReportParams dto)
+        {
+            return await _averageDailyRateReportService.ReportAsync(dto);
         }
     }
 }
