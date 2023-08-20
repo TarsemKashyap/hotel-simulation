@@ -9,6 +9,7 @@ import { MaterialModule } from '../material.module';
 import {ValueFormatterPipe} from 'src/app/shared/value-formatter.pipe';
 import { PerformanceComponent } from './performance/performance.component';
 import { IncomeComponent } from './income/income.component';
+import { BalanceComponent } from './balance/balance.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { IncomeComponent } from './income/income.component';
     ReportListComponent,
     ValueFormatterPipe,
     PerformanceComponent,
-    IncomeComponent
+    IncomeComponent,
+    BalanceComponent
   ],
   imports: [
     CommonModule,

@@ -32,3 +32,26 @@ export interface departmentalExpenses{
     totalDepartmentalIncome:ReportAttribute		
 
 }
+export interface currentAssests{
+currentAssests:ReportAttribute
+cash:ReportAttribute,
+accountReceivables:ReportAttribute,
+inventories:ReportAttribute,
+total:ReportAttribute
+}
+   
+export interface propertyEquipement{
+    lessAccumlatedDepreciation:ReportAttribute,
+    netPropertyAndEquipment:ReportAttribute,
+    propertyAndEquipment:ReportAttribute
+}
+export interface libilitiesAndOwnerEquity1{
+    libilitiesAndOwnerEquity:ReportAttribute ,
+    currentLibalities:ReportAttribute,
+    emergencyLoan:ReportAttribute,
+    longTermDebt:ReportAttribute,
+    totalLibbalities:ReportAttribute
+
+
+
+}

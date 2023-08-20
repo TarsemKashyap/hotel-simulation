@@ -6,6 +6,7 @@ import { ReportListComponent } from './report-list/report-list.component';
 import { ObjectiveReportComponent } from './objective-report/objective-report.component';
 import { PerformanceComponent } from './performance/performance.component';
 import {IncomeComponent} from './income/income.component';
+import {BalanceComponent} from './balance/balance.component';
 
 export const reportRoutes: Routes = [
   {
@@ -15,7 +16,8 @@ export const reportRoutes: Routes = [
       { path: ':id/list', component: ReportListComponent },
       { path: ':id/objective-report', component: ObjectiveReportComponent },
       { path: ':id/performance-report', component: PerformanceComponent },
-      { path: ':id/income-report',component:IncomeComponent}
+      { path: ':id/income-report',component:IncomeComponent},
+      { path: ':id/balance-report',component:BalanceComponent}
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,

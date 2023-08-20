@@ -1,0 +1,513 @@
+<h1>Income Report</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>Balance for the Month</h2>
+<table class="style1">
+  <tr>
+    
+    <td class="style2">
+      CurrentAssests
+      <!-- {{balancereportResponse.currentAssests.currentAssests.label}} -->
+    </td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      &nbsp;
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.cash.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.cash.data.value | ValueFormatterPipe:
+        balancereportResponse.currentAssests.cash.data.format}}
+
+    </td>
+  </tr>
+ <tr>
+  <td class="style2">
+    &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.accountReceivables.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.accountReceivables.data.value | ValueFormatterPipe:
+        balancereportResponse.currentAssests.accountReceivables.data.format}}
+
+    </td>
+  </tr>
+
+    <tr *ngFor="let accountReceivablesData of balancereportResponse.currentAssests.accountReceivables.childern">
+      <td class="style2">
+        &nbsp;</td>
+    
+    <td class="style2">
+      {{accountReceivablesData.label}}</td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style3">
+      {{accountReceivablesData.data.value | ValueFormatterPipe: accountReceivablesData.data.format}}
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.inventories.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style3">
+      {{balancereportResponse.currentAssests.inventories.data.value | ValueFormatterPipe:
+        balancereportResponse.currentAssests.inventories.data.format}}
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.currentAssests.total.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style3">
+      {{balancereportResponse.currentAssests.total.data.value | ValueFormatterPipe:
+        balancereportResponse.currentAssests.total.data.format}}
+
+    </td>
+  </tr>
+  <tr>
+    
+    <td class="style2">
+      {{balancereportResponse.propertyEquipement.propertyAndEquipment.label}}
+    </td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      &nbsp;
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.propertyEquipement.propertyAndEquipment.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style3">
+      {{balancereportResponse.propertyEquipement.propertyAndEquipment.data.value | ValueFormatterPipe:
+        balancereportResponse.propertyEquipement.propertyAndEquipment.data.format}}
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style3">
+      {{balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.data.value | ValueFormatterPipe:
+        balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.data.format}}
+
+    </td>
+  </tr>
+  <tr>
+    
+    <td class="style2">
+      {{balancereportResponse.otherAssets.label}}
+    </td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      &nbsp;
+
+    </td>
+  </tr>
+  <tr *ngFor="let otherAssetsData of balancereportResponse.otherAssets.childern">
+    <td class="style2">
+      &nbsp;</td>
+      
+    <td class="style2">
+      {{otherAssetsData.label}}</td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style3">
+
+      {{otherAssetsData.data.value | ValueFormatterPipe: otherAssetsData.data.format}}
+    </td>
+  </tr>
+  <tr>
+  <td class="style2">
+    {{balancereportResponse.totalAssests.label}}
+  </td>
+    <td class="style2">
+      &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+ 
+    <td class="style2">
+      {{balancereportResponse.totalAssests.data.value | ValueFormatterPipe: balancereportResponse.totalAssests.data.format}}</td>
+
+ 
+</tr>
+<tr>
+    
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.currentLibalities.label}}
+  </td>
+    <td class="style2">
+      &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;
+
+  </td>
+</tr>
+<tr *ngFor="let libilitiesAndOwnerEquityData of balancereportResponse.libilitiesAndOwnerEquity.currentLibalities.childern">
+  <td class="style2">
+    &nbsp;</td>
+    
+  <td class="style2">
+    {{libilitiesAndOwnerEquityData.label}}</td>
+    <td >
+      &nbsp;
+    </td>
+      <td class="style2">
+        {{libilitiesAndOwnerEquityData.data.value | ValueFormatterPipe: libilitiesAndOwnerEquityData.data.format}}</td>
+</tr>
+<tr  >
+    
+  <td class="style2">
+     Libilities And OwnerEquity <!--{{balancereportResponse.libilitiesAndOwnerEquity}} -->
+</td>
+    <td class="style2">
+      &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;
+
+  </td>
+</tr>
+<tr>
+  <td class="style2">
+    &nbsp;</td> 
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.label}}
+  </td>
+    
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.format}}
+
+  </td>
+</tr>
+<tr>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.label}}
+  </td>
+   
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.format}}
+
+  </td>
+</tr>
+<tr>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.label}}
+  </td>
+    
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.format}}
+
+  </td>
+</tr>
+
+<tr>
+  
+  <td class="style2">
+    {{balancereportResponse.shareHolderEquity.label}}
+  </td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.shareHolderEquity.data.value | ValueFormatterPipe: balancereportResponse.shareHolderEquity.data.format}}
+
+  </td>
+</tr>
+<tr>
+  
+  <td class="style2">
+    {{balancereportResponse.retainedEarnings.label}}
+  </td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.retainedEarnings.data.value | ValueFormatterPipe: balancereportResponse.retainedEarnings.data.format}}
+
+  </td>
+</tr>
+<tr>
+  
+  <td class="style2">
+    {{balancereportResponse.totalShareHoldersEquity.label}}
+  </td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.totalShareHoldersEquity.data.value | ValueFormatterPipe: balancereportResponse.totalShareHoldersEquity.data.format}}
+
+  </td>
+</tr>
+<tr>
+  
+  <td class="style2">
+    {{balancereportResponse.totalLiablitiesAndEquity.label}}
+  </td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{balancereportResponse.totalLiablitiesAndEquity.data.value | ValueFormatterPipe: balancereportResponse.totalLiablitiesAndEquity.data.format}}
+
+  </td>
+</tr>
+<!-- <tr *ngFor="let totalAssestsData of balancereportResponse.totalAssests.childern">
+  <td class="style2">
+    &nbsp;</td>
+    
+      <td colspan="3">
+  <table style="border: 1px solid;">
+    <tr *ngFor="let totalAssestsChildData of totalAssestsData.childern">
+     
+      <td>{{totalAssestsChildData.label}}</td>
+      <td class="style2">
+        &nbsp;</td>
+      <td >{{totalAssestsChildData.data.value | ValueFormatterPipe: totalAssestsChildData.data.format}}</td>
+    </tr>
+  </table>
+</td>
+  </tr> -->
+ <!-- <tr>
+    <td class="style2">
+      {{incomereportResponse.revenue.rentelOtherIncome.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{incomereportResponse.revenue.rentelOtherIncome.data.value | ValueFormatterPipe:
+      incomereportResponse.revenue.rentelOtherIncome.data.format}}
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.revenue.totalRevenue.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{incomereportResponse.revenue.totalRevenue.data.value | ValueFormatterPipe:
+      incomereportResponse.revenue.totalRevenue.data.format}}
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.departmentalExpenses.label}}</td>
+    <td class="style2">
+    </td>
+
+  </tr>
+
+
+  <tr *ngFor="let departmentalExpensesData of incomereportResponse.departmentalExpenses.childern">
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{departmentalExpensesData.label}}
+    </td>
+    <td class="style2">
+
+      {{departmentalExpensesData.data.value | ValueFormatterPipe: departmentalExpensesData.data.format}}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.totalDepartIncome.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{incomereportResponse.totalDepartIncome.data?.value}}
+      
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.undistOperatingExpenses.label}}</td>
+    <td class="style2">
+    </td>
+
+  </tr>
+
+
+  <tr *ngFor="let undistOperatingExpensesData of incomereportResponse.undistOperatingExpenses.childern">
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{undistOperatingExpensesData.label}}
+    </td>
+    <td class="style2">
+
+      {{undistOperatingExpensesData.data.value | ValueFormatterPipe: undistOperatingExpensesData.data.format}}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.grossOperatingProfit.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+
+      {{incomereportResponse.grossOperatingProfit.data.value | ValueFormatterPipe:
+      incomereportResponse.grossOperatingProfit.data.format}}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.managmentFees.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+
+      {{incomereportResponse.managmentFees.data.value | ValueFormatterPipe:
+      incomereportResponse.managmentFees.data.format}}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.incomeBeforeFixedCharges.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+
+      {{incomereportResponse.incomeBeforeFixedCharges.data.value | ValueFormatterPipe:
+      incomereportResponse.incomeBeforeFixedCharges.data.format}}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.fixedCharges.label}}</td>
+    <td class="style2">
+    </td>
+
+  </tr>
+  <tr *ngFor="let fixedChargesData of incomereportResponse.fixedCharges.childern">
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{fixedChargesData.label}}
+    </td>
+    <td class="style2">
+      {{fixedChargesData.data.value | ValueFormatterPipe: fixedChargesData.data.format}}
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.netOperatingIncome.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      {{incomereportResponse.netOperatingIncome.data.value | ValueFormatterPipe:
+      incomereportResponse.netOperatingIncome.data.format}}
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.incomeTax.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+
+      {{incomereportResponse.incomeTax.data.value | ValueFormatterPipe: incomereportResponse.incomeTax.data.format}}
+
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      {{incomereportResponse.netIncome.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+
+      {{incomereportResponse.netIncome.data.value | ValueFormatterPipe: incomereportResponse.netIncome.data.format}}
+    </td>
+  </tr> -->
+</table>
