@@ -19,8 +19,9 @@ namespace Api.Controllers
         private readonly IOccupancyPercentageReport _occupancyPercentageReport;
         private readonly IAverageDailyRateReportService _averageDailyRateReportService;
         private readonly IRevParGoParReportService _revParGoParReportService;
+        private readonly IRoomRateReportService _roomRateReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -31,6 +32,7 @@ namespace Api.Controllers
             _occupancyPercentageReport = occupancyPercentageReport;
             _averageDailyRateReportService = averageDailyRateReportService;
             _revParGoParReportService = revParGoParReportService;
+            _roomRateReportService = roomRateReportService;
         }
 
 
@@ -95,6 +97,12 @@ namespace Api.Controllers
         public async Task<RevparReportDto> RevParGoPar(ReportParams dto)
         {
             return await _revParGoParReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("roomRate")]
+        public async Task<RoomRateReportDto> RoomRate(ReportParams dto)
+        {
+            return await _roomRateReportService.ReportAsync(dto);
         }
     }
 }

@@ -26,7 +26,7 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
 
     public async Task<IncomeReportDto> Report(ReportParams reportParams)
     {
-        int quater = reportParams.CurrentQuarter, groupId = reportParams.GroupId,monthId=reportParams.MonthId;
+        int quater = reportParams.CurrentQuarter, groupId = reportParams.GroupId, monthId = reportParams.MonthId;
         IncomeState incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quater && x.GroupID == groupId).FirstOrDefaultAsync();
         IncomeReportDto report = new IncomeReportDto();
         report.Revenue = new Revenue()
