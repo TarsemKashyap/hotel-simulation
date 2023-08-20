@@ -13,7 +13,7 @@ namespace Service.Reports
 {
     public interface IOccupancyPercentageReport
     {
-        Task<OccupancyReportDto> Report(ReportParams p);
+        Task<MarketShareReportDto> Report(ReportParams p);
     }
 
     public class OccupancyPercentageReport : AbstractReportService, IOccupancyPercentageReport
@@ -38,7 +38,7 @@ namespace Service.Reports
 
 
 
-        public async Task<OccupancyReportDto> Report(ReportParams p)
+        public async Task<MarketShareReportDto> Report(ReportParams p)
         {
             ClassGroup group = _context.ClassGroups.FirstOrDefault(x => x.Serial == p.GroupId);
             soldRoomList = await _context.SoldRoomByChannel.AsNoTracking().Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
@@ -207,7 +207,7 @@ namespace Service.Reports
 
             //Business Overall Market
             businessOverallMarket = OverallMarket(SEG_BUSINESS);
-            OccupancyBySegement business = OccupancyBySegement.Create(SEG_BUSINESS)
+            Common.ReportDto.Segment business = Common.ReportDto.Segment.Create(SEG_BUSINESS)
                                     .WeekDay(businessWeekday, businessWeekdayMarket)
                                     .WeekEnd(businessWeekend, businessWeekendMarket)
                                     .Overall(businessOverall, businessOverallMarket);
@@ -231,7 +231,7 @@ namespace Service.Reports
             //Small Business Overall Market
             smallBusinessOverallMarket = OverallMarket(SEG_SMALL_BUSINESS);
 
-            OccupancyBySegement smallBusiness = OccupancyBySegement.Create(SEG_SMALL_BUSINESS)
+            Common.ReportDto.Segment smallBusiness = Common.ReportDto.Segment.Create(SEG_SMALL_BUSINESS)
                                   .WeekDay(smallBusinessWeekday, smallBusinessWeekdayMarket)
                                   .WeekEnd(smallBusinessWeekend, smallBusinessWeekendMarket)
                                   .Overall(smallBusinessOverall, smallBusinessOverallMarket);
@@ -255,7 +255,7 @@ namespace Service.Reports
             //Corporate contract Overall Market
             corpContraOverallMarket = OverallMarket(SEG_CORPORATE_CONTRACT);
 
-            OccupancyBySegement cropContract = OccupancyBySegement.Create(SEG_CORPORATE_CONTRACT)
+            Common.ReportDto.Segment cropContract = Common.ReportDto.Segment.Create(SEG_CORPORATE_CONTRACT)
                                 .WeekDay(corpContraWeekday, corpContraWeekdayMarket)
                                 .WeekEnd(corpContraWeekend, corpContraWeekendMarket)
                                 .Overall(corpContraOverall, corpContraOverallMarket);
@@ -279,7 +279,7 @@ namespace Service.Reports
             //Families Overall Market
             familiesOverallMarket = OverallMarket(SEG_FAMILIES);
 
-            OccupancyBySegement families = OccupancyBySegement.Create(SEG_FAMILIES)
+            Common.ReportDto.Segment families = Common.ReportDto.Segment.Create(SEG_FAMILIES)
                               .WeekDay(familiesWeekday, familiesWeekdayMarket)
                               .WeekEnd(familiesWeekend, familiesWeekendMarket)
                               .Overall(familiesOverall, familiesOverallMarket);
@@ -302,7 +302,7 @@ namespace Service.Reports
             //Afluent Mature Travelers Overall Market
             afluOverallMarket = OverallMarket(SEG_AFLUENT_MATURE_TRAVILER);
 
-            OccupancyBySegement afluentMatureTravlers = OccupancyBySegement.Create(SEG_AFLUENT_MATURE_TRAVILER)
+            Common.ReportDto.Segment afluentMatureTravlers = Common.ReportDto.Segment.Create(SEG_AFLUENT_MATURE_TRAVILER)
                               .WeekDay(afluWeekday, afluWeekdayMarket)
                               .WeekEnd(afluWeekend, afluWeekendMarket)
                               .Overall(afluOverall, afluOverallMarket);
@@ -326,7 +326,7 @@ namespace Service.Reports
             //International leisure travelers Overall Market
             interOverallMarket = OverallMarket(SEG_INTER_LEISURE_TRAVEL);
 
-            OccupancyBySegement interLeisureTravel = OccupancyBySegement.Create(SEG_INTER_LEISURE_TRAVEL)
+            Common.ReportDto.Segment interLeisureTravel = Common.ReportDto.Segment.Create(SEG_INTER_LEISURE_TRAVEL)
                               .WeekDay(interWeekday, interWeekdayMarket)
                               .WeekEnd(interWeekend, interWeekendMarket)
                               .Overall(interOverall, interOverallMarket);
@@ -341,7 +341,7 @@ namespace Service.Reports
             corpMeetingOverall = Overall(p, SEG_CORPORATE_BUSINESS);
             corpMeetingOverallMarket = OverallMarket(SEG_CORPORATE_BUSINESS);
 
-            OccupancyBySegement corporate = OccupancyBySegement.Create(SEG_CORPORATE_BUSINESS)
+            Common.ReportDto.Segment corporate = Common.ReportDto.Segment.Create(SEG_CORPORATE_BUSINESS)
                               .WeekDay(corpMeetingWeekday, corpMeetingWeekdayMarket)
                               .WeekEnd(corpMeetingWeekend, corpMeetingWeekendMarket)
                               .Overall(corpMeetingOverall, corpMeetingOverallMarket);
@@ -354,12 +354,12 @@ namespace Service.Reports
             assoMeetingOverall = Overall(p, SEG_ASSOCIATE_MEETINGS);
             assoMeetingOverallMarket = OverallMarket(SEG_ASSOCIATE_MEETINGS);
 
-            OccupancyBySegement assocateMeeting = OccupancyBySegement.Create(SEG_ASSOCIATE_MEETINGS)
+            Common.ReportDto.Segment assocateMeeting = Common.ReportDto.Segment.Create(SEG_ASSOCIATE_MEETINGS)
                              .WeekDay(assoMeetingWeekday, assoMeetingWeekdayMarket)
                              .WeekEnd(assoMeetingWeekend, assoMeetingWeekendMarket)
                              .Overall(assoMeetingOverall, assoMeetingOverallMarket);
 
-            OccupancyReportDto reportDto = new OccupancyReportDto();
+            MarketShareReportDto reportDto = new MarketShareReportDto();
             reportDto.AddSegment(business);
             reportDto.AddSegment(smallBusiness);
             reportDto.AddSegment(cropContract);

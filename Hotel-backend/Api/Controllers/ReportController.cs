@@ -20,8 +20,9 @@ namespace Api.Controllers
         private readonly IAverageDailyRateReportService _averageDailyRateReportService;
         private readonly IRevParGoParReportService _revParGoParReportService;
         private readonly IRoomRateReportService _roomRateReportService;
+        private readonly IMarketShareRevenueReport _marketShareRevenueReport;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -33,6 +34,7 @@ namespace Api.Controllers
             _averageDailyRateReportService = averageDailyRateReportService;
             _revParGoParReportService = revParGoParReportService;
             _roomRateReportService = roomRateReportService;
+            _marketShareRevenueReport = marketShareRevenueReport;
         }
 
 
@@ -82,7 +84,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("occupancy")]
-        public async Task<OccupancyReportDto> OccupancyReport(ReportParams goalReport)
+        public async Task<MarketShareReportDto> OccupancyReport(ReportParams goalReport)
         {
             return await _occupancyPercentageReport.Report(goalReport);
         }
@@ -103,6 +105,13 @@ namespace Api.Controllers
         public async Task<RoomRateReportDto> RoomRate(ReportParams dto)
         {
             return await _roomRateReportService.ReportAsync(dto);
+        }
+
+
+        [HttpPost("market-share-revenue")]
+        public async Task<MarketShareReportDto> MarketShareRevenue(ReportParams dto)
+        {
+            return await _marketShareRevenueReport.ReportAsync(dto);
         }
     }
 }
