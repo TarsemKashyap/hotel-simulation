@@ -21,8 +21,9 @@ namespace Api.Controllers
         private readonly IRevParGoParReportService _revParGoParReportService;
         private readonly IRoomRateReportService _roomRateReportService;
         private readonly IMarketShareRevenueReport _marketShareRevenueReport;
+        private readonly IMarketShareRoomSoldReport _marketShareRoomSoldReport;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -35,6 +36,7 @@ namespace Api.Controllers
             _revParGoParReportService = revParGoParReportService;
             _roomRateReportService = roomRateReportService;
             _marketShareRevenueReport = marketShareRevenueReport;
+            _marketShareRoomSoldReport = marketShareRoomSoldReport;
         }
 
 
@@ -108,10 +110,15 @@ namespace Api.Controllers
         }
 
 
-        [HttpPost("market-share-revenue")]
+        [HttpPost("market-share/revenue")]
         public async Task<MarketShareReportDto> MarketShareRevenue(ReportParams dto)
         {
             return await _marketShareRevenueReport.ReportAsync(dto);
+        }
+        [HttpPost("market-share/roomsold")]
+        public async Task<MarketShareReportDto> MarketShareRoomSold(ReportParams dto)
+        {
+            return await _marketShareRoomSoldReport.ReportAsync(dto);
         }
     }
 }

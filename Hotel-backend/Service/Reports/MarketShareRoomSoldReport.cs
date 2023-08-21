@@ -1,38 +1,29 @@
 ﻿using Common;
 using Common.ReportDto;
 using Database;
-using Database.Migrations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Service.Reports
 {
-    public interface IMarketShareRevenueReport
+    public interface IMarketShareRoomSoldReport
     {
         Task<MarketShareReportDto> ReportAsync(ReportParams p);
     }
-
-    
-
-    public class MarketShareRevenueReport : AbstractReportService, IMarketShareRevenueReport
+    public class MarketShareRoomSoldReport : IMarketShareRoomSoldReport
     {
         private readonly HotelDbContext _context;
         private List<SoldRoomByChannel> soldRoomList;
         private List<RoomAllocation> roomAllocationList;
         private decimal _groupNumber;
 
-        public MarketShareRevenueReport(HotelDbContext context)
+        public MarketShareRoomSoldReport(HotelDbContext context)
         {
             _context = context;
         }
-
-
-
         public async Task<MarketShareReportDto> ReportAsync(ReportParams p)
         {
             ClassGroup group = _context.ClassGroups.FirstOrDefault(x => x.Serial == p.GroupId);
@@ -123,7 +114,7 @@ namespace Service.Reports
             }
 
             //overallShare
-            roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId).Sum(x => x.Revenue);
+            roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId).Sum(x => x.SoldRoom);
             roomAllocated = soldRoomList.Sum(x => x.Revenue);
             if (roomAllocated == 0)
             {
@@ -142,8 +133,8 @@ namespace Service.Reports
 
 
             //Weekday Revenue Share
-            roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Weekday).Sum(x => x.Revenue);
-            roomAllocated = soldRoomList.Where(x => x.Weekday).Sum(x => x.Revenue);
+            roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Weekday).Sum(x => x.SoldRoom);
+            roomAllocated = soldRoomList.Where(x => x.Weekday).Sum(x => x.SoldRoom);
             if (roomAllocated == 0)
             {
                 weekdayOccu = 0;
@@ -363,16 +354,16 @@ namespace Service.Reports
         }
         private decimal WeekDay(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.Revenue);
-            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.Revenue);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.SoldRoom);
+            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.SoldRoom);
             return roomAllocated == 0 ? 0 : roomSold / roomAllocated;
         }
 
 
         private decimal Weekend(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.Revenue);
-            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.Revenue);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.SoldRoom);
+            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.SoldRoom);
             return roomAllocated == 0 ? 0 : roomSold / roomAllocated;
 
         }
@@ -380,14 +371,11 @@ namespace Service.Reports
 
         private decimal Overall(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => x.Revenue);
-            var roomAllocated = soldRoomList.Where(x => x.Segment == segment).Sum(x => x.Revenue);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => x.SoldRoom);
+            var roomAllocated = soldRoomList.Where(x => x.Segment == segment).Sum(x => x.SoldRoom);
             return roomAllocated == 0 ? 0 : (roomSold / roomAllocated);
 
         }
-
-
-
     }
 
 
