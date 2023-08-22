@@ -8,6 +8,7 @@ import { GoalReportResponse } from './model/GoalReportResponse.model';
 import { PerformanceResponse } from './model/PerformanceResponse.model';
 import { IncomeReportResponse } from './model/IncomeResponse.model';
 import { BalanceReportResponse } from './model/BalanceResponse.model';
+import { CashFlowReportResponse } from './model/CashFlowResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,7 @@ export class ReportService {
   balanceReportDetails(reportParams:ReportParams): Observable<BalanceReportResponse> {
     return this.httpClient.post<BalanceReportResponse>(`Reports/balance`,reportParams);
   }
-
+  cashFlowReportDetails(reportParams:ReportParams): Observable<CashFlowReportResponse> {
+    return this.httpClient.post<CashFlowReportResponse>(`Reports/cashflow`,reportParams);
+  }
 }
