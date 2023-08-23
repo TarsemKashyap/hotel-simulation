@@ -47,7 +47,9 @@ builder.Services.AddIdentity<AppUser, AppUserRole>(options =>
 builder.Services.RegisterOptions(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
-builder.Services.RegisterAppServices();
+builder.Services
+    .RegisterAppServices()
+    .AddReportingServices();
 builder.Services.RegisterMapster();
 
 
