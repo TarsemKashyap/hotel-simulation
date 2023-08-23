@@ -11,6 +11,11 @@ import { PerformanceComponent } from './performance/performance.component';
 import { IncomeComponent } from './income/income.component';
 import { BalanceComponent } from './balance/balance.component';
 import { CashflowComponent } from './cashflow/cashflow.component';
+import { OccupancyComponent } from './occupancy/occupancy.component';
+import { AvgDailyRateComponent } from './avg-daily-rate/avg-daily-rate.component';
+import { RevParGoparComponent } from './rev-par-gopar/rev-par-gopar.component';
+import { RoomRateComponent } from './room-rate/room-rate.component';
+import { MarketShareRevenueComponent } from './market-share-revenue/market-share-revenue.component';
 
 
 @NgModule({
@@ -21,7 +26,12 @@ import { CashflowComponent } from './cashflow/cashflow.component';
     PerformanceComponent,
     IncomeComponent,
     BalanceComponent,
-    CashflowComponent
+    CashflowComponent,
+    OccupancyComponent,
+    AvgDailyRateComponent,
+    RevParGoparComponent,
+    RoomRateComponent,
+    MarketShareRevenueComponent
   ],
   imports: [
     CommonModule,
