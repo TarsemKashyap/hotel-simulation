@@ -1,16 +1,12 @@
-﻿using Common;
-using Common.Dto;
-using Common.ReportDto;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Common.ReportDto;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.Reports;
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Route("Reports")]
     // [Authorize(Roles = RoleType.Student)]
     public class ReportController : AbstractBaseController
     {
@@ -19,14 +15,28 @@ namespace Api.Controllers
         private readonly IIncomeReportService _incomeReportService;
         private readonly IBalanceReportService _balanceReportService;
         private readonly IClassSessionService _classSessionService;
+        private readonly ICashFlowReportService _cashFlowReportService;
+        private readonly IOccupancyPercentageReport _occupancyPercentageReport;
+        private readonly IAverageDailyRateReportService _averageDailyRateReportService;
+        private readonly IRevParGoParReportService _revParGoParReportService;
+        private readonly IRoomRateReportService _roomRateReportService;
+        private readonly IMarketShareRevenueReport _marketShareRevenueReport;
+        private readonly IMarketShareRoomSoldReport _marketShareRoomSoldReport;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
             _incomeReportService = incomeReportService;
             _balanceReportService = balanceReportService;
             _classSessionService = classSessionService;
+            _cashFlowReportService = cashFlowReportService;
+            _occupancyPercentageReport = occupancyPercentageReport;
+            _averageDailyRateReportService = averageDailyRateReportService;
+            _revParGoParReportService = revParGoParReportService;
+            _roomRateReportService = roomRateReportService;
+            _marketShareRevenueReport = marketShareRevenueReport;
+            _marketShareRoomSoldReport = marketShareRoomSoldReport;
         }
 
 
@@ -70,9 +80,45 @@ namespace Api.Controllers
         }
 
         [HttpPost("cashflow")]
-        public async Task<BalanceReportDto> CashFlowReport(ReportParams goalReport)
+        public async Task<CashFlowDto> CashFlowReport(ReportParams goalReport)
         {
-            return new BalanceReportDto();
+            return await _cashFlowReportService.GenerateReport(goalReport);
+        }
+
+        [HttpPost("occupancy")]
+        public async Task<MarketShareReportDto> OccupancyReport(ReportParams goalReport)
+        {
+            return await _occupancyPercentageReport.Report(goalReport);
+        }
+
+        [HttpPost("avg-daily-rate")]
+        public async Task<AverageDailyRateDto> AvgDailyRate(ReportParams dto)
+        {
+            return await _averageDailyRateReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("rev-par-gopar")]
+        public async Task<RevparReportDto> RevParGoPar(ReportParams dto)
+        {
+            return await _revParGoParReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("roomRate")]
+        public async Task<RoomRateReportDto> RoomRate(ReportParams dto)
+        {
+            return await _roomRateReportService.ReportAsync(dto);
+        }
+
+
+        [HttpPost("market-share/revenue")]
+        public async Task<MarketShareReportDto> MarketShareRevenue(ReportParams dto)
+        {
+            return await _marketShareRevenueReport.ReportAsync(dto);
+        }
+        [HttpPost("market-share/roomsold")]
+        public async Task<MarketShareReportDto> MarketShareRoomSold(ReportParams dto)
+        {
+            return await _marketShareRoomSoldReport.ReportAsync(dto);
         }
     }
 }

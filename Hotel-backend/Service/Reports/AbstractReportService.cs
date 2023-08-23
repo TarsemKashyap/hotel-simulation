@@ -25,6 +25,10 @@ public abstract class AbstractReportService
         return new ReportAttribute() { Label = label, Data = currency };
     }
 
+    protected virtual decimal DivideSafe(decimal first, decimal divisor)
+    {
+        return first == 0 ? 0 : first / divisor;
+    }
 }
 
 

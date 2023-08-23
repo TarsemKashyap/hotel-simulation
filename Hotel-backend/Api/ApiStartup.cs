@@ -10,6 +10,7 @@ using System.Text;
 using Mapster;
 using MapsterMapper;
 using System.Reflection;
+using Service.Reports;
 
 namespace Api;
 public static class ApiStartupExtensions
@@ -106,7 +107,7 @@ public static class ApiStartupExtensions
         service.Configure<PaymentConfig>(config.GetSection("PaymentConfig"));
     }
 
-    public static void RegisterAppServices(this IServiceCollection services)
+    public static IServiceCollection RegisterAppServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
@@ -124,15 +125,26 @@ public static class ApiStartupExtensions
         services.AddScoped<ICalculationServices, CalculationServices>();
 
         services.AddScoped<IMarketingService, MarketingService>();
-        services.AddScoped<IGoalReportService, GoalReportService>();
-        services.AddScoped<IPerformanceReportService, PerformanceReportService>();
         services.AddScoped<IGoalSettingService, GoalSettingService>();
         services.AddScoped<IBalanceSheetService, BalanceSheetService>();
 
+        return services;
+
+    }
+    public static IServiceCollection AddReportingServices(this IServiceCollection services)
+    {
+        services.AddScoped<IGoalReportService, GoalReportService>();
+        services.AddScoped<IPerformanceReportService, PerformanceReportService>();
         services.AddScoped<IIncomeReportService, IncomeReportService>();
         services.AddScoped<IBalanceReportService, BalanceReportService>();
-        services.AddScoped<IMarketingService, MarketingService>();
-
+        services.AddScoped<ICashFlowReportService, CashFlowReportService>();
+        services.AddScoped<IOccupancyPercentageReport, OccupancyPercentageReport>();
+        services.AddScoped<IAverageDailyRateReportService, AverageDailyRateReportService>();
+        services.AddScoped<IRevParGoParReportService, RevParGoParReportService>();
+        services.AddScoped<IRoomRateReportService, RoomRateReportService>();
+        services.AddScoped<IMarketShareRevenueReport, MarketShareRevenueReport>();
+        services.AddScoped<IMarketShareRoomSoldReport, MarketShareRoomSoldReport>();
+        return services;
     }
     public static void RegisterMapster(this IServiceCollection services)
     {
