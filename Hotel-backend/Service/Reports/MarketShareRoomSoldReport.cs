@@ -342,9 +342,9 @@ namespace Service.Reports
             reportDto.AddSegment(corporate);
             reportDto.AddSegment(assocateMeeting);
 
-            reportDto.AddOverAll("Overall Market share based on Revenue", overallOccu, overallOccuMarket);
-            reportDto.AddOverAll("Weekday Market share based on Revenue", weekdayOccu, weekdayOccuMarket);
-            reportDto.AddOverAll("Weekend Market share based on Revenue", weekendOccu, weekendOccuMarket);
+            reportDto.AddOverAll("Overall Market share based on Room Sold", overallOccu, overallOccuMarket);
+            reportDto.AddOverAll("Weekday Market share based on Room Sold", weekdayOccu, weekdayOccuMarket);
+            reportDto.AddOverAll("Weekend Market share based on Room Sold", weekendOccu, weekendOccuMarket);
 
             return reportDto;
 

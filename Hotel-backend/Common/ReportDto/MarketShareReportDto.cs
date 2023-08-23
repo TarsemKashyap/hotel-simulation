@@ -2,6 +2,7 @@
 
 namespace Common.ReportDto
 {
+
     public class MarketShareReportDto
     {
         public List<CategoryLine> OverAllPercentages { get; set; } = new List<CategoryLine>();

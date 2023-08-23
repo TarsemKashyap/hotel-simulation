@@ -17,8 +17,6 @@ namespace Service.Reports
         Task<MarketShareReportDto> ReportAsync(ReportParams p);
     }
 
-    
-
     public class MarketShareRevenueReport : AbstractReportService, IMarketShareRevenueReport
     {
         private readonly HotelDbContext _context;
