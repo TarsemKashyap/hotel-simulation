@@ -19,28 +19,28 @@ export class ReportService {
   constructor(private httpClient: HttpClient) {}
 
   monthFilterList(classId:number): Observable<MonthDto[]> {
-    return this.httpClient.get<MonthDto[]>(`Reports/monthFilterDetails/${classId}`);
+    return this.httpClient.get<MonthDto[]>(`api/Report/monthFilterDetails/${classId}`);
   }
 
   groupFilterList(classId:number): Observable<ClassGroup[]> {
-    return this.httpClient.get<ClassGroup[]>(`Reports/groupFilterDetails/${classId}`);
+    return this.httpClient.get<ClassGroup[]>(`api/Report/groupFilterDetails/${classId}`);
   }
 
   objectiveReportDetails(reportParams:ReportParams): Observable<GoalReportResponse[]> {
-    return this.httpClient.post<GoalReportResponse[]>(`Reports/goal`,reportParams);
+    return this.httpClient.post<GoalReportResponse[]>(`api/Report/goal`,reportParams);
   }
 
   performanceReportDetails(reportParams:ReportParams): Observable<PerformanceResponse> {
-    return this.httpClient.post<PerformanceResponse>(`Reports/performance`,reportParams);
+    return this.httpClient.post<PerformanceResponse>(`api/Report/performance`,reportParams);
   }
   
   incomeReportDetails(reportParams:ReportParams): Observable<IncomeReportResponse> {
-    return this.httpClient.post<IncomeReportResponse>(`Reports/income`,reportParams);
+    return this.httpClient.post<IncomeReportResponse>(`api/Report/income`,reportParams);
   }
   balanceReportDetails(reportParams:ReportParams): Observable<BalanceReportResponse> {
-    return this.httpClient.post<BalanceReportResponse>(`Reports/balance`,reportParams);
+    return this.httpClient.post<BalanceReportResponse>(`api/Report/balance`,reportParams);
   }
   cashFlowReportDetails(reportParams:ReportParams): Observable<CashFlowReportResponse> {
-    return this.httpClient.post<CashFlowReportResponse>(`Reports/cashflow`,reportParams);
+    return this.httpClient.post<CashFlowReportResponse>(`api/Report/cashflow`,reportParams);
   }
 }

@@ -3,16 +3,9 @@ import { ReportCommon,currentAssests,ReportAttribute,propertyEquipement,libiliti
 
 export interface CashFlowReportResponse {
    
-    currentAssests :currentAssests,
-    propertyEquipement:propertyEquipement,
-    otherAssets:ReportAttribute,
-    totalAssests:ReportAttribute,
-    libilitiesAndOwnerEquity:libilitiesAndOwnerEquity1,
-    shareHolderEquity:ReportAttribute,
-    retainedEarnings:ReportAttribute,
-    totalShareHoldersEquity:ReportAttribute,
-    totalLiablitiesAndEquity:ReportAttribute,
-   
-
+    netIncome :ReportAttribute,
+    netCashFlow:ReportAttribute,
+    currentCashBalnce:ReportAttribute,
+    
 }
 

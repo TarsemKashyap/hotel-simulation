@@ -30,8 +30,8 @@
   <tr>
     
     <td class="style2">
-      CurrentAssests
-      <!-- {{cashFlowreportResponse.currentAssests.currentAssests.label}} -->
+      
+      {{cashFlowreportResponse.netIncome.label}} NetIncome
     </td>
       <td class="style2">
         &nbsp;</td>
@@ -42,6 +42,66 @@
 
     </td>
   </tr>
+ <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
+      <td class="style2">
+        &nbsp;</td>
+    
+    <td class="style2">
+      {{netIncomeData.label}}</td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style3">
+      {{netIncomeData.data.value | ValueFormatterPipe: netIncomeData.data.format }}
+    
+
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      
+      {{cashFlowreportResponse.netCashFlow.label}} 
+    </td>
+      <td class="style2">
+        &nbsp;</td>
+    <td class="style2">
+      &nbsp;</td>
+    <td class="style2">
+      &nbsp;
+
+    </td>
+  </tr>
+
+  <tr *ngFor="let netCashFlowData of cashFlowreportResponse.netCashFlow.childern">
+    <td class="style2">
+      &nbsp;</td>
+  
+  <td class="style2">
+    {{netCashFlowData.label}}</td>
+    <td class="style2">
+      &nbsp;</td>
+  <td class="style3">
+    {{netCashFlowData.data.value | ValueFormatterPipe: netCashFlowData.data.format }}
+  
+
+  </td>
+</tr>
+<tr>
+  <td class="style2">
+    
+    {{cashFlowreportResponse.currentCashBalnce.label}} 
+  </td>
+    <td class="style2">
+      &nbsp;</td>
+  <td class="style2">
+    &nbsp;</td>
+  <td class="style2">
+    {{cashFlowreportResponse.currentCashBalnce.data.value | ValueFormatterPipe: cashFlowreportResponse.currentCashBalnce.data.format }}
+
+  </td>
+</tr>
+
+
+
   <tr>
     <td class="style2">
       &nbsp;</td>
