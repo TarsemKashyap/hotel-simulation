@@ -9,6 +9,7 @@ import { PerformanceResponse } from './model/PerformanceResponse.model';
 import { IncomeReportResponse } from './model/IncomeResponse.model';
 import { BalanceReportResponse } from './model/BalanceResponse.model';
 import { CashFlowReportResponse } from './model/CashFlowResponse.model';
+import {OccupancyReportResponse} from './model/OccupancyResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +43,8 @@ export class ReportService {
   }
   cashFlowReportDetails(reportParams:ReportParams): Observable<CashFlowReportResponse> {
     return this.httpClient.post<CashFlowReportResponse>(`api/Report/cashflow`,reportParams);
+  }
+  occupancyReportDetails(reportParams:ReportParams): Observable<OccupancyReportResponse> {
+    return this.httpClient.post<OccupancyReportResponse>(`api/Report/occupancy`,reportParams);
   }
 }

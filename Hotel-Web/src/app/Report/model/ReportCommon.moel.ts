@@ -51,7 +51,14 @@ export interface libilitiesAndOwnerEquity1{
     emergencyLoan:ReportAttribute,
     longTermDebt:ReportAttribute,
     totalLibbalities:ReportAttribute
-
-
-
+}
+export interface IoccupancyBySegment{
+    segmentTitle:string,
+    segments:occupancyReportAttribute[]
+}
+export interface occupancyReportAttribute {
+    label: string,
+    hotel: AbstractDecimal,
+    index:Number,
+    marketAverage: AbstractDecimal
 }
