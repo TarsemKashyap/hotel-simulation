@@ -9,8 +9,9 @@ import { PerformanceResponse } from './model/PerformanceResponse.model';
 import { IncomeReportResponse } from './model/IncomeResponse.model';
 import { BalanceReportResponse } from './model/BalanceResponse.model';
 import { CashFlowReportResponse } from './model/CashFlowResponse.model';
-import {OccupancyReportResponse} from './model/OccupancyResponse.model';
-
+import { OccupancyReportResponse} from './model/OccupancyResponse.model';
+import {AvgDailyRateReportResponse} from './model/AvgDailyRateResponse.model';
+import {RevParGopalReportResponse} from './model/RevParGoparResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -46,5 +47,11 @@ export class ReportService {
   }
   occupancyReportDetails(reportParams:ReportParams): Observable<OccupancyReportResponse> {
     return this.httpClient.post<OccupancyReportResponse>(`api/Report/occupancy`,reportParams);
+  }
+  avgDailyRateReportDetails(reportParams:ReportParams): Observable<AvgDailyRateReportResponse> {
+    return this.httpClient.post<AvgDailyRateReportResponse>(`api/Report/avg-daily-rate`,reportParams);
+  }
+  revParGopalReportDetails(reportParams:ReportParams): Observable<RevParGopalReportResponse> {
+    return this.httpClient.post<RevParGopalReportResponse>(`api/Report/rev-par-gopar`,reportParams);
   }
 }

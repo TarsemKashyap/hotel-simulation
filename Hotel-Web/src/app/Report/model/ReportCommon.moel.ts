@@ -62,3 +62,9 @@ export interface occupancyReportAttribute {
     index:Number,
     marketAverage: AbstractDecimal
 }
+export interface avgdailyrateReportAttribute {
+    label: string,
+    hotel: AbstractDecimal,
+    index:Number,
+    marketAvg: AbstractDecimal
+}
