@@ -12,6 +12,7 @@ import { CashFlowReportResponse } from './model/CashFlowResponse.model';
 import { OccupancyReportResponse} from './model/OccupancyResponse.model';
 import {AvgDailyRateReportResponse} from './model/AvgDailyRateResponse.model';
 import {RevParGopalReportResponse} from './model/RevParGoparResponse.model';
+import {RoomRateReportResponse} from './model/RoomRateResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -54,4 +55,8 @@ export class ReportService {
   revParGopalReportDetails(reportParams:ReportParams): Observable<RevParGopalReportResponse> {
     return this.httpClient.post<RevParGopalReportResponse>(`api/Report/rev-par-gopar`,reportParams);
   }
+  roomRateReportDetails(reportParams:ReportParams): Observable<RoomRateReportResponse> {
+    return this.httpClient.post<RoomRateReportResponse>(`api/Report/roomRate`,reportParams);
+  }
+  
 }

@@ -68,3 +68,14 @@ export interface avgdailyrateReportAttribute {
     index:Number,
     marketAvg: AbstractDecimal
 }
+export interface roomRateReportAttribute {
+    label: string,
+    weekDayRoomSold: AbstractDecimal,
+    weekdayCost:Number,
+    weekdayRate: AbstractDecimal,
+    weekendCost: AbstractDecimal
+    weekendRate: AbstractDecimal
+    weekendRoomSold: AbstractDecimal
+}
+
+

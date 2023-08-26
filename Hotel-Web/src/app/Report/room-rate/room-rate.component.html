@@ -1,1 +1,374 @@
-<p>room-rate works!</p>
+        <h1>Room Rate and Distribution Channel Cost Report</h1>
+        <span class="inline-grid grid-cols-3 gap-8">
+        <mat-form-field class="align-right">
+            <mat-label>
+            <i *ngIf="MonthList.length"> Select Month</i>
+            <i *ngIf="!MonthList.length"> No month available</i>
+            </mat-label>
+            <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+            <mat-label>Choose an month</mat-label>
+            <mat-option *ngFor="let month of MonthList" [value]="month">
+                {{ month.sequence }}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="align-right">
+            <mat-label>
+            <i *ngIf="groups.length"> Select Hotel</i>
+            <i *ngIf="!groups.length"> No hotel available</i>
+            </mat-label>
+            <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+            <mat-label>Choose an month</mat-label>
+            <mat-option *ngFor="let group of groups" [value]="group">
+                {{ group.name }}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        </span>
+        <h2>Room Rate and Distribution Channel Cost for the Month</h2>
+        <table class="style1">
+            <!--==Direct====-->
+            <tr>
+                
+                    <td class="style3" colspan="6">
+                      <b> Direct</b>
+                    </td>
+            </tr>
+            <tr>
+                <td class="style2" style="padding: 0px 0px 0px 30px">
+                    &nbsp;</td>
+                    <td class="style3">
+                     
+                    </td>
+                <td class="style3" colspan="3">
+                   weekDay
+                </td>
+                    <td class="style3" colspan="3">
+                        weekend 
+                    </td>
+            </tr>
+            <tr>
+                <td class="style2" style="padding: 0px 0px 0px 30px">
+                    &nbsp;</td>
+                    <td class="style3">
+                       Rate
+                    </td>
+                <td class="style3">
+                   RoomSold
+                </td>
+                <td class="style3">
+                    Cost
+                    </td>
+                    <td class="style3">
+                    Rate 
+                    </td>
+                    <td class="style3">
+                       RoomSold 
+                    </td>
+                    
+                    <td class="style3">
+                       Cost 
+                    </td>
+            </tr>
+
+            <tr *ngFor="let directData of roomRateReportResponse.direct" >
+        
+                <td class="style2" style="padding: 0px 0px 0px 30px">
+                    {{directData.label}}</td>
+                    <td class="style3">
+                        ${{directData.weekdayRate }}
+                        </td>
+                <td class="style3">
+                    {{directData.weekDayRoomSold }}
+                </td>
+                <td class="style3">
+                    ${{directData.weekdayCost }}
+                    </td>
+                    <td class="style3">
+                       $ {{directData.weekendRate }}
+                    </td>
+                    <td class="style3">
+                        {{directData.weekendRoomSold }}
+                    </td>
+                    <td class="style3">
+                       $ {{directData.weekendCost }}
+                    </td>
+            </tr>
+
+<!--==    travelAgent====-->
+<tr>
+                
+    <td class="style3" colspan="6">
+      <b> Travel Agent</b>
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+     
+    </td>
+<td class="style3" colspan="3">
+   weekDay
+</td>
+    <td class="style3" colspan="3">
+        weekend 
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+       Rate
+    </td>
+<td class="style3">
+   RoomSold
+</td>
+<td class="style3">
+    Cost
+    </td>
+    <td class="style3">
+    Rate 
+    </td>
+    <td class="style3">
+       RoomSold 
+    </td>
+    
+    <td class="style3">
+       Cost 
+    </td>
+</tr>
+
+<tr *ngFor="let travelAgentData of roomRateReportResponse.travelAgent" >
+
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    {{travelAgentData.label}}</td>
+    <td class="style3">
+        ${{travelAgentData.weekdayRate }}
+        </td>
+<td class="style3">
+    {{travelAgentData.weekDayRoomSold }}
+</td>
+<td class="style3">
+    ${{travelAgentData.weekdayCost }}
+    </td>
+    <td class="style3">
+       $ {{travelAgentData.weekendRate }}
+    </td>
+    <td class="style3">
+        {{travelAgentData.weekendRoomSold }}
+    </td>
+    <td class="style3">
+       $ {{travelAgentData.weekendCost }}
+    </td>
+</tr>
+
+<!--==    onlineTravelAgent====-->
+<tr>
+                
+    <td class="style3" colspan="6">
+      <b> Online Travel Agent</b>
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+     
+    </td>
+<td class="style3" colspan="3">
+   weekDay
+</td>
+    <td class="style3" colspan="3">
+        weekend 
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+       Rate
+    </td>
+<td class="style3">
+   RoomSold
+</td>
+<td class="style3">
+    Cost
+    </td>
+    <td class="style3">
+    Rate 
+    </td>
+    <td class="style3">
+       RoomSold 
+    </td>
+    
+    <td class="style3">
+       Cost 
+    </td>
+</tr>
+
+<tr *ngFor="let onlineTravelAgentData of roomRateReportResponse.onlineTravelAgent" >
+
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    {{onlineTravelAgentData.label}}</td>
+    <td class="style3">
+        ${{onlineTravelAgentData.weekdayRate }}
+        </td>
+<td class="style3">
+    {{onlineTravelAgentData.weekDayRoomSold }}
+</td>
+<td class="style3">
+    ${{onlineTravelAgentData.weekdayCost }}
+    </td>
+    <td class="style3">
+       $ {{onlineTravelAgentData.weekendRate }}
+    </td>
+    <td class="style3">
+        {{onlineTravelAgentData.weekendRoomSold }}
+    </td>
+    <td class="style3">
+       $ {{onlineTravelAgentData.weekendCost }}
+    </td>
+</tr>
+<!--==    opaque====-->
+<tr>
+                
+    <td class="style3" colspan="6">
+      <b> Opaque</b>
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+     
+    </td>
+<td class="style3" colspan="3">
+   weekDay
+</td>
+    <td class="style3" colspan="3">
+        weekend 
+    </td>
+</tr>
+<tr>
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    &nbsp;</td>
+    <td class="style3">
+       Rate
+    </td>
+<td class="style3">
+   RoomSold
+</td>
+<td class="style3">
+    Cost
+    </td>
+    <td class="style3">
+    Rate 
+    </td>
+    <td class="style3">
+       RoomSold 
+    </td>
+    
+    <td class="style3">
+       Cost 
+    </td>
+</tr>
+
+<tr *ngFor="let opaqueData of roomRateReportResponse.opaque" >
+
+<td class="style2" style="padding: 0px 0px 0px 30px">
+    {{opaqueData.label}}</td>
+    <td class="style3">
+        ${{opaqueData.weekdayRate }}
+        </td>
+<td class="style3">
+    {{opaqueData.weekDayRoomSold }}
+</td>
+<td class="style3">
+    ${{opaqueData.weekdayCost }}
+    </td>
+    <td class="style3">
+       $ {{opaqueData.weekendRate }}
+    </td>
+    <td class="style3">
+        {{opaqueData.weekendRoomSold }}
+    </td>
+    <td class="style3">
+       $ {{opaqueData.weekendCost }}
+    </td>
+</tr>
+        <!-- <tr>
+            <td class="style2">
+                &nbsp;
+            </td>
+            <td class="style2">
+            Hotel1
+            </td>
+            <td class="style2">
+            MarketAvarage
+            </td>
+            <td class="style2">
+            Index</td>
+            
+        </tr> -->
+        <!-- <tr>
+            <td class="style2">
+            {{ revParGopalReportResponse.overAll.label}}
+            </td>
+            <td class="style2">
+                {{ revParGopalReportResponse.overAll.hotel}}
+            </td>
+            <td class="style2">
+                {{revParGopalReportResponse.overAll.marketAvg}}
+            </td>
+            <td class="style2">
+                {{revParGopalReportResponse.overAll.index}}
+            </td>
+            
+        </tr> -->
+        <!-- <tr *ngFor="let overAllChildData of revParGopalReportResponse.overAllChild" >
+        
+        <td class="style2" style="padding: 0px 0px 0px 30px">
+            {{overAllChildData.label}}</td>
+            
+            <td class="style3">
+            ${{overAllChildData.hotel }}
+            </td>
+            <td class="style3">
+                ${{overAllChildData.marketAvg }}
+            </td>
+            <td class="style3">
+                {{overAllChildData.index }}
+            </td>
+        </tr>
+        <tr>
+        <td class="style2">
+            {{ revParGopalReportResponse.totalRevpar.label}}
+            </td>
+        <td class="style2">
+            ${{ revParGopalReportResponse.totalRevpar.hotel}}
+        </td>
+            <td class="style2">
+            ${{revParGopalReportResponse.totalRevpar.marketAvg}}
+        </td>
+        <td class="style2">
+            {{revParGopalReportResponse.totalRevpar.index}}
+        </td>
+        
+        </tr>
+        <tr>
+        <td class="style2">
+            {{ revParGopalReportResponse.goPar.label}}
+            </td>
+        <td class="style2">
+            ${{ revParGopalReportResponse.goPar.hotel}}
+        </td>
+            <td class="style2">
+            ${{revParGopalReportResponse.goPar.marketAvg}}
+        </td>
+        <td class="style2">
+            {{revParGopalReportResponse.goPar.index}}
+        </td>
+        
+        </tr> -->
+        </table>

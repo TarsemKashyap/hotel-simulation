@@ -56,19 +56,49 @@
     </td>
     
   </tr>
- <!-- <tr *ngFor="let avgDailyRateData of avgDailyRateReportResponse.data">
-      <td class="style2">
-      {{avgDailyRateData.label}}</td>
+ <tr *ngFor="let overAllChildData of revParGopalReportResponse.overAllChild" >
+  
+  <td class="style2" style="padding: 0px 0px 0px 30px">
+      {{overAllChildData.label}}</td>
       
     <td class="style3">
-      ${{avgDailyRateData.hotel }}
+      ${{overAllChildData.hotel }}
     </td>
     <td class="style3">
-        ${{avgDailyRateData.marketAvg }}
+        ${{overAllChildData.marketAvg }}
       </td>
       <td class="style3">
-        {{avgDailyRateData.index }}
+        {{overAllChildData.index }}
       </td>
- </tr> -->
+ </tr>
+ <tr>
+  <td class="style2">
+     {{ revParGopalReportResponse.totalRevpar.label}}
+    </td>
+  <td class="style2">
+      ${{ revParGopalReportResponse.totalRevpar.hotel}}
+  </td>
+    <td class="style2">
+      ${{revParGopalReportResponse.totalRevpar.marketAvg}}
+  </td>
+  <td class="style2">
+      {{revParGopalReportResponse.totalRevpar.index}}
+  </td>
   
+</tr>
+<tr>
+  <td class="style2">
+     {{ revParGopalReportResponse.goPar.label}}
+    </td>
+  <td class="style2">
+      ${{ revParGopalReportResponse.goPar.hotel}}
+  </td>
+    <td class="style2">
+      ${{revParGopalReportResponse.goPar.marketAvg}}
+  </td>
+  <td class="style2">
+      {{revParGopalReportResponse.goPar.index}}
+  </td>
+  
+</tr>
 </table>
