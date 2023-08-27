@@ -5,13 +5,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
-import {MarketShareRevenueReportResponse} from '../model/MarketShareRevenueResponse.model';
+import {MarketShareRoomSoldReportResponse} from '../model/MarketShareRoomSoldResponse.model';
 @Component({
-  selector: 'app-market-share-revenue',
-  templateUrl: './market-share-revenue.component.html',
-  styleUrls: ['./market-share-revenue.component.css']
+  selector: 'app-market-share-roomsold',
+  templateUrl: './market-share-roomsold.component.html',
+  styleUrls: ['./market-share-roomsold.component.css']
 })
-export class MarketShareRevenueComponent {
+export class MarketShareRoomSoldComponent {
   MonthList : MonthDto[] = [];
   selectedMonth : MonthDto = {} as MonthDto;
   classId: number | undefined;
@@ -19,7 +19,7 @@ export class MarketShareRevenueComponent {
   selectedHotel : ClassGroup | undefined;
 
   reportParam:ReportParams = {} as ReportParams;
-  marketShareRevenueReportResponse : MarketShareRevenueReportResponse = {} as MarketShareRevenueReportResponse;
+  marketShareRoomSoldReportResponse : MarketShareRoomSoldReportResponse = {} as MarketShareRoomSoldReportResponse;
 
   constructor(
     private reportService: ReportService,
@@ -43,12 +43,12 @@ export class MarketShareRevenueComponent {
     this.reportParam.GroupId =this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
-    this.reportService.marketShareRevenueReportDetails(this.reportParam).subscribe((reportData) => {
+    this.reportService.marketShareRoomSoldReportDetails(this.reportParam).subscribe((reportData) => {
       // console.log('DATA...........');
       
       // console.log(reportData);
-        this.marketShareRevenueReportResponse = reportData;  
-        console.log('DataLenght',this.marketShareRevenueReportResponse);      
+        this.marketShareRoomSoldReportResponse = reportData;  
+        console.log('DataLenght',this.marketShareRoomSoldReportResponse);      
     });
   }
 

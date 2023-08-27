@@ -13,6 +13,8 @@ import { OccupancyReportResponse} from './model/OccupancyResponse.model';
 import {AvgDailyRateReportResponse} from './model/AvgDailyRateResponse.model';
 import {RevParGopalReportResponse} from './model/RevParGoparResponse.model';
 import {RoomRateReportResponse} from './model/RoomRateResponse.model';
+import {MarketShareRevenueReportResponse} from './model/MarketShareRevenueResponse.model';
+import {MarketShareRoomSoldReportResponse} from './model/MarketShareRoomSoldResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,5 +60,10 @@ export class ReportService {
   roomRateReportDetails(reportParams:ReportParams): Observable<RoomRateReportResponse> {
     return this.httpClient.post<RoomRateReportResponse>(`api/Report/roomRate`,reportParams);
   }
-  
+  marketShareRevenueReportDetails(reportParams:ReportParams): Observable<MarketShareRevenueReportResponse> {
+    return this.httpClient.post<MarketShareRevenueReportResponse>(`api/Report/market-share/revenue`,reportParams);
+  }
+  marketShareRoomSoldReportDetails(reportParams:ReportParams): Observable<MarketShareRoomSoldReportResponse> {
+    return this.httpClient.post<MarketShareRoomSoldReportResponse>(`api/Report/market-share/roomsold`,reportParams);
+  }
 }

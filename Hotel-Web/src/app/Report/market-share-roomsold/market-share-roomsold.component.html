@@ -1,4 +1,4 @@
-<h1>OverAll Market Share Base Revenue Report</h1>
+<h1>OverAll Market Share Base RoomSold Report</h1>
 <span class="inline-grid grid-cols-3 gap-8">
   <mat-form-field class="align-right">
     <mat-label>
@@ -29,7 +29,7 @@
 <table class="style1">
   <tr>
     <td class="style2">
-        <h2>OverAll Market Share Base On Revenue</h2>
+        <h2>OverAll Market Share Base On RoomSold</h2>
     </td>
       <td class="style2">
         &nbsp;</td>
@@ -51,7 +51,7 @@
 </td>
 </tr>
 
-  <tr *ngFor="let marketShareRevenueData of marketShareRevenueReportResponse.overAllPercentages">
+  <tr *ngFor="let marketShareRevenueData of marketShareRoomSoldReportResponse.overAllPercentages">
       
     
     <td class="style2">
@@ -80,7 +80,7 @@
     </td>
   </tr>
   <tr>
-    <td><h2>Market Share Base On Revenue By Segment</h2></td>
+    <td><h2>Market Share Base On RoomSold By Segment</h2></td>
 </tr>
   <tr>
     <td class="style2">
@@ -97,7 +97,7 @@
      </td></tr></table></td>
   </tr>
  
-  <tr *ngFor="let occupancyBySegmentData of marketShareRevenueReportResponse.occupancyBySegment">
+  <tr *ngFor="let occupancyBySegmentData of marketShareRoomSoldReportResponse.occupancyBySegment">
       
     
     <td class="style2">

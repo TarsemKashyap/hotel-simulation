@@ -16,6 +16,7 @@ import { AvgDailyRateComponent } from './avg-daily-rate/avg-daily-rate.component
 import { RevParGoparComponent } from './rev-par-gopar/rev-par-gopar.component';
 import { RoomRateComponent } from './room-rate/room-rate.component';
 import { MarketShareRevenueComponent } from './market-share-revenue/market-share-revenue.component';
+import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { MarketShareRevenueComponent } from './market-share-revenue/market-share
     AvgDailyRateComponent,
     RevParGoparComponent,
     RoomRateComponent,
-    MarketShareRevenueComponent
+    MarketShareRevenueComponent,
+    MarketShareRoomSoldComponent
   ],
   imports: [
     CommonModule,
