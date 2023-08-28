@@ -7,6 +7,9 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {AvgDailyRateReportResponse} from '../model/AvgDailyRateResponse.model';
 import { find } from 'rxjs';
+import Chart from 'chart.js/auto';
+import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "../model/ReportCommon.moel";
+
 @Component({
   selector: 'app-avg-daily-rate',
   templateUrl: './avg-daily-rate.component.html',
@@ -21,7 +24,11 @@ export class AvgDailyRateComponent {
 
   reportParam:ReportParams = {} as ReportParams;
   avgDailyRateReportResponse : AvgDailyRateReportResponse = {} as AvgDailyRateReportResponse;
-
+  public chart: any;
+  ChartData:avgdailyrateReportAttribute[]=[];
+  Xaxis:any[]=[];
+  YaxisMarketAvg:any[]=[];
+  YaxisHotel:any[]=[];
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -32,7 +39,7 @@ export class AvgDailyRateComponent {
   ngOnInit(): void {
     this.classId = this.activeRoute.snapshot.params['id'];
     this.loadMonths();
- 
+    
   }
 
    onOptionChange() {
@@ -48,8 +55,13 @@ export class AvgDailyRateComponent {
       // console.log('DATA...........');
       
       // console.log(reportData);
-        this.avgDailyRateReportResponse = reportData;  
-        console.log('DataLenght',this.avgDailyRateReportResponse);      
+        this.avgDailyRateReportResponse = reportData;
+        
+        this.ChartData=this.avgDailyRateReportResponse.data;
+       this.YaxisMarketAvg=this.ChartData.map(item=>item.marketAvg);
+       this.YaxisHotel=this.ChartData.map(item=>item.hotel);
+       this.Xaxis=this.ChartData.map(item=>item.label);
+        this.createChart();     
     });
   }
 
@@ -66,6 +78,32 @@ export class AvgDailyRateComponent {
       this.MonthList = months;  
       this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
       this.loadGroups();
+    });
+  }
+  createChart(){
+  
+    this.chart = new Chart("MyChart", {
+      type: 'bar', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+        labels: this.Xaxis, 
+	       datasets: [
+          {
+            label: "marketAvg",
+            data: this.YaxisMarketAvg,
+            backgroundColor: 'blue'
+          },
+          {
+            label: "hotel",
+            data: this.YaxisHotel,
+            backgroundColor: 'limegreen'
+          }  
+        ]
+      },
+      options: {
+        aspectRatio:2.5
+      }
+      
     });
   }
 }
