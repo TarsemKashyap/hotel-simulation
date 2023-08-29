@@ -7,6 +7,8 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {OccupancyReportResponse} from '../model/OccupancyResponse.model';
 import { find } from 'rxjs';
+import Chart from 'chart.js/auto';
+import {occupancyReportAttribute,IoccupancyBySegment } from "../model/ReportCommon.moel";
 
 @Component({
   selector: 'app-occupancy',
@@ -22,7 +24,15 @@ export class OccupancyComponent {
 
   reportParam:ReportParams = {} as ReportParams;
   occupancyReportResponse : OccupancyReportResponse = {} as OccupancyReportResponse;
-
+  public chart: any;
+  ChartData:IoccupancyBySegment[]=[];
+  occupancyBySegment:IoccupancyBySegment[]=[];
+  occupancyBySegmentSeg:occupancyReportAttribute[][]=[];
+  overAllPercentages:occupancyReportAttribute[]=[];
+  YaxisData:any[]=[];
+  Xaxis:any[]=[];
+  YaxisMarketAvg:any[]=[];
+  YaxisHotel:any[]=[];
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -50,7 +60,21 @@ export class OccupancyComponent {
       
       // console.log(reportData);
         this.occupancyReportResponse = reportData;  
-        console.log('DataLenght',this.occupancyReportResponse);      
+        this.occupancyReportResponse = reportData;  
+        this.occupancyBySegment=this.occupancyReportResponse.occupancyBySegment;
+        this.overAllPercentages=this.occupancyReportResponse.overAllPercentages;
+        this.occupancyBySegmentSeg=this.occupancyBySegment.map(i=>i.segments);
+       this.ChartData=this.occupancyReportResponse.occupancyBySegment;
+       for (let entry of this.occupancyBySegmentSeg) {
+         this.YaxisData.push.apply(this.YaxisData,entry);
+        
+     }
+     this.YaxisData.push.apply(this.YaxisData,this.overAllPercentages);
+         this.YaxisMarketAvg=this.YaxisData.map(item=>item.marketAverage);
+         this.YaxisHotel=this.YaxisData.map(item=>item.hotel);
+         this.Xaxis=this.ChartData.map(item=>item.segmentTitle);
+        
+          this.createChart(); 
     });
   }
 
@@ -67,6 +91,32 @@ export class OccupancyComponent {
       this.MonthList = months;  
       this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
       this.loadGroups();
+    });
+  }
+  createChart(){
+  
+    this.chart = new Chart("MyChart", {
+      type: 'bar', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+        labels: this.Xaxis, 
+	       datasets: [
+          {
+            label: "marketAvg",
+            data: this.YaxisMarketAvg,
+            backgroundColor: 'blue'
+          },
+          {
+            label: "hotel",
+            data: this.YaxisHotel,
+            backgroundColor: 'limegreen'
+          }  
+        ]
+      },
+      options: {
+        aspectRatio:2.5
+      }
+      
     });
   }
 }

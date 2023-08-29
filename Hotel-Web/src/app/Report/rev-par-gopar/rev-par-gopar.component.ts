@@ -6,6 +6,9 @@ import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {RevParGopalReportResponse} from '../model/RevParGoparResponse.model';
+import Chart from 'chart.js/auto';
+import {avgdailyrateReportAttribute } from "../model/ReportCommon.moel";
+import { isNgTemplate } from '@angular/compiler';
 @Component({
   selector: 'app-rev-par-gopar',
   templateUrl: './rev-par-gopar.component.html',
@@ -20,7 +23,11 @@ export class RevParGoparComponent {
 
   reportParam:ReportParams = {} as ReportParams;
   revParGopalReportResponse : RevParGopalReportResponse = {} as RevParGopalReportResponse;
-
+  public chart: any;
+  ChartData:avgdailyrateReportAttribute[]=[];
+  Xaxis:any[]=[];
+  YaxisMarketAvg:any[]=[];
+  YaxisHotel:any[]=[];
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -44,11 +51,18 @@ export class RevParGoparComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
     this.reportService.revParGopalReportDetails(this.reportParam).subscribe((reportData) => {
-      // console.log('DATA...........');
-      
-      // console.log(reportData);
+     
         this.revParGopalReportResponse = reportData;  
-        console.log('DataLenght',this.revParGopalReportResponse);      
+        this.ChartData.push(this.revParGopalReportResponse.overAll);
+        this.ChartData.push.apply(this.ChartData,this.revParGopalReportResponse.overAllChild);
+       this.ChartData.push(this.revParGopalReportResponse.totalRevpar);
+        this.ChartData.push(this.revParGopalReportResponse.goPar);
+       
+        this.YaxisMarketAvg=this.ChartData.map(item=>item.marketAvg);
+        this.YaxisHotel=this.ChartData.map(item=>item.hotel);
+        this.Xaxis=this.ChartData.map(item=>item.label);
+       
+         this.createChart();      
     });
   }
 
@@ -65,6 +79,32 @@ export class RevParGoparComponent {
       this.MonthList = months;  
       this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
       this.loadGroups();
+    });
+  }
+  createChart(){
+  
+    this.chart = new Chart("MyChart", {
+      type: 'bar', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+        labels: this.Xaxis, 
+	       datasets: [
+          {
+            label: "marketAvg",
+            data: this.YaxisMarketAvg,
+            backgroundColor: 'blue'
+          },
+          {
+            label: "hotel",
+            data: this.YaxisHotel,
+            backgroundColor: 'limegreen'
+          }  
+        ]
+      },
+      options: {
+        aspectRatio:2.5
+      }
+      
     });
   }
 }

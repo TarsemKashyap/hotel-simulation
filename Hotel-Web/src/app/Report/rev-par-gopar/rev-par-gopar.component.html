@@ -26,6 +26,9 @@
   </mat-form-field>
 </span>
 <h2>RevPAR,TOTAL REVPAR And Gophar for the Month</h2>
+<div class="chart-container">
+  <canvas  id="MyChart" >{{ chart }}</canvas>
+</div>
 <table class="style1">
   <tr>
     <td class="style2">
@@ -46,10 +49,10 @@
        {{ revParGopalReportResponse.overAll.label}}
       </td>
     <td class="style2">
-        {{ revParGopalReportResponse.overAll.hotel}}
+       $ {{ revParGopalReportResponse.overAll.hotel}}
     </td>
       <td class="style2">
-        {{revParGopalReportResponse.overAll.marketAvg}}
+       $ {{revParGopalReportResponse.overAll.marketAvg}}
     </td>
     <td class="style2">
         {{revParGopalReportResponse.overAll.index}}

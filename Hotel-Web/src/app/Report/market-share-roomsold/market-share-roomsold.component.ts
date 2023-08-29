@@ -6,6 +6,8 @@ import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {MarketShareRoomSoldReportResponse} from '../model/MarketShareRoomSoldResponse.model';
+import Chart from 'chart.js/auto';
+import {occupancyReportAttribute,IoccupancyBySegment } from "../model/ReportCommon.moel";
 @Component({
   selector: 'app-market-share-roomsold',
   templateUrl: './market-share-roomsold.component.html',
@@ -20,7 +22,15 @@ export class MarketShareRoomSoldComponent {
 
   reportParam:ReportParams = {} as ReportParams;
   marketShareRoomSoldReportResponse : MarketShareRoomSoldReportResponse = {} as MarketShareRoomSoldReportResponse;
-
+  public chart: any;
+  ChartData:IoccupancyBySegment[]=[];
+  occupancyBySegment:IoccupancyBySegment[]=[];
+  occupancyBySegmentSeg:occupancyReportAttribute[][]=[];
+  overAllPercentages:occupancyReportAttribute[]=[];
+  YaxisData:any[]=[];
+  Xaxis:any[]=[];
+  YaxisMarketAvg:any[]=[];
+  YaxisHotel:any[]=[];
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -44,11 +54,22 @@ export class MarketShareRoomSoldComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
     this.reportService.marketShareRoomSoldReportDetails(this.reportParam).subscribe((reportData) => {
-      // console.log('DATA...........');
       
-      // console.log(reportData);
         this.marketShareRoomSoldReportResponse = reportData;  
-        console.log('DataLenght',this.marketShareRoomSoldReportResponse);      
+       this.occupancyBySegment=this.marketShareRoomSoldReportResponse.occupancyBySegment;
+       this.overAllPercentages=this.marketShareRoomSoldReportResponse.overAllPercentages;
+       this.occupancyBySegmentSeg=this.occupancyBySegment.map(i=>i.segments);
+      this.ChartData=this.marketShareRoomSoldReportResponse.occupancyBySegment;
+      for (let entry of this.occupancyBySegmentSeg) {
+        this.YaxisData.push.apply(this.YaxisData,entry);
+        console.log('entry', entry)
+    }
+    this.YaxisData.push.apply(this.YaxisData,this.overAllPercentages);
+        this.YaxisMarketAvg=this.YaxisData.map(item=>item.marketAverage);
+        this.YaxisHotel=this.YaxisData.map(item=>item.hotel);
+        this.Xaxis=this.ChartData.map(item=>item.segmentTitle);
+       
+         this.createChart();
     });
   }
 
@@ -65,6 +86,32 @@ export class MarketShareRoomSoldComponent {
       this.MonthList = months;  
       this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
       this.loadGroups();
+    });
+  }
+  createChart(){
+  
+    this.chart = new Chart("MyChart", {
+      type: 'bar', //this denotes tha type of chart
+
+      data: {// values on X-Axis
+        labels: this.Xaxis, 
+	       datasets: [
+          {
+            label: "marketAvg",
+            data: this.YaxisMarketAvg,
+            backgroundColor: 'blue'
+          },
+          {
+            label: "hotel",
+            data: this.YaxisHotel,
+            backgroundColor: 'limegreen'
+          }  
+        ]
+      },
+      options: {
+        aspectRatio:2.5
+      }
+      
     });
   }
 }
