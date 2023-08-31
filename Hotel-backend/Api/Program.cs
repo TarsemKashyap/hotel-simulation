@@ -50,6 +50,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services
     .RegisterAppServices()
     .AddReportingServices();
+
 builder.Services.RegisterMapster();
 
 

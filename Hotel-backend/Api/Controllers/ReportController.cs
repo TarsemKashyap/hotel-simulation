@@ -1,4 +1,5 @@
-﻿using Common.ReportDto;
+﻿
+using Common.ReportDto;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.Reports;
@@ -22,8 +23,10 @@ namespace Api.Controllers
         private readonly IRoomRateReportService _roomRateReportService;
         private readonly IMarketShareRevenueReport _marketShareRevenueReport;
         private readonly IMarketShareRoomSoldReport _marketShareRoomSoldReport;
+        private readonly IMarketSharePositionReport _marketSharePositionReport;
+        private readonly IAttributeAmentitiesReportService _attributeAmentitiesReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -37,6 +40,8 @@ namespace Api.Controllers
             _roomRateReportService = roomRateReportService;
             _marketShareRevenueReport = marketShareRevenueReport;
             _marketShareRoomSoldReport = marketShareRoomSoldReport;
+            _marketSharePositionReport = marketSharePositionReport;
+            _attributeAmentitiesReportService = attributeAmentitiesReportService;
         }
 
 
@@ -115,10 +120,23 @@ namespace Api.Controllers
         {
             return await _marketShareRevenueReport.ReportAsync(dto);
         }
+
         [HttpPost("market-share/roomsold")]
         public async Task<MarketShareReportDto> MarketShareRoomSold(ReportParams dto)
         {
             return await _marketShareRoomSoldReport.ReportAsync(dto);
+        }
+
+        [HttpPost("market-share/position-alone")]
+        public async Task<MarketSharePositionReportDto> MarketSharePosition(ReportParams dto)
+        {
+            return await _marketSharePositionReport.ReportAsync(dto);
+        }
+
+        [HttpPost("attribute-amentities")]
+        public async Task<AttributeAmentitiesReportDto> HoteAttributeAmenties(ReportParams dto)
+        {
+            return await _attributeAmentitiesReportService.ReportAsync(dto);
         }
     }
 }

@@ -21,13 +21,16 @@ namespace Service.Reports
     {
         private readonly HotelDbContext _context;
         private List<SoldRoomByChannel> soldRoomList;
-        private List<RoomAllocation> roomAllocationList;
-        private List<PriceDecision> priceDemandList;
+        private List<RoomAllocation> _roomAllocationList;
+        private List<WeightedAttributeRating> _weightedList;
+        private List<PriceDecision> _priceDecisionList;
         private decimal _groupNumber;
-
+        decimal _overallwithout = 0;
+        decimal _overallMarket = 0;
         public MarketSharePositionReport(HotelDbContext context)
         {
             _context = context;
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
 
@@ -36,69 +39,53 @@ namespace Service.Reports
         {
             ClassGroup group = _context.ClassGroups.FirstOrDefault(x => x.Serial == p.GroupId);
             soldRoomList = await _context.SoldRoomByChannel.AsNoTracking().Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
-            roomAllocationList = await _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
-            priceDemandList = await _context.PriceDecision.AsNoTracking().Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
+            _roomAllocationList = await _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
 
+            _weightedList = await _context.WeightedAttributeRating.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
+            _priceDecisionList = await _context.PriceDecision.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
 
-            decimal[] shareWith = new decimal[9];
-            decimal[] shareWithout = new decimal[9];
-            decimal roomSold;
-            decimal roomAllocated;
-
-
-
-
-            string hotelName;
-            int individualAttriDemand;
-            int individualPriceDemand;
-            int totalIndividualDemand;
-            int marketAttriDemand;
-            int marketPriceDemand;
-            int totalMarketDemand;
-            decimal marketShare;
-            decimal overallwithout = 0;
-            decimal overallMarket = 0;
-
-
-
-            int groupNumber = await _context.ClassGroups.Where(x => x.ClassId == p.ClassId).CountAsync();
+            _groupNumber = await _context.ClassGroups.Where(x => x.ClassId == p.ClassId).CountAsync();
             MarketSharePositionDto overAll = new MarketSharePositionDto("Overall");
 
-            MarketSharePositionReportDto positionDto = new MarketSharePositionReportDto();
-            {
-                //overallShare
-                decimal soldRoom = soldRoomList.Where(x => x.GroupID == p.GroupId).Sum(x => x.SoldRoom);
-                decimal soldRoomQuater = soldRoomList.Sum(x => x.SoldRoom);
-                overAll.MarketSharePosition = DivideSafe(soldRoom, soldRoomQuater);
 
-            }
+
+            //overallShare
+            decimal soldRoom = soldRoomList.Where(x => x.GroupID == p.GroupId).Sum(x => x.SoldRoom);
+            decimal soldRoomQuater = soldRoomList.Sum(x => x.SoldRoom);
+            overAll.MarketSharePosition = DivideSafe(soldRoom, soldRoomQuater);
+
+
 
 
             // Business
-            MarketSharePositionDto businessSeg = new MarketSharePositionDto(SEGMENTS.BUSINESS)
-                .MarketShare(ActualMarketShare(p, SEGMENTS.BUSINESS));
+            MarketSharePositionDto businessSeg = PositionDto(p, SEGMENTS.BUSINESS);
 
-            MarketSharePositionDto smallBusiness = new MarketSharePositionDto(SEGMENTS.SMALL_BUSINESS)
-                .MarketShare(ActualMarketShare(p, SEGMENTS.SMALL_BUSINESS));
+            MarketSharePositionDto smallBusiness = PositionDto(p, SEGMENTS.SMALL_BUSINESS);
 
-            MarketSharePositionDto coroporate = new MarketSharePositionDto(SEGMENTS.CORPORATE_CONTRACT)
-               .MarketShare(ActualMarketShare(p, SEGMENTS.CORPORATE_CONTRACT));
+            MarketSharePositionDto coroporate = PositionDto(p, SEGMENTS.CORPORATE_CONTRACT);
 
-            MarketSharePositionDto families = new MarketSharePositionDto(SEGMENTS.FAMILIES)
-              .MarketShare(ActualMarketShare(p, SEGMENTS.FAMILIES));
+            MarketSharePositionDto families = PositionDto(p, SEGMENTS.FAMILIES);
 
-            MarketSharePositionDto afluentMature = new MarketSharePositionDto(SEGMENTS.AFLUENT_MATURE_TRAVELERS)
-              .MarketShare(ActualMarketShare(p, SEGMENTS.AFLUENT_MATURE_TRAVELERS));
+            MarketSharePositionDto afluentMature = PositionDto(p, SEGMENTS.AFLUENT_MATURE_TRAVELERS);
 
-            MarketSharePositionDto corporateMeeting = new MarketSharePositionDto(SEGMENTS.CORPORATE_BUSINESS_MEETINGS)
-             .MarketShare(ActualMarketShare(p, SEGMENTS.CORPORATE_BUSINESS_MEETINGS));
+            MarketSharePositionDto corporateMeeting = PositionDto(p, SEGMENTS.CORPORATE_BUSINESS_MEETINGS);
+
+            MarketSharePositionDto associationMeeting = PositionDto(p, SEGMENTS.ASSOCIATION_MEETINGS);
+
+            if (_overallMarket == 0)
+            {
+                overAll.Position(0);
+            }
+            else
+            {
+                overAll.Position(_overallwithout / _overallMarket);
+            }
 
 
-            MarketSharePositionDto associationMeeting = new MarketSharePositionDto(SEGMENTS.ASSOCIATION_MEETINGS)
-                 .MarketShare(ActualMarketShare(p, SEGMENTS.ASSOCIATION_MEETINGS));
+            MarketSharePositionReportDto positionDto = new MarketSharePositionReportDto();
 
 
-            ////////////////////Business without marketing 
+            positionDto.Data.AddRange(new MarketSharePositionDto[] { overAll, businessSeg, smallBusiness, coroporate, families, afluentMature, corporateMeeting, associationMeeting });
 
             return positionDto;
 
@@ -116,24 +103,34 @@ namespace Service.Reports
 
         private decimal ActualMarketPosition(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.Revenue);
-            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.Revenue);
-            return roomAllocated == 0 ? 0 : roomSold / roomAllocated;
+            decimal individualAttriDemand = _weightedList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => x.ActualDemand);
+            decimal individualPriceDemand = _priceDecisionList.Where(x => x.Segment == segment).Sum(x => x.ActualDemand);
 
+            decimal marketAttriDemand = _weightedList.FirstOrDefault(x => x.Segment == segment)!.ActualDemand;
+            decimal marketPriceDemand = _priceDecisionList.Where(x => x.Segment == segment).Sum(x => x.ActualDemand);
+
+
+
+            decimal totalIndividualDemand = individualAttriDemand + individualPriceDemand;
+            _overallwithout = _overallwithout + totalIndividualDemand;
+            decimal totalMarketDemand = marketAttriDemand + marketPriceDemand;
+            _overallMarket = _overallMarket + totalMarketDemand;
+
+            return totalMarketDemand == 0 ? 0 : totalIndividualDemand / totalMarketDemand;
         }
 
 
-        private decimal Overall(ReportParams p, string segment)
+
+
+        private MarketSharePositionDto PositionDto(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => x.Revenue);
-            var roomAllocated = soldRoomList.Where(x => x.Segment == segment).Sum(x => x.Revenue);
-            return roomAllocated == 0 ? 0 : (roomSold / roomAllocated);
-
+            return new MarketSharePositionDto(segment)
+               .MarketShare(ActualMarketShare(p, segment))
+               .Position(ActualMarketPosition(p, segment));
         }
-
 
 
     }
 
-
 }
+
