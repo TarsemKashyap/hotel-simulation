@@ -1,4 +1,5 @@
-﻿using Common.ReportDto;
+﻿
+using Common.ReportDto;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.Reports;
