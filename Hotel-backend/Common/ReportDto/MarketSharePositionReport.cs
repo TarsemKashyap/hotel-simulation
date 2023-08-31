@@ -1,5 +1,6 @@
 ﻿namespace Common.ReportDto
 {
+
     public class MarketSharePositionReportDto
     {
         public List<MarketSharePositionDto> Data { get; set; } = new List<MarketSharePositionDto>();
