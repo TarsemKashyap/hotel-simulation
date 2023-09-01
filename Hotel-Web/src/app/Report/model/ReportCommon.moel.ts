@@ -82,4 +82,12 @@ export interface possitionAloneReportAttribute {
     actualMarketShare: AbstractDecimal,
     marketSharePosition: AbstractDecimal
 }
+export interface AttributeAmentitesReportAttribute{
+    label: string,
+    accumulatedCapital: AbstractDecimal,
+    laborBudget: AbstractDecimal,
+    newCaptial: AbstractDecimal,
+    operationBudget: AbstractDecimal,
+    
 
+}

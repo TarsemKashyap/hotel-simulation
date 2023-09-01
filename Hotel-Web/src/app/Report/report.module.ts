@@ -18,6 +18,7 @@ import { RoomRateComponent } from './room-rate/room-rate.component';
 import { MarketShareRevenueComponent } from './market-share-revenue/market-share-revenue.component';
 import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
 import { MarketSharePositionAloneComponent } from './market-share-position-alone/market-share-position-alone.component';
+import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-amentities.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { MarketSharePositionAloneComponent } from './market-share-position-alone
     RoomRateComponent,
     MarketShareRevenueComponent,
     MarketShareRoomSoldComponent,
-    MarketSharePositionAloneComponent
+    MarketSharePositionAloneComponent,
+    AttributeAmentitiesComponent
   ],
   imports: [
     CommonModule,

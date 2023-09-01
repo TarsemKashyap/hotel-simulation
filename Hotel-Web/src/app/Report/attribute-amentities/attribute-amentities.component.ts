@@ -5,15 +5,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
-import {MarketSharePositionAloneReportResponse} from '../model/MarketSharePositionAloneResponse.model';
+import {AttributeAmentitesReportResponse} from '../model/AttributeAmentitesResponse.model';
 import Chart from 'chart.js/auto';
-import {possitionAloneReportAttribute } from "../model/ReportCommon.moel";
+import {AttributeAmentitesReportAttribute } from "../model/ReportCommon.moel";
 @Component({
-  selector: 'app-market-share-position-alone',
-  templateUrl: './market-share-position-alone.component.html',
-  styleUrls: ['./market-share-position-alone.component.css']
+  selector: 'app-attribute-amentities',
+  templateUrl: './attribute-amentities.component.html',
+  styleUrls: ['./attribute-amentities.component.css']
 })
-export class MarketSharePositionAloneComponent {
+export class AttributeAmentitiesComponent {
   MonthList : MonthDto[] = [];
   selectedMonth : MonthDto = {} as MonthDto;
   classId: number | undefined;
@@ -21,9 +21,9 @@ export class MarketSharePositionAloneComponent {
   selectedHotel : ClassGroup | undefined;
 
   reportParam:ReportParams = {} as ReportParams;
-  marketSharePositionAloneReportResponse : MarketSharePositionAloneReportResponse = {} as MarketSharePositionAloneReportResponse;
+  attributeAmentitesReportResponse : AttributeAmentitesReportResponse = {} as AttributeAmentitesReportResponse;
   public chart: any;
-  ChartData:possitionAloneReportAttribute[]=[];
+  ChartData:AttributeAmentitesReportAttribute[]=[];
  
   Xaxis:any[]=[];
   YaxisMktShrPos:any[]=[];
@@ -50,15 +50,10 @@ export class MarketSharePositionAloneComponent {
     this.reportParam.GroupId =this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
-    this.reportService.marketSharePositionAloneReportDetails(this.reportParam).subscribe((reportData) => {
+    this.reportService.marketShareAttributeAmentitesReportDetails(this.reportParam).subscribe((reportData) => {
       
-        this.marketSharePositionAloneReportResponse = reportData;  
-        this.ChartData.push.apply(this.ChartData,this.marketSharePositionAloneReportResponse.data);
-        this.YaxisMktShrPos=this.ChartData.map(item=>item.marketSharePosition);
-        this.YaxisActualMktShr=this.ChartData.map(item=>item.actualMarketShare);
-        this.Xaxis=this.ChartData.map(item=>item.label);
-       
-        this.createChart();
+        this.attributeAmentitesReportResponse = reportData;  
+     
     });
   }
 
@@ -77,30 +72,5 @@ export class MarketSharePositionAloneComponent {
       this.loadGroups();
     });
   }
-  createChart(){
-  
-    this.chart = new Chart("MyChart", {
-      type: 'bar', //this denotes tha type of chart
 
-      data: {// values on X-Axis
-        labels: this.Xaxis, 
-	       datasets: [
-          {
-            label: "MarketSharePosition",
-            data: this.YaxisMktShrPos,
-            backgroundColor: 'blue'
-          },
-          {
-            label: "Actual Maket Share",
-            data: this.YaxisActualMktShr,
-            backgroundColor: 'limegreen'
-          }  
-        ]
-      },
-      options: {
-        aspectRatio:2.5
-      }
-      
-    });
-  }
 }

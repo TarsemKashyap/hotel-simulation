@@ -16,6 +16,7 @@ import {RoomRateReportResponse} from './model/RoomRateResponse.model';
 import {MarketShareRevenueReportResponse} from './model/MarketShareRevenueResponse.model';
 import {MarketShareRoomSoldReportResponse} from './model/MarketShareRoomSoldResponse.model';
 import {MarketSharePositionAloneReportResponse} from './model/MarketSharePositionAloneResponse.model';
+import {AttributeAmentitesReportResponse} from './model/AttributeAmentitesResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -69,5 +70,8 @@ export class ReportService {
   }
   marketSharePositionAloneReportDetails(reportParams:ReportParams): Observable<MarketSharePositionAloneReportResponse> {
     return this.httpClient.post<MarketSharePositionAloneReportResponse>(`api/Report/market-share/position-alone`,reportParams);
+  }
+  marketShareAttributeAmentitesReportDetails(reportParams:ReportParams): Observable<AttributeAmentitesReportResponse> {
+    return this.httpClient.post<AttributeAmentitesReportResponse>(`api/Report/attribute-amentities`,reportParams);
   }
 }
