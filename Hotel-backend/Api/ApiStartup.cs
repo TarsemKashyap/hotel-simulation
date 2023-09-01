@@ -144,6 +144,8 @@ public static class ApiStartupExtensions
         services.AddScoped<IRoomRateReportService, RoomRateReportService>();
         services.AddScoped<IMarketShareRevenueReport, MarketShareRevenueReport>();
         services.AddScoped<IMarketShareRoomSoldReport, MarketShareRoomSoldReport>();
+        services.AddScoped<IMarketSharePositionReport, MarketSharePositionReport>();
+        services.AddScoped<IAttributeAmentitiesReportService, AttributeAmentitiesReportService>();
         return services;
     }
     public static void RegisterMapster(this IServiceCollection services)
