@@ -77,5 +77,9 @@ export interface roomRateReportAttribute {
     weekendRate: AbstractDecimal
     weekendRoomSold: AbstractDecimal
 }
-
+export interface possitionAloneReportAttribute {
+    label: string,
+    actualMarketShare: AbstractDecimal,
+    marketSharePosition: AbstractDecimal
+}
 

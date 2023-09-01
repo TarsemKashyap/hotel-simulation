@@ -14,6 +14,7 @@ import { RevParGoparComponent } from './rev-par-gopar/rev-par-gopar.component';
 import { RoomRateComponent } from './room-rate/room-rate.component';
 import { MarketShareRevenueComponent } from './market-share-revenue/market-share-revenue.component';
 import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
+import { MarketSharePositionAloneComponent } from './market-share-position-alone/market-share-position-alone.component';
 
 export const reportRoutes: Routes = [
   {
@@ -32,6 +33,7 @@ export const reportRoutes: Routes = [
       { path: ':id/room-rate-report',component:RoomRateComponent},
       { path: ':id/market-share-revenue-report',component:MarketShareRevenueComponent},
       { path: ':id/market-share-roomsold-report',component:MarketShareRoomSoldComponent},
+      { path: ':id/market-share-position-alone-report',component:MarketSharePositionAloneComponent},
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,

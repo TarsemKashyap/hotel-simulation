@@ -17,6 +17,7 @@ import { RevParGoparComponent } from './rev-par-gopar/rev-par-gopar.component';
 import { RoomRateComponent } from './room-rate/room-rate.component';
 import { MarketShareRevenueComponent } from './market-share-revenue/market-share-revenue.component';
 import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
+import { MarketSharePositionAloneComponent } from './market-share-position-alone/market-share-position-alone.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-sha
     RevParGoparComponent,
     RoomRateComponent,
     MarketShareRevenueComponent,
-    MarketShareRoomSoldComponent
+    MarketShareRoomSoldComponent,
+    MarketSharePositionAloneComponent
   ],
   imports: [
     CommonModule,
