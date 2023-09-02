@@ -25,8 +25,9 @@ namespace Api.Controllers
         private readonly IMarketShareRoomSoldReport _marketShareRoomSoldReport;
         private readonly IMarketSharePositionReport _marketSharePositionReport;
         private readonly IAttributeAmentitiesReportService _attributeAmentitiesReportService;
+        private readonly IMarketExpendReportService _marketExpendReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService, IMarketExpendReportService marketExpendReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -42,6 +43,7 @@ namespace Api.Controllers
             _marketShareRoomSoldReport = marketShareRoomSoldReport;
             _marketSharePositionReport = marketSharePositionReport;
             _attributeAmentitiesReportService = attributeAmentitiesReportService;
+            _marketExpendReportService = marketExpendReportService;
         }
 
 
@@ -137,6 +139,12 @@ namespace Api.Controllers
         public async Task<AttributeAmentitiesReportDto> HoteAttributeAmenties(ReportParams dto)
         {
             return await _attributeAmentitiesReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("market-expenditure")]
+        public async Task<MarketingExpensReportDto> MarketExpenditure(ReportParams dto)
+        {
+            return await _marketExpendReportService.ReportAsync(dto);
         }
     }
 }

@@ -14,4 +14,12 @@ namespace Common
         public const string ASSOCIATION_MEETINGS = "Association Meetings";
         public static readonly string[] list = new string[] { BUSINESS, SMALL_BUSINESS, CORPORATE_BUSINESS_MEETINGS, FAMILIES, AFLUENT_MATURE_TRAVELERS, INTERNATIONAL_LEISURE_TRAVELERS, CORPORATE_BUSINESS_MEETINGS, ASSOCIATION_MEETINGS };
     }
+
+    public class MARKETING_TECHNIQUE
+    {
+        public const string ADVERTISING = "Advertising";
+        public const string SALES_FORCE = "Sales Force";
+        public const string PROMOTIONS = "Promotions";
+        public const string PUBLIC_RELATIONS = "Public Relations";
+    }
 }
