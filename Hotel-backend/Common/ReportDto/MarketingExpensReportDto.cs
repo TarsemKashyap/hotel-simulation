@@ -24,4 +24,6 @@ namespace Common.ReportDto
         public decimal PublicRelations { get; set; }
         public decimal Total => Advertising + SalesForce + Promotions + PublicRelations;
     }
+
+
 }
