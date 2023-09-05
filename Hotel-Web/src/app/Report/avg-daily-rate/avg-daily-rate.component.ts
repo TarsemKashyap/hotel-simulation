@@ -106,4 +106,8 @@ export class AvgDailyRateComponent {
       
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
 }

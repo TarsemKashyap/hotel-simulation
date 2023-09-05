@@ -49,13 +49,13 @@
        {{ revParGopalReportResponse.overAll.label}}
       </td>
     <td class="style2">
-       $ {{ revParGopalReportResponse.overAll.hotel}}
+       $ {{ numberToDecimal(revParGopalReportResponse.overAll.hotel)}}
     </td>
       <td class="style2">
-       $ {{revParGopalReportResponse.overAll.marketAvg}}
+       $ {{numberToDecimal(revParGopalReportResponse.overAll.marketAvg)}}
     </td>
     <td class="style2">
-        {{revParGopalReportResponse.overAll.index}}
+        {{numberToDecimal(revParGopalReportResponse.overAll.index)}}
     </td>
     
   </tr>
@@ -65,13 +65,13 @@
       {{overAllChildData.label}}</td>
       
     <td class="style3">
-      ${{overAllChildData.hotel }}
+      ${{numberToDecimal(overAllChildData.hotel) }}
     </td>
     <td class="style3">
-        ${{overAllChildData.marketAvg }}
+        ${{numberToDecimal(overAllChildData.marketAvg) }}
       </td>
       <td class="style3">
-        {{overAllChildData.index }}
+        {{numberToDecimal(overAllChildData.index) }}
       </td>
  </tr>
  <tr>
@@ -79,13 +79,13 @@
      {{ revParGopalReportResponse.totalRevpar.label}}
     </td>
   <td class="style2">
-      ${{ revParGopalReportResponse.totalRevpar.hotel}}
+      ${{ numberToDecimal(revParGopalReportResponse.totalRevpar.hotel)}}
   </td>
     <td class="style2">
-      ${{revParGopalReportResponse.totalRevpar.marketAvg}}
+      ${{numberToDecimal(revParGopalReportResponse.totalRevpar.marketAvg)}}
   </td>
   <td class="style2">
-      {{revParGopalReportResponse.totalRevpar.index}}
+      {{numberToDecimal(revParGopalReportResponse.totalRevpar.index)}}
   </td>
   
 </tr>
@@ -94,13 +94,13 @@
      {{ revParGopalReportResponse.goPar.label}}
     </td>
   <td class="style2">
-      ${{ revParGopalReportResponse.goPar.hotel}}
+      ${{ numberToDecimal(revParGopalReportResponse.goPar.hotel)}}
   </td>
     <td class="style2">
-      ${{revParGopalReportResponse.goPar.marketAvg}}
+      ${{numberToDecimal(revParGopalReportResponse.goPar.marketAvg)}}
   </td>
   <td class="style2">
-      {{revParGopalReportResponse.goPar.index}}
+      {{numberToDecimal(revParGopalReportResponse.goPar.index)}}
   </td>
   
 </tr>

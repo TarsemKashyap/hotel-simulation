@@ -68,4 +68,7 @@ export class CashflowComponent {
       this.loadGroups();
     });
   }
+  numberWithCommas(x:any) {
+    return this.reportService.numberWithCommas(x);
+}
 }

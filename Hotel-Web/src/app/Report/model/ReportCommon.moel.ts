@@ -59,13 +59,13 @@ export interface IoccupancyBySegment{
 export interface occupancyReportAttribute {
     label: string,
     hotel: AbstractDecimal,
-    index:Number,
+    index:number,
     marketAverage: AbstractDecimal
 }
 export interface avgdailyrateReportAttribute {
     label: string,
     hotel: AbstractDecimal,
-    index:Number,
+    index:number,
     marketAvg: AbstractDecimal
 }
 export interface roomRateReportAttribute {

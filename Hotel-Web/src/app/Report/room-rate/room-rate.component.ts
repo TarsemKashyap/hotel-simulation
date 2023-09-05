@@ -67,4 +67,11 @@ export class RoomRateComponent {
       this.loadGroups();
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
+  numberWithCommas(x:any) {
+    return this.reportService.numberWithCommas(x);
+}
 }

@@ -68,4 +68,7 @@ export class BalanceComponent {
       this.loadGroups();
     });
   }
+  numberWithCommas(x:any) {
+    return this.reportService.numberWithCommas(x);
+}
 }

@@ -74,4 +74,22 @@ export class ReportService {
   marketShareAttributeAmentitesReportDetails(reportParams:ReportParams): Observable<AttributeAmentitesReportResponse> {
     return this.httpClient.post<AttributeAmentitesReportResponse>(`api/Report/attribute-amentities`,reportParams);
   }
+  numberWithCommas(x:any) {
+    x=Math.round(x);
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
+decimalnumberWithCommas(x:any) {
+  x=this.numberToDecimal(x);
+  var parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
+}
+numberToDecimal(x:any)
+{
+ 
+return x.toFixed(2)
+
+}
 }

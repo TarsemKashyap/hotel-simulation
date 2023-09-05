@@ -60,13 +60,13 @@
     <td class="style2">
       {{marketShareRevenueData.label}}</td>
       <td class="style2">
-        {{marketShareRevenueData.hotel}}%</td>
+        {{ numberToDecimal(marketShareRevenueData.hotel)}}%</td>
      
     <td class="style3">
-      {{marketShareRevenueData.marketAverage }}%
+      {{ numberToDecimal(marketShareRevenueData.marketAverage) }}%
     </td>
     <td class="style3">
-        {{marketShareRevenueData.index }}
+        {{ numberToDecimal(marketShareRevenueData.index) }}
       </td>
   </tr>
   
@@ -112,14 +112,14 @@
                 {{SegmentData.label}}
             </td>
             <td class="style2" >
-                {{SegmentData.hotel}}%
+                {{ numberToDecimal(SegmentData.hotel)}}%
             </td>
               
     <td class="style2">
-        {{SegmentData.marketAverage }}%
+        {{ numberToDecimal(SegmentData.marketAverage )}}%
       </td>
       <td class="style2">
-        {{SegmentData.index }}
+        {{ numberToDecimal(SegmentData.index )}}
       </td>
         </tr>
       </table>

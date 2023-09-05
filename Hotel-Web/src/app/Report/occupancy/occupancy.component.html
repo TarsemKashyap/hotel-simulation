@@ -60,13 +60,13 @@
     <td class="style2">
       {{overAllPercentagesData.label}}</td>
       <td class="style2">
-        {{overAllPercentagesData.hotel}}%</td>
+        {{numberToDecimal(overAllPercentagesData.hotel)}}%</td>
      
     <td class="style3">
-      {{overAllPercentagesData.marketAverage }}%
+      {{numberToDecimal(overAllPercentagesData.marketAverage) }}%
     </td>
     <td class="style3">
-        {{overAllPercentagesData.index }}
+        {{numberToDecimal(overAllPercentagesData.index)}}
       </td>
   </tr>
   
@@ -109,14 +109,14 @@
                 {{SegmentData.label}}
             </td>
             <td class="style2" >
-                {{SegmentData.hotel}}%
+                {{numberToDecimal(SegmentData.hotel)}}%
             </td>
               
     <td class="style2">
-        {{SegmentData.marketAverage }}%
+        {{numberToDecimal(SegmentData.marketAverage) }}%
       </td>
       <td class="style2">
-        {{SegmentData.index }}
+        {{numberToDecimal(SegmentData.index) }}
       </td>
         </tr>
       </table>

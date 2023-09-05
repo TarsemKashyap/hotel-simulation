@@ -107,4 +107,12 @@ export class RevParGoparComponent {
       
     });
   }
+  numberWithCommas(x:any) {
+    
+    return this.reportService.numberWithCommas;
+}
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
 }

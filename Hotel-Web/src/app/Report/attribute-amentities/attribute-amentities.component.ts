@@ -72,5 +72,7 @@ export class AttributeAmentitiesComponent {
       this.loadGroups();
     });
   }
-
+  decimalnumberWithCommas(x:any) {
+    return this.reportService.decimalnumberWithCommas(x);
+  }
 }

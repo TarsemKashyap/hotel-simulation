@@ -114,4 +114,8 @@ export class MarketShareRoomSoldComponent {
       
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
 }

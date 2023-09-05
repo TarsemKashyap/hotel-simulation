@@ -12,7 +12,7 @@ import { Pipe, PipeTransform } from '@angular/core';
               break;
           }
           case('C0')  : case('C') :{
-            return '$ ' + value.toString();
+            return '$' + value.toString();
             break;
           }
           default: {

@@ -116,4 +116,8 @@ export class MarketShareRevenueComponent {
       
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
 }

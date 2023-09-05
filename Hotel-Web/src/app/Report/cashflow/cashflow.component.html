@@ -51,7 +51,7 @@
       <td class="style2">
         &nbsp;</td>
     <td class="style3">
-      {{netIncomeData.data.value | ValueFormatterPipe: netIncomeData.data.format }}
+      {{numberWithCommas(netIncomeData.data.value) | ValueFormatterPipe: netIncomeData.data.format }}
     
 
     </td>
@@ -80,7 +80,7 @@
     <td class="style2">
       &nbsp;</td>
   <td class="style3">
-    {{netCashFlowData.data.value | ValueFormatterPipe: netCashFlowData.data.format }}
+    {{numberWithCommas(netCashFlowData.data.value) | ValueFormatterPipe: netCashFlowData.data.format }}
   
 
   </td>
@@ -95,7 +95,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{cashFlowreportResponse.currentCashBalnce.data.value | ValueFormatterPipe: cashFlowreportResponse.currentCashBalnce.data.format }}
+    {{numberWithCommas(cashFlowreportResponse.currentCashBalnce.data.value) | ValueFormatterPipe: cashFlowreportResponse.currentCashBalnce.data.format }}
 
   </td>
 </tr>

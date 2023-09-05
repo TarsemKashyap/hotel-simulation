@@ -103,4 +103,8 @@ export class MarketSharePositionAloneComponent {
       
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
 }

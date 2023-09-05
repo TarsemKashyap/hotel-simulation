@@ -50,7 +50,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style2">
-      {{balancereportResponse.currentAssests.cash.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.currentAssests.cash.data.value) | ValueFormatterPipe:
         balancereportResponse.currentAssests.cash.data.format}}
 
     </td>
@@ -63,7 +63,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style2">
-      {{balancereportResponse.currentAssests.accountReceivables.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.currentAssests.accountReceivables.data.value) | ValueFormatterPipe:
         balancereportResponse.currentAssests.accountReceivables.data.format}}
 
     </td>
@@ -78,7 +78,7 @@
       <td class="style2">
         &nbsp;</td>
     <td class="style3">
-      {{accountReceivablesData.data.value | ValueFormatterPipe: accountReceivablesData.data.format}}
+      {{numberWithCommas(accountReceivablesData.data.value) | ValueFormatterPipe: accountReceivablesData.data.format}}
 
     </td>
   </tr>
@@ -91,7 +91,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style3">
-      {{balancereportResponse.currentAssests.inventories.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.currentAssests.inventories.data.value) | ValueFormatterPipe:
         balancereportResponse.currentAssests.inventories.data.format}}
 
     </td>
@@ -104,7 +104,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style3">
-      {{balancereportResponse.currentAssests.total.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.currentAssests.total.data.value) | ValueFormatterPipe:
         balancereportResponse.currentAssests.total.data.format}}
 
     </td>
@@ -131,7 +131,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style3">
-      {{balancereportResponse.propertyEquipement.propertyAndEquipment.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.propertyEquipement.propertyAndEquipment.data.value) | ValueFormatterPipe:
         balancereportResponse.propertyEquipement.propertyAndEquipment.data.format}}
 
     </td>
@@ -145,7 +145,7 @@
     <td class="style2">
       &nbsp;</td>
     <td class="style3">
-      {{balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.data.value | ValueFormatterPipe:
+      {{numberWithCommas(balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.data.value) | ValueFormatterPipe:
         balancereportResponse.propertyEquipement.lessAccumlatedDepreciation.data.format}}
 
     </td>
@@ -174,7 +174,7 @@
         &nbsp;</td>
     <td class="style3">
 
-      {{otherAssetsData.data.value | ValueFormatterPipe: otherAssetsData.data.format}}
+      {{numberWithCommas(otherAssetsData.data.value) | ValueFormatterPipe: otherAssetsData.data.format}}
     </td>
   </tr>
   <tr>
@@ -187,7 +187,7 @@
     &nbsp;</td>
  
     <td class="style2">
-      {{balancereportResponse.totalAssests.data.value | ValueFormatterPipe: balancereportResponse.totalAssests.data.format}}</td>
+      {{numberWithCommas(balancereportResponse.totalAssests.data.value) | ValueFormatterPipe: balancereportResponse.totalAssests.data.format}}</td>
 
  
 </tr>
@@ -215,7 +215,7 @@
       &nbsp;
     </td>
       <td class="style2">
-        {{libilitiesAndOwnerEquityData.data.value | ValueFormatterPipe: libilitiesAndOwnerEquityData.data.format}}</td>
+        {{numberWithCommas(libilitiesAndOwnerEquityData.data.value) | ValueFormatterPipe: libilitiesAndOwnerEquityData.data.format}}</td>
 </tr>
 <tr  >
     
@@ -241,7 +241,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.format}}
+    {{numberWithCommas(balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.value) | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.emergencyLoan.data.format}}
 
   </td>
 </tr>
@@ -255,7 +255,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.format}}
+    {{numberWithCommas(balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.value) | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.longTermDebt.data.format}}
 
   </td>
 </tr>
@@ -269,7 +269,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.value | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.format}}
+    {{numberWithCommas(balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.value) | ValueFormatterPipe: balancereportResponse.libilitiesAndOwnerEquity.totalLibbalities.data.format}}
 
   </td>
 </tr>
@@ -284,7 +284,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.shareHolderEquity.data.value | ValueFormatterPipe: balancereportResponse.shareHolderEquity.data.format}}
+    {{numberWithCommas(balancereportResponse.shareHolderEquity.data.value) | ValueFormatterPipe: balancereportResponse.shareHolderEquity.data.format}}
 
   </td>
 </tr>
@@ -298,7 +298,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.retainedEarnings.data.value | ValueFormatterPipe: balancereportResponse.retainedEarnings.data.format}}
+    {{numberWithCommas(balancereportResponse.retainedEarnings.data.value) | ValueFormatterPipe: balancereportResponse.retainedEarnings.data.format}}
 
   </td>
 </tr>
@@ -312,7 +312,7 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.totalShareHoldersEquity.data.value | ValueFormatterPipe: balancereportResponse.totalShareHoldersEquity.data.format}}
+    {{numberWithCommas(balancereportResponse.totalShareHoldersEquity.data.value) | ValueFormatterPipe: balancereportResponse.totalShareHoldersEquity.data.format}}
 
   </td>
 </tr>
@@ -326,188 +326,9 @@
   <td class="style2">
     &nbsp;</td>
   <td class="style2">
-    {{balancereportResponse.totalLiablitiesAndEquity.data.value | ValueFormatterPipe: balancereportResponse.totalLiablitiesAndEquity.data.format}}
+    {{numberWithCommas(balancereportResponse.totalLiablitiesAndEquity.data.value) | ValueFormatterPipe: balancereportResponse.totalLiablitiesAndEquity.data.format}}
 
   </td>
 </tr>
-<!-- <tr *ngFor="let totalAssestsData of balancereportResponse.totalAssests.childern">
-  <td class="style2">
-    &nbsp;</td>
-    
-      <td colspan="3">
-  <table style="border: 1px solid;">
-    <tr *ngFor="let totalAssestsChildData of totalAssestsData.childern">
-     
-      <td>{{totalAssestsChildData.label}}</td>
-      <td class="style2">
-        &nbsp;</td>
-      <td >{{totalAssestsChildData.data.value | ValueFormatterPipe: totalAssestsChildData.data.format}}</td>
-    </tr>
-  </table>
-</td>
-  </tr> -->
- <!-- <tr>
-    <td class="style2">
-      {{incomereportResponse.revenue.rentelOtherIncome.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{incomereportResponse.revenue.rentelOtherIncome.data.value | ValueFormatterPipe:
-      incomereportResponse.revenue.rentelOtherIncome.data.format}}
 
-    </td>
-  </tr>
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.revenue.totalRevenue.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{incomereportResponse.revenue.totalRevenue.data.value | ValueFormatterPipe:
-      incomereportResponse.revenue.totalRevenue.data.format}}
-
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.departmentalExpenses.label}}</td>
-    <td class="style2">
-    </td>
-
-  </tr>
-
-
-  <tr *ngFor="let departmentalExpensesData of incomereportResponse.departmentalExpenses.childern">
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{departmentalExpensesData.label}}
-    </td>
-    <td class="style2">
-
-      {{departmentalExpensesData.data.value | ValueFormatterPipe: departmentalExpensesData.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.totalDepartIncome.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{incomereportResponse.totalDepartIncome.data?.value}}
-      
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.undistOperatingExpenses.label}}</td>
-    <td class="style2">
-    </td>
-
-  </tr>
-
-
-  <tr *ngFor="let undistOperatingExpensesData of incomereportResponse.undistOperatingExpenses.childern">
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{undistOperatingExpensesData.label}}
-    </td>
-    <td class="style2">
-
-      {{undistOperatingExpensesData.data.value | ValueFormatterPipe: undistOperatingExpensesData.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.grossOperatingProfit.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{incomereportResponse.grossOperatingProfit.data.value | ValueFormatterPipe:
-      incomereportResponse.grossOperatingProfit.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.managmentFees.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{incomereportResponse.managmentFees.data.value | ValueFormatterPipe:
-      incomereportResponse.managmentFees.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.incomeBeforeFixedCharges.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{incomereportResponse.incomeBeforeFixedCharges.data.value | ValueFormatterPipe:
-      incomereportResponse.incomeBeforeFixedCharges.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.fixedCharges.label}}</td>
-    <td class="style2">
-    </td>
-
-  </tr>
-  <tr *ngFor="let fixedChargesData of incomereportResponse.fixedCharges.childern">
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{fixedChargesData.label}}
-    </td>
-    <td class="style2">
-      {{fixedChargesData.data.value | ValueFormatterPipe: fixedChargesData.data.format}}
-
-    </td>
-  </tr>
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.netOperatingIncome.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{incomereportResponse.netOperatingIncome.data.value | ValueFormatterPipe:
-      incomereportResponse.netOperatingIncome.data.format}}
-
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.incomeTax.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{incomereportResponse.incomeTax.data.value | ValueFormatterPipe: incomereportResponse.incomeTax.data.format}}
-
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.netIncome.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{incomereportResponse.netIncome.data.value | ValueFormatterPipe: incomereportResponse.netIncome.data.format}}
-    </td>
-  </tr> -->
 </table>

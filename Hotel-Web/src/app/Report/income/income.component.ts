@@ -70,4 +70,7 @@ export class IncomeComponent {
       this.loadGroups();
     });
   }
+   numberWithCommas(x:any) {
+    return this.reportService.numberWithCommas(x);
+}
 }

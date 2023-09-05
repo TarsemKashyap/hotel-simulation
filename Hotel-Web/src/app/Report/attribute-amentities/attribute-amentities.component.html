@@ -52,22 +52,22 @@
     <td class="style2">
       {{AttributeAmentitesData.label}}</td>
       <td class="style2">
-       $ {{AttributeAmentitesData.accumulatedCapital}}</td>
+       $ {{ decimalnumberWithCommas(AttributeAmentitesData.accumulatedCapital)}}</td>
      
     
     <td class="style3">
-    $  {{AttributeAmentitesData.newCaptial }}
+    $  {{ decimalnumberWithCommas(AttributeAmentitesData.newCaptial) }}
     </td>
     <td class="style3">
-     $ {{AttributeAmentitesData.operationBudget }}
+     $ {{ decimalnumberWithCommas(AttributeAmentitesData.operationBudget) }}
     </td>
     <td class="style3">
-     $ {{AttributeAmentitesData.laborBudget }}
+     $ {{ decimalnumberWithCommas(AttributeAmentitesData.laborBudget) }}
     </td>
    
   </tr>
   <!-- <tr><td colspan="4"><hr/></td></tr> -->
-  <tr><td>Total Expense:${{attributeAmentitesReportResponse.totalExpense}}</td></tr>
+  <tr><td>Total Expense:${{ decimalnumberWithCommas(attributeAmentitesReportResponse.totalExpense)}}</td></tr>
  
   
 </table>
