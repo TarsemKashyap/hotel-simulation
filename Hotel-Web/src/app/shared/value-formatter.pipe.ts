@@ -15,6 +15,10 @@ import { Pipe, PipeTransform } from '@angular/core';
             return '$' + value.toString();
             break;
           }
+          case('N')  :{
+            return  value.toString();
+            break;
+          }
           default: {
             return '0';
           }
