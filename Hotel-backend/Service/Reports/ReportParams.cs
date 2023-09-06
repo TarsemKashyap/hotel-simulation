@@ -7,4 +7,6 @@ public record ReportParams
     public int GroupId { get; set; }
     //todo: add monthId filter to all reports
     public int MonthId { get; set; }
+
+    public string Segment { get; set; }
 }

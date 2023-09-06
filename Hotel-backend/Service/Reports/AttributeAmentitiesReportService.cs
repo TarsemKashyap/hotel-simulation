@@ -31,7 +31,29 @@ namespace Service.Reports
 
             _attributeDecision = await _context.AttributeDecision.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.GroupID == p.GroupId).ToListAsync();
 
-            string[] atrNames = new string[] { "Spa", "Fitness Center", "Business Center", "Golf Course", "Other Recreation Facilities - Pools, game rooms, tennis courts, ect", "Management/Sales Attention", "Resturants", "Bars", "Room Service", "Banquet & Catering", "Meeting Rooms", "Entertainment", "Courtesy(FB)", "Guest Rooms", "Reservations", "Guest Check in/Guest Check out", "Concierge", "Housekeeping", "Maintanence and security", "Courtesy (Rooms)" };
+            string[] atrNames = new string[]
+            {
+                "Spa",
+                "Fitness Center",
+                "Business Center",
+                "Golf Course",
+                "Other Recreation Facilities - Pools, game rooms, tennis courts, ect",
+                "Management/Sales Attention",
+                "Resturants",
+                "Bars",
+                "Room Service",
+                "Banquet & Catering",
+                "Meeting Rooms",
+                "Entertainment",
+                "Courtesy(FB)",
+                "Guest Rooms",
+                "Reservations",
+                "Guest Check in/Guest Check out",
+                "Concierge",
+                "Housekeeping",
+                "Maintanence and security",
+                "Courtesy (Rooms)"
+            };
             List<AttributeAmentiDto> attrubtes = atrNames.Select(x => GetAttribute(x)).ToList();
 
 

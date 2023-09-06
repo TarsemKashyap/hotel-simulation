@@ -27,8 +27,6 @@ public abstract class AbstractReportService
 
     protected virtual decimal DivideSafe(decimal first, decimal divisor)
     {
-        return first == 0 ? 0 : first / divisor;
+        return divisor == 0 ? 0 : first / divisor;
     }
 }
-
-

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service;
-
 public interface IRoomRateReportService
 {
     Task<RoomRateReportDto> ReportAsync(ReportParams p);
