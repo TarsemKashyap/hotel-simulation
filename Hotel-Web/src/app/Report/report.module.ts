@@ -19,6 +19,8 @@ import { MarketShareRevenueComponent } from './market-share-revenue/market-share
 import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
 import { MarketSharePositionAloneComponent } from './market-share-position-alone/market-share-position-alone.component';
 import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-amentities.component';
+import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
+import { PositionMapComponent } from './position-map/position-map.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-a
     MarketShareRevenueComponent,
     MarketShareRoomSoldComponent,
     MarketSharePositionAloneComponent,
-    AttributeAmentitiesComponent
+    AttributeAmentitiesComponent,
+    MarketExpenditureComponent,
+    PositionMapComponent
   ],
   imports: [
     CommonModule,

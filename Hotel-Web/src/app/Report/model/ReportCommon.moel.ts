@@ -91,3 +91,27 @@ export interface AttributeAmentitesReportAttribute{
     
 
 }
+export interface MarketExpenditureReportAttribute{
+    label: string,
+    labor: MarketExpenditureAttribute,
+    other: MarketExpenditureAttribute,
+    publicRelations: AbstractDecimal,
+    salesForce: AbstractDecimal,
+    total: AbstractDecimal
+    
+
+}
+export interface MarketExpenditureAttribute{
+    label: string,
+    advertising: AbstractDecimal,
+    promotions: AbstractDecimal,
+    publicRelations: AbstractDecimal,
+    salesForce: AbstractDecimal,
+    total: AbstractDecimal
+ }
+ export interface PositionMapAttribute{
+    classGroup: string,
+    qualityRating: AbstractDecimal,
+    roomRate: AbstractDecimal,
+   
+ }

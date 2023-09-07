@@ -17,6 +17,8 @@ import {MarketShareRevenueReportResponse} from './model/MarketShareRevenueRespon
 import {MarketShareRoomSoldReportResponse} from './model/MarketShareRoomSoldResponse.model';
 import {MarketSharePositionAloneReportResponse} from './model/MarketSharePositionAloneResponse.model';
 import {AttributeAmentitesReportResponse} from './model/AttributeAmentitesResponse.model';
+import {MarketExpenditureReportResponse} from './model/MarketExpenditureResponse.model';
+import {PositionMapReportResponse} from './model/PositionMapResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -73,6 +75,12 @@ export class ReportService {
   }
   marketShareAttributeAmentitesReportDetails(reportParams:ReportParams): Observable<AttributeAmentitesReportResponse> {
     return this.httpClient.post<AttributeAmentitesReportResponse>(`api/Report/attribute-amentities`,reportParams);
+  }
+  marketExpenditureReportDetails(reportParams:ReportParams): Observable<MarketExpenditureReportResponse> {
+    return this.httpClient.post<MarketExpenditureReportResponse>(`api/Report/market-expenditure`,reportParams);
+  }
+  positionMapReportDetails(reportParams:ReportParams): Observable<PositionMapReportResponse> {
+    return this.httpClient.post<PositionMapReportResponse>(`api/Report/position-map`,reportParams);
   }
   numberWithCommas(x:any) {
     x=Math.round(x);

@@ -16,6 +16,8 @@ import { MarketShareRevenueComponent } from './market-share-revenue/market-share
 import { MarketShareRoomSoldComponent } from './market-share-roomsold/market-share-roomsold.component';
 import { MarketSharePositionAloneComponent } from './market-share-position-alone/market-share-position-alone.component';
 import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-amentities.component';
+import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
+import { PositionMapComponent } from './position-map/position-map.component';
 
 export const reportRoutes: Routes = [
   {
@@ -36,6 +38,8 @@ export const reportRoutes: Routes = [
       { path: ':id/market-share-roomsold-report',component:MarketShareRoomSoldComponent},
       { path: ':id/market-share-position-alone-report',component:MarketSharePositionAloneComponent},
       { path: ':id/attribute-amentities-report',component:AttributeAmentitiesComponent},
+      { path: ':id/market-expenditure-report',component:MarketExpenditureComponent},
+      { path: ':id/position-map-report',component:PositionMapComponent},
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,
