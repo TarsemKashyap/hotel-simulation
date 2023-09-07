@@ -2,14 +2,8 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Service;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Net.Mail;
-using System.Net;
 using Microsoft.Extensions.Options;
-using Mysqlx;
-using Newtonsoft.Json;
 using Common.Model;
 
 namespace Api.Controllers
@@ -34,8 +28,6 @@ namespace Api.Controllers
             IOptions<PaymentConfig>  paymentConfig,
             IPaymentService paymentService,
             IAccountService accountService, IValidator<StudentSignupDto> accountValidator)
-
-      
         {
             _validator = validator;
             _studentSignupTempService = studentSignupTempService;

@@ -25,8 +25,11 @@ namespace Api.Controllers
         private readonly IMarketShareRoomSoldReport _marketShareRoomSoldReport;
         private readonly IMarketSharePositionReport _marketSharePositionReport;
         private readonly IAttributeAmentitiesReportService _attributeAmentitiesReportService;
+        private readonly IMarketExpendReportService _marketExpendReportService;
+        private readonly IQualityPerceptionRatingReportService _qualityPerceptionRatingReportService;
+        private readonly IPositionMapReportService _positionMapReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService, IMarketExpendReportService marketExpendReportService, IQualityPerceptionRatingReportService qualityPerceptionRatingReportService, IPositionMapReportService positionMapReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -42,6 +45,9 @@ namespace Api.Controllers
             _marketShareRoomSoldReport = marketShareRoomSoldReport;
             _marketSharePositionReport = marketSharePositionReport;
             _attributeAmentitiesReportService = attributeAmentitiesReportService;
+            _marketExpendReportService = marketExpendReportService;
+            _qualityPerceptionRatingReportService = qualityPerceptionRatingReportService;
+            _positionMapReportService = positionMapReportService;
         }
 
 
@@ -137,6 +143,24 @@ namespace Api.Controllers
         public async Task<AttributeAmentitiesReportDto> HoteAttributeAmenties(ReportParams dto)
         {
             return await _attributeAmentitiesReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("market-expenditure")]
+        public async Task<MarketingExpensReportDto> MarketExpenditure(ReportParams dto)
+        {
+            return await _marketExpendReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("quality-rating")]
+        public async Task<QualityPreceptionReportDto> QualityPerceptionRating(ReportParams dto)
+        {
+            return await _qualityPerceptionRatingReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("position-map")]
+        public async Task<PositionMapReportDto> PositionMapReport(ReportParams dto)
+        {
+            return await _positionMapReportService.ReportAsync(dto);
         }
     }
 }
