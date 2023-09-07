@@ -39,8 +39,6 @@ public class PositionMapReportService : AbstractReportService, IPositionMapRepor
         try
         {
 
-
-
             var groups = (await _context.ClassGroups.Where(x => x.ClassId == p.ClassId).ToListAsync()).Adapt<List<ClassGroupDto>>();
 
             if (string.IsNullOrEmpty(p.Segment))
