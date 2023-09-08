@@ -19,6 +19,7 @@ import {MarketSharePositionAloneReportResponse} from './model/MarketSharePositio
 import {AttributeAmentitesReportResponse} from './model/AttributeAmentitesResponse.model';
 import {MarketExpenditureReportResponse} from './model/MarketExpenditureResponse.model';
 import {PositionMapReportResponse} from './model/PositionMapResponse.model';
+import {QualityRatingReportResponse} from './model/QualityRatingResponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -81,6 +82,9 @@ export class ReportService {
   }
   positionMapReportDetails(reportParams:ReportParams): Observable<PositionMapReportResponse> {
     return this.httpClient.post<PositionMapReportResponse>(`api/Report/position-map`,reportParams);
+  }
+  qualityRatingReportDetails(reportParams:ReportParams): Observable<QualityRatingReportResponse> {
+    return this.httpClient.post<QualityRatingReportResponse>(`api/Report/quality-rating`,reportParams);
   }
   numberWithCommas(x:any) {
     x=Math.round(x);

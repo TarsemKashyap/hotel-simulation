@@ -21,6 +21,7 @@ import { MarketSharePositionAloneComponent } from './market-share-position-alone
 import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-amentities.component';
 import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
 import { PositionMapComponent } from './position-map/position-map.component';
+import { QualityRatingComponent } from './quality-rating/quality-rating.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { PositionMapComponent } from './position-map/position-map.component';
     MarketSharePositionAloneComponent,
     AttributeAmentitiesComponent,
     MarketExpenditureComponent,
-    PositionMapComponent
+    PositionMapComponent,
+    QualityRatingComponent
   ],
   imports: [
     CommonModule,

@@ -115,3 +115,9 @@ export interface MarketExpenditureAttribute{
     roomRate: AbstractDecimal,
    
  }
+ export interface QualityRatingAttribute{
+    label: string,
+    hotel: AbstractDecimal,
+    marketAverage: AbstractDecimal,
+   
+ }

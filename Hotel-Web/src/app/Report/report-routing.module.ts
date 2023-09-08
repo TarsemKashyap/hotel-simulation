@@ -18,7 +18,7 @@ import { MarketSharePositionAloneComponent } from './market-share-position-alone
 import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-amentities.component';
 import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
 import { PositionMapComponent } from './position-map/position-map.component';
-
+import { QualityRatingComponent } from './quality-rating/quality-rating.component';
 export const reportRoutes: Routes = [
   {
 
@@ -40,6 +40,7 @@ export const reportRoutes: Routes = [
       { path: ':id/attribute-amentities-report',component:AttributeAmentitiesComponent},
       { path: ':id/market-expenditure-report',component:MarketExpenditureComponent},
       { path: ':id/position-map-report',component:PositionMapComponent},
+      { path: ':id/quality-rating-report',component:QualityRatingComponent},
     ],
     canActivate:[checkAccessPermission],
     data: { role: AppRoles.Student } as AuthRouteData,
