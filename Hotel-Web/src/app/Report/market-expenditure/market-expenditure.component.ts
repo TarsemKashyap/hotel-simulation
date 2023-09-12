@@ -81,7 +81,7 @@ if (chartStatus != undefined) {
         this.marketExpenditureReportResponse = reportData;  
         
        this.ChartData=this.marketExpenditureReportResponse.segments;
-       debugger;
+      
        let selectorName:string=this.selectedSector?.value!;
        let strategyName:string=this.selectedMarketingStrategy?.value!;
 
