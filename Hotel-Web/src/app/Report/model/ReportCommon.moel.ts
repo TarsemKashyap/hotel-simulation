@@ -121,3 +121,14 @@ export interface MarketExpenditureAttribute{
     marketAverage: AbstractDecimal,
    
  }
+ export interface Sector{
+    name: string,
+    value: string
+   
+ }
+ export interface MarketingStrategy{
+    name: string,
+    value: string
+   
+ }
+ 

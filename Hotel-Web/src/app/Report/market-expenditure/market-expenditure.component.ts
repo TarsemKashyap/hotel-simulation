@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {MarketExpenditureReportResponse} from '../model/MarketExpenditureResponse.model';
 import Chart from 'chart.js/auto';
-import {MarketExpenditureReportAttribute } from "../model/ReportCommon.moel";
+import {MarketExpenditureReportAttribute,Sector,MarketingStrategy } from "../model/ReportCommon.moel";
 
 @Component({
   selector: 'app-market-expenditure',
@@ -21,7 +21,12 @@ export class MarketExpenditureComponent {
   classId: number | undefined;
   groups: ClassGroup[] = [];
   selectedHotel : ClassGroup | undefined;
-
+  selectedMarketingStrategyList:MarketingStrategy[]=[];
+  selectedSectorlist:Sector[]=[];
+  selectedSector:Sector|undefined;
+  chartLabel:string="";
+  
+  selectedMarketingStrategy:MarketingStrategy|undefined;
   reportParam:ReportParams = {} as ReportParams;
   marketExpenditureReportResponse : MarketExpenditureReportResponse = {} as MarketExpenditureReportResponse;
   public chart: any;
@@ -42,18 +47,33 @@ export class MarketExpenditureComponent {
   ngOnInit(): void {
     this.classId = this.activeRoute.snapshot.params['id'];
     this.loadMonths();
- 
+    this. selectedMarketingStrategyList.push({name:"Advertising",value:"Advertising"},{name:"Sales Force",value:"Sales Force"},
+    {name:"Promotions",value:"Promotions"},{name:"Public Relations",value:"Public Relations"});
+    this. selectedSectorlist.push({name:"Labor",value:"Labor"},{name:"Other",value:"Other"});
+
+
+  this.selectedMarketingStrategy=this.selectedMarketingStrategyList.at(0);
+ this.selectedSector=this.selectedSectorlist.at(0);
+//  this.selectedMarketingStrategy=""
   }
 
    onOptionChange() {
+    let chartStatus = Chart.getChart("MyChart"); // <canvas> id
+if (chartStatus != undefined) {
+  chartStatus.destroy();
+}
      this.loadReportDetails();
    }
+  
 
   loadReportDetails() {    
     this.reportParam.ClassId =  this.classId!;
     this.reportParam.GroupId =this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
+    console.log("selectedSector" ,this.selectedSector);
+    console.log("selectedMarketingStrategy" ,this.selectedMarketingStrategy);
+
     this.reportService.marketExpenditureReportDetails(this.reportParam).subscribe((reportData) => {
       // console.log('DATA...........');
       
@@ -61,13 +81,84 @@ export class MarketExpenditureComponent {
         this.marketExpenditureReportResponse = reportData;  
         
        this.ChartData=this.marketExpenditureReportResponse.segments;
+       debugger;
+       let selectorName:string=this.selectedSector?.value!;
+       let strategyName:string=this.selectedMarketingStrategy?.value!;
+
+       this.Xaxis=this.ChartData.map(item=>item.label);
+       if(this.selectedSector?.value=="Labor")
+       {
+        this.YaxisSaleForce=[];
        
-      this.YaxisData.push.apply(this.YaxisData,this.ChartData);
-          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.labor.salesForce));
-     this.YaxisAdv.push.apply(this.YaxisAdv,this.ChartData.map(i=>i.labor.advertising));
-          this.Xaxis=this.ChartData.map(item=>item.label);
+          if(this.selectedMarketingStrategy?.value== "Advertising")
+            {
+          this.chartLabel="Advertising";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.labor.advertising));
+            }
         
-          console.log('this.YaxisAdv',this.YaxisAdv)
+           else if(this.selectedMarketingStrategy?.value=== "Sales Force")
+            {
+          this.chartLabel="Sales Force";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.labor.salesForce));
+         
+            }
+            else if(this.selectedMarketingStrategy?.value== "Promotions")
+            {
+          this.chartLabel="Promotions";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.labor.promotions));
+          
+            }
+            else  if(this.selectedMarketingStrategy?.value== "Public Relations")
+            {
+          this.chartLabel="Public Relations";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.labor.publicRelations));
+         
+            }
+         
+       // }
+
+
+       }
+       else
+       {
+        this.YaxisSaleForce=[];
+        // switch(this.selectedMarketingStrategy?.name)
+        // {
+          if(this.selectedMarketingStrategy?.name== this.selectedMarketingStrategyList.at(0)?.name)
+            {
+          this.chartLabel="Advertising";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.other.advertising));
+         
+            }
+            if(this.selectedMarketingStrategy?.name== this.selectedMarketingStrategyList.at(1)?.name)
+            {
+          this.chartLabel="Sales Force";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.other.salesForce));
+          
+          }
+          if(this.selectedMarketingStrategy?.name== "Promotions")
+            {
+          this.chartLabel="Promotions";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.other.promotions));
+         
+            }
+            if(this.selectedMarketingStrategy?.name== "Public Relations")
+            {
+          this.chartLabel="Public Relations";
+          this.YaxisSaleForce.push.apply(this.YaxisSaleForce,this.ChartData.map(i=>i.other.publicRelations));
+         
+            }
+         
+
+      //  }
+       }
+      //this.YaxisData.push.apply(this.YaxisData,this.ChartData);
+         
+    //  this.YaxisAdv.push.apply(this.YaxisAdv,this.ChartData.map(i=>i.labor.advertising));
+          
+        
+          console.log('this.YaxisAdv',this.YaxisAdv);
+          console.log('this.YaxisSaleforce',this.YaxisSaleForce);
         this.createChart(); 
     });
   }
@@ -96,15 +187,15 @@ export class MarketExpenditureComponent {
         labels: this.Xaxis, 
 	       datasets: [
           {
-            label: "SaleForce",
+            label: this.chartLabel,
             data: this.YaxisSaleForce,
             backgroundColor: 'blue'
           },
-          {
-            label: "Advertisement",
-            data: this.YaxisAdv,
-            backgroundColor: 'limegreen'
-          }  
+          // {
+          //   label: "Advertisement",
+          //   data: this.YaxisAdv,
+          //   backgroundColor: 'limegreen'
+          // }  
         ]
       },
       options: {
