@@ -1,0 +1,107 @@
+<h1>RevPAR,TOTAL REVPAR And Gophar, Report</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>RevPAR,TOTAL REVPAR And Gophar for the Month</h2>
+<div class="chart-container">
+  <canvas  id="MyChart" >{{ chart }}</canvas>
+</div>
+<table class="style1">
+  <tr>
+    <td class="style2">
+        &nbsp;
+      </td>
+    <td class="style2">
+      Hotel1
+    </td>
+      <td class="style2">
+       MarketAvarage
+    </td>
+    <td class="style2">
+     Index</td>
+    
+  </tr>
+  <tr>
+    <td class="style2">
+       {{ revParGopalReportResponse.overAll.label}}
+      </td>
+    <td class="style2">
+       $ {{ numberToDecimal(revParGopalReportResponse.overAll.hotel)}}
+    </td>
+      <td class="style2">
+       $ {{numberToDecimal(revParGopalReportResponse.overAll.marketAvg)}}
+    </td>
+    <td class="style2">
+        {{numberToDecimal(revParGopalReportResponse.overAll.index)}}
+    </td>
+    
+  </tr>
+ <tr *ngFor="let overAllChildData of revParGopalReportResponse.overAllChild" >
+  
+  <td class="style2" style="padding: 0px 0px 0px 30px">
+      {{overAllChildData.label}}</td>
+      
+    <td class="style3">
+      ${{numberToDecimal(overAllChildData.hotel) }}
+    </td>
+    <td class="style3">
+        ${{numberToDecimal(overAllChildData.marketAvg) }}
+      </td>
+      <td class="style3">
+        {{numberToDecimal(overAllChildData.index) }}
+      </td>
+ </tr>
+ <tr>
+  <td class="style2">
+     {{ revParGopalReportResponse.totalRevpar.label}}
+    </td>
+  <td class="style2">
+      ${{ numberToDecimal(revParGopalReportResponse.totalRevpar.hotel)}}
+  </td>
+    <td class="style2">
+      ${{numberToDecimal(revParGopalReportResponse.totalRevpar.marketAvg)}}
+  </td>
+  <td class="style2">
+      {{numberToDecimal(revParGopalReportResponse.totalRevpar.index)}}
+  </td>
+  
+</tr>
+<tr>
+  <td class="style2">
+     {{ revParGopalReportResponse.goPar.label}}
+    </td>
+  <td class="style2">
+      ${{ numberToDecimal(revParGopalReportResponse.goPar.hotel)}}
+  </td>
+    <td class="style2">
+      ${{numberToDecimal(revParGopalReportResponse.goPar.marketAvg)}}
+  </td>
+  <td class="style2">
+      {{numberToDecimal(revParGopalReportResponse.goPar.index)}}
+  </td>
+  
+</tr>
+</table>

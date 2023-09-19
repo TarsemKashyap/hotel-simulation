@@ -6,6 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReportParams } from '../model/ReportParams.model';
 import { PerformanceResponse } from '../model/PerformanceResponse.model';
 
+
+
+
+
 @Component({
   selector: 'app-performance',
   templateUrl: './performance.component.html',
@@ -60,4 +64,11 @@ export class PerformanceComponent {
       this.loadPerformanceDetails();
     });
   }
+  numberToDecimal(x:any)
+  {
+    return this.reportService.numberToDecimal(x);
+  }
+  numberWithCommas(x:any) {
+    return this.reportService.numberWithCommas(x);
+}
 }

@@ -1,0 +1,10 @@
+table {
+    width: 100% !important;
+  }
+  tr {
+    height: 50px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  td{
+    width:100px;
+  }
