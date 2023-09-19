@@ -34,6 +34,8 @@
 
   // ===== responsive navbar
   let navbarToggler = document.querySelector("#navbarToggler");
+  if(navbarToggler!==null)
+  {
   const navbarCollapse = document.querySelector("#navbarCollapse");
 
   navbarToggler.addEventListener("click", () => {
@@ -50,7 +52,7 @@
         navbarCollapse.classList.add("hidden");
       })
     );
-
+  }
   // ===== Sub-menu
   const submenuItems = document.querySelectorAll(".submenu-item");
   submenuItems.forEach((el) => {
