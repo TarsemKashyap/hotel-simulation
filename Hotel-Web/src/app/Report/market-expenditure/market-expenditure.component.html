@@ -108,7 +108,7 @@
         </table>
       </td>
   </tr>
-   <tr>
+   <tr *ngIf="marketExpenditureReportResponse.total">
     <td> {{marketExpenditureReportResponse.total.label}}</td>
     <td><span style="visibility: hidden;">	
         Labor Total</span></td>
@@ -119,7 +119,9 @@
                 <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.total)}}</td>
     </tr>
   <tr><td colspan="4"><hr/></td></tr>
-   <tr><td style="width: 151px;">Total marketing expenditure is:${{ decimalnumberWithCommas(marketExpenditureReportResponse.total.total)}}</td></tr>
+   <tr *ngIf="marketExpenditureReportResponse.total">
+    <td style="width: 151px;">Total marketing expenditure is:${{ decimalnumberWithCommas(marketExpenditureReportResponse.total.total)}}</td>
+  </tr>
  
   
 </table>

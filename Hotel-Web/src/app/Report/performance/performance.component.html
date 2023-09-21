@@ -24,7 +24,7 @@
         </mat-select>
       </mat-form-field>
     </span>
-      <table class="style1">
+      <table class="style1" *ngIf="performancereportResponse.statstics">
         <tr >
             <td class="style2">
                 Monthly Profit</td>
@@ -71,7 +71,7 @@
       </table>
       <h2>Financial Ratio</h2>
 <br />
-    <table class="style1">
+    <table class="style1" *ngIf="performancereportResponse.financialRatios">
         <tr>
             <td class="style2">
                 &nbsp;</td>

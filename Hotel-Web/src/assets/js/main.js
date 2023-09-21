@@ -4,6 +4,8 @@
   // ======= Sticky
   window.onscroll = function () {
     const ud_header = document.querySelector(".ud-header");
+    if(ud_header!==null)
+    {
     const sticky = ud_header.offsetTop;
     const logo = document.querySelector(".header-logo");
 
@@ -19,7 +21,7 @@
     } else {
       logo.src = "assets/images/logo/blue-white-logo.png";
     }
-
+  }
     // show or hide the back-top-top button
     const backToTop = document.querySelector(".back-to-top");
     if (

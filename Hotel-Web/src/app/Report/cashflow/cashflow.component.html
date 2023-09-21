@@ -26,12 +26,13 @@
   </mat-form-field>
 </span>
 <h2>CashFlow for the Month</h2>
-<table class="style1">
+<table class="style1" *ngIf="cashFlowreportResponse">
   <tr>
     
     <td class="style2">
       
-      {{cashFlowreportResponse.netIncome.label}} NetIncome
+      <!-- {{cashFlowreportResponse.netIncome.label}} -->
+       Net Income
     </td>
       <td class="style2">
         &nbsp;</td>
@@ -42,7 +43,10 @@
 
     </td>
   </tr>
- <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
+</table>
+<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
+  
+ <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern" >
       <td class="style2">
         &nbsp;</td>
     
@@ -50,12 +54,14 @@
       {{netIncomeData.label}}</td>
       <td class="style2">
         &nbsp;</td>
-    <td class="style3">
+    <td class="style2" style="text-align: right;">
       {{numberWithCommas(netIncomeData.data.value) | ValueFormatterPipe: netIncomeData.data.format }}
     
 
     </td>
   </tr>
+</table>
+<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
   <tr>
     <td class="style2">
       
@@ -70,7 +76,8 @@
 
     </td>
   </tr>
-
+</table>
+<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
   <tr *ngFor="let netCashFlowData of cashFlowreportResponse.netCashFlow.childern">
     <td class="style2">
       &nbsp;</td>
@@ -79,12 +86,14 @@
     {{netCashFlowData.label}}</td>
     <td class="style2">
       &nbsp;</td>
-  <td class="style3">
+  <td class="style2" style="text-align: right;">
     {{numberWithCommas(netCashFlowData.data.value) | ValueFormatterPipe: netCashFlowData.data.format }}
   
 
   </td>
 </tr>
+</table>
+<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
 <tr>
   <td class="style2">
     
@@ -94,7 +103,7 @@
       &nbsp;</td>
   <td class="style2">
     &nbsp;</td>
-  <td class="style2">
+  <td class="style2" style="text-align: right;">
     {{numberWithCommas(cashFlowreportResponse.currentCashBalnce.data.value) | ValueFormatterPipe: cashFlowreportResponse.currentCashBalnce.data.format }}
 
   </td>

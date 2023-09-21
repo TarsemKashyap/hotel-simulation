@@ -48,8 +48,7 @@ export class BalanceComponent {
     this.reportService.balanceReportDetails(this.reportParam).subscribe((reportData) => {
    
         this.balancereportResponse = reportData; 
-        debugger; 
-        console.log('DataLenght',this.balancereportResponse);      
+          
     });
   }
 
