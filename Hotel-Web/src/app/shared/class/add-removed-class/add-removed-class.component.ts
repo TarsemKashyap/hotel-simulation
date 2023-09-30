@@ -54,9 +54,8 @@ export class AddRemovedClassComponent {
       cellRendererParams: {
         actions: [
           {
-            placeHolder: 'visibility',
-            mode: 'icon',
-            cssClass: 'hover:text-primary mr-1 mt-1',
+            placeHolder: 'Reports',
+            mode: 'text',
             onClick: this.loadReport(),
             hide: () => false,
           },
@@ -86,7 +85,7 @@ export class AddRemovedClassComponent {
     public activeRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.loadClasses();
   }
 
@@ -107,12 +106,12 @@ export class AddRemovedClassComponent {
     });
   }
 
-  loadReport() : ($event: Event , row: any) => void {
+  loadReport(): ($event: Event, row: any) => void {
     return ($event: Event, row: IRowNode<ClassSession>) => {
-      this.router.navigate(['../report', row.data?.classId,'list'], {
+      this.router.navigate(['../report', row.data?.classId, 'list'], {
         relativeTo: this.activeRoute,
       });
-    }
+    };
   }
 
   setAsDefault(): ($event: Event, row: any) => void {
