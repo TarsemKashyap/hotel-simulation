@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace Service;
 using Common.Dto;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using Mysqlx.Prepare;
 using System;
 
@@ -41,20 +42,22 @@ public class BalanceSheetService : IBalanceSheetService
 
     public async Task<BalanceSheetDto> BalanceSheetDetails(int MonthID, int? groupId, int quarterNo)
     {
-        var balanceDetails =  _context.BalanceSheet.Where(c => c.MonthID == MonthID && c.GroupID == groupId && c.QuarterNo == quarterNo).Select(s => new BalanceSheetDto
-        {
-            LongDebt = s.LongDebt,
-            ShortDebt = s.ShortDebt,
-            LongDebtPay = s.LongDebtPay,
-            ShortDebtPay = s.ShortDebtPay,
-            GroupID = s.GroupID,
-            QuarterNo = s.QuarterNo,
-            ID = s.ID
-        }).ToList().FirstOrDefault();
+        var balanceDetails = await _context.BalanceSheet
+            .Where(c => c.MonthID == MonthID && c.GroupID == groupId && c.QuarterNo == quarterNo)
+            .Select(s => new BalanceSheetDto
+            {
+                LongDebt = s.LongDebt,
+                ShortDebt = s.ShortDebt,
+                LongDebtPay = s.LongDebtPay,
+                ShortDebtPay = s.ShortDebtPay,
+                GroupID = s.GroupID,
+                QuarterNo = s.QuarterNo,
+                ID = s.ID
+            }).FirstOrDefaultAsync();
 
         return balanceDetails;
 
     }
-  
+
 
 }

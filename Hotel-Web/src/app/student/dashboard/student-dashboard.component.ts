@@ -59,7 +59,7 @@ private studentRolesList() {
       this.sessionStore.SetStudentRole(this.studentRoleList);
       
       this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
-      this.studentRolePageList.unshift({pageKey:"menu",pageName:"Menu",roleName:"",childPageLink:"menu"},{pageKey:"ChangePwd",pageName:"Change your password",roleName:"",childPageLink:"change-password"})
+      this.studentRolePageList.unshift({pageKey:"menu",pageName:"Menu",roleName:"",childPageLink:"menu"},{pageKey:"ChangePwd",pageName:"Change password",roleName:"",childPageLink:"change-password"})
     });
 }
 
