@@ -36,7 +36,7 @@
                 <td class="style2"><b>Hotel</b></td>
                 <td class="style2" > <b>Market Avarage</b></td>
      </tr>
-     <tr>
+     <tr *ngIf="qualityRatingReportResponse.overAll">
         <td class="style2">{{qualityRatingReportResponse.overAll.label}}</td>
         <td class="style2" > {{ numberToDecimal(qualityRatingReportResponse.overAll.hotel)}}</td>
         <td class="style2" >{{ numberToDecimal(qualityRatingReportResponse.overAll.marketAverage)}}</td>

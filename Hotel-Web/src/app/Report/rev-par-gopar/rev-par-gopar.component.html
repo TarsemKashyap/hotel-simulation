@@ -29,7 +29,7 @@
 <div class="chart-container">
   <canvas  id="MyChart" >{{ chart }}</canvas>
 </div>
-<table class="style1">
+<table class="style1" *ngIf="revParGopalReportResponse">
   <tr>
     <td class="style2">
         &nbsp;
@@ -44,7 +44,7 @@
      Index</td>
     
   </tr>
-  <tr>
+  <tr  *ngIf="revParGopalReportResponse.overAll">
     <td class="style2">
        {{ revParGopalReportResponse.overAll.label}}
       </td>
@@ -74,7 +74,7 @@
         {{numberToDecimal(overAllChildData.index) }}
       </td>
  </tr>
- <tr>
+ <tr  *ngIf="revParGopalReportResponse.totalRevpar">
   <td class="style2">
      {{ revParGopalReportResponse.totalRevpar.label}}
     </td>
@@ -89,7 +89,7 @@
   </td>
   
 </tr>
-<tr>
+<tr *ngIf="revParGopalReportResponse.goPar">
   <td class="style2">
      {{ revParGopalReportResponse.goPar.label}}
     </td>

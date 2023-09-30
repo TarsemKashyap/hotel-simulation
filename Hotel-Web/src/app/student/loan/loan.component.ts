@@ -34,7 +34,7 @@ export class LoanComponent implements OnInit {
 
   private getBalanceSheetDetail() {
     this.studentService.BalanceSheetDetails().subscribe((data) => {
-      this.balanceSheetDetails = data;
+      this.balanceSheetDetails = data||{};
       this.form.patchValue({ payLongTermLoan: this.balanceSheetDetails.longDebtPay, payEmergencyLoan: this.balanceSheetDetails.shortDebtPay });
       this.longTermLoan = this.balanceSheetDetails.longDebt;
       this.emergencyLoan = this.balanceSheetDetails.shortDebt;
