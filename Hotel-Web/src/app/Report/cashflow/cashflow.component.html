@@ -31,8 +31,7 @@
     
     <td class="style2">
       
-      <!-- {{cashFlowreportResponse.netIncome.label}} -->
-       Net Income
+      {{cashFlowreportResponse.netIncome.label}} NetIncome
     </td>
       <td class="style2">
         &nbsp;</td>
@@ -46,7 +45,7 @@
 </table>
 <table class="style1" *ngIf="cashFlowreportResponse.netIncome">
   
- <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern" >
+ <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
       <td class="style2">
         &nbsp;</td>
     
@@ -54,7 +53,7 @@
       {{netIncomeData.label}}</td>
       <td class="style2">
         &nbsp;</td>
-    <td class="style2" style="text-align: right;">
+    <td class="style3">
       {{numberWithCommas(netIncomeData.data.value) | ValueFormatterPipe: netIncomeData.data.format }}
     
 
@@ -86,7 +85,7 @@
     {{netCashFlowData.label}}</td>
     <td class="style2">
       &nbsp;</td>
-  <td class="style2" style="text-align: right;">
+  <td class="style3">
     {{numberWithCommas(netCashFlowData.data.value) | ValueFormatterPipe: netCashFlowData.data.format }}
   
 
