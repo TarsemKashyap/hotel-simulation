@@ -2,6 +2,7 @@
 {
     public class StatisticsDto
     {
+        public string HotelName { get; set; }
         public AbstractDecimal MonthlyProfit { get; set; }
         public AbstractDecimal AccumulativeProfit { get; set; }
         public AbstractDecimal MarketShareRevenueBased { get; set; }
@@ -10,4 +11,6 @@
         public AbstractDecimal REVPAR { get; set; }
 
     }
+
+
 }
