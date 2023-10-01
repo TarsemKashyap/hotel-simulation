@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppRoles } from '../public/account';
-import {RolePagesDtl}  from '../shared/class/model/Roles';
+import { RolePagesDtl } from '../shared/class/model/Roles';
 
 const RefreshToken = 'RefreshToken';
 const AccessToken = 'AccessToken';
@@ -13,12 +13,168 @@ const marketManagerPagesArr: RolePagesDtl[] = [];
 const roomManagerPagesArr: RolePagesDtl[] = [];
 let studentRole = 'studentRole';
 let currentRole = 'currentRole';
-revenueManagerPagesArr.push({pageKey:"rmChangeClass",pageName:"Add/Change class",roleName:"RM",childPageLink:"change-class"},{pageKey:"rmMakeDecision",pageName:"Make your decisions",roleName:"RM",childPageLink:"decision"},{pageKey:"rmViewReport",pageName:"viewReports",roleName:"RM",childPageLink:""},{pageKey:"rmLoan",pageName:"Borrow/Pay your loans",roleName:"RM",childPageLink:"loan"});
-generalManagerPagesArr.push({pageKey:"gmChangeClass",pageName:"Add/Change class",roleName:"GM",childPageLink:"change-class"},{pageKey:"gmSetYourObjective",pageName:"Set your objective",roleName:"GM",childPageLink:"goalSetting"},{pageKey:"rmMakeDecision",pageName:"Make your decisions",roleName:"GM",childPageLink:"decision"},{pageKey:"gmViewReport",pageName:"viewReports",roleName:"GM",childPageLink:""},{pageKey:"gmLoan",pageName:"Borrow/Pay your loans",roleName:"GM",childPageLink:"loan"});
-roManagerPagesArr.push({pageKey:"roChangeClass",pageName:"Add/Change class",roleName:"RT",childPageLink:"change-class"},{pageKey:"roMakeDecision",pageName:"Make your decisions",roleName:"RT",childPageLink:"decision"},{pageKey:"roViewReport",pageName:"viewReports",roleName:"RT",childPageLink:""},{pageKey:"roLoan",pageName:"Borrow/Pay your loans",roleName:"RT",childPageLink:"loan"});
-fbManagerPagesArr.push({pageKey:"fbChangeClass",pageName:"Add/Change class",roleName:"FB",childPageLink:"change-class"},{pageKey:"fbMakeDecision",pageName:"Make your decisions",roleName:"FB",childPageLink:"decision"},{pageKey:"fbViewReport",pageName:"viewReports",roleName:"FB",childPageLink:""},{pageKey:"fbLoan",pageName:"Borrow/Pay your loans",roleName:"FB",childPageLink:"loan"});
-marketManagerPagesArr.push({pageKey:"mmChangeClass",pageName:"Add/Change class",roleName:"MM",childPageLink:"change-class"},{pageKey:"mmMakeDecision",pageName:"Make your decisions",roleName:"MM",childPageLink:"decision"},{pageKey:"mmViewReport",pageName:"viewReports",roleName:"MM",childPageLink:""},{pageKey:"mmLoan",pageName:"Borrow/Pay your loans",roleName:"MM",childPageLink:"loan"});
-roomManagerPagesArr.push({pageKey:"retailChangeClass",pageName:"Add/Change class",roleName:"RO",childPageLink:"change-class"},{pageKey:"retailMakeDecision",pageName:"Make your decisions",roleName:"RO",childPageLink:"decision"},{pageKey:"retailViewReport",pageName:"viewReports",roleName:"RO",childPageLink:""},{pageKey:"retailLoan",pageName:"Borrow/Pay your loans",roleName:"RO",childPageLink:"loan"});
+revenueManagerPagesArr.push(
+  {
+    pageKey: 'rmChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'RM',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'rmMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'RM',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'rmViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'RM',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'rmLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'RM',
+    childPageLink: 'loan',
+  }
+);
+generalManagerPagesArr.push(
+  {
+    pageKey: 'gmChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'GM',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'gmSetYourObjective',
+    pageName: 'Set your objective',
+    roleName: 'GM',
+    childPageLink: 'goalSetting',
+  },
+  {
+    pageKey: 'rmMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'GM',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'gmViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'GM',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'gmLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'GM',
+    childPageLink: 'loan',
+  }
+);
+roManagerPagesArr.push(
+  {
+    pageKey: 'roChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'RT',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'roMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'RT',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'roViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'RT',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'roLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'RT',
+    childPageLink: 'loan',
+  }
+);
+fbManagerPagesArr.push(
+  {
+    pageKey: 'fbChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'FB',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'fbMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'FB',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'fbViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'FB',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'fbLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'FB',
+    childPageLink: 'loan',
+  }
+);
+marketManagerPagesArr.push(
+  {
+    pageKey: 'mmChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'MM',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'mmMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'MM',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'mmViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'MM',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'mmLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'MM',
+    childPageLink: 'loan',
+  }
+);
+roomManagerPagesArr.push(
+  {
+    pageKey: 'retailChangeClass',
+    pageName: 'Class Overview',
+    roleName: 'RO',
+    childPageLink: 'change-class',
+  },
+  {
+    pageKey: 'retailMakeDecision',
+    pageName: 'Make your decisions',
+    roleName: 'RO',
+    childPageLink: 'decision',
+  },
+  // {
+  //   pageKey: 'retailViewReport',
+  //   pageName: 'viewReports',
+  //   roleName: 'RO',
+  //   childPageLink: '',
+  // },
+  {
+    pageKey: 'retailLoan',
+    pageName: 'Borrow/Pay your loans',
+    roleName: 'RO',
+    childPageLink: 'loan',
+  }
+);
 
 let RolesDetails = new Map<number, RolePagesDtl[]>([
   [1, revenueManagerPagesArr],
@@ -27,7 +183,6 @@ let RolesDetails = new Map<number, RolePagesDtl[]>([
   [4, generalManagerPagesArr],
   [5, roomManagerPagesArr],
   [6, marketManagerPagesArr],
- 
 ]);
 
 @Injectable({ providedIn: 'root' })
@@ -42,32 +197,37 @@ export class SessionStore {
     return localStorage.getItem(RefreshToken);
   }
 
-  SetStudentRole(value:any) {
+  SetStudentRole(value: any) {
     localStorage.setItem(studentRole, JSON.stringify(value));
   }
 
-  SetCurrentRole(value:any){
+  SetCurrentRole(value: any) {
     localStorage.setItem(currentRole, value);
   }
 
-  GetCurrentRole () {
-    return localStorage.getItem(currentRole) 
+  GetCurrentRole() {
+    return localStorage.getItem(currentRole);
   }
 
   studentAssignRoleList() {
-    return localStorage.getItem(studentRole) ;
+    return localStorage.getItem(studentRole);
   }
 
   GetStudentRole() {
-    var rolesArray : string = "";
-    var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
+    var rolesArray: string = '';
+    var selectedRolesArr = JSON.parse(
+      localStorage.getItem(studentRole) || '[]'
+    );
     const roleArray: any = [];
-    selectedRolesArr.forEach((element : any) => {
-      let arrDtl = RolesDetails.get(element.id) == undefined?[]:RolesDetails.get(element.id) ;
-      roleArray.push(...arrDtl ? arrDtl : []);
+    selectedRolesArr.forEach((element: any) => {
+      let arrDtl =
+        RolesDetails.get(element.id) == undefined
+          ? []
+          : RolesDetails.get(element.id);
+      roleArray.push(...(arrDtl ? arrDtl : []));
     });
     rolesArray += JSON.stringify(roleArray);
-    
+
     return rolesArray;
   }
 
@@ -94,6 +254,4 @@ export class SessionStore {
   clearSession() {
     return localStorage.clear();
   }
-
- 
 }

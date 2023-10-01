@@ -24,33 +24,33 @@
         </mat-select>
       </mat-form-field>
     </span>
-      <table class="style1">
+      <table class="style1" *ngIf="performancereportResponse.statstics">
         <tr >
             <td class="style2">
                 Monthly Profit</td>
             <td style="border-style: none none inset none; border-width: thin">
-                {{performancereportResponse.statstics.monthlyProfit.value}}
+                {{numberWithCommas(performancereportResponse.statstics.monthlyProfit.value)| ValueFormatterPipe: performancereportResponse.statstics.monthlyProfit.format}}
             </td>
         </tr>
         <tr>
             <td class="style2">
                 Accumulated Profit</td>
             <td style="border-style: none none inset none; border-width: thin">
-                {{performancereportResponse.statstics.accumulativeProfit.value}}
+                {{numberWithCommas(performancereportResponse.statstics.accumulativeProfit.value)| ValueFormatterPipe: performancereportResponse.statstics.accumulativeProfit.format}}
             </td>
         </tr>
         <tr>
             <td class="style2">
                 Market Share based on Revenue</td>
             <td class="style2">
-                {{performancereportResponse.statstics.marketShareRevenueBased.value}}
+                {{numberWithCommas(performancereportResponse.statstics.marketShareRevenueBased.value)| ValueFormatterPipe: performancereportResponse.statstics.marketShareRevenueBased.format}}
             </td>
         </tr>
         <tr>
             <td class="style2">
                 Market Share based on Rooms Sold</td>
             <td class="style2">
-                {{performancereportResponse.statstics.marketShareRoomSoldBased.value}}
+                {{numberWithCommas(performancereportResponse.statstics.marketShareRoomSoldBased.value)| ValueFormatterPipe: performancereportResponse.statstics.marketShareRoomSoldBased.format}}
             </td>
         </tr>
         <tr>
@@ -58,20 +58,20 @@
                 Occupancy 
                 Percentage</td>
             <td class="style2">
-                {{performancereportResponse.statstics.occupancy.value}}
+                {{numberWithCommas(performancereportResponse.statstics.occupancy.value)| ValueFormatterPipe: performancereportResponse.statstics.occupancy.format}}
             </td>
         </tr>
         <tr>
             <td class="style2">
                 REVPAR</td>
             <td class="style2">
-                {{performancereportResponse.statstics.revpar.value}}
+                {{numberWithCommas(performancereportResponse.statstics.revpar.value)| ValueFormatterPipe: performancereportResponse.statstics.revpar.format}}
             </td>
         </tr>
       </table>
       <h2>Financial Ratio</h2>
 <br />
-    <table class="style1">
+    <table class="style1" *ngIf="performancereportResponse.financialRatios">
         <tr>
             <td class="style2">
                 &nbsp;</td>
@@ -95,7 +95,9 @@
             <td class="style2">
                 {{liquidData.label}}</td>
             <td class="style3">
-                {{liquidData.data.value}}
+                <!-- ppppp{{liquidData.data.value}} -->
+                {{numberToDecimal(liquidData.data.value)| ValueFormatterPipe:liquidData.data.format}}
+               
             </td>
         </tr>
         
@@ -113,7 +115,7 @@
             <td class="style2">
                 {{solvancyData.label}}</td>
             <td class="style3">
-                {{solvancyData.data.value}}
+                {{numberToDecimal(solvancyData.data.value)| ValueFormatterPipe: solvancyData.data.format}}
             </td>
         </tr>
         <tr>
@@ -130,7 +132,7 @@
             <td class="style2">
                 {{profitablityData.label}}</td>
             <td class="style3">
-                {{profitablityData.data.value}}
+                {{numberToDecimal(profitablityData.data.value)}}
             </td>
         </tr>
         <tr>
@@ -147,7 +149,7 @@
             <td class="style2">
                 {{turnOverData.label}}</td>
             <td class="style3">
-                {{turnOverData.data.value}}
+                {{numberToDecimal(turnOverData.data.value)}}
             </td>
         </tr>
     </table>

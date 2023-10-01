@@ -1,0 +1,62 @@
+<h1>Avg-Daily-Rate Report</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>Avg-Daily-Rate for the Month</h2>
+<div class="chart-container">
+  <canvas  id="MyChart" >{{ chart }}</canvas>
+</div>
+<table class="style1">
+  <tr>
+    <td class="style2">
+        &nbsp;
+      </td>
+    <td class="style2">
+      Hotel1
+    </td>
+      <td class="style2">
+       MarketAvarage
+    </td>
+    <td class="style2">
+     Index</td>
+    
+  </tr>
+ <tr *ngFor="let avgDailyRateData of avgDailyRateReportResponse.data">
+      <td class="style2">
+      {{avgDailyRateData.label}}</td>
+      
+    <td class="style3">
+      ${{numberToDecimal(avgDailyRateData.hotel) }}
+    </td>
+    <td class="style3">
+        ${{numberToDecimal(avgDailyRateData.marketAvg) }}
+      </td>
+      <td class="style3">
+        {{numberToDecimal(avgDailyRateData.index) }}
+      </td>
+ </tr>
+  
+</table>

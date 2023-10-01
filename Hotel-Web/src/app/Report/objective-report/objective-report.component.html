@@ -54,26 +54,27 @@
          {{goalData.indicators}}
         </td>
       <td style="border-style: none none inset none; border-width: thin">
-        {{goalData.performance | ValueFormatterPipe: goalData.formatter}}
+        <!-- {{goalData.indicators === "Room revenue" ? numberWithCommas(goalData.performance) : numberToDecimal(goalData.performance)| ValueFormatterPipe: goalData.formatter }} -->
+        {{ numberToDecimal(goalData.performance) | ValueFormatterPipe: goalData.formatter}}
       </td>
 
       <td style="border-style: none none inset none; border-width: thin">
-        {{goalData.marketAverage | ValueFormatterPipe: goalData.formatter}}
+        {{numberToDecimal(goalData.marketAverage) | ValueFormatterPipe: goalData.formatter}}
         
       </td>
 
       <td style="border-style: none none inset none; border-width: thin">
-        {{goalData.perfMarketAvgerage | ValueFormatterPipe: goalData.formatter}}
+        {{numberToDecimal(goalData.perfMarketAvgerage) | ValueFormatterPipe: goalData.formatter}}
        
       </td>
 
       <td style="border-style: none none inset none; border-width: thin">
-        {{goalData.objective | ValueFormatterPipe: goalData.formatter}}
+        {{numberToDecimal(goalData.objective) | ValueFormatterPipe: goalData.formatter}}
         
       </td>
 
       <td style="border-style: none none inset none; border-width: thin">
-        {{goalData.prefObjective | ValueFormatterPipe: goalData.formatter}}
+        {{numberToDecimal(goalData.prefObjective) | ValueFormatterPipe: goalData.formatter}}
         
       </td>
 

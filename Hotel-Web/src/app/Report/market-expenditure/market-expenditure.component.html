@@ -1,0 +1,127 @@
+<h1>MARKETING EXPENDITURE REPORT</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Marketing Strategy</i>
+      <i *ngIf="!MonthList.length"> No Marketing Strategy available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMarketingStrategy" name="selectedMarketingStrategy">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let MarketingStrategy of selectedMarketingStrategyList" [value]="MarketingStrategy">
+        {{ MarketingStrategy.name }}
+      </mat-option>
+      
+     
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Sector</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedSector" name="selectedSector">
+      <mat-label>Choose an Sector</mat-label>
+      <mat-option  *ngFor="let Sector of selectedSectorlist" [value]="Sector">
+        {{Sector.name}}
+      </mat-option>
+     
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>MARKETING EXPENDITURE REPORT</h2>
+<div class="chart-container">
+    <canvas  id="MyChart" >{{ chart }}</canvas>
+  </div>
+ <table class="style1">
+  <tr>
+    <td class="style2"><b>Segment</b></td>
+    
+    <td colspan="6" class="style2">
+    <table >
+        <tr>
+            <td class="style2"><span style="visibility: hidden;">	
+                Labor Total</span></td>
+            <td class="style2" > <b>Advertising</b></td>
+            <td class="style2" ><b>Sales Force</b></td>
+            <td class="style2" ><b>Promotions</b></td>
+            <td class="style2" ><b>Public Relations</b></td>
+            <td class="style2" ><b>Total</b></td>
+        </tr>
+    </table>    
+    </td>
+   
+ </tr>
+  
+
+ <tr *ngFor="let marketExpenditureData of marketExpenditureReportResponse.segments">
+      
+    
+    <td class="style2">
+      {{marketExpenditureData.label}}</td>
+      <td colspan="6" class="style2">
+        <table >
+            <tr>
+
+                <td class="style2" >{{marketExpenditureData.labor.label}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.labor.advertising)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.labor.salesForce)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.labor.promotions)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.labor.publicRelations)}}</td>
+                
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.labor.total)}}</td>
+            </tr>
+            <tr>
+                <td class="style2">{{marketExpenditureData.other.label}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.other.advertising)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.other.salesForce)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.other.promotions)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.other.publicRelations)}}</td>
+                
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureData.other.total)}}</td>
+            </tr>
+        </table>
+      </td>
+  </tr>
+   <tr *ngIf="marketExpenditureReportResponse.total">
+    <td> {{marketExpenditureReportResponse.total.label}}</td>
+    <td><span style="visibility: hidden;">	
+        Labor Total</span></td>
+    <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.advertising)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.promotions)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.publicRelations)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.salesForce)}}</td>
+                <td class="style2">${{decimalnumberWithCommas(marketExpenditureReportResponse.total.total)}}</td>
+    </tr>
+  <tr><td colspan="4"><hr/></td></tr>
+   <tr *ngIf="marketExpenditureReportResponse.total">
+    <td style="width: 151px;">Total marketing expenditure is:${{ decimalnumberWithCommas(marketExpenditureReportResponse.total.total)}}</td>
+  </tr>
+ 
+  
+</table>

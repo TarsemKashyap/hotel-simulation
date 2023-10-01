@@ -1,0 +1,84 @@
+<h1>QUALITY PERCEPTIONS REPORT</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+
+<div class="chart-container">
+    <canvas  id="MyChart" >{{ chart }}</canvas>
+  </div>
+  <h2>OVERALL QUALITY PERCEPTION</h2>
+ <table class="style1">
+    <tr>
+        <td class="style2">&nbsp;</td>
+                <td class="style2"><b>Hotel</b></td>
+                <td class="style2" > <b>Market Avarage</b></td>
+     </tr>
+     <tr *ngIf="qualityRatingReportResponse.overAll">
+        <td class="style2">{{qualityRatingReportResponse.overAll.label}}</td>
+        <td class="style2" > {{ numberToDecimal(qualityRatingReportResponse.overAll.hotel)}}</td>
+        <td class="style2" >{{ numberToDecimal(qualityRatingReportResponse.overAll.marketAverage)}}</td>
+        
+     </tr>
+     <tr>
+        <td class="style2"><h2>QUALITY RATINGS BY SEGMENT</h2></td>
+                
+     </tr>
+     <tr>
+        <td class="style2"><b>Segment</b></td>
+                <td class="style2"><b>Hotel</b></td>
+                <td class="style2" > <b>Market Avarage</b></td>
+     </tr>
+     <tr *ngFor="let qualityRatingData of qualityRatingReportResponse.segments">
+      
+    
+        <td class="style2">{{qualityRatingData.label}}
+        </td>
+        <td class="style2">{{ numberToDecimal(qualityRatingData.hotel)}}
+        </td>
+        <td class="style2">{{ numberToDecimal(qualityRatingData.marketAverage)}}
+        </td>
+     </tr>
+     <tr>
+        <td class="style2"><h2>HOTEL ATTRIBUTES AND AMENITIES QUALITY RATINGS (10 POINT SCALE)</h2></td>
+                
+     </tr>
+     <tr>
+        <td class="style2"><b>Attribute</b></td>
+                <td class="style2"><b>Hotel</b></td>
+                <td class="style2" > <b>Market Avarage</b></td>
+     </tr>
+     <tr *ngFor="let attributesData of qualityRatingReportResponse.attributes">
+      
+    
+        <td class="style2">{{attributesData.label}}
+        </td>
+        <td class="style2">{{ numberToDecimal(attributesData.hotel)}}
+        </td>
+        <td class="style2">{{ numberToDecimal(attributesData.marketAverage)}}
+        </td>
+     </tr>
+  
+</table>
