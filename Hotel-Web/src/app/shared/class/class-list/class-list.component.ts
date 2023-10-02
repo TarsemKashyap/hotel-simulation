@@ -120,7 +120,7 @@ export class ClassListComponent implements OnInit {
 
   navigateToReport() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
-      this.router.navigate(['../', row.data?.classId, 'report'], {
+      this.router.navigate(['../../report', row.data?.classId, 'list'], {
         relativeTo: this.activeRoute,
       });
     };

@@ -25,7 +25,7 @@ export class AuthGuard {
   async validateSession(routeData: AuthRouteData) {
     
     const tokenValid = await this.isJwtTokenValid();
-    const hasRole = this.authService.userHasRole(routeData.role);
+    const hasRole = this.authService.userHasAnyRole(routeData.roles);
     if (tokenValid && hasRole) {
       return true;
     }
@@ -60,5 +60,5 @@ export const checkAccessPermission: CanActivateFn = (
 };
 
 export interface AuthRouteData {
-  role: AppRoles;
+  roles: AppRoles[];
 }

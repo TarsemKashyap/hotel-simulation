@@ -6,27 +6,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReportParams } from '../model/ReportParams.model';
 import { PerformanceResponse } from '../model/PerformanceResponse.model';
 
-
-
-
-
 @Component({
   selector: 'app-performance',
   templateUrl: './performance.component.html',
-  styleUrls: ['./performance.component.css']
+  styleUrls: ['./performance.component.css'],
 })
 export class PerformanceComponent {
-  selectedMonth : MonthDto = {} as MonthDto;
-  MonthList : MonthDto[] = [];
+  selectedMonth: MonthDto = {} as MonthDto;
+  MonthList: MonthDto[] = [];
   groups: ClassGroup[] = [];
-  selectedHotel : ClassGroup | undefined;
+  selectedHotel: ClassGroup | undefined;
   classId: number | undefined;
-  reportParam : ReportParams = {} as ReportParams;
-  performancereportResponse : PerformanceResponse = {} as PerformanceResponse;
+  reportParam: ReportParams = {} as ReportParams;
+  performancereportResponse: PerformanceResponse = {} as PerformanceResponse;
 
   constructor(
     private reportService: ReportService,
-    private router: Router,   
+    private router: Router,
     public activeRoute: ActivatedRoute
   ) {}
 
@@ -39,20 +35,22 @@ export class PerformanceComponent {
     this.loadMonths();
   }
 
-  loadPerformanceDetails() {    
-    this.reportParam.ClassId =  this.classId!;
-    this.reportParam.GroupId =this.selectedHotel?.serial!;
+  loadPerformanceDetails() {
+    this.reportParam.ClassId = this.classId!;
+    this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = 0;
-    this.reportService.performanceReportDetails(this.reportParam).subscribe((reportData) => {
-        this.performancereportResponse = reportData;        
-    });
+    this.reportService
+      .performanceReportDetails(this.reportParam)
+      .subscribe((reportData) => {
+        this.performancereportResponse = reportData;
+      });
   }
 
   private loadMonths() {
     this.reportService.monthFilterList(this.classId!).subscribe((months) => {
-      this.MonthList = months;  
-      this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
+      this.MonthList = months;
+      this.selectedMonth = this.MonthList.at(this.MonthList.length - 1)!;
       this.loadGroups();
     });
   }
@@ -60,15 +58,14 @@ export class PerformanceComponent {
   private loadGroups() {
     this.reportService.groupFilterList(this.classId!).subscribe((groups) => {
       this.groups = groups;
-      this.selectedHotel =  this.groups.at(0);
+      this.selectedHotel = this.groups.at(0);
       this.loadPerformanceDetails();
     });
   }
-  numberToDecimal(x:any)
-  {
+  numberToDecimal(x: any) {
     return this.reportService.numberToDecimal(x);
   }
-  numberWithCommas(x:any) {
+  numberWithCommas(x: any) {
     return this.reportService.numberWithCommas(x);
-}
+  }
 }
