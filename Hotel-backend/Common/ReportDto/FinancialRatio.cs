@@ -8,9 +8,7 @@ namespace Common.ReportDto
         {
         }
 
-        //public string Label { get; private set; }
-
-        //public List<ReportAttribute> Child { get; set; }
+        public string HotelName { get; set; }
 
         public ReportAttribute LiquidtyRatios { get; set; } = "Liquidity Ratios";
 
@@ -19,12 +17,7 @@ namespace Common.ReportDto
         public ReportAttribute ProfitablityRation { get; set; } = "Profitablity Ratio";
 
         public ReportAttribute TurnOverRatio { get; set; } = "Turn Over Ratio";
-
-        //public Dictionary<string, AbstractDecimal> Child { get; set; } = new Dictionary<string, AbstractDecimal>();
-        //public void Add(string label, ReportAttribute value)
-        //{
-        //    Child.Add(value);
-        //}
+      
     }
 
 

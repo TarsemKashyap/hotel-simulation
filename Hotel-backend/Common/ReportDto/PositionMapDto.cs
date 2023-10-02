@@ -13,5 +13,4 @@
         public decimal RoomRate { get; set; }
     }
 
-
 }

@@ -43,7 +43,7 @@ export const reportRoutes: Routes = [
       { path: ':id/quality-rating-report',component:QualityRatingComponent},
     ],
     canActivate:[checkAccessPermission],
-    data: { role: AppRoles.Student } as AuthRouteData,
+    data: { roles: [AppRoles.Student,AppRoles.Instructor,AppRoles.Admin] } as AuthRouteData,
   },
 ];
 

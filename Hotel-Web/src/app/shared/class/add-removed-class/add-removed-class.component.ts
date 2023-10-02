@@ -54,16 +54,18 @@ export class AddRemovedClassComponent {
       cellRendererParams: {
         actions: [
           {
-            placeHolder: 'Reports',
-            mode: 'text',
+            placeHolder: 'assignment',
+            mode: 'icon',
             onClick: this.loadReport(),
             hide: () => false,
+            tooltip:'View Reports'
           },
           {
-            placeHolder: 'Set as default',
-            mode: 'text',
+            placeHolder: 'visibility',
+            mode: 'icon',
             onClick: this.setAsDefault(),
             hide: () => false,
+            tooltip:'Set as Default'
           },
         ] as RowAction[],
       } as GridActionParmas,

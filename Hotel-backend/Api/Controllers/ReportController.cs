@@ -28,8 +28,9 @@ namespace Api.Controllers
         private readonly IMarketExpendReportService _marketExpendReportService;
         private readonly IQualityPerceptionRatingReportService _qualityPerceptionRatingReportService;
         private readonly IPositionMapReportService _positionMapReportService;
+        private readonly IDemandReportService _demandReportService;
 
-        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService, IMarketExpendReportService marketExpendReportService, IQualityPerceptionRatingReportService qualityPerceptionRatingReportService, IPositionMapReportService positionMapReportService)
+        public ReportController(IGoalReportService goalReportService, IPerformanceReportService performanceReportService, IIncomeReportService incomeReportService, IBalanceReportService balanceReportService, IClassSessionService classSessionService, ICashFlowReportService cashFlowReportService, IOccupancyPercentageReport occupancyPercentageReport, IAverageDailyRateReportService averageDailyRateReportService, IRevParGoParReportService revParGoParReportService, IRoomRateReportService roomRateReportService, IMarketShareRevenueReport marketShareRevenueReport, IMarketShareRoomSoldReport marketShareRoomSoldReport, IMarketSharePositionReport marketSharePositionReport, IAttributeAmentitiesReportService attributeAmentitiesReportService, IMarketExpendReportService marketExpendReportService, IQualityPerceptionRatingReportService qualityPerceptionRatingReportService, IPositionMapReportService positionMapReportService, IDemandReportService demandReportService)
         {
             _goalReportService = goalReportService;
             _performanceReportService = performanceReportService;
@@ -48,6 +49,7 @@ namespace Api.Controllers
             _marketExpendReportService = marketExpendReportService;
             _qualityPerceptionRatingReportService = qualityPerceptionRatingReportService;
             _positionMapReportService = positionMapReportService;
+            _demandReportService = demandReportService;
         }
 
 
@@ -161,6 +163,12 @@ namespace Api.Controllers
         public async Task<PositionMapReportDto> PositionMapReport(ReportParams dto)
         {
             return await _positionMapReportService.ReportAsync(dto);
+        }
+
+        [HttpPost("demand-report")]
+        public async Task<DemandReportDto> DemandReport(ReportParams dto)
+        {
+            return await _demandReportService.ReportAsync(dto);
         }
     }
 }

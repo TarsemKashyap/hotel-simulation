@@ -16,28 +16,28 @@ export const appRoutes: Routes = [
     loadChildren: () =>
       import('./admin/admin.module').then((x) => x.AdminModule),
     canActivate: [checkAccessPermission],
-    data: { role: AppRoles.Admin } as AuthRouteData,
+    data: { roles: [AppRoles.Admin] } as AuthRouteData,
   },
   {
     path: 'student',
     loadChildren: () =>
       import('./student/student.module').then((x) => x.StudentModule),
     canActivate: [checkAccessPermission],
-    data: { role: AppRoles.Student } as AuthRouteData,
+    data: { roles: [AppRoles.Student] } as AuthRouteData,
   },
   {
     path: 'report/:id',
     loadChildren: () =>
       import('./Report/report.module').then((x) => x.ReportModule),
     canActivate: [checkAccessPermission],
-    data: { role: AppRoles.Student } as AuthRouteData,
+    data: { roles: [AppRoles.Student] } as AuthRouteData,
   },
   {
     path: 'instructor',
     loadChildren: () =>
       import('./instructor/instructor.module').then((x) => x.InstructorModule),
     canActivate: [checkAccessPermission],
-    data: { role: AppRoles.Instructor } as AuthRouteData,
+    data: { roles: [AppRoles.Instructor] } as AuthRouteData,
   },
 ];
 

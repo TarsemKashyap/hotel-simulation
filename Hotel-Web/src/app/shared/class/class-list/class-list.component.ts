@@ -54,24 +54,26 @@ export class ClassListComponent implements OnInit {
       cellRendererParams: {
         actions: [
           {
+            placeHolder: 'assignment',
+            mode: 'icon',
+            onClick: this.navigateToReport(),
+            hide: () => false,
+            tooltip:'View class Reports'
+          },
+          {
             placeHolder: 'visibility',
             mode: 'icon',
-            cssClass: 'hover:text-primary',
             onClick: this.onOverviewClick(),
             hide: () => false,
+            tooltip:'Class overview'
           },
-          // {
-          //   placeHolder: 'edit',
-          //   mode: 'icon',
-          //   onClick: this.onEditCallback(),
-          //   hide: () => false,
-          // },
           {
             placeHolder: 'delete',
             mode: 'icon',
             cssClass: 'text-red-500  hover:text-primary',
             onClick: this.onDeleteback(),
             hide: () => false,
+            tooltip:'Delete class'
           },
         ] as RowAction[],
       } as GridActionParmas,
@@ -99,7 +101,6 @@ export class ClassListComponent implements OnInit {
       this.$rows = x;
     });
   }
-
   onEditCallback() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       console.log('Edit Class', row);
@@ -112,6 +113,14 @@ export class ClassListComponent implements OnInit {
   onOverviewClick() {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       this.router.navigate(['..', row.data?.classId, 'student-list'], {
+        relativeTo: this.activeRoute,
+      });
+    };
+  }
+
+  navigateToReport() {
+    return ($event: Event, row: IRowNode<ClassSession>) => {
+      this.router.navigate(['../../report', row.data?.classId, 'list'], {
         relativeTo: this.activeRoute,
       });
     };

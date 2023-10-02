@@ -36,7 +36,7 @@ const routes: Routes = [
       
     ],
     canActivate:[checkAccessPermission],
-    data: { role: AppRoles.Student } as AuthRouteData,
+    data: { roles: [AppRoles.Student] } as AuthRouteData,
   },
 ];
 

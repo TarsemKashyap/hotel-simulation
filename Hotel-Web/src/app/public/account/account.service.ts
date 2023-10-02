@@ -73,6 +73,11 @@ export class AccountService {
     return savedRole.some((x) => x == role);
   }
 
+  userHasAnyRole(roles:AppRoles[]):boolean{
+    const savedRole = this.sessionStore.GetRole();
+    return savedRole.some((x) => roles.some(y=>y==x));
+  }
+
   getInstructor(userId: string): Observable<InstructorUpdate> {
     return this.httpClient.get<InstructorUpdate>(
       `account/instructor/${userId}`
