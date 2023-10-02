@@ -9,7 +9,9 @@ import {
   InstructorEditComponent,
   InstructorListComponent,
 } from './instructor';
-import { checkAccessPermission } from '../shared/auth.gurad';
+import { AuthRouteData, checkAccessPermission } from '../shared/auth.gurad';
+import { reportRoutes } from '../Report/report-routing.module';
+import { AppRoles } from '../public/account';
 
 const routes: Routes = [
   {
@@ -22,8 +24,10 @@ const routes: Routes = [
       { path: 'instructor/list', component: InstructorListComponent },
       { path: 'instructor/edit/:id', component: InstructorEditComponent },
       ...classRoute,
+      ...reportRoutes
     ],
     canActivate: [checkAccessPermission],
+    data:{ roles:[AppRoles.Admin] } as AuthRouteData
   },
 ];
 
