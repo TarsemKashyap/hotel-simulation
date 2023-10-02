@@ -21,5 +21,11 @@ namespace Api.Controllers
         {
             return await _performanceReportService.InstructorPerformanceReport(goalReport);
         }
+
+        [HttpPost("summary-all-hotels")]
+        public async Task<List<StatisticsHotelDto>> AllHotelSummery(ReportParams goalReport)
+        {
+            return await _performanceReportService.AllHotelPerformanceReport(goalReport);
+        }
     }
 }

@@ -12,6 +12,14 @@ public abstract class AbstractReportService
         return new Currency(money.Value);
     }
 
+
+    protected virtual Percent Percent(decimal? number)
+    {
+        if (number.HasValue)
+            return new Percent(number.Value);
+        return null;
+    }
+
     protected virtual ReportAttribute Money(string label, decimal? money)
     {
         Currency currency = money.HasValue ? new Currency(money.Value) : null;

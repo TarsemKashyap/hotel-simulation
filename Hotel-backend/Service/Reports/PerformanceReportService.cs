@@ -16,6 +16,7 @@ public interface IPerformanceReportService
     Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs);
 
     Task<PerformanceInstructorReportDto> InstructorPerformanceReport(ReportParams reportParams);
+    Task<List<StatisticsHotelDto>> AllHotelPerformanceReport(ReportParams report);
 }
 
 public class PerformanceReportService : AbstractReportService, IPerformanceReportService
@@ -27,6 +28,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
     {
         _context = context;
         _userManager = userManager;
+        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     private IQueryable<IncomeState> IncomeStateQuery => _context.IncomeState.AsNoTracking();
@@ -34,7 +36,6 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
     public async Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs)
     {
-        // AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
         int monthId = goalArgs.MonthId;
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
@@ -444,6 +445,83 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         }
 
         return report;
+
+    }
+
+    public async Task<List<StatisticsHotelDto>> AllHotelPerformanceReport(ReportParams report)
+    {
+        ClassSession classSession = await _context.ClassSessions
+            .Include(x => x.Groups)
+            .Include(x => x.Months)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.ClassId == report.ClassId);
+
+
+        List<StatisticsHotelDto> stats = new List<StatisticsHotelDto>();
+
+        foreach (var group in classSession.Groups)
+        {
+            decimal totalSoldRoom = await _context.SoldRoomByChannel.Where(x => x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.SoldRoom);
+            decimal totalRoomAllocated = await _context.RoomAllocation.Where(x => x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.RoomsAllocated);
+            StatisticsHotelDto dto = new StatisticsHotelDto() { HotelName = group.Name };
+            dto.OccupancyPercentage = Percent(totalRoomAllocated == 0 ? 0 : (totalSoldRoom / 500 / 30));
+
+            var incomeState = await _context.IncomeState.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).FirstOrDefaultAsync();
+            dto.RoomRevenue = new Currency(incomeState.Room1);
+
+            dto.TotalRevenue = new Currency(incomeState.Room1 * 100 / 52);
+
+            //MarketShareRoomsSold
+            decimal allHotelRoomSold = await _context.SoldRoomByChannel.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter).SumAsync(x => x.SoldRoom);
+            dto.MarketShareRoomsSold = Percent(allHotelRoomSold == 0 ? 0 : (totalSoldRoom / allHotelRoomSold));
+
+            //MarketShareRevenue
+            decimal revenue = await _context.SoldRoomByChannel.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.Revenue);
+
+            decimal totalRevenue = await _context.SoldRoomByChannel.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter).SumAsync(x => x.Revenue);
+
+            dto.MarketShareRevenue = Percent(totalRevenue == 0 ? 0 : (revenue / totalRevenue));
+
+            //REVPAR
+            dto.REVPAR = Money(totalSoldRoom == 0 ? 0 : (revenue / 15000));
+
+            //ADR
+            dto.ADR = new Currency(totalSoldRoom == 0 ? 0 : (revenue / totalSoldRoom));
+            // Yield Managment
+            decimal yieldOccupancy = 0;
+            decimal AARate = 0;
+            decimal potentialRate = 0;
+            if (totalSoldRoom != 0)
+            {
+                yieldOccupancy = totalSoldRoom / 500 / 30;
+                AARate = revenue / totalSoldRoom;
+            }
+
+            if (allHotelRoomSold != 0)
+            {
+                potentialRate = totalRevenue / allHotelRoomSold;
+            }
+
+            dto.YieldMgmt = new Percent(potentialRate == 0 ? 0 : (yieldOccupancy * AARate / potentialRate));
+
+            //OperatingEfficiencyRatio
+            {
+                decimal bfCharge = incomeState.IncomBfCharg;
+                decimal room = incomeState.Room1 * 100 / 52;
+                dto.OperatingEfficiencyRatio = new Percent(room == 0 ? 0 : (bfCharge / room));
+            }
+
+            //ProfitMargin
+            {
+                decimal income = incomeState.NetIncom;
+                decimal room = incomeState.Room1 * 100 / 52;
+                dto.ProfitMargin = new Percent(room == 0 ? 0 : (income / room));
+            }
+
+            stats.Add(dto);
+        }
+
+        return stats;
 
     }
 
