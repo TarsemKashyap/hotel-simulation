@@ -1,0 +1,216 @@
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<span class="text-2xl font-bold"> Performance Statiststic </span>
+
+<table class="style1">
+  <tr>
+    <td class="style2">Indicator</td>
+    <td
+      *ngFor="let stat of reportDto.statstics"
+      style="border-style: none none inset none; border-width: thin"
+    >
+      {{ stat.hotelName }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">Monthly Profit</td>
+    <td
+      *ngFor="let stat of reportDto.statstics"
+      style="border-style: none none inset none; border-width: thin"
+    >
+      {{
+        numberWithCommas(stat.monthlyProfit.value)
+          | ValueFormatterPipe : stat.monthlyProfit.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">Accumulated Profit</td>
+    <td
+      *ngFor="let stat of reportDto.statstics"
+      style="border-style: none none inset none; border-width: thin"
+    >
+      {{
+        numberWithCommas(stat.accumulativeProfit.value)
+          | ValueFormatterPipe : stat.accumulativeProfit.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">Market Share based on Revenue</td>
+    <td *ngFor="let stat of reportDto.statstics" class="style2">
+      {{
+        numberWithCommas(stat.marketShareRevenueBased.value)
+          | ValueFormatterPipe : stat.marketShareRevenueBased.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">Market Share based on Rooms Sold</td>
+    <td *ngFor="let stat of reportDto.statstics" class="style2">
+      {{
+        numberWithCommas(stat.marketShareRoomSoldBased.value)
+          | ValueFormatterPipe : stat.marketShareRoomSoldBased.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">Occupancy Percentage</td>
+    <td *ngFor="let stat of reportDto.statstics" class="style2">
+      {{
+        numberWithCommas(stat.occupancy.value)
+          | ValueFormatterPipe : stat.occupancy.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">REVPAR</td>
+    <td *ngFor="let stat of reportDto.statstics" class="style2">
+      {{
+        numberWithCommas(stat.revpar.value)
+          | ValueFormatterPipe : stat.revpar.format
+      }}
+    </td>
+  </tr>
+</table>
+<span class="text-lg py-10 font-bold"> Financial Ratio </span>
+
+<table class="style1">
+  <tr>
+    <td class="style2">Indicator</td>
+    <td>&nbsp;</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ reportDto.financialRatio[index].hotelName }}
+    </td>
+  </tr>
+  <tr>
+    <td>Liquidity Ratios</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Current Ratio</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{
+        numberWithCommas(finc.liquidtyRatios.childern[0].data.value)
+          | ValueFormatterPipe : finc.liquidtyRatios.childern[0].data.format
+      }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Quick (Acid Test) Ratio</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.liquidtyRatios.childern[1].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Accounts Receivable Percentage</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.liquidtyRatios.childern[2].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Accounts Receivable Turnover</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.liquidtyRatios.childern[3].data | fmt }}
+    </td>
+  </tr>
+
+  <tr>
+    <td>Solvency Ratios</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Total Assets to Total Liabilities</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.solvencyRatios.childern[0].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Total Liabilities to Total Assests</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.solvencyRatios.childern[1].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Total Liabilities to Total Equity</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.solvencyRatios.childern[2].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Stockholder Equity</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.solvencyRatios.childern[3].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>Turn Over Ratio</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Fixed Asset Turnover</td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>Profitablity Ratio</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Operating Efficenty Ratio</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.profitablityRation.childern[0].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Net Income to Revenue (Profit Margin)</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.profitablityRation.childern[1].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Gross Return on Assests (Gross ROA)</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.profitablityRation.childern[2].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Net Returun on Assests (Net ROA)</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.profitablityRation.childern[3].data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Return on Equity (ROE)</td>
+    <td *ngFor="let finc of reportDto.financialRatio; let index = index">
+      {{ finc.profitablityRation.childern[4].data | fmt }}
+    </td>
+  </tr>
+</table>

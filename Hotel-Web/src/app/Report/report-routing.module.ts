@@ -19,6 +19,7 @@ import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-a
 import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
 import { PositionMapComponent } from './position-map/position-map.component';
 import { QualityRatingComponent } from './quality-rating/quality-rating.component';
+import { PerformanceInstComponent } from './performance-inst/performance-inst.component';
 export const reportRoutes: Routes = [
   {
 
@@ -41,6 +42,7 @@ export const reportRoutes: Routes = [
       { path: ':id/market-expenditure-report',component:MarketExpenditureComponent},
       { path: ':id/position-map-report',component:PositionMapComponent},
       { path: ':id/quality-rating-report',component:QualityRatingComponent},
+      { path: ':id/inst-performance-report', component: PerformanceInstComponent },
     ],
     canActivate:[checkAccessPermission],
     data: { roles: [AppRoles.Student,AppRoles.Instructor,AppRoles.Admin] } as AuthRouteData,

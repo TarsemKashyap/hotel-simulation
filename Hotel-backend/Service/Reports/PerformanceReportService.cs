@@ -398,13 +398,12 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             decimal bEfficiency = incomeState.Room1 * 100 / 52;
 
 
-            finacialRatio.TurnOverRatio.AddChild(Number("Operating Efficiency Ratio", bEfficiency == 0 ? 0 : new Number(aEfficiency / bEfficiency)));
 
 
             decimal aRevenue = incomeState.NetIncom;
             decimal bRevenue = incomeState.Room1 * 100 / 52;
 
-            finacialRatio.TurnOverRatio.AddChild(Number("Net Income to Revenue (Profit Margin)", bRevenue == 0 ? 0 : new Number(aEfficiency / bEfficiency)));
+
 
             decimal aRoa = incomeState.AjstNetIncom;
             decimal bRoa = 0;
@@ -420,8 +419,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
                 bRoa = currentMonthBalSheet.TotAsset;
             }
 
-            finacialRatio.TurnOverRatio.AddChild(Number("Gross Return on Assets (Gross ROA)", bRoa == 0 ? 0 : new Number(aRoa / bRoa)));
-            finacialRatio.TurnOverRatio.AddChild(Number("Net Return on Assets (Net ROA)", bRoa == 0 ? 0 : new Number(incomeState.NetIncom / bRoa)));
+
 
             decimal aRoe = incomeState.NetIncom;
             decimal bRoe = 0;
@@ -437,9 +435,9 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
                 bRoe = currentMonthBalSheet.RetainedEarn + 35000000;
             }
 
-            finacialRatio.TurnOverRatio.AddChild(Number("Return on Equity (ROE)", bRoe == 0 ? 0 : new Number(aRoe / bRoa)));
 
             report.FinancialRatio.Add(finacialRatio);
+
 
 
         }

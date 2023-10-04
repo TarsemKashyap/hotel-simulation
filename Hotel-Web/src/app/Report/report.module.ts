@@ -22,6 +22,8 @@ import { AttributeAmentitiesComponent } from './attribute-amentities/attribute-a
 import { MarketExpenditureComponent } from './market-expenditure/market-expenditure.component';
 import { PositionMapComponent } from './position-map/position-map.component';
 import { QualityRatingComponent } from './quality-rating/quality-rating.component';
+import { PerformanceInstComponent } from './performance-inst/performance-inst.component';
+import { FmtPipe } from '../shared/FmtPipe';
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { QualityRatingComponent } from './quality-rating/quality-rating.componen
     ObjectiveReportComponent,
     ReportListComponent,
     ValueFormatterPipe,
+    FmtPipe,
     PerformanceComponent,
     IncomeComponent,
     BalanceComponent,
@@ -43,7 +46,8 @@ import { QualityRatingComponent } from './quality-rating/quality-rating.componen
     AttributeAmentitiesComponent,
     MarketExpenditureComponent,
     PositionMapComponent,
-    QualityRatingComponent
+    QualityRatingComponent,
+    PerformanceInstComponent
   ],
   imports: [
     CommonModule,

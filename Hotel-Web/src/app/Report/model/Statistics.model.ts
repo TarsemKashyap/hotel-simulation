@@ -1,5 +1,6 @@
 
 export interface StatisticsDto {
+    hotelName:string;
     monthlyProfit: StatisticsType;
     accumulativeProfit: StatisticsType;
     marketShareRevenueBased: StatisticsType;
