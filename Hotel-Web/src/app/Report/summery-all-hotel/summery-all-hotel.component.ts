@@ -1,24 +1,25 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
-import { ReportService } from '../report.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { PerformanceInstReport } from '../model/PerformanceResponse.model';
 import { ReportParams } from '../model/ReportParams.model';
-import { PerformanceResponse } from '../model/PerformanceResponse.model';
+import { ReportService } from '../report.service';
+import { SummeryAllHotelsReport } from '../model/SummeryAllHotelsReport';
 
 @Component({
-  selector: 'app-performance',
-  templateUrl: './performance.component.html',
-  styleUrls: ['./performance.component.css'],
+  selector: 'app-summery-all-hotel',
+  templateUrl: './summery-all-hotel.component.html',
+  styleUrls: ['./summery-all-hotel.component.css'],
 })
-export class PerformanceComponent {
+export class SummeryAllHotelComponent {
   selectedMonth: MonthDto = {} as MonthDto;
   MonthList: MonthDto[] = [];
   groups: ClassGroup[] = [];
   selectedHotel: ClassGroup | undefined;
   classId: number | undefined;
   reportParam: ReportParams = {} as ReportParams;
-  performancereportResponse: PerformanceResponse = {} as PerformanceResponse;
+  reportDto: SummeryAllHotelsReport[] = []
 
   constructor(
     private reportService: ReportService,
@@ -32,7 +33,7 @@ export class PerformanceComponent {
   }
 
   onOptionChange() {
-    this.loadPerformanceDetails();
+   this.loadPerformanceDetails();
   }
 
   loadPerformanceDetails() {
@@ -41,9 +42,9 @@ export class PerformanceComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;
     this.reportService
-      .performanceReportDetails(this.reportParam)
+      .summeryAllHotels(this.reportParam)
       .subscribe((reportData) => {
-        this.performancereportResponse = reportData;
+        this.reportDto = reportData;
       });
   }
 

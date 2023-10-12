@@ -20,6 +20,7 @@ import { MarketExpenditureComponent } from './market-expenditure/market-expendit
 import { PositionMapComponent } from './position-map/position-map.component';
 import { QualityRatingComponent } from './quality-rating/quality-rating.component';
 import { PerformanceInstComponent } from './performance-inst/performance-inst.component';
+import { SummeryAllHotelComponent } from './summery-all-hotel/summery-all-hotel.component';
 export const reportRoutes: Routes = [
   {
 
@@ -43,6 +44,7 @@ export const reportRoutes: Routes = [
       { path: ':id/position-map-report',component:PositionMapComponent},
       { path: ':id/quality-rating-report',component:QualityRatingComponent},
       { path: ':id/inst-performance-report', component: PerformanceInstComponent },
+      { path: ':id/inst-hotels-summery-report', component: SummeryAllHotelComponent },
     ],
     canActivate:[checkAccessPermission],
     data: { roles: [AppRoles.Student,AppRoles.Instructor,AppRoles.Admin] } as AuthRouteData,

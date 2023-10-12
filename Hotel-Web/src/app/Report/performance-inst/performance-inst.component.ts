@@ -32,14 +32,14 @@ export class PerformanceInstComponent {
   }
 
   onOptionChange() {
-    this.loadMonths();
+    this.loadPerformanceDetails();
   }
 
   loadPerformanceDetails() {
     this.reportParam.ClassId = this.classId!;
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter = 0;
+    this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;;
     this.reportService
       .performanceInstReport(this.reportParam)
       .subscribe((reportData) => {

@@ -19,7 +19,11 @@ import { PositionMapReportResponse } from './model/PositionMapResponse.model';
 import { QualityRatingReportResponse } from './model/QualityRatingResponse.model';
 import { ReportParams } from './model/ReportParams.model';
 import { GoalReportResponse } from './model/GoalReportResponse.model';
-import { PerformanceInstReport, PerformanceResponse } from './model/PerformanceResponse.model';
+import {
+  PerformanceInstReport,
+  PerformanceResponse,
+} from './model/PerformanceResponse.model';
+import { SummeryAllHotelsReport } from './model/SummeryAllHotelsReport';
 @Injectable({
   providedIn: 'root',
 })
@@ -178,6 +182,16 @@ export class ReportService {
       reportParams
     );
   }
+
+  summeryAllHotels(
+    reportParams: ReportParams
+  ): Observable<Array<SummeryAllHotelsReport>> {
+    return this.httpClient.post<Array<SummeryAllHotelsReport>>(
+      `api/ReportInstructor/summary-all-hotels`,
+      reportParams
+    );
+  }
+
   numberWithCommas(x: any) {
     x = Math.round(x);
     var parts = x.toString().split('.');

@@ -1,26 +1,112 @@
 <section class="bg-[#F4F7FF]">
-    <div class="container">
-        <div class="-mx-4 flex flex-wrap">
-            <mat-list>
-                <mat-list-item ><a [routerLink]="['../objective-report']"  class="decision-link">Objectives Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../performance-report']"  class="decision-link">Performance Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../inst-performance-report']"  class="decision-link">Instructor Performance Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../income-report']"  class="decision-link">Income Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../balance-report']"  class="decision-link">Balance Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../cashflow-report']"  class="decision-link">Cash Flow Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../occupancy-report']"  class="decision-link">Occupancy Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../avg-daily-rate-report']"  class="decision-link">Avgerage Daily Rate Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../rev-par-gopar-report']"  class="decision-link">Rev Par Go par Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../room-rate-report']"  class="decision-link">RoomRate Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../market-share-revenue-report']"  class="decision-link">Market Share Revenue Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../market-share-roomsold-report']"  class="decision-link">Market Share Room Sold Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../market-share-position-alone-report']"  class="decision-link">Market Share Position Alone Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../attribute-amentities-report']"  class="decision-link">Attribute Amentities Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../market-expenditure-report']"  class="decision-link">Market Expenditure Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../position-map-report']"  class="decision-link">Position Map Report</a></mat-list-item>
-                <mat-list-item ><a [routerLink]="['../quality-rating-report']"  class="decision-link">Quality Rating Report</a></mat-list-item>
-                
-            </mat-list>
-        </div>
+  <div class="container">
+    <div class="-mx-4 flex flex-wrap">
+      <mat-list>
+        <mat-list-item
+          ><a [routerLink]="['../objective-report']" class="decision-link"
+            >Objectives Report</a
+          ></mat-list-item
+        >
+        <mat-list-item *ngIf="!isInstructor"
+          ><a [routerLink]="['../performance-report']" class="decision-link"
+            >Performance Report</a
+          ></mat-list-item
+        >
+        <mat-list-item *ngIf="isInstructor"
+          ><a
+            [routerLink]="['../inst-performance-report']"
+            class="decision-link"
+            >Performance Report</a
+          ></mat-list-item
+        >
+        <mat-list-item *ngIf="isInstructor"
+          ><a
+            [routerLink]="['../inst-hotels-summery-report']"
+            class="decision-link"
+            >Instructor Hotels Summery Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../income-report']" class="decision-link"
+            >Income Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../balance-report']" class="decision-link"
+            >Balance Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../cashflow-report']" class="decision-link"
+            >Cash Flow Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../occupancy-report']" class="decision-link"
+            >Occupancy Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../avg-daily-rate-report']" class="decision-link"
+            >Avgerage Daily Rate Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../rev-par-gopar-report']" class="decision-link"
+            >Rev Par Go par Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../room-rate-report']" class="decision-link"
+            >RoomRate Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a
+            [routerLink]="['../market-share-revenue-report']"
+            class="decision-link"
+            >Market Share Revenue Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a
+            [routerLink]="['../market-share-roomsold-report']"
+            class="decision-link"
+            >Market Share Room Sold Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a
+            [routerLink]="['../market-share-position-alone-report']"
+            class="decision-link"
+            >Market Share Position Alone Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a
+            [routerLink]="['../attribute-amentities-report']"
+            class="decision-link"
+            >Attribute Amentities Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a
+            [routerLink]="['../market-expenditure-report']"
+            class="decision-link"
+            >Market Expenditure Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../position-map-report']" class="decision-link"
+            >Position Map Report</a
+          ></mat-list-item
+        >
+        <mat-list-item
+          ><a [routerLink]="['../quality-rating-report']" class="decision-link"
+            >Quality Rating Report</a
+          ></mat-list-item
+        >
+      </mat-list>
     </div>
+  </div>
 </section>
