@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -29,224 +37,243 @@
 <table class="style1" *ngIf="incomereportResponse.revenue">
   <tr>
     <td class="style2">
-      {{incomereportResponse.revenue.rooms.label}}</td>
+      {{ incomereportResponse.revenue.rooms.label }}
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{numberWithCommas(incomereportResponse.revenue.rooms.data.value) | ValueFormatterPipe:
-      incomereportResponse.revenue.rooms.data.format}}
-
+      {{
+        numberWithCommas(incomereportResponse.revenue.rooms.data.value)
+          | ValueFormatterPipe : incomereportResponse.revenue.rooms.data.format
+      }}
     </td>
   </tr>
   <tr>
     <td class="style2">
-      {{incomereportResponse.revenue.foodBeverage.label}}</td>
+      {{ incomereportResponse.revenue.foodBeverage.label }}
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{numberWithCommas(incomereportResponse.revenue.foodBeverage.data.value) | ValueFormatterPipe:
-      incomereportResponse.revenue.foodBeverage.data.format}}
-
+      {{
+        numberWithCommas(incomereportResponse.revenue.foodBeverage.data.value)
+          | ValueFormatterPipe
+            : incomereportResponse.revenue.foodBeverage.data.format
+      }}
     </td>
   </tr>
 
-  <tr *ngFor="let foodBeverageData of incomereportResponse.revenue.foodBeverage.childern">
+  <tr
+    *ngFor="
+      let foodBeverageData of incomereportResponse.revenue.foodBeverage.childern
+    "
+  >
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{foodBeverageData.label}}</td>
+      {{ foodBeverageData.label }}
+    </td>
     <td class="style3">
-      {{numberWithCommas(foodBeverageData.data.value) | ValueFormatterPipe: foodBeverageData.data.format}}
-
+      {{ foodBeverageData.data | fmt }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-      {{incomereportResponse.revenue.otherOperatedDocs.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
+      {{ incomereportResponse.revenue.otherOperatedDocs.label }}
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style3">
-      {{numberWithCommas(incomereportResponse.revenue.otherOperatedDocs.data.value) | ValueFormatterPipe:
-      incomereportResponse.revenue.otherOperatedDocs.data.format}}
-
+      {{ incomereportResponse.revenue.otherOperatedDocs.data | fmt }}
     </td>
   </tr>
 
-  <tr *ngFor="let otherOperatedDocsData of incomereportResponse.revenue.otherOperatedDocs.childern">
+  <tr
+    *ngFor="
+      let otherOperatedDocsData of incomereportResponse.revenue
+        .otherOperatedDocs.childern
+    "
+  >
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{otherOperatedDocsData.label}}</td>
+      {{ otherOperatedDocsData.label }}
+    </td>
     <td class="style3">
-
-      {{numberWithCommas(otherOperatedDocsData.data.value) | ValueFormatterPipe: otherOperatedDocsData.data.format}}
-    </td>
-  </tr>
-
-
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.revenue.rentelOtherIncome.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{numberWithCommas(incomereportResponse.revenue.rentelOtherIncome.data.value) | ValueFormatterPipe:
-      incomereportResponse.revenue.rentelOtherIncome.data.format}}
-
-    </td>
-  </tr>
-  <tr>
-    <td class="style2">
-      {{incomereportResponse.revenue.totalRevenue.label}}</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{numberWithCommas(incomereportResponse.revenue.totalRevenue.data.value) | ValueFormatterPipe:
-      incomereportResponse.revenue.totalRevenue.data.format}}
-
+      {{ otherOperatedDocsData.data | fmt }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-    <b>  {{incomereportResponse.departmentalExpenses.label}}</b></td>
-    <td class="style2">
+      {{ incomereportResponse.revenue.rentelOtherIncome.label }}
     </td>
-
+    <td class="style2">&nbsp;</td>
+    <td class="style2">
+      {{
+        numberWithCommas(
+          incomereportResponse.revenue.rentelOtherIncome.data.value
+        )
+          | ValueFormatterPipe
+            : incomereportResponse.revenue.rentelOtherIncome.data.format
+      }}
+    </td>
   </tr>
-
-
-  <tr *ngFor="let departmentalExpensesData of incomereportResponse.departmentalExpenses.childern">
+  <tr>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{departmentalExpensesData.label}}
+      {{ incomereportResponse.revenue.totalRevenue.label }}
     </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-
-      {{numberWithCommas(departmentalExpensesData.data.value) | ValueFormatterPipe: departmentalExpensesData.data.format}}
+      {{
+        numberWithCommas(incomereportResponse.revenue.totalRevenue.data.value)
+          | ValueFormatterPipe
+            : incomereportResponse.revenue.totalRevenue.data.format
+      }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-      <b> {{incomereportResponse.totalDepartIncome.label}}</b></td>
+      <b> {{ incomereportResponse.departmentalExpenses.label }}</b>
+    </td>
+    <td class="style2"></td>
+  </tr>
+
+  <tr
+    *ngFor="
+      let departmentalExpensesData of incomereportResponse.departmentalExpenses
+        .childern
+    "
+  >
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
+      {{ departmentalExpensesData.label }}
+    </td>
     <td class="style2">
-      {{numberWithCommas(incomereportResponse.totalDepartIncome.data.value)}}
+      {{ departmentalExpensesData.data | fmt }}
+    </td>
+  </tr>
+
+  <tr>
+    <td class="style2">
+      <b> {{ incomereportResponse.totalDepartIncome.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">
+      {{ incomereportResponse.totalDepartIncome.data | fmt }}
       <!-- {{incomereportResponse.totalDepartIncome.data?.value | ValueFormatterPipe: incomereportResponse.totalDepartIncome.data.format}} -->
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-      <b> {{incomereportResponse.undistOperatingExpenses.label}}</b></td>
-    <td class="style2">
+      <b> {{ incomereportResponse.undistOperatingExpenses.label }}</b>
     </td>
-
+    <td class="style2"></td>
   </tr>
 
-
-  <tr *ngFor="let undistOperatingExpensesData of incomereportResponse.undistOperatingExpenses.childern">
+  <tr
+    *ngFor="
+      let undistOperatingExpensesData of incomereportResponse
+        .undistOperatingExpenses.childern
+    "
+  >
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{undistOperatingExpensesData.label}}
+      {{ undistOperatingExpensesData.label }}
     </td>
     <td class="style2">
-
-      {{numberWithCommas(undistOperatingExpensesData.data.value) | ValueFormatterPipe: undistOperatingExpensesData.data.format}}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">
-      <b>{{incomereportResponse.grossOperatingProfit.label}}</b></td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{numberWithCommas(incomereportResponse.grossOperatingProfit.data.value) | ValueFormatterPipe:
-      incomereportResponse.grossOperatingProfit.data.format}}
+      {{ undistOperatingExpensesData.data | fmt }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-    <b>{{incomereportResponse.managmentFees.label}}</b></td>
+      <b>{{ incomereportResponse.grossOperatingProfit.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{numberWithCommas(incomereportResponse.managmentFees.data.value) | ValueFormatterPipe:
-      incomereportResponse.managmentFees.data.format}}
+      {{ incomereportResponse.grossOperatingProfit.data | fmt }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-      <b>{{incomereportResponse.incomeBeforeFixedCharges.label}}</b></td>
+      <b>{{ incomereportResponse.managmentFees.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-
-      {{numberWithCommas(incomereportResponse.incomeBeforeFixedCharges.data.value) | ValueFormatterPipe:
-      incomereportResponse.incomeBeforeFixedCharges.data.format}}
+      {{
+        numberWithCommas(incomereportResponse.managmentFees.data.value)
+          | ValueFormatterPipe : incomereportResponse.managmentFees.data.format
+      }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-    <b>{{incomereportResponse.fixedCharges.label}}</b></td>
-    <td class="style2">
+      <b>{{ incomereportResponse.incomeBeforeFixedCharges.label }}</b>
     </td>
-
-  </tr>
-  <tr *ngFor="let fixedChargesData of incomereportResponse.fixedCharges.childern">
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{fixedChargesData.label}}
-    </td>
-    <td class="style2">
-      {{numberWithCommas(fixedChargesData.data.value) | ValueFormatterPipe: fixedChargesData.data.format}}
-
-    </td>
-  </tr>
-  <tr>
-    <td class="style2">
-     <b> {{incomereportResponse.netOperatingIncome.label}}</b></td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      {{numberWithCommas(incomereportResponse.netOperatingIncome.data.value) | ValueFormatterPipe:
-      incomereportResponse.netOperatingIncome.data.format}}
-
+      {{
+        numberWithCommas(
+          incomereportResponse.incomeBeforeFixedCharges.data.value
+        )
+          | ValueFormatterPipe
+            : incomereportResponse.incomeBeforeFixedCharges.data.format
+      }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-    <b>{{incomereportResponse.incomeTax.label}}</b></td>
+      <b>{{ incomereportResponse.fixedCharges.label }}</b>
+    </td>
+    <td class="style2"></td>
+  </tr>
+  <tr
+    *ngFor="let fixedChargesData of incomereportResponse.fixedCharges.childern"
+  >
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
+      {{ fixedChargesData.label }}
+    </td>
     <td class="style2">
-
-      {{numberWithCommas(incomereportResponse.incomeTax.data.value) | ValueFormatterPipe: incomereportResponse.incomeTax.data.format}}
-
+      {{ fixedChargesData.data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2">
+      <b> {{ incomereportResponse.netOperatingIncome.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">
+      {{
+        incomereportResponse.netOperatingIncome.data|fmt
+      }}
     </td>
   </tr>
 
   <tr>
     <td class="style2">
-     <b> {{incomereportResponse.netIncome.label}}</b></td>
+      <b>{{ incomereportResponse.incomeTax.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
     <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
+      {{
+        numberWithCommas(incomereportResponse.incomeTax.data.value)
+          | ValueFormatterPipe : incomereportResponse.incomeTax.data.format
+      }}
+    </td>
+  </tr>
 
-      {{numberWithCommas(incomereportResponse.netIncome.data.value) | ValueFormatterPipe: incomereportResponse.netIncome.data.format}}
+  <tr>
+    <td class="style2">
+      <b> {{ incomereportResponse.netIncome.label }}</b>
+    </td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">
+      {{
+       incomereportResponse.netIncome.data|fmt
+      }}
     </td>
   </tr>
 </table>

@@ -11,8 +11,7 @@ import { SessionStore } from 'src/app/store';
   styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboard {
-
-  studentId:  string = '';
+  studentId: string = '';
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   constructor(
@@ -51,30 +50,35 @@ export class StudentDashboard {
   //     });
   // }
 
-
-private studentRolesList() {
-  this.studentService
-    .StudentRoleslist().subscribe((data) => {
+  private studentRolesList() {
+    this.studentService.StudentRoleslist().subscribe((data) => {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);
-      
+
       this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
-      this.studentRolePageList.unshift({pageKey:"menu",pageName:"Menu",roleName:"",childPageLink:"menu"},{pageKey:"ChangePwd",pageName:"Change password",roleName:"",childPageLink:"change-password"})
+      this.studentRolePageList.unshift(
+        {
+          pageKey: 'ChangePwd',
+          pageName: 'Change password',
+          roleName: '',
+          childPageLink: 'change-password',
+        }
+      );
     });
-}
-
-  openLink(studentRolePage:RolePagesDtl) {
-    this.sessionStore.SetCurrentRole(studentRolePage.roleName);
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-      this.router.navigate([studentRolePage.childPageLink]);
-  });
-
   }
 
-reloadCurrentRoute() {
-  let currentUrl = this.router.url;
-  this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+  openLink(studentRolePage: RolePagesDtl) {
+    this.sessionStore.SetCurrentRole(studentRolePage.roleName);
+    this.router.navigate(['./student',studentRolePage.childPageLink])
+    // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    //   this.router.navigate([studentRolePage.childPageLink]);
+    // });
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([currentUrl]);
-  });
+    });
   }
 }

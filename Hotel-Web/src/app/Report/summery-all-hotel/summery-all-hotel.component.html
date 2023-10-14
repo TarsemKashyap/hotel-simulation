@@ -1,0 +1,94 @@
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>
+  <span class="text-lg py-10 font-bold uppercase"
+    >Summery Report of the Results for all Hotels
+  </span>
+</h2>
+
+<div *ngIf="reportDto">
+  <table class="style1">
+    <tr>
+      <td class="style2">Indicator</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].hotelName }}
+      </td>
+    </tr>
+    <tr>
+      <td>Occupancy Percentage</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].occupancyPercentage | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Room Revenue</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].roomRevenue | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Total Revenue</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].totalRevenue | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Market Share based on Rooms Sold</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].marketShareRoomsSold | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Market Share based on Revenue</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].marketShareRevenue | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>REVPAR</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].revpar | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>ADR</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].adr | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Yield Management</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].yieldMgmt | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Operating Efficiency Ratio</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].operatingEfficiencyRatio | fmt }}
+      </td>
+    </tr>
+    <tr>
+      <td>Profit Margin</td>
+      <td *ngFor="let finc of reportDto; let index = index">
+        {{ reportDto[index].profitMargin | fmt }}
+      </td>
+    </tr>
+  </table>
+</div>

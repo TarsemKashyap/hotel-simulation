@@ -45,7 +45,7 @@ export class ObjectiveReportComponent {
     this.reportParam.ClassId =  this.classId!;
     this.reportParam.GroupId =this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter = 0;
+    this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;
     this.reportService.objectiveReportDetails(this.reportParam).subscribe((reportData) => {
         this.goalReportResponse = reportData;        
     });

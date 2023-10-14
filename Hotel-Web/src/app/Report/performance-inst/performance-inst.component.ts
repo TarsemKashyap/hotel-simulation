@@ -4,21 +4,21 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportService } from '../report.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportParams } from '../model/ReportParams.model';
-import { PerformanceResponse } from '../model/PerformanceResponse.model';
+import { PerformanceInstReport, PerformanceResponse } from '../model/PerformanceResponse.model';
 
 @Component({
-  selector: 'app-performance',
-  templateUrl: './performance.component.html',
-  styleUrls: ['./performance.component.css'],
+  selector: 'app-performance-inst',
+  templateUrl: './performance-inst.component.html',
+  styleUrls: ['./performance-inst.component.css'],
 })
-export class PerformanceComponent {
+export class PerformanceInstComponent {
   selectedMonth: MonthDto = {} as MonthDto;
   MonthList: MonthDto[] = [];
   groups: ClassGroup[] = [];
   selectedHotel: ClassGroup | undefined;
   classId: number | undefined;
   reportParam: ReportParams = {} as ReportParams;
-  performancereportResponse: PerformanceResponse = {} as PerformanceResponse;
+  reportDto: PerformanceInstReport = {} as PerformanceInstReport;
 
   constructor(
     private reportService: ReportService,
@@ -39,11 +39,11 @@ export class PerformanceComponent {
     this.reportParam.ClassId = this.classId!;
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;
+    this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;;
     this.reportService
-      .performanceReportDetails(this.reportParam)
+      .performanceInstReport(this.reportParam)
       .subscribe((reportData) => {
-        this.performancereportResponse = reportData;
+        this.reportDto = reportData;
       });
   }
 
