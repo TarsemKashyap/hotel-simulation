@@ -19,7 +19,7 @@ export class SummeryAllHotelComponent {
   selectedHotel: ClassGroup | undefined;
   classId: number | undefined;
   reportParam: ReportParams = {} as ReportParams;
-  reportDto: SummeryAllHotelsReport[] = []
+  reportDto: SummeryAllHotelsReport[] = [];
 
   constructor(
     private reportService: ReportService,
@@ -33,7 +33,7 @@ export class SummeryAllHotelComponent {
   }
 
   onOptionChange() {
-   this.loadPerformanceDetails();
+    this.loadPerformanceDetails();
   }
 
   loadPerformanceDetails() {

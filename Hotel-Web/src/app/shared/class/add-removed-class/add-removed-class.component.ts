@@ -58,14 +58,14 @@ export class AddRemovedClassComponent {
             mode: 'icon',
             onClick: this.loadReport(),
             hide: () => false,
-            tooltip:'View Reports'
+            tooltip: 'View Reports',
           },
           {
             placeHolder: 'visibility',
             mode: 'icon',
             onClick: this.setAsDefault(),
             hide: () => false,
-            tooltip:'Set as Default'
+            tooltip: 'Set as Default',
           },
         ] as RowAction[],
       } as GridActionParmas,

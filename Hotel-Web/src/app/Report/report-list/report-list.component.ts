@@ -7,9 +7,12 @@ import { AccountService, AppRoles } from 'src/app/public/account';
   styleUrls: ['./report-list.component.css'],
 })
 export class ReportListComponent {
-  isInstructor: boolean=false;
+  isInstructorOrAdmin: boolean = false;
   constructor(private accountService: AccountService) {}
   ngOnInit() {
-    this.isInstructor = this.accountService.userHasRole(AppRoles.Instructor);
+    this.isInstructorOrAdmin = this.accountService.userHasAnyRole([
+      AppRoles.Instructor,
+      AppRoles.Admin,
+    ]);
   }
 }

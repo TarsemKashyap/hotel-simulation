@@ -75,7 +75,9 @@ export class AccountService {
 
   userHasAnyRole(roles:AppRoles[]):boolean{
     const savedRole = this.sessionStore.GetRole();
-    return savedRole.some((x) => roles.some(y=>y==x));
+    const hasRole= savedRole.some((x) => roles.some(y=>y==x));
+    console.log("userHasAnyRole:",{savedRole,hasRole});
+    return hasRole;
   }
 
   getInstructor(userId: string): Observable<InstructorUpdate> {
