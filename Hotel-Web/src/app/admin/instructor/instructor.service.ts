@@ -13,7 +13,7 @@ export class InstructorService {
     return this.httpClient.get<InstructorDto[]>('account/instructor/list');
   }
   deleteUser(userId: string) {
-    return this.httpClient.delete(
+    return this.httpClient.get(
       `account/instructor/${userId}`
     );
   }

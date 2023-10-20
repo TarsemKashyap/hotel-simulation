@@ -61,7 +61,7 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpGet("delete/{id}")]
     public async Task<ActionResult> ClassDelete(int id)
     {
         await _classSessionService.DeleteId(id);

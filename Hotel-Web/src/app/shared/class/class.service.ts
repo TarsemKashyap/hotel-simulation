@@ -36,7 +36,7 @@ export class ClassService {
   }
 
     deleteClass(classId: number) {
-    return this.httpClient.delete(
+    return this.httpClient.get(
       `class/delete/${classId}`
     );
   }
