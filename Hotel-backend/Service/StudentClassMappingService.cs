@@ -108,6 +108,9 @@ namespace Service
                 throw new ValidationException("student not found for given student id");
             if (studentList.Count > 1 && defaultClass == null)
                 throw new ValidationException("No default class set");
+            if (defaultClass.ClassGroup == null)
+                throw new ValidationException("Student not assigned to any group");
+
             var studentSignupDto = new StudentClassMappingDto
             {
                 Id = defaultClass.Id,

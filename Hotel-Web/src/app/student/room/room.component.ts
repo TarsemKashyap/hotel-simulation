@@ -37,52 +37,52 @@ export class RoomComponent {
        this.WeekdayTotal = this.roomAllocations.weekdayTotal;
        this.WeekendTotal = this.roomAllocations.weekendTotal;
        var weekday1RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Business' && d.weekday == true)?.roomsAllocated;
-       weekday1RoomAllocated = weekday1RoomAllocated == undefined ? 0 : weekday1RoomAllocated / 17;
+       weekday1RoomAllocated = weekday1RoomAllocated == undefined ? 0 : Math.round(weekday1RoomAllocated / 17);
 
        var weekend1RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Business' && d.weekday == false)?.roomsAllocated;
-       weekend1RoomAllocated = weekend1RoomAllocated == undefined ? 0 : weekend1RoomAllocated / 13;
+       weekend1RoomAllocated = weekend1RoomAllocated == undefined ? 0 :Math.round( weekend1RoomAllocated / 13);
 
        var weekday2RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Small Business' && d.weekday == true)?.roomsAllocated;
-       weekday2RoomAllocated = weekday2RoomAllocated == undefined ? 0 : weekday2RoomAllocated / 17;
+       weekday2RoomAllocated = weekday2RoomAllocated == undefined ? 0 : Math.round(weekday2RoomAllocated / 17);
 
        var weekend2RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Small Business' && d.weekday == false)?.roomsAllocated;
-       weekend2RoomAllocated = weekend2RoomAllocated == undefined ? 0 : weekend2RoomAllocated / 13;
+       weekend2RoomAllocated = weekend2RoomAllocated == undefined ? 0 : Math.round(weekend2RoomAllocated / 13);
 
        var weekday3RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate contract' && d.weekday == true)?.roomsAllocated;
-       weekday3RoomAllocated = weekday3RoomAllocated == undefined ? 0 : weekday3RoomAllocated / 17;
+       weekday3RoomAllocated = weekday3RoomAllocated == undefined ? 0 : Math.round(weekday3RoomAllocated / 17);
 
        var weekend3RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate contract' && d.weekday == false)?.roomsAllocated;
-       weekend3RoomAllocated = weekend3RoomAllocated == undefined ? 0 : weekend3RoomAllocated / 13;
+       weekend3RoomAllocated = weekend3RoomAllocated == undefined ? 0 : Math.round(weekend3RoomAllocated / 13);
 
        var weekday4RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Families' && d.weekday == true)?.roomsAllocated;
-       weekday4RoomAllocated = weekday4RoomAllocated == undefined ? 0 : weekday4RoomAllocated / 17;
+       weekday4RoomAllocated = weekday4RoomAllocated == undefined ? 0 : Math.round(weekday4RoomAllocated / 17);
 
        var weekend4RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Families' && d.weekday == false)?.roomsAllocated;
-       weekend4RoomAllocated = weekend4RoomAllocated == undefined ? 0 : weekend4RoomAllocated / 13;
+       weekend4RoomAllocated = weekend4RoomAllocated == undefined ? 0 : Math.round(weekend4RoomAllocated / 13);
 
        var weekday5RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == true)?.roomsAllocated;
-       weekday5RoomAllocated = weekday5RoomAllocated == undefined ? 0 : weekday5RoomAllocated / 17;
+       weekday5RoomAllocated = weekday5RoomAllocated == undefined ? 0 :Math.round( weekday5RoomAllocated / 17);
 
        var weekend5RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Afluent Mature Travelers' && d.weekday == false)?.roomsAllocated;
-       weekend5RoomAllocated = weekend5RoomAllocated == undefined ? 0 : weekend5RoomAllocated / 13;
+       weekend5RoomAllocated = weekend5RoomAllocated == undefined ? 0 :Math.round( weekend5RoomAllocated / 13);
 
        var weekday6RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'International leisure travelers' && d.weekday == true)?.roomsAllocated;
-       weekday6RoomAllocated = weekday6RoomAllocated == undefined ? 0 : weekday6RoomAllocated / 17;
+       weekday6RoomAllocated = weekday6RoomAllocated == undefined ? 0 :Math.round( weekday6RoomAllocated / 17);
 
        var weekend6RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'International leisure travelers' && d.weekday == false)?.roomsAllocated;
-       weekend6RoomAllocated = weekend6RoomAllocated == undefined ? 0 : weekend6RoomAllocated / 13;
+       weekend6RoomAllocated = weekend6RoomAllocated == undefined ? 0 : Math.round(weekend6RoomAllocated / 13);
 
        var weekday7RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == true)?.roomsAllocated;
-       weekday7RoomAllocated = weekday7RoomAllocated == undefined ? 0 : weekday7RoomAllocated / 17;
+       weekday7RoomAllocated = weekday7RoomAllocated == undefined ? 0 : Math.round(weekday7RoomAllocated / 17);
 
        var weekend7RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Corporate/Business Meetings' && d.weekday == false)?.roomsAllocated;
-       weekend7RoomAllocated = weekend7RoomAllocated == undefined ? 0 : weekend7RoomAllocated / 13;
+       weekend7RoomAllocated = weekend7RoomAllocated == undefined ? 0 : Math.round(weekend7RoomAllocated / 13);
 
        var weekday8RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Association Meetings' && d.weekday == true)?.roomsAllocated;
-       weekday8RoomAllocated = weekday8RoomAllocated == undefined ? 0 : weekday8RoomAllocated / 17;
+       weekday8RoomAllocated = weekday8RoomAllocated == undefined ? 0 :Math.round( weekday8RoomAllocated / 17);
 
        var weekend8RoomAllocated =  this.roomAllocations.roomAllocation.find(d => d.segment === 'Association Meetings' && d.weekday == false)?.roomsAllocated;
-       weekend8RoomAllocated = weekend8RoomAllocated == undefined ? 0 : weekend8RoomAllocated / 13;
+       weekend8RoomAllocated = weekend8RoomAllocated == undefined ? 0 : Math.round(weekend8RoomAllocated / 13);
 
        this.form.patchValue({weekDay1: weekday1RoomAllocated,Weekend1 : weekend1RoomAllocated,weekDay2: weekday2RoomAllocated,Weekend2 : weekend2RoomAllocated , weekDay3: weekday3RoomAllocated,Weekend3 : weekend3RoomAllocated , weekDay4: weekday4RoomAllocated,Weekend4 : weekend4RoomAllocated , weekDay5: weekday5RoomAllocated,Weekend5 : weekend5RoomAllocated , weekDay6: weekday6RoomAllocated,Weekend6 : weekend6RoomAllocated , weekDay7: weekday7RoomAllocated,Weekend7 : weekend7RoomAllocated , weekDay8: weekday8RoomAllocated,Weekend8 : weekend8RoomAllocated});
       
