@@ -14,7 +14,7 @@ export class InstructorService {
   }
   deleteUser(userId: string) {
     return this.httpClient.get(
-      `account/instructor/${userId}`
+      `account/instructor/delete/${userId}`
     );
   }
 }

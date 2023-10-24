@@ -15,7 +15,7 @@ export class MonthService {
   }
 
   deleteUser(userId: string) {
-    return this.httpClient.get(`account/instructor/${userId}`);
+    return this.httpClient.get(`account/instructor/delete/${userId}`);
   }
   quarterlyMarketList(apiBody: any): Observable<MonthDto[]> {
     return this.httpClient.post<MonthDto[]>('month/list', apiBody);

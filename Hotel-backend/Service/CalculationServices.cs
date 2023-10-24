@@ -1661,7 +1661,7 @@ namespace Service
         }
         private async Task<AttributeDecisionDto> GetDataBySingleRowAttributeDecision(int monthId, int quarterNo, int groupId, string attribute)
         {
-            var data = await _context.AttributeDecision.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute);
+            var data = await _context.AttributeDecision.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute.Trim() == attribute.Trim());
             if (data == null)
             {
                 throw new ValidationException("data not found ");

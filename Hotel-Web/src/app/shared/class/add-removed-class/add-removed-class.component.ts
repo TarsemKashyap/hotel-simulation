@@ -19,7 +19,7 @@ export class AddRemovedClassComponent {
   private datePipe = new DatePipe('en-US');
   isDefault: any;
   Titles: ClassSession[] = [];
-  selectedTitle: ClassSession | undefined;
+  selectedTitle: string | undefined;
   myForm!: FormGroup;
   columnDefs: ColDef[] = [
     {
@@ -44,8 +44,8 @@ export class AddRemovedClassComponent {
     },
     // { field: 'createdBy' },
     {
-      field: 'isDefault',
-      headerName: 'Default',
+      field: 'isDefaultSet',
+      headerName: 'Set Default',
     },
     {
       field: 'action',
@@ -61,7 +61,7 @@ export class AddRemovedClassComponent {
             tooltip: 'View Reports',
           },
           {
-            placeHolder: 'visibility',
+            placeHolder: 'menu',
             mode: 'icon',
             onClick: this.setAsDefault(),
             hide: () => false,
@@ -102,10 +102,18 @@ export class AddRemovedClassComponent {
     if (!this.selectedTitle) {
       return;
     }
-    this.classService.SaveClass(this.selectedTitle).subscribe((response) => {
-      this.loadClasses();
-      this.snackBar.open('Student Assign Class Saved Successfully');
-    });
+    // this.classService.SaveClass(this.selectedTitle).subscribe((response) => {
+    //   this.loadClasses();
+    //   this.snackBar.open('Student Assign Class Saved Successfully');
+    // });
+  }
+  addIntoClass() {
+    if (this.selectedTitle) {
+      this.classService.addStudentInClass(this.selectedTitle).subscribe((x) => {
+        this.snackBar.open('Student has been added to class');
+        this.loadClasses();
+      });
+    }
   }
 
   loadReport(): ($event: Event, row: any) => void {

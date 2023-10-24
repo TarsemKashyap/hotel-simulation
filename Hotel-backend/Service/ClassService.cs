@@ -19,19 +19,22 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Linq.Expressions;
 
-    public interface IClassSessionService
-    {
-        Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
-        IEnumerable<ClassSessionDto> ClassList();
-        Task<ClassSessionDto> Create(ClassSessionDto classSession);
-        IEnumerable<ClassSessionDto> List(string instructorId = null);
-        Task<ClassSessionUpdateDto> GetById(int classId);
-        Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
-        Task DeleteId(int classId);
-        Task<IList<ClassGroupDto>> StudentGroupList();
+public interface IClassSessionService
+{
+    Task<IEnumerable<ClassGroupDto>> AddGroupAsync(int classId, ClassGroupDto[] classGroup);
+    IEnumerable<ClassSessionDto> ClassList();
+    Task<ClassSessionDto> Create(ClassSessionDto classSession);
+    IEnumerable<ClassSessionDto> List(string instructorId = null);
+    Task<ClassSessionUpdateDto> GetById(int classId);
+    Task<ClassSessionDto> Update(int id, ClassSessionUpdateDto account);
+    Task DeleteId(int classId);
+    Task<IList<ClassGroupDto>> StudentGroupList();
 
-        Task<IList<MonthDto>> MonthFilterList(int classId);
-        Task<IList<ClassGroupDto>> GetGroupList(int classId);
+    Task<IList<MonthDto>> MonthFilterList(int classId);
+    Task<IList<ClassGroupDto>> GetGroupList(int classId);
+    Task AddStudentInClass(string studentId, string classCode);
+
+
 }
 
 public class ClassSessionService : IClassSessionService
@@ -105,7 +108,7 @@ public class ClassSessionService : IClassSessionService
     {
         return _context.ClassSessions.ProjectToType<ClassSessionDto>().AsEnumerable();
     }
-    public  async Task<IList<ClassGroupDto>> StudentGroupList()
+    public async Task<IList<ClassGroupDto>> StudentGroupList()
     {
         var users = _context.ClassGroups.ToList();
         return users.Adapt<IList<ClassGroupDto>>();
@@ -186,5 +189,23 @@ public class ClassSessionService : IClassSessionService
         }
     }
 
-   
+    public async Task AddStudentInClass(string studentId, string classCode)
+    {
+        Student student = await _context.Students.FindAsync(studentId);
+        if (student == null)
+            throw new ValidationException($"Student does not exist with id {studentId}");
+        ClassSession classSession = await _context.ClassSessions.Where(x => x.Code.Equals(classCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
+        if (classSession == null)
+            throw new ValidationException($"Class does not exists with class code {classCode}");
+
+        bool alreadyExist = await _context.StudentClassMapping.AnyAsync(x => x.StudentId == studentId && x.ClassId == classSession.ClassId);
+        if (alreadyExist)
+        {
+            throw new ValidationException($"Mapping already exist for this student and class");
+        }
+
+        var mapping = new Database.Domain.StudentClassMapping { Class = classSession, Student = student };
+        _context.StudentClassMapping.Add(mapping);
+        await _context.SaveChangesAsync();
+    }
 }

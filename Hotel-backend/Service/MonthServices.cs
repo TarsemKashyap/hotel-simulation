@@ -281,6 +281,8 @@ namespace Service
         public async Task<MonthDto> GetMonthDtlsByClassId(int classId)
         {
             var month = _context.Months.Where(x => x.ClassId == classId).OrderByDescending(o => o.MonthId).FirstOrDefault();
+            if (month == null)
+                throw new ValidationException("No months found");
             return month.Adapt<MonthDto>();
         }
         public async Task<bool> UpdateClassStatus(ClassSessionDto csdt)

@@ -100,17 +100,20 @@ namespace Service
 
         public async Task<StudentClassMappingDto> GetDefaultByStudentID(string studentID)
         {
-            var studentSignup = _context.StudentClassMapping.Include(x => x.Class)
+            var studentList = await _context.StudentClassMapping.Include(x => x.Class)
                 .Include(x => x.ClassGroup)
-                .Include(x => x.Student).FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
-            if (studentSignup == null)
+                .Include(x => x.Student).ToListAsync();
+            var defaultClass = studentList.Count == 1 ? studentList.FirstOrDefault() : studentList.FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
+            if (defaultClass == null)
                 throw new ValidationException("student not found for given student id");
+            if (studentList.Count > 1 && defaultClass == null)
+                throw new ValidationException("No default class set");
             var studentSignupDto = new StudentClassMappingDto
             {
-                Id = studentSignup.Id,
-                ClassId = studentSignup.ClassId,
-                GroupId = studentSignup.GroupId,
-                GroupSerial = studentSignup.ClassGroup.Serial
+                Id = defaultClass.Id,
+                ClassId = defaultClass.ClassId,
+                GroupId = defaultClass.GroupId,
+                GroupSerial = defaultClass.ClassGroup.Serial
             };
 
             return studentSignupDto;
@@ -181,15 +184,22 @@ namespace Service
 
         public async Task<AddRemoveClassDto> ClassesByStudent(string studentId)
         {
-            var selectedClass = await _context.StudentClassMapping.Include(x => x.Class).Where(x => x.StudentId == studentId).Select(x => x.Class).ToListAsync();
+            var selectedClass = await _context.StudentClassMapping.Include(x => x.Class).Where(x => x.StudentId == studentId).ToListAsync();
 
-            var selectedClassIds = selectedClass.Select(x => x.ClassId);
-            List<ClassSession> availableClasses = await _context.ClassSessions.Where(x => !selectedClassIds.Contains(x.ClassId)).ToListAsync();
+            //var selectedClassIds = selectedClass.Select(x => x.ClassId);
+            //List<ClassSession> availableClasses = await _context.ClassSessions.Where(x => !selectedClassIds.Contains(x.ClassId)).ToListAsync();
+
+
 
             return new AddRemoveClassDto
             {
-                SelectedClasses = selectedClass.Adapt<IEnumerable<ClassSessionDto>>(),
-                AvailableClasses = availableClasses.Adapt<IEnumerable<ClassSessionDto>>(),
+                SelectedClasses = selectedClass.Select(x =>
+                {
+                    var classSession = x.Class.Adapt<ClassSessionDto>();
+                    classSession.IsDefaultSet = x.isDefault;
+                    return classSession;
+                })
+                // AvailableClasses = availableClasses.Adapt<IEnumerable<ClassSessionDto>>(),
             };
         }
     }

@@ -1,5 +1,6 @@
 <h1 class="text-3xl text-black pb-0">Manage Class</h1>
 <app-class-menu></app-class-menu>
+<!-- 
 <mat-form-field class="align-right">
   <mat-label>
     <i *ngIf="Titles.length"> Select class</i>
@@ -19,10 +20,22 @@
   style="margin-left: 10px"
 >
   Save
-</button>
+</button> -->
 
 <div class="container">
-  <div></div>
+  <div>
+    <div class="mb-6">
+      <input
+        type="text"
+        placeholder="Class Code"
+        [(ngModel)]="selectedTitle"
+        class="bordder-[#E9EDF4] rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
+      />
+      <button (click)="addIntoClass()" class="bg-primary flex-auto py-3 px-5 text-white mx-5">
+        Add new Class
+      </button>
+    </div>
+  </div>
   <div>
     <ag-grid-angular
       style="height: 300px"
