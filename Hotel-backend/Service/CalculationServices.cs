@@ -86,7 +86,12 @@ namespace Service
                                 }
                                 else
                                 {
-                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, monthId - 1, groupId, currentQuarter - 1);
+                                    var currentMonth = _context.Months.FirstOrDefault(x => x.MonthId == monthId);
+                                    var previousMonth = _context.Months
+                                         .Where(x => x.ClassId == currentMonth.ClassId && x.Sequence < currentMonth.Sequence)
+                                         .OrderByDescending(x => x.Sequence)
+                                         .FirstOrDefault();
+                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, previousMonth.MonthId, groupId, previousMonth.Sequence);
                                     fourpercentOfRevenue = Convert.ToDecimal(totalRevTemp * Convert.ToDecimal(0.04));
                                 }
                                 if (mDRow.QuarterNo == 1)
