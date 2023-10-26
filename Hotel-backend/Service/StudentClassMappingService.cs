@@ -105,9 +105,8 @@ namespace Service
                 .Include(x => x.Student).ToListAsync();
             var defaultClass = studentList.Count == 1 ? studentList.FirstOrDefault() : studentList.FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
             if (defaultClass == null)
-                throw new ValidationException("student not found for given student id");
-            if (studentList.Count > 1 && defaultClass == null)
-                throw new ValidationException("No default class set");
+                throw new ValidationException("No default class found");
+           
             if (defaultClass.ClassGroup == null)
                 throw new ValidationException("Student not assigned to any group");
 
