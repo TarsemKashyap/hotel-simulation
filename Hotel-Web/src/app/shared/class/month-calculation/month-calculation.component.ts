@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { MonthDto } from './month-calculation.model';
 import { MatRow, MatTableDataSource } from '@angular/material/table';
@@ -11,38 +11,35 @@ import { MonthCalculationService } from './monthcalculation.service';
 @Component({
   selector: 'app-month-calculation',
   templateUrl: './month-calculation.component.html',
-  styleUrls: ['./month-calculation.component.css']
+  styleUrls: ['./month-calculation.component.css'],
 })
 export class MonthCalculationComponent {
   $rows: MonthDto[] = [];
- // monthList: MonthDto[] = [];
- monthInfo: MonthDto = {
-  monthId: '',
-  classId: '',
-  sequence: '',
-  totalMarket: '',
-  isComplete: false,
-  configId: '',
-  status:''
-};
-apiBody = {};
-btnCalculationText:string='Calculate Now';
-classId: number | undefined;
-dataSource = new MatTableDataSource<MonthDto>();
-dataSourceMonth = new MatTableDataSource<MonthDto>();
+  // monthList: MonthDto[] = [];
+  monthInfo: MonthDto = {
+    monthId: '',
+    classId: '',
+    sequence: '',
+    totalMarket: '',
+    isComplete: false,
+    configId: '',
+    status: '',
+  };
+  apiBody = {};
+  btnCalculationText: string = 'Calculate Now';
+  classId: number | undefined;
+  dataSource = new MatTableDataSource<MonthDto>();
+  dataSourceMonth = new MatTableDataSource<MonthDto>();
   //classId: any;
   monthId: number = 0;
   columnDefs: ColDef[] = [
     {
       field: 'monthId',
-      
     },
-    
+
     {
       field: 'status',
-      
     },
-    
   ];
   defaultColDef: ColDef = {
     flex: 1,
@@ -70,32 +67,32 @@ dataSourceMonth = new MatTableDataSource<MonthDto>();
     this.classId = this.route.snapshot.params['id'];
     this.apiBody = {
       ClassId: this.classId,
-      MonthId: this.monthId
+      MonthId: this.monthId,
     };
     this.monthCalculationService.monthList(this.apiBody).subscribe((data) => {
-     // this.monthList = data;
-    this.$rows=data.data;
+      // this.monthList = data;
+      this.$rows = data.data;
       console.log(data.data);
       this.dataSourceMonth.data = data;
     });
-}
-monthCalculation()
-{
-  this.btnCalculationText='Processing.....';
-  this.apiBody = {
-    ClassId: this.classId
-  };
-  this.monthCalculationService.monthCalculate(this.apiBody).subscribe((data) => {
-    // this.monthList = data;
-     console.log(data.data);
-     this.dataSourceMonth.data = data;
-     this.pageload();
-     this.btnCalculationText='Calculate Now';
-     this.snackBar.open('Calculate successfully','close',{
-      duration: 3000
-    });
-   });
-
-}
-
+  }
+  monthCalculation() {
+    this.btnCalculationText = 'Processing.....';
+    this.apiBody = {
+      ClassId: this.classId,
+    };
+    this.monthCalculationService
+      .monthCalculate(this.apiBody)
+      .subscribe((data) => {
+        // this.monthList = data;
+        console.log(data.data);
+        this.dataSourceMonth.data = data;
+        this.pageload();
+        this.btnCalculationText = 'Calculate Now';
+        this.snackBar.open('Calculate successfully', 'close', {
+          duration: 3000,
+        });
+        this.router.navigate(['../create-month']);
+      });
+  }
 }

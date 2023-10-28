@@ -1,12 +1,15 @@
-<section class="bg-[#F4F7FF]">
-    <div class="container">
-        <div class="-mx-4 flex flex-wrap">
-            <mat-list>
-                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RO'"><a [routerLink]="['../room']" class="decision-link"> Room Allocation</a></mat-list-item>
-                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RO' || currentRoleName == 'FB' || currentRoleName == 'RT'"><a [routerLink]="['../attribute']" class="decision-link"> Hotel Attributes and Amenities</a></mat-list-item>
-                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'RM'"><a [routerLink]="['../price']" class="decision-link"> Room Rate Decisions</a></mat-list-item>
-                <mat-list-item *ngIf="currentRoleName == 'GM' || currentRoleName == 'MM'"><a [routerLink]="['../marketing']" class="decision-link"> Marketing Decisions</a></mat-list-item>
-            </mat-list>
-        </div>
-    </div>
+<section class="flex-auto">
+  <div class="flex-row text-xl text-white bg-primary px-0 mx-0 py-0">
+    Decision
+  </div>
+  <div class="flex-row">
+    <ul>
+      <li *ngFor="let link of activeLinks; let i = index">
+        {{ i + 1 }}.
+        <a [routerLink]="[link.link]" class="mx-5 my-10 hover:underline">
+          {{ link.text }}</a
+        >
+      </li>
+    </ul>
+  </div>
 </section>

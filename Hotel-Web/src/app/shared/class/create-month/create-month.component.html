@@ -1,16 +1,10 @@
+<app-class-menu></app-class-menu>
 
-<!-- <app-class-menu></app-class-menu> -->
-
-<div class="flex-row w-full"><div class="flex-initial"><span class="text-2xl text-black pb-0"> <b>Class/Code:</b>
-{{classInfo.title}}/{{classInfo.code}}</span></div>
-</div>
-<div class="flex-row w-full">
-    <div class="flex-initial">
-      <span class="text-3xl text-black pb-0">Previous Months</span>
-     
-    </div>
+<section class="container">
+  <div class="text-primary text-2xl px-3 py-2 mx-5">
+    Class : {{ classInfo.title }}
   </div>
-  
+
   <div class="flex-initial container">
     <ag-grid-angular
       style="height: 300px"
@@ -21,31 +15,38 @@
     >
     </ag-grid-angular>
   </div>
-  <div><a class="bg-primary float-left px-6 py-2 m-2 text-white" [routerLink]="['../month-calculation']" routerLinkActive="router-link-active">Calculation Current Month</a></div>
+    <a
+      class="bg-primary float-left px-6 py-2 m-2 text-white"
+      [routerLink]="['../month-calculation']"
+      routerLinkActive="router-link-active"
+      >Calculation Current Month</a
+    >
 
-  <section style="margin-top: 55px;">
-   
-  <div>
-    
-    <h2>Finalize The Current Month</h2>
-    <div class="card">
-      <div class="card-body">You can't create new month before finalizing current 
-        month. Be careful, once 
-        you finalize current month, it is not allowed to rollback. You can only review 
-        finalized months.</div>
-        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bg-primary float-left px-6 py-2 m-2 text-white py-3 px-5 hover:shadow-md mt-5" 
-        [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">{{btnfinltext}}</button>
+  <section style="margin-top: 55px">
+    <div>
+      <h2>Finalize The Current Month</h2>
+      <div class="card">
+        <div class="card-body">
+          You can't create new month before finalizing current month. Be
+          careful, once you finalize current month, it is not allowed to
+          rollback. You can only review finalized months.
+        </div>
+        <button
+          ID="FinalizeButton"
+          type="button"
+          Text="Finalize Now"
+          class="bg-primary float-left px-6 py-2 m-2 text-white py-3 px-5 hover:shadow-md mt-5"
+          [disabled]="isFinalizeButtonDisable"
+          (click)="FinalizeMonth()"
+        >
+          {{ btnfinltext }}
+        </button>
+      </div>
     </div>
-  </div>
   </section>
-  
+</section>
 
-
-
-
-
-
-  <!-- <div style="margin-top: 12px;margin-bottom: 10px;">
+<!-- <div style="margin-top: 12px;margin-bottom: 10px;">
     <h2>Finalize The Current Month</h2>
     <p>
         You can't create new month before finalizing current 
@@ -57,40 +58,47 @@
     </p>
     </div> -->
 
-    <section style="margin-top: 75px;">
-        <div>
-          <div class="px-1 sm:px-0">
-            <h2 >Create A New Month</h2>
-          </div>
-          <div class="mt-6 border-t border-gray-100">
-            <dl class="divide-y divide-gray-100">
-              <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">
-                    Month Number
-                </dt>
-                <dd
-                  class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
-                >
-                  <span>{{QuarterNoLabel}}</span>
-                </dd>
-              </div>
-              <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">
-                    Average Expected Market Occupancy Percentage(%)
-                </dt>
-                <dd
-                  class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
-                >
-                <div class="mb-3">
-                   
-                    <input type="number" class="form-control br1px"  id="MarketTextBox" placeholder="Enter Number Value" [(ngModel)]="MarketTextBox" required>
-                    <span id="ErrorMsg" [hidden]="!isError" style="color: red;">Enter Number Value </span>  
-                </div>
-                  <!-- <span><input type="number" ID="MarketTextBox"[(ngModel)]="MarketTextBox" required ></span> -->
-                  
-                </dd>
-              </div>
-              <!-- <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+<section style="margin-top: 75px">
+  <div>
+    <div class="px-1 sm:px-0">
+      <h2>Create A New Month</h2>
+    </div>
+    <div class="mt-6 border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">
+            Month Number
+          </dt>
+          <dd
+            class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+          >
+            <span>{{ QuarterNoLabel }}</span>
+          </dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">
+            Average Expected Market Occupancy Percentage(%)
+          </dt>
+          <dd
+            class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+          >
+            <div class="mb-3">
+              <input
+                type="number"
+                class="form-control br1px"
+                id="MarketTextBox"
+                placeholder="Enter Number Value"
+                [(ngModel)]="MarketTextBox"
+                required
+              />
+              <span id="ErrorMsg" [hidden]="!isError" style="color: red"
+                >Enter Number Value
+              </span>
+            </div>
+            <!-- <span><input type="number" ID="MarketTextBox"[(ngModel)]="MarketTextBox" required ></span> -->
+          </dd>
+        </div>
+        <!-- <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900"> Configuration</dt>
                 <dd
                   class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
@@ -98,24 +106,21 @@
                   <span>{{configId}} </span>
                 </dd>
               </div> -->
-              <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">
-                    Message
-                </dt>
-                <dd
-                  class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
-                >
-                  <span>{{MessageLabel}} </span>
-                </dd>
-              </div>
-              
-      
-              <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900"></dt>
-                <dd
-                  class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
-                >
-                  <!-- <a
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Message</dt>
+          <dd
+            class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+          >
+            <span>{{ MessageLabel }} </span>
+          </dd>
+        </div>
+
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900"></dt>
+          <dd
+            class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+          >
+            <!-- <a
                     [routerLink]="['../','edit']"
                     routerLinkActive="router-link-active"
                     class="bg-primary float-left px-6 py-2 m-2 text-white"
@@ -123,35 +128,21 @@
                     Edit Class
                   </a> -->
 
-                  <button ID="NewQuarterButton" type="button" class="bg-primary float-left px-6 py-2 m-2 text-white" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >{{btnCreateNewMonth}}</button>
-                 
-                </dd>
-                
-              </div>
-            </dl>
-          </div>
+            <button
+              ID="NewQuarterButton"
+              type="button"
+              class="bg-primary float-left px-6 py-2 m-2 text-white"
+              (click)="CreateNewMonth()"
+              [disabled]="isNewQuarterButtonDisable"
+            >
+              {{ btnCreateNewMonth }}
+            </button>
+          </dd>
         </div>
-      </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      </dl>
+    </div>
+  </div>
+</section>
 
 <!-- <h2>
     Previous 

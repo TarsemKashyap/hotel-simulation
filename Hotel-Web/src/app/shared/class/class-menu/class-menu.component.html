@@ -1,18 +1,39 @@
-<button *ngIf="isClassManageShow"
-  class="bg-secondary border-solid float-right p-3 text-white hover:text-white"
+<button
+  *ngIf="isClassManageShow"
+  class="bg-secondary border-solid text-base float-right p-3 text-white hover:text-white"
   [matMenuTriggerFor]="belowMenu"
 >
   Class Management
 </button>
-<mat-menu #belowMenu="matMenu" class="w-full" yPosition="below">
-  <ul class="text-sm">
-    <li class="rounded w-full hover:bg-secondary hover:text-white p-3">
+<mat-menu #belowMenu="matMenu" class="w-full p-2 m-2" yPosition="below">
+  <ul>
+    <li class="rounded hover:bg-secondary hover:text-white px-2 py-1 mx-2">
+      <a
+        [routerLink]="['../student-list']"
+        routerLinkActive="router-link-active"
+        >Overview</a
+      >
+    </li>
+    <li class="rounded hover:bg-secondary hover:text-white px-2 py-1 mx-2">
+      <a
+        [routerLink]="['../edit']"
+        routerLinkActive="router-link-active"
+        >Edit</a
+      >
+    </li>
+    <li class="rounded hover:bg-secondary hover:text-white px-2 py-1 mx-2">
       <a
         [routerLink]="['../create-month']"
         routerLinkActive="router-link-active"
         >Calculation</a
       >
     </li>
-    
+    <li class="rounded hover:bg-secondary hover:text-white px-2 py-1 mx-2">
+      <a
+        [routerLink]="['../../../report', classId, 'list']"
+        routerLinkActive="router-link-active"
+        >Report</a
+      >
+    </li>
   </ul>
 </mat-menu>
