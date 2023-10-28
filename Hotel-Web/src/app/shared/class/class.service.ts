@@ -6,7 +6,11 @@ import { SessionStore } from 'src/app/store';
 import { ClassSession } from '.';
 import { ClassOverview, StudentList } from './model/studentList.model';
 import { InstructorDto } from 'src/app/admin/instructor';
-import { StudentGroupList, StudentRoleGroupRequest, StudentRoles } from './model/Roles';
+import {
+  StudentGroupList,
+  StudentRoleGroupRequest,
+  StudentRoles,
+} from './model/Roles';
 import { StudentRoleGroupAssign } from './model/StudentRoles';
 import { AddRemoveClassDto, ClassMapping } from './model/classSession.model';
 
@@ -26,33 +30,35 @@ export class ClassService {
   }
 
   getClass(classId: number): Observable<any> {
-    return this.httpClient.get<ClassSession[]>(
-      `class/${classId}`
-    );
+    return this.httpClient.get<ClassSession[]>(`class/${classId}`);
   }
 
   classUpdate(id: any, update: ClassSession): Observable<any> {
     return this.httpClient.post(`class/editClass/${id}`, update);
   }
 
-    deleteClass(classId: number) {
-    return this.httpClient.delete(
-      `class/delete/${classId}`
-    );
+  deleteClass(classId: number) {
+    return this.httpClient.get(`class/delete/${classId}`);
   }
 
-  studentClassMappingList(classId:number): Observable<ClassOverview> {
-    return this.httpClient.get<ClassOverview>(`roleMapping/studentlist/${classId}`);
+  studentClassMappingList(classId: number): Observable<ClassOverview> {
+    return this.httpClient.get<ClassOverview>(
+      `roleMapping/studentlist/${classId}`
+    );
   }
 
   getStudentData(id: string): Observable<any> {
-    return this.httpClient.get<StudentList[]>(
-      `roleMapping/student/${id}`
-    );
+    return this.httpClient.get<StudentList[]>(`roleMapping/student/${id}`);
   }
 
-  Roleslist(req:{studentId : string, classId : number}): Observable<StudentRoleGroupRequest> {
-    return this.httpClient.post<StudentRoleGroupRequest>('roleMapping/list',req);
+  Roleslist(req: {
+    studentId: string;
+    classId: number;
+  }): Observable<StudentRoleGroupRequest> {
+    return this.httpClient.post<StudentRoleGroupRequest>(
+      'roleMapping/list',
+      req
+    );
   }
 
   Grouplist(): Observable<StudentGroupList[]> {
@@ -70,18 +76,38 @@ export class ClassService {
   }
 
   studentByclass(): Observable<AddRemoveClassDto> {
-    return this.httpClient.get<AddRemoveClassDto>('studentClassMapping/studentlist');
+    return this.httpClient.get<AddRemoveClassDto>(
+      'studentClassMapping/studentlist'
+    );
   }
 
-  setAsDefault(req:ClassSession): Observable<any> {
-    return this.httpClient.post<ClassSession>('studentClassMapping/studentClassUpdate',req);
+  setAsDefault(req: ClassSession): Observable<any> {
+    return this.httpClient.post<ClassSession>(
+      'studentClassMapping/studentClassUpdate',
+      req
+    );
   }
 
   ClassTitlelist(): Observable<any> {
-    return this.httpClient.get<ClassSession[]>('studentClassMapping/studentClasslist');
+    return this.httpClient.get<ClassSession[]>(
+      'studentClassMapping/studentClasslist'
+    );
   }
 
   SaveClass(classSession: ClassMapping): Observable<any> {
-    return this.httpClient.post('studentClassMapping/studentClassAssign', classSession);
+    return this.httpClient.post(
+      'studentClassMapping/studentClassAssign',
+      classSession
+    );
+  }
+
+  addStudentInClass(classCode: string): Observable<any> {
+    const classRequest = {
+      code: classCode,
+    } as ClassSession;
+    return this.httpClient.post<ClassSession>(
+      'class/AddStudentInClass',
+      classRequest
+    );
   }
 }

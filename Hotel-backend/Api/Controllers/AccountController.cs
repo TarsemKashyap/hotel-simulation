@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
         return Ok();
 
     }
-    [HttpDelete("instructor/{id}")]
+    [HttpGet("instructor/delete/{id}")]
     public async Task<ActionResult> InstructorDelete(string id)
     {
         await _accountService.InstructorDelete(id);

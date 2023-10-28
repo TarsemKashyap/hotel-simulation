@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Service;
 using FluentValidation;
 using Service;
+using Common;
 
 namespace Api.Controllers;
 
@@ -61,7 +62,7 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpGet("delete/{id}")]
     public async Task<ActionResult> ClassDelete(int id)
     {
         await _classSessionService.DeleteId(id);
@@ -78,6 +79,13 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
-   
+    [HttpPost("AddStudentInClass")]
+    [Authorize]
+    public async Task<ActionResult> AddStudentInClass(ClassSessionDto classSessionDto)
+    {
+        await _classSessionService.AddStudentInClass(LoggedUserId, classSessionDto.Code);
+        return Ok();
+    }
+
 
 }

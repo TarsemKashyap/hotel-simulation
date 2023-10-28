@@ -86,7 +86,12 @@ namespace Service
                                 }
                                 else
                                 {
-                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, monthId - 1, groupId, currentQuarter - 1);
+                                    var currentMonth = _context.Months.FirstOrDefault(x => x.MonthId == monthId);
+                                    var previousMonth = _context.Months
+                                         .Where(x => x.ClassId == currentMonth.ClassId && x.Sequence < currentMonth.Sequence)
+                                         .OrderByDescending(x => x.Sequence)
+                                         .FirstOrDefault();
+                                    decimal totalRevTemp = obj.GetDataBySingleRowIncomeState(_context, previousMonth.MonthId, groupId, previousMonth.Sequence);
                                     fourpercentOfRevenue = Convert.ToDecimal(totalRevTemp * Convert.ToDecimal(0.04));
                                 }
                                 if (mDRow.QuarterNo == 1)
@@ -1661,7 +1666,7 @@ namespace Service
         }
         private async Task<AttributeDecisionDto> GetDataBySingleRowAttributeDecision(int monthId, int quarterNo, int groupId, string attribute)
         {
-            var data = await _context.AttributeDecision.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute == attribute);
+            var data = await _context.AttributeDecision.SingleOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId && x.Attribute.Trim() == attribute.Trim());
             if (data == null)
             {
                 throw new ValidationException("data not found ");

@@ -17,6 +17,8 @@ public class ClassSessionDto
     public string Status { get; set; }
     public int TotalStudentCount { get; set; }
 
+    public bool IsDefaultSet { get; set; }
+
     public ClassGroupDto[] Groups { get; set; }
 
 }

@@ -53,7 +53,7 @@ export class AddClassComponent {
     const groups: FormGroup[] = [];
     for (let index = 0; index < this.hotelCount; index++) {
       let hotelGroup = new FormGroup({
-        name: new FormControl(`Group ${index + 1}`, Validators.required),
+        name: new FormControl(`Hotel ${index + 1}`, Validators.required),
       });
       groups.push(hotelGroup);
     }
@@ -107,7 +107,6 @@ export class AddClassComponent {
       groups: groups,
       createdBy: '',
     };
-    console.log('Group', { sigup });
     this.classService.addClass(sigup).subscribe((x) => {
       this.classCode = x.code;
       this.router.navigate(['admin/class', 'list']);

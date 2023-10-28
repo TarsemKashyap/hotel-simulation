@@ -436,7 +436,8 @@ namespace Service
         {
 
             List<AttributeDto> lstAttribute = await GetAttribute(context);
-
+            Month month = await context.Months.FirstOrDefaultAsync(x => x.MonthId == monthID);
+            Month lastMonth = await context.Months.Where(x => x.ClassId == month.ClassId && x.MonthId < monthID).OrderByDescending(x => x.MonthId).FirstOrDefaultAsync();
             for (int i = 1; i <= noOfHotels; i++)
             {
                 foreach (var item in lstAttribute)
@@ -464,7 +465,7 @@ namespace Service
                     }
                     else
                     {
-                        AttributeDecisionDto row = GetDataBySingleRowAttributeDecision(context, monthID - 1, currentQuarter, i, item.AttributeName);
+                        AttributeDecisionDto row = GetDataBySingleRowAttributeDecision(context, lastMonth.MonthId, currentQuarter, i, item.AttributeName);
                         decimal depreciationRate = Convert.ToDecimal(ScalarDepreciRateMonthlyAttributeConfig(context, monthID, currentQuarter, item.AttributeName));
                         decimal accumuCapital = (row.AccumulatedCapital + row.NewCapital) * (1 - depreciationRate);
                         AttributeDecisionPriceList AttPlist = GetAttributeDecisionPriceList(item.AttributeName.Trim());
@@ -1179,7 +1180,7 @@ namespace Service
         {
 
             var data = context.AttributeDecision.SingleOrDefault(x => (x.GroupID == groupID && x.MonthID == monthID && x.QuarterNo == currentQuarter
-                     && x.Attribute == attributeName.Trim()));
+                     && x.Attribute.Trim() == attributeName.Trim()));
             if (data == null)
                 throw new ValidationException("data not found ");
             return data.Adapt<AttributeDecisionDto>();
@@ -1221,7 +1222,7 @@ namespace Service
             var attrConf = (from m in context.Months
                             join c in context.ClassSessions on m.ClassId equals c.ClassId
                             join a in context.AttributeMaxCapitalOperationConfig on m.ConfigId equals a.ConfigID
-                            where m.MonthId == monthID && c.CurrentQuater == currentQuarter && a.Attribute == AttributeName
+                            where m.MonthId == monthID && c.CurrentQuater == currentQuarter && a.Attribute.Trim() == AttributeName.Trim()
                             select new
                             {
                                 Expr1 = a.DepreciationYearly / 12
