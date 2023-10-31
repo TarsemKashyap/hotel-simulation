@@ -45,7 +45,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         int quarter = classSession.CurrentQuater;
         int groupId = goalArgs.GroupId;
         int hotelCount = classSession.HotelsCount;
-        var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId);
+        var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.MonthID == goalArgs.MonthId && x.GroupID == goalArgs.GroupId);
         decimal monthlyProfit = incomeState.NetIncom;
         decimal accumplateProfit = IncomeStateQuery.Where(x => x.QuarterNo <= quarter).Sum(x => x.NetIncom);
         var soldRoomListMonth = await _context.SoldRoomByChannel.AsNoTracking()
@@ -150,9 +150,11 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         decimal bAjstNetIncom = 0;
 
 
+        Month lastMonth = await LastMonth(monthId);
         if (quarter > 1)
         {
-            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+
+            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
             bAjstNetIncom = (currentMonthBalSheet.TotAsset + lastMonthBalSheet.TotAsset) / 2;
         }
         bAjstNetIncom = currentMonthBalSheet.TotAsset;
@@ -174,7 +176,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
         if (quarter > 1)
         {
-            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
             bNetIncom = (currentMonthBalSheet.RetainedEarn + 35000000 + lastMonthBalSheet.RetainedEarn + 35000000) / 2;
         }
         else
@@ -203,7 +205,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
         if (quarter > 1)
         {
-            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
             bRoa = (currentMonthBalSheet.TotAsset + lastMonthBalSheet.TotAsset) / 2;
         }
         else
@@ -220,7 +222,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
         if (quarter > 1)
         {
-            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+            var lastMonthBalSheet = await _context.BalanceSheet.AsNoTracking().Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
             bRoe = (currentMonthBalSheet.RetainedEarn + 35000000 + lastMonthBalSheet.TotAsset + 35000000) / 2;
         }
         else
@@ -237,6 +239,18 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             FinancialRatios = finacialRatio
         };
 
+    }
+
+    private async Task<Month> LastMonth(int monthId)
+    {
+        var classMonths = await _context.Months
+                        .Include(x => x.Class)
+                        .ThenInclude(x => x.Months)
+                        .Where(x => x.MonthId == monthId)
+                        .Select(x => x.Class.Months)
+                        .FirstOrDefaultAsync();
+        var lastMonth = classMonths.Where(x => x.MonthId != monthId).OrderByDescending(x => x.MonthId).FirstOrDefault();
+        return lastMonth;
     }
 
     public async Task<PerformanceInstructorReportDto> InstructorPerformanceReport(ReportParams goalArgs)

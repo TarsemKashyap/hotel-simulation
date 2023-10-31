@@ -181,7 +181,7 @@ WHERE     (priceMarketingAttributeSegmentConfig.PMA = N'Marketing') AND (marketi
                        join sc in context.SegmentConfig on m.ConfigId equals sc.ConfigID
                        where (md.Segment == sc.Segment)
                        join c in context.ClassSessions on m.ClassId equals c.ClassId
-                       where (pmasc.PMA == "Marketing" && md.Segment == segment.Trim()
+                       where (pmasc.PMA.Trim() == "Marketing" && md.Segment == segment.Trim()
                        && md.MarketingTechniques == marketingTechniques && m.MonthId == MonthID && m.Sequence == QuarterNo)
 
 

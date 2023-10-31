@@ -53,6 +53,9 @@ public class MarketingService : IMarketingService
             SpendingFormatN0 = s.Spending.ToString("n0").Replace(",",""),
             LaborSpendingFormatN0 = s.LaborSpending.ToString("n0").Replace(",", ""),
             Segment = s.Segment.Replace("\t", "").Trim(),
+            ActualDemand = s.ActualDemand,
+            MonthID = s.MonthID,
+            Confirmed=s.Confirmed,
             ID = s.ID
         }).ToList();
 
