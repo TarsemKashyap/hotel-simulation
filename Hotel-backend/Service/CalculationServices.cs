@@ -36,9 +36,24 @@ namespace Service
             _mapper = mapper;
             _context = context;
         }
+        private async Task<List<int>> Months(int classId)
+        {
+            return await _context.Months
+                            .Where(x => x.ClassId == classId)
+                            .OrderBy(x => x.MonthId)
+                            .Select(x => x.MonthId).ToListAsync();
+
+        }
         public async Task<ResponseData> Calculation(MonthDto month)
         {
             ResponseData resObj = new ResponseData();
+            var prevMonths = await Months(month.ClassId);
+            Func<int, int, int> getLastMonth = (int monthId, int index) =>
+            {
+                int prevMonthIndex = prevMonths.FindIndex(p => p == monthId);
+                return prevMonths[prevMonthIndex - index];
+            };
+
             using (var transaction = _context.Database.BeginTransaction())
             {
 
@@ -46,6 +61,7 @@ namespace Service
                 {
 
                     List<MonthDto> listMonth = await GetMonthListByClassId(month.ClassId);
+
                     for (int i = 0; i < listMonth.Count; i++)
                     {
                         FunMonth obj = new FunMonth();
@@ -107,11 +123,11 @@ namespace Service
                                 }
                                 if (mDRow.QuarterNo == 2)
                                 {
-                                    Qminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     Qminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     Qminus3 = Qminus2;
                                     Qminus4 = Qminus2;
-                                    LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     LQminus2 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     LQminus3 = LQminus2;
                                     LQminus4 = LQminus2;
@@ -119,37 +135,37 @@ namespace Service
                                 }
                                 if (mDRow.QuarterNo == 3)
                                 {
-                                    Qminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus2 = Convert.ToDecimal(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = Convert.ToDecimal(objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     Qminus3 = Convert.ToDecimal(251645.01 / 6) * Convert.ToDecimal(objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     Qminus4 = Qminus3;
-                                    LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus2 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = Convert.ToDecimal(objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     LQminus3 = Convert.ToDecimal(251645.01 / 6) * (objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
                                     LQminus4 = LQminus3;
                                 }
                                 if (mDRow.QuarterNo == 4)
                                 {
-                                    Qminus1 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus2 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus3 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 3, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus1 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus3 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 3), mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     Qminus4 = Convert.ToDecimal(251645.01 / 6) * (objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
-                                    LQminus1 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus2 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus3 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 3, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 3), mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                     LQminus4 = Convert.ToDecimal(251645.01 / 6) * (objCalculation.ScalarQueryIndustrialNormPercentMarketingDecision(_context, mDRow.MonthID, mDRow.QuarterNo, mDRow.Segment, mDRow.MarketingTechniques));
 
                                 }
                                 if (mDRow.QuarterNo > 4)
                                 {
-                                    Qminus1 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus2 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus3 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 3, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    Qminus4 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, mDRow.MonthID - 4, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus1 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 1, mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus2 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 2, mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus3 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 3, mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
-                                    LQminus4 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, mDRow.MonthID - 4, mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus1 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus2 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus3 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 3), mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    Qminus4 = (objCalculation.ScalarQueryPastSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 4), mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus1 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 1), mDRow.QuarterNo - 1, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus2 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 2), mDRow.QuarterNo - 2, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus3 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 3), mDRow.QuarterNo - 3, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
+                                    LQminus4 = (objCalculation.ScalarQueryPastLaborSpendingMarketingDecision(_context, getLastMonth(mDRow.MonthID, 4), mDRow.QuarterNo - 4, mDRow.GroupID, mDRow.MarketingTechniques, mDRow.Segment));
                                 }
                                 if (mDRow.MarketingTechniques == "Advertising")
                                 {
@@ -279,7 +295,7 @@ namespace Service
                             else
                             {
                                 //Puneet
-                                IncomeState objinsDto = await GetDataBySingleRowIncomeState(monthId - 1, currentQuarter - 1, row.GroupID);
+                                IncomeState objinsDto = await GetDataBySingleRowIncomeState(getLastMonth(monthId, 1), currentQuarter - 1, row.GroupID);
                                 row.TotReven = objinsDto.TotReven;
                             }
 
@@ -1326,7 +1342,7 @@ namespace Service
                                 foreach (IncomeState incom1StaRow in dataincome1Table)
                                 {
                                     totalRevThisMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId, incom1StaRow.GroupID, currentQuarter));
-                                    totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(monthId - 1, incom1StaRow.GroupID, currentQuarter - 1));
+                                    totalRevPrevMonth = Convert.ToDecimal(ScalarGetTotalRevenueIncomeState(getLastMonth(monthId, 1), incom1StaRow.GroupID, currentQuarter - 1));
                                     if (totalRevPrevMonth == totalRevThisMonth)
                                     {
                                         decimal roomRevenue = Convert.ToDecimal(ScalarGroupRoomRevenueByMonthSoldRoomByChannel(monthId, currentQuarter, incom1StaRow.GroupID));

@@ -688,6 +688,7 @@ namespace Service
             return 1;
         }
 
+       
         public async Task<int> CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
@@ -750,10 +751,17 @@ namespace Service
             }
             else
             {
+                var prevMonths = PreviousMonthFinder(context, monthID);
+
+
+
+
+
+
                 for (int i = 1; i <= noOfHotels; i++)
                 {
 
-                    decimal totalRevenBefore = GetDataBySingleRowIncomeState(context, monthID - 1, i, currentQuarter);
+                    decimal totalRevenBefore = GetDataBySingleRowIncomeState(context, prevMonths(1), i, currentQuarter);
                     var obj1 = new IncomeState()
                     {
                         MonthID = monthID,
@@ -807,6 +815,23 @@ namespace Service
                 }
             }
             return 1;
+        }
+
+        private Func<int, int> PreviousMonthFinder(HotelDbContext context, int monthID)
+        {
+            var prevMonths = context.Months
+                            .Include(x => x.Class)
+                            .ThenInclude(x => x.Months)
+                            .Where(x => x.MonthId == monthID)
+                            .SelectMany(x => x.Class.Months)
+                            .OrderBy(x => x.MonthId)
+                           .Select(x => x.MonthId)
+                            .ToList();
+            return (int index) =>
+            {
+                int prevMonthIndex = prevMonths.FindIndex(p => p == monthID);
+                return prevMonths[prevMonthIndex - index];
+            };
         }
 
         public async Task<int> CreateGoal(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
@@ -977,8 +1002,9 @@ namespace Service
                 }
                 else
                 {
+                    var prevMonths = PreviousMonthFinder(context, monthID);
 
-                    BalanceSheet balanceRow = await GetDataBySingleRowBalanceSheet(context, monthID - 1, currentQuarter, i);
+                    BalanceSheet balanceRow = await GetDataBySingleRowBalanceSheet(context, prevMonths(1), currentQuarter, i);
 
                     var obj1 = new BalanceSheet()
                     {

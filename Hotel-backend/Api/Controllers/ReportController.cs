@@ -1,5 +1,7 @@
 ﻿
+using Common;
 using Common.ReportDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.Reports;
@@ -8,7 +10,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize(Roles = RoleType.Student)]
+    [Authorize]
     public class ReportController : AbstractBaseController
     {
         private readonly IGoalReportService _goalReportService;

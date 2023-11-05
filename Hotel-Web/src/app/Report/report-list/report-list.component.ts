@@ -18,17 +18,17 @@ export class ReportListComponent {
     {
       text: 'Performance Report',
       link: 'performance-report',
-      enable: () => this.isInstructorOrAdmin,
+      enable: () => !this.isInstructorOrAdmin,
     },
     {
       text: 'Performance Report',
       link: 'inst-performance-report',
-      enable: () => !this.isInstructorOrAdmin,
+      enable: () => this.isInstructorOrAdmin,
     },
     {
       text: 'Instructor Hotels Summery Report',
       link: 'inst-hotels-summery-report',
-      enable: () => !this.isInstructorOrAdmin,
+      enable: () => this.isInstructorOrAdmin,
     },
     {
       text: 'Income Report',
@@ -100,5 +100,3 @@ export class ReportListComponent {
     });
   }
 }
-
-

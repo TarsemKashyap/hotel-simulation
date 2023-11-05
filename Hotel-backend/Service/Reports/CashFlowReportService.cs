@@ -19,10 +19,24 @@ namespace Service
         {
             _context = context;
         }
+        private int PreviousMonthFinder(int monthID)
+        {
+            var prevMonths = _context.Months
+                            .Include(x => x.Class)
+                            .ThenInclude(x => x.Months)
+                            .Where(x => x.MonthId == monthID)
+                            .SelectMany(x => x.Class.Months)
+                            .OrderBy(x => x.MonthId)
+                           .Select(x => x.MonthId)
+                            .ToList();
+
+            int prevMonthIndex = prevMonths.FindIndex(p => p == monthID);
+            return prevMonths[prevMonthIndex - 1];
+        }
         public async Task<CashFlowDto> GenerateReport(ReportParams parms)
         {
             var currentMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == parms.MonthId);
-            var lastMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == parms.MonthId - 1);
+            var lastMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == PreviousMonthFinder(parms.MonthId));
             if (lastMonth == null)
             {
                 lastMonth = new BalanceSheet { AcctReceivable = 0, Inventories = 0, TotLiab = 0, Cash = 0 };
