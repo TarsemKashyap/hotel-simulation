@@ -122,7 +122,7 @@ public class ClassSessionService : IClassSessionService
     }
     public async Task<IList<MonthDto>> MonthFilterList(int classId)
     {
-        var sequence = _context.Months.Where(c => c.ClassId == classId).OrderBy(s => s.Sequence).ToList();
+        var sequence = _context.Months.Where(c => c.ClassId == classId && c.Sequence != 0).OrderBy(s => s.Sequence).ToList();
         return sequence.Adapt<IList<MonthDto>>();
 
     }
