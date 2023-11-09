@@ -35,7 +35,7 @@ public class GoalReportService : IGoalReportService
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = classSession.CurrentQuater;
+        int quarter = goalArgs.CurrentQuarter;
         int monthId = goalArgs.MonthId;
         int hotelCount = classSession.HotelsCount;
 

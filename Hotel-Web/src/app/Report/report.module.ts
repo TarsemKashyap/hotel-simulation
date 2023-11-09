@@ -19,7 +19,7 @@ import { MarketExpenditureComponent } from './market-expenditure/market-expendit
 import { PositionMapComponent } from './position-map/position-map.component';
 import { QualityRatingComponent } from './quality-rating/quality-rating.component';
 import { PerformanceInstComponent } from './performance-inst/performance-inst.component';
-import { FmtPipe } from '../shared/FmtPipe';
+import { Fmt2Pipe, FmtPipe } from '../shared/FmtPipe';
 import { SummeryAllHotelComponent } from './summery-all-hotel/summery-all-hotel.component';
 import { ObjectiveReportComponent } from './objective-report/objective-report.component';
 import { PerformanceComponent } from './performance/performance.component';
@@ -33,6 +33,7 @@ import { ReportRoutingModule } from './report-routing.module';
     ReportListComponent,
     ValueFormatterPipe,
     FmtPipe,
+    Fmt2Pipe,
     PerformanceComponent,
     IncomeComponent,
     BalanceComponent,

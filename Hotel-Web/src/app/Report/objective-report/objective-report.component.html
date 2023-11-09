@@ -1,11 +1,15 @@
 <h1>Objectives Report</h1>
 <span class="inline-grid grid-cols-3 gap-8">
-<mat-form-field class="align-right">
+  <mat-form-field class="align-right">
     <mat-label>
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -25,59 +33,52 @@
     </mat-select>
   </mat-form-field>
 </span>
-  <h2>Objectives and Performance for the Month</h2>
+<h2>Objectives and Performance for the Month</h2>
 
-  <table class="table-auto">
-    <tr>
-        <td style="border-style: none none inset none">
-            Indicators
-        </td>
-        <td style="border-style: none none inset none">
-            Performance
-        </td>
-        <td style="border-style: none none inset none">
-            Market Average
-        </td>
-        <td style="border-style: none none inset none">
-            Performance - Market Average
-        </td>
-        <td style="border-style: none none inset none">
-            Objective
-        </td>
-        <td style="border-style: none none inset none">
-            Performance - Objective
-        </td>
-    </tr>
-    
-    <tr *ngFor="let goalData of goalReportResponse">
-      <td class="style3">
-         {{goalData.indicators}}
-        </td>
-      <td style="border-style: none none inset none; border-width: thin">
-        <!-- {{goalData.indicators === "Room revenue" ? numberWithCommas(goalData.performance) : numberToDecimal(goalData.performance)| ValueFormatterPipe: goalData.formatter }} -->
-        {{ numberToDecimal(goalData.performance) | ValueFormatterPipe: goalData.formatter}}
-      </td>
-
-      <td style="border-style: none none inset none; border-width: thin">
-        {{numberToDecimal(goalData.marketAverage) | ValueFormatterPipe: goalData.formatter}}
-        
-      </td>
-
-      <td style="border-style: none none inset none; border-width: thin">
-        {{numberToDecimal(goalData.perfMarketAvgerage) | ValueFormatterPipe: goalData.formatter}}
-       
-      </td>
-
-      <td style="border-style: none none inset none; border-width: thin">
-        {{numberToDecimal(goalData.objective) | ValueFormatterPipe: goalData.formatter}}
-        
-      </td>
-
-      <td style="border-style: none none inset none; border-width: thin">
-        {{numberToDecimal(goalData.prefObjective) | ValueFormatterPipe: goalData.formatter}}
-        
-      </td>
-
+<table class="table-auto">
+  <tr>
+    <td style="border-style: none none inset none">Indicators</td>
+    <td style="border-style: none none inset none">Performance</td>
+    <td style="border-style: none none inset none">Market Average</td>
+    <td style="border-style: none none inset none">
+      Performance - Market Average
+    </td>
+    <td style="border-style: none none inset none">Objective</td>
+    <td style="border-style: none none inset none">Performance - Objective</td>
   </tr>
-    
-    </table>
+
+  <tr *ngFor="let goalData of goalReportResponse">
+    <td class="style3">
+      {{ goalData.indicators }}
+    </td>
+    <td style="border-style: none none inset none; border-width: thin">
+      <!-- {{goalData.indicators === "Room revenue" ? numberWithCommas(goalData.performance) : numberToDecimal(goalData.performance)| ValueFormatterPipe: goalData.formatter }} -->
+      
+      {{ goalData.performance | fmt2 : goalData.formatter }}
+    </td>
+
+    <td style="border-style: none none inset none; border-width: thin">
+      
+      {{ goalData.marketAverage | fmt2 : goalData.formatter }}
+
+    </td>
+
+    <td style="border-style: none none inset none; border-width: thin">
+
+      {{ goalData.perfMarketAvgerage | fmt2 : goalData.formatter }}
+
+    </td>
+
+    <td style="border-style: none none inset none; border-width: thin">
+     
+      {{ goalData.objective | fmt2 : goalData.formatter }}
+
+    </td>
+
+    <td style="border-style: none none inset none; border-width: thin">
+      
+      {{ goalData.prefObjective | fmt2 : goalData.formatter }}
+
+    </td>
+  </tr>
+</table>
