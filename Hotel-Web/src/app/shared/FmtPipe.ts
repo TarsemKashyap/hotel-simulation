@@ -32,7 +32,7 @@ export class FmtPipe implements PipeTransform {
   name: 'fmt2',
 })
 export class Fmt2Pipe implements PipeTransform {
-  transform(value: number, format: string) {
+  transform(value: any, format: any) {
     switch (format) {
       case 'P': {
         return `${formatNumber(value * 100, 'en-US', '1.0-2')}%`;

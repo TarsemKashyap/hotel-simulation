@@ -178,7 +178,7 @@ namespace Service.Reports
 
 
             //Weekend Occupancy Market
-            roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && !x.Weekday).Sum(x => x.SoldRoom);
+            roomSold = soldRoomList.Where(x => !x.Weekday).Sum(x => x.SoldRoom);
             roomAllocated = roomAllocationList.Where(x => x.GroupID == p.GroupId && !x.Weekday).Sum(x => x.RoomsAllocated);
             if (roomAllocated == 0)
             {
