@@ -9,6 +9,8 @@ namespace Common.ReportDto
         public List<Segment> OccupancyBySegment { get; private set; } = new List<Segment>();
         public void AddOverAll(string label, decimal hotel, decimal marketAvg)
         {
+            marketAvg = marketAvg * 100;
+            hotel = hotel * 100;
             OverAllPercentages.Add(new CategoryLine { Label = label, Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
         }
 
@@ -50,6 +52,7 @@ namespace Common.ReportDto
 
         public Segment WeekDay(decimal hotel, decimal marketAvg)
         {
+            marketAvg *= 100;
             Segments.Add(new CategoryLine { Label = "Weekday", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
@@ -61,11 +64,13 @@ namespace Common.ReportDto
 
         public Segment WeekEnd(decimal hotel, decimal marketAvg)
         {
+            marketAvg *= 100;
             Segments.Add(new CategoryLine { Label = "Weekday", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
         public Segment Overall(decimal hotel, decimal marketAvg)
         {
+            marketAvg *= 100;
             Segments.Add(new CategoryLine { Label = "Overall", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
