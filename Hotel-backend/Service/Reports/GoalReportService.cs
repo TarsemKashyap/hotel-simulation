@@ -154,7 +154,7 @@ public class GoalReportService : IGoalReportService
         {
             Indicators = "Operating Efficiency Ratio",
             M_P = roomSoldIncomestate == 0 ? 0 : incomeState.IncomBfCharg / roomSoldIncomestate,
-            M_M = ScalarMonthAvgIncomeBFcharge / ScalarMonthAvgRoomRevenue,
+            M_M = ScalarMonthAvgIncomeBFcharge / roomSoldIncomestate,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM),
             Formatter = "P"
         };
