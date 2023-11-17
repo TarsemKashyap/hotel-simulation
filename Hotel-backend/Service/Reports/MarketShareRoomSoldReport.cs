@@ -115,7 +115,7 @@ namespace Service.Reports
 
             //overallShare
             roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId).Sum(x => x.SoldRoom);
-            roomAllocated = soldRoomList.Sum(x => x.Revenue);
+            roomAllocated = soldRoomList.Sum(x => x.SoldRoom);
             if (roomAllocated == 0)
             {
                 overallOccu = 0;
@@ -354,26 +354,26 @@ namespace Service.Reports
         }
         private decimal WeekDay(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.SoldRoom);
-            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => x.SoldRoom);
-            return roomAllocated == 0 ? 0 : roomSold / roomAllocated;
+            var roomAllocated = soldRoomList.Where(x => x.Segment == segment && x.Weekday).Sum(x => (decimal)x.SoldRoom);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && x.Weekday).Sum(x => (decimal)x.SoldRoom);
+            return roomAllocated == 0 ? 0 : Convert.ToDecimal(roomSold / roomAllocated);
         }
 
 
         private decimal Weekend(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.SoldRoom);
-            var roomAllocated = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => x.SoldRoom);
-            return roomAllocated == 0 ? 0 : roomSold / roomAllocated;
+            var roomAllocated = soldRoomList.Where(x => x.Segment == segment && !x.Weekday).Sum(x => (decimal)x.SoldRoom);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment && !x.Weekday).Sum(x => (decimal)x.SoldRoom);
+            return roomAllocated == 0 ? 0 : Convert.ToDecimal(roomSold / roomAllocated);
 
         }
 
 
         private decimal Overall(ReportParams p, string segment)
         {
-            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => x.SoldRoom);
-            var roomAllocated = soldRoomList.Where(x => x.Segment == segment).Sum(x => x.SoldRoom);
-            return roomAllocated == 0 ? 0 : (roomSold / roomAllocated);
+            var roomSold = soldRoomList.Where(x => x.GroupID == p.GroupId && x.Segment == segment).Sum(x => (decimal)x.SoldRoom);
+            var roomAllocated = soldRoomList.Where(x => x.Segment == segment).Sum(x => (decimal)x.SoldRoom);
+            return roomAllocated == 0 ? 0 : Convert.ToDecimal(roomSold / roomAllocated);
 
         }
     }
