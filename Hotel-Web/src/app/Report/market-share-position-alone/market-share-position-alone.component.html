@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -27,38 +35,32 @@
 </span>
 <!-- <h2>OverAll Market Share Base Revenue</h2> -->
 <div class="chart-container">
-  <canvas  id="MyChart" >{{ chart }}</canvas>
+  <canvas id="MyChart">{{ chart }}</canvas>
 </div>
- <table class="style1">
+<table class="style1">
   <tr>
-    
-    <td class="style2">
-      &nbsp;</td> 
-    
-  <td class="style2">
-   Segment</td>
-    <td class="style2">
-    Actual Market Share </td>
-    <td class="style2">
-      Market Share Base By Position Alone
-</td>
-</tr>
+    <td class="style2">&nbsp;</td>
 
- <tr *ngFor="let marketSharePositionAloneData of marketSharePositionAloneReportResponse.data">
-      
-  <td class="style2">
-    &nbsp;</td>
-    <td class="style2">
-      {{marketSharePositionAloneData.label}}</td>
-      <td class="style2">
-        {{numberToDecimal(marketSharePositionAloneData.actualMarketShare)}}%</td>
-     
-    <td class="style3">
-      {{numberToDecimal(marketSharePositionAloneData.marketSharePosition) }}%
-    </td>
-    
+    <td class="style2">Segment</td>
+    <td class="style2">Actual Market Share</td>
+    <td class="style2">Market Share Base By Position Alone</td>
   </tr>
-  
- 
-  
+
+  <tr
+    *ngFor="
+      let marketSharePositionAloneData of marketSharePositionAloneReportResponse.data
+    "
+  >
+    <td class="style2">&nbsp;</td>
+    <td class="style2">
+      {{ marketSharePositionAloneData.label }}
+    </td>
+    <td class="style2">
+      {{ marketSharePositionAloneData.actualMarketShare | fmt2 : "P" }}
+    </td>
+
+    <td class="style3">
+      {{ marketSharePositionAloneData.marketSharePosition|fmt2:"P" }}
+    </td>
+  </tr>
 </table>
