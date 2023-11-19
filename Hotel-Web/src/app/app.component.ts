@@ -12,6 +12,6 @@ export class AppComponent {
    *
    */
   constructor() {
-    Chart.register(ChartDataLabels);
+   // Chart.register(ChartDataLabels);
   }
 }

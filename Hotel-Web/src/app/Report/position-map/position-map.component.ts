@@ -9,8 +9,7 @@ import { PositionMapReportResponse } from '../model/PositionMapResponse.model';
 import Chart from 'chart.js/auto';
 import { PositionMapAttribute } from '../model/ReportCommon.moel';
 import { SeedData, Segment } from '../model/Segment';
-import { formatNumber } from '@angular/common';
-
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
   selector: 'app-position-map',
   templateUrl: './position-map.component.html',
@@ -20,7 +19,7 @@ export class PositionMapComponent {
   MonthList: MonthDto[] = [];
   selectedMonth: MonthDto = {} as MonthDto;
   classId: number | undefined;
-  segments: Segment[] = SeedData.SegmentList();
+  segments: Segment[] = SeedData.SegmentWithOverAll();
   selectedSegment: Segment | undefined;
 
   reportParam: ReportParams = {} as ReportParams;
@@ -111,14 +110,14 @@ export class PositionMapComponent {
       data: {
         datasets: datasets,
       },
-
+      plugins: [ChartDataLabels],
       options: {
         aspectRatio: 2.5,
         plugins: {
           datalabels: {
             formatter: (value, context) => {
               let data = <any>context.dataset.data[0];
-              return `${context.dataset.label} ($${ this.numberToDecimal(
+              return `${context.dataset.label} ($${this.numberToDecimal(
                 data!.x
               )},${this.numberToDecimal(data!.y)})`;
             },

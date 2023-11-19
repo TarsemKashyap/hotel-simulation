@@ -5,8 +5,7 @@ export interface Segment {
 
 export class SeedData {
   public static SegmentList(): Segment[] {
-    return [
-      { value: 'Overall', title: 'Overall' },
+    const segments = [
       { value: 'Business', title: 'Business' },
       { value: 'Small Business', title: 'Small Business' },
       { value: 'Corporate contract', title: 'Corporate contract' },
@@ -22,5 +21,10 @@ export class SeedData {
       },
       { value: 'Association Meetings', title: 'Association Meetings' },
     ];
+    return segments;
+  }
+  public static SegmentWithOverAll(): Segment[] {
+    const overAll = { value: 'Overall', title: 'Overall' };
+    return [overAll, ...this.SegmentList()];
   }
 }
