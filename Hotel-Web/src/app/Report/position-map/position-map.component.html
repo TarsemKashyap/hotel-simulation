@@ -14,13 +14,12 @@
   </mat-form-field>
   <mat-form-field class="align-right">
     <mat-label>
-      <i *ngIf="groups.length"> Select Hotel</i>
-      <i *ngIf="!groups.length"> No hotel available</i>
+      <i> Select Segment</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedSegment" name="selectedSegment">
       <mat-label>Choose an month</mat-label>
-      <mat-option *ngFor="let group of groups" [value]="group">
-        {{ group.name }}
+      <mat-option *ngFor="let segment of segments" [value]="segment">
+        {{ segment.title }}
       </mat-option>
     </mat-select>
   </mat-form-field>
