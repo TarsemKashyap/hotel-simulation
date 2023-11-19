@@ -9,6 +9,7 @@ import { PositionMapReportResponse } from '../model/PositionMapResponse.model';
 import Chart from 'chart.js/auto';
 import { PositionMapAttribute } from '../model/ReportCommon.moel';
 import { SeedData, Segment } from '../model/Segment';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-position-map',
@@ -25,7 +26,7 @@ export class PositionMapComponent {
   reportParam: ReportParams = {} as ReportParams;
   positionMapReportResponse: PositionMapReportResponse =
     {} as PositionMapReportResponse;
-  public chart: any;
+  public chart: Chart | any;
   ChartData: PositionMapAttribute[] = [];
 
   YaxisData: any[] = [];
@@ -59,18 +60,18 @@ export class PositionMapComponent {
       .subscribe((reportData) => {
         this.positionMapReportResponse = reportData;
         this.ChartData = this.positionMapReportResponse.groupRating;
-        this.YaxisData.push.apply(this.YaxisData, this.ChartData);
-        this.YaxisQualityRating.push.apply(
-          this.YaxisQualityRating,
-          this.ChartData.map((i) => i.qualityRating)
-        );
-        this.YaxisRoomRating.push.apply(
-          this.YaxisRoomRating,
-          this.ChartData.map((i) => i.roomRate)
-        );
-        this.Xaxis = this.ChartData.map((item) => item.roomRate);
+        // this.YaxisData.push.apply(this.YaxisData, this.ChartData);
+        // this.YaxisQualityRating.push.apply(
+        //   this.YaxisQualityRating,
+        //   this.ChartData.map((i) => i.qualityRating)
+        // );
+        // this.YaxisRoomRating.push.apply(
+        //   this.YaxisRoomRating,
+        //   this.ChartData.map((i) => i.roomRate)
+        // );
+        // this.Xaxis = this.ChartData.map((item) => item.roomRate);
 
-        this.createChart();
+        this.createChart(reportData.groupRating);
       });
   }
 
@@ -90,28 +91,44 @@ export class PositionMapComponent {
       this.loadGroups();
     });
   }
-  createChart() {
+  createChart(data: PositionMapAttribute[]) {
+    var datasets = data.map((x, index) => {
+      return {
+        label: x.classGroup,
+        pointRadius: 10,
+        data: [
+          {
+            y: <any>data[index].qualityRating * (1 + index),
+            x: <any>data[index].roomRate * (1 + index),
+          },
+        ],
+      };
+    });
+    console.log(datasets);
     this.chart = new Chart('MyChart', {
-      type: 'bar', //this denotes tha type of chart
+      type: 'scatter', //this denotes tha type of chart
 
       data: {
-        // values on X-Axis
-        labels: this.Xaxis,
-        datasets: [
-          {
-            label: 'QualityRating',
-            data: this.YaxisQualityRating,
-            backgroundColor: 'blue',
-          },
-          // {
-          //   label: "Advertisement",
-          //   data: this.YaxisRoomRating,
-          //   backgroundColor: 'limegreen'
-          // }
-        ],
+        datasets: datasets,
       },
+
       options: {
         aspectRatio: 2.5,
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              debugger;
+              let data = <any>context.dataset.data[0];
+              return `${context.dataset.label} ($${Math.round(
+                data!.x
+              )},${Math.round(data!.y)})`;
+            },
+            textAlign: 'left',
+            align: 'top',
+            offset:10,
+            display: 'auto',
+          },
+        },
       },
     });
   }
