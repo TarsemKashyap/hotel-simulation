@@ -98,8 +98,8 @@ export class PositionMapComponent {
         pointRadius: 10,
         data: [
           {
-            y: <any>data[index].qualityRating * (1 + index),
-            x: <any>data[index].roomRate * (1 + index),
+            y: <any>data[index].qualityRating,
+            x: <any>data[index].roomRate,
           },
         ],
       };
@@ -117,15 +117,14 @@ export class PositionMapComponent {
         plugins: {
           datalabels: {
             formatter: (value, context) => {
-              debugger;
               let data = <any>context.dataset.data[0];
-              return `${context.dataset.label} ($${Math.round(
+              return `${context.dataset.label} ($${ this.numberToDecimal(
                 data!.x
-              )},${Math.round(data!.y)})`;
+              )},${this.numberToDecimal(data!.y)})`;
             },
-            textAlign: 'left',
             align: 'top',
-            offset:10,
+            offset: 10,
+            padding: 5,
             display: 'auto',
           },
         },
