@@ -36,89 +36,85 @@
 
 <table class="style1">
   <tr>
-    <td class="style2">
-      <h2>OverAll Market Share Base On RoomSold</h2>
-    </td>
-    <td class="style2">&nbsp;</td>
-    <td class="style2">&nbsp;</td>
-    <td class="style2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td class="style2"></td>
-    <td class="style2">Hotel</td>
-    <td class="style2">marketAverage</td>
-    <td class="style2">index</td>
-  </tr>
-
-  <tr
-    *ngFor="
-      let marketShareRevenueData of marketShareRoomSoldReportResponse.overAllPercentages
-    "
-  >
-    <td class="style2">
-      {{ marketShareRevenueData.label }}
-    </td>
-    <td class="style2">
-      {{ marketShareRevenueData.hotel | fmt2 : "P" }}
-    </td>
-
-    <td class="style3">
-      {{ marketShareRevenueData.marketAverage | fmt2 : "P" }}
-    </td>
-    <td class="style3">
-      {{ marketShareRevenueData.index | fmt2 : "N2" }}
-    </td>
-  </tr>
-
-  <tr>
-    <td class="style2">occupancy By Segment</td>
-    <td class="style2">&nbsp;</td>
-    <td class="style2">&nbsp;</td>
-    <td class="style2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td><h2>Market Share Base On RoomSold By Segment</h2></td>
-  </tr>
-  <tr>
-    <td class="style2"></td>
-    <td colspan="3">
-      <table>
-        <tr>
-          <td class="style2">Weekdayweekend</td>
-          <td class="style2">Hotel</td>
-          <td class="style2">marketAverage</td>
-          <td class="style2">index</td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <tr
-    *ngFor="
-      let occupancyBySegmentData of marketShareRoomSoldReportResponse.occupancyBySegment
-    "
-  >
-    <td class="style2">
-      {{ occupancyBySegmentData.segmentTitle }}
-    </td>
     <td class="style2" colspan="3">
-      <table>
-        <tr *ngFor="let SegmentData of occupancyBySegmentData.segments">
-          <td class="style2">
-            {{ SegmentData.label }}
-          </td>
-          <td class="style2">
-            {{ SegmentData.hotel | fmt2 : "P" }}
-          </td>
-
-          <td class="style2">
-            {{ SegmentData.marketAverage | fmt2 : "P" }}
-          </td>
-          <td class="style2">
-            {{ SegmentData.index | fmt2 : "N2" }}
-          </td>
-        </tr>
-      </table>
+      <h2>Room Demanded for {{ selectedHotel?.name }}</h2>
     </td>
   </tr>
+  <tr style="font-weight: bold;">
+    <td class="style2">Segment</td>
+    <td>&nbsp;</td>
+    <td class="style2">Room Allocated</td>
+    <td class="style2">Room Demanded</td>
+    <td class="style2">Room Sold</td>
+    <td class="style2">Deficient</td>
+  </tr>
+  <ng-container *ngFor="let item of demandReport.hotelDemand">
+    <ng-container
+      [ngTemplateOutlet]="segment"
+      [ngTemplateOutletContext]="{ segment: item }"
+    >
+    </ng-container>
+  </ng-container>
 </table>
+
+
+<table class="style1">
+    <tr>
+      <td class="style2" colspan="3">
+        <h2>Room Demanded for the Market</h2>
+      </td>
+    </tr>
+    <tr style="font-weight: bold;">
+      <td class="style2">Segment</td>
+      <td>&nbsp;</td>
+      <td class="style2">Room Allocated</td>
+      <td class="style2">Room Demanded</td>
+      <td class="style2">Room Sold</td>
+      <td class="style2">Deficient</td>
+    </tr>
+    <ng-container *ngFor="let item of demandReport.marketDemand">
+      <ng-container
+        [ngTemplateOutlet]="segment"
+        [ngTemplateOutletContext]="{ segment: item }"
+      >
+      </ng-container>
+    </ng-container>
+  </table>
+
+<ng-template let-segment="segment" #segment>
+  <tr>
+    <td rowspan="2">
+      {{ segment.segment }}
+    </td>
+    <ng-container
+      [ngTemplateOutlet]="week"
+      [ngTemplateOutletContext]="{ week: segment.weekDay }"
+    >
+    </ng-container>
+  </tr>
+  <tr>
+    <ng-container
+      [ngTemplateOutlet]="week"
+      [ngTemplateOutletContext]="{ week: segment.weekEnd }"
+    >
+    </ng-container>
+  </tr>
+</ng-template>
+
+<ng-template let-week="week" #week>
+  <td class="style2">
+    {{ week.label }}
+  </td>
+  <td>
+    {{ week.roomAllocated }}
+  </td>
+  <td class="style2">
+    {{ week.roomDemanded }}
+  </td>
+  <td class="style2">
+    {{ week.roomSold }}
+  </td>
+  <td class="style2">
+    {{ week.deficit }}
+  </td>
+</ng-template>

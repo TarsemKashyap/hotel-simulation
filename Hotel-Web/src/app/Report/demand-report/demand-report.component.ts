@@ -10,6 +10,7 @@ import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
+import { DemandReportModel } from '../model/demand-report.model';
 @Component({
   selector: 'app-demand-report',
   templateUrl: './demand-report.component.html',
@@ -23,8 +24,7 @@ export class DemandReportComponent {
   selectedHotel: ClassGroup | undefined;
 
   reportParam: ReportParams = {} as ReportParams;
-  marketShareRoomSoldReportResponse: MarketShareRoomSoldReportResponse =
-    {} as MarketShareRoomSoldReportResponse;
+  demandReport: DemandReportModel = {} as DemandReportModel;
   occupancyBySegment: IoccupancyBySegment[] = [];
   occupancyBySegmentSeg: occupancyReportAttribute[][] = [];
   overAllPercentages: occupancyReportAttribute[] = [];
@@ -49,16 +49,9 @@ export class DemandReportComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
     this.reportService
-      .marketShareRoomSoldReportDetails(this.reportParam)
+      .demandReport(this.reportParam)
       .subscribe((reportData) => {
-        this.marketShareRoomSoldReportResponse = reportData;
-        this.occupancyBySegment =
-          this.marketShareRoomSoldReportResponse.occupancyBySegment;
-        this.overAllPercentages =
-          this.marketShareRoomSoldReportResponse.overAllPercentages;
-        this.occupancyBySegmentSeg = this.occupancyBySegment.map(
-          (i) => i.segments
-        );
+        this.demandReport = reportData;
       });
   }
 
