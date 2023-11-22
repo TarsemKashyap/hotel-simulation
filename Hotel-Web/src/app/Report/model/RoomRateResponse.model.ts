@@ -1,4 +1,4 @@
-import { ReportCommon,roomRateReportAttribute } from "./ReportCommon.moel";
+import { ReportCommon,roomRateReportAttribute } from "./ReportCommon.model";
 
 
 export interface RoomRateReportResponse {

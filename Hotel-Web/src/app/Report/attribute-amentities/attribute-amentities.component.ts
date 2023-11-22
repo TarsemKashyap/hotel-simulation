@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {AttributeAmentitesReportResponse} from '../model/AttributeAmentitesResponse.model';
 import Chart from 'chart.js/auto';
-import {AttributeAmentitesReportAttribute } from "../model/ReportCommon.moel";
+import {AttributeAmentitesReportAttribute } from "../model/ReportCommon.model";
 @Component({
   selector: 'app-attribute-amentities',
   templateUrl: './attribute-amentities.component.html',

@@ -86,6 +86,10 @@ export class ReportListComponent {
       text: 'Quality Rating Report',
       link: 'quality-rating-report',
     },
+    {
+      text: 'Demand Report',
+      link: 'demand-report',
+    },
   ];
   constructor(private accountService: AccountService) {}
 

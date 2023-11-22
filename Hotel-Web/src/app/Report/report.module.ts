@@ -25,6 +25,7 @@ import { ObjectiveReportComponent } from './objective-report/objective-report.co
 import { PerformanceComponent } from './performance/performance.component';
 import { ReportListComponent } from './report-list/report-list.component';
 import { ReportRoutingModule } from './report-routing.module';
+import { DemandReportComponent } from './demand-report/demand-report.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { ReportRoutingModule } from './report-routing.module';
     PositionMapComponent,
     QualityRatingComponent,
     PerformanceInstComponent,
-    SummeryAllHotelComponent
+    SummeryAllHotelComponent,
+    DemandReportComponent
   ],
   imports: [
     CommonModule,

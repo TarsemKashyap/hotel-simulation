@@ -1,4 +1,4 @@
-import { ReportCommon,possitionAloneReportAttribute } from "./ReportCommon.moel";
+import { ReportCommon,possitionAloneReportAttribute } from "./ReportCommon.model";
 
 
 export interface MarketSharePositionAloneReportResponse {

@@ -5,20 +5,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
-import { OccupancyReportResponse } from '../model/OccupancyResponse.model';
-import { find } from 'rxjs';
-import Chart from 'chart.js/auto';
+import { MarketShareRoomSoldReportResponse } from '../model/MarketShareRoomSoldResponse.model';
 import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
-
 @Component({
-  selector: 'app-occupancy',
-  templateUrl: './occupancy.component.html',
-  styleUrls: ['./occupancy.component.css'],
+  selector: 'app-demand-report',
+  templateUrl: './demand-report.component.html',
+  styleUrls: ['./demand-report.component.css'],
 })
-export class OccupancyComponent {
+export class DemandReportComponent {
   MonthList: MonthDto[] = [];
   selectedMonth: MonthDto = {} as MonthDto;
   classId: number | undefined;
@@ -26,20 +23,13 @@ export class OccupancyComponent {
   selectedHotel: ClassGroup | undefined;
 
   reportParam: ReportParams = {} as ReportParams;
-  occupancyReportResponse: OccupancyReportResponse =
-    {} as OccupancyReportResponse;
-  public chart: any;
-  ChartData: IoccupancyBySegment[] = [];
+  marketShareRoomSoldReportResponse: MarketShareRoomSoldReportResponse =
+    {} as MarketShareRoomSoldReportResponse;
   occupancyBySegment: IoccupancyBySegment[] = [];
   occupancyBySegmentSeg: occupancyReportAttribute[][] = [];
   overAllPercentages: occupancyReportAttribute[] = [];
-  YaxisData: any[] = [];
-  Xaxis: any[] = [];
-  YaxisMarketAvg: any[] = [];
-  YaxisHotel: any[] = [];
   constructor(
     private reportService: ReportService,
-    private router: Router,
     public snackBar: MatSnackBar,
     public activeRoute: ActivatedRoute
   ) {}
@@ -59,29 +49,16 @@ export class OccupancyComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
     this.reportService
-      .occupancyReportDetails(this.reportParam)
+      .marketShareRoomSoldReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
-        this.occupancyReportResponse = reportData;
+        this.marketShareRoomSoldReportResponse = reportData;
         this.occupancyBySegment =
-          this.occupancyReportResponse.occupancyBySegment;
+          this.marketShareRoomSoldReportResponse.occupancyBySegment;
         this.overAllPercentages =
-          this.occupancyReportResponse.overAllPercentages;
+          this.marketShareRoomSoldReportResponse.overAllPercentages;
         this.occupancyBySegmentSeg = this.occupancyBySegment.map(
           (i) => i.segments
         );
-        this.ChartData = this.occupancyReportResponse.occupancyBySegment;
-        for (let entry of this.occupancyBySegmentSeg) {
-          this.YaxisData.push.apply(this.YaxisData, entry);
-        }
-        this.YaxisData.push.apply(this.YaxisData, this.overAllPercentages);
-        this.YaxisMarketAvg = this.YaxisData.map((item) => item.marketAverage);
-        this.YaxisHotel = this.YaxisData.map((item) => item.hotel);
-        this.Xaxis = this.ChartData.map((item) => item.segmentTitle);
-
-        this.createChart();
       });
   }
 
@@ -100,35 +77,8 @@ export class OccupancyComponent {
       this.loadGroups();
     });
   }
-  createChart() {
-    this.chart = new Chart('MyChart', {
-      type: 'bar', //this denotes tha type of chart
 
-      data: {
-        // values on X-Axis
-        labels: this.Xaxis,
-        datasets: [
-          {
-            label: 'marketAvg',
-            data: this.YaxisMarketAvg,
-            backgroundColor: 'blue',
-          },
-          {
-            label: 'hotel',
-            data: this.YaxisHotel,
-            backgroundColor: 'limegreen',
-          },
-        ],
-      },
-      options: {
-        aspectRatio: 2.5,
-      },
-    });
-  }
   numberToDecimal(x: any) {
     return this.reportService.numberToDecimal(x);
-  }
-  numberWithCommas(x: any) {
-    return this.reportService.numberWithCommas(x);
   }
 }

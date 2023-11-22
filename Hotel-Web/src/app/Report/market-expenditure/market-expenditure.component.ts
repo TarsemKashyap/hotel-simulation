@@ -11,7 +11,7 @@ import {
   MarketExpenditureReportAttribute,
   Sector,
   MarketingStrategy,
-} from '../model/ReportCommon.moel';
+} from '../model/ReportCommon.model';
 
 @Component({
   selector: 'app-market-expenditure',

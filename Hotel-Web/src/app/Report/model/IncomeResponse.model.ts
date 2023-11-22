@@ -1,4 +1,4 @@
-import { ReportCommon,IncomeReport,revenue,departmentalExpenses,ReportAttribute } from "./ReportCommon.moel";
+import { ReportCommon,IncomeReport,revenue,departmentalExpenses,ReportAttribute } from "./ReportCommon.model";
 
 
 export interface IncomeReportResponse {

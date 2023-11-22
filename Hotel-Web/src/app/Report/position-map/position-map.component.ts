@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import { PositionMapReportResponse } from '../model/PositionMapResponse.model';
 import Chart from 'chart.js/auto';
-import { PositionMapAttribute } from '../model/ReportCommon.moel';
+import { PositionMapAttribute } from '../model/ReportCommon.model';
 import { SeedData, Segment } from '../model/Segment';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({

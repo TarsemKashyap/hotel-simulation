@@ -1,11 +1,10 @@
-import { ReportCommon,IoccupancyBySegment,occupancyReportAttribute } from "./ReportCommon.moel";
-
+import {
+  ReportCommon,
+  IoccupancyBySegment,
+  occupancyReportAttribute,
+} from './ReportCommon.model';
 
 export interface OccupancyReportResponse {
-   
-    occupancyBySegment :IoccupancyBySegment[],
-    overAllPercentages:occupancyReportAttribute[],
-   
-    
+  occupancyBySegment: IoccupancyBySegment[];
+  overAllPercentages: occupancyReportAttribute[];
 }
-

@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import { QualityRatingReportResponse } from '../model/QualityRatingResponse.model';
 import Chart from 'chart.js/auto';
-import { QualityRatingAttribute } from '../model/ReportCommon.moel';
+import { QualityRatingAttribute } from '../model/ReportCommon.model';
 import { SeedData, Segment } from '../model/Segment';
 @Component({
   selector: 'app-quality-rating',

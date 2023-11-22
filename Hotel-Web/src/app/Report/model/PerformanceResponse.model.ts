@@ -1,4 +1,4 @@
-import { ReportCommon } from './ReportCommon.moel';
+import { ReportCommon } from './ReportCommon.model';
 import { StatisticsDto } from './Statistics.model';
 
 export interface PerformanceResponse {

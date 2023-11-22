@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {MarketShareRevenueReportResponse} from '../model/MarketShareRevenueResponse.model';
 import Chart from 'chart.js/auto';
-import {occupancyReportAttribute,IoccupancyBySegment } from "../model/ReportCommon.moel";
+import {occupancyReportAttribute,IoccupancyBySegment } from "../model/ReportCommon.model";
 @Component({
   selector: 'app-market-share-revenue',
   templateUrl: './market-share-revenue.component.html',

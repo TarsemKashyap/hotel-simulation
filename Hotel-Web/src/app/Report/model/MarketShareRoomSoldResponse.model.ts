@@ -1,4 +1,4 @@
-import { ReportCommon,occupancyReportAttribute,IoccupancyBySegment } from "./ReportCommon.moel";
+import { ReportCommon,occupancyReportAttribute,IoccupancyBySegment } from "./ReportCommon.model";
 
 
 export interface MarketShareRoomSoldReportResponse {

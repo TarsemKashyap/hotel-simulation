@@ -1,4 +1,4 @@
-import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "./ReportCommon.moel";
+import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "./ReportCommon.model";
 
 
 export interface AvgDailyRateReportResponse {
