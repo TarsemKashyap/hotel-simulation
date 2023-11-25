@@ -42,7 +42,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = classSession.CurrentQuater;
+        int quarter = goalArgs.CurrentQuarter;
         int groupId = goalArgs.GroupId;
         int hotelCount = classSession.HotelsCount;
         var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.MonthID == goalArgs.MonthId && x.GroupID == goalArgs.GroupId);
@@ -79,12 +79,12 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         finacialRatio.LiquidtyRatios.AddChild(Number("Quick (Acid Test) Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? 0 : quickAcidTest / currentMonthBalSheet.TotCurrentLiab));
 
         //Accounts Receivable Percentage
-        Month lastMonth = await GetLastMonth(monthId);
+        Month lastMonth = await GetLastMonth(monthId,quarter);
         decimal b = incomeState.Room1 * 100 / 52;
         decimal a = currentMonthBalSheet.AcctReceivable;
         if (quarter > 1)
         {
-            var lastMonthBalSheet = await _context.BalanceSheet.Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == (quarter - 1) && x.GroupID == groupId).FirstOrDefaultAsync();
+            var lastMonthBalSheet = await _context.BalanceSheet.Where(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == lastMonth.Sequence && x.GroupID == groupId).FirstOrDefaultAsync();
             a = (currentMonthBalSheet.AcctReceivable + lastMonthBalSheet.AcctReceivable) / 2;
         }
         Number AccountsReceivablePercentage = b == 0 ? null : new Number(a / b);
@@ -242,7 +242,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
     }
 
-    private async Task<Month> GetLastMonth(int monthId)
+    private async Task<Month> GetLastMonth(int monthId,int quarter)
     {
         var classMonths = await _context.Months
                         .Include(x => x.Class)
@@ -250,7 +250,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
                         .Where(x => x.MonthId == monthId)
                         .Select(x => x.Class.Months)
                         .FirstOrDefaultAsync();
-        var lastMonth = classMonths.Where(x => x.MonthId != monthId).OrderByDescending(x => x.MonthId).FirstOrDefault();
+        var lastMonth = classMonths.FirstOrDefault(x => x.Sequence == (quarter - 1));
         return lastMonth;
     }
 
@@ -271,12 +271,12 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             FinancialRatio = new List<FinancialRatio>()
         };
 
-        Month lastMonth = await GetLastMonth(monthId);
+        Month lastMonth = await GetLastMonth(monthId,goalArgs.CurrentQuarter);
 
+        int quarter = goalArgs.CurrentQuarter;
         foreach (var group in classSession.Groups)
         {
             int groupId = group.Serial;
-            int quarter = classSession.CurrentQuater;
             int hotelCount = classSession.HotelsCount;
             var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == groupId);
             decimal monthlyProfit = incomeState.NetIncom;

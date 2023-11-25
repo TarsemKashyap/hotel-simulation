@@ -20,6 +20,8 @@ public class DemandReportService : AbstractReportService, IDemandReportService
     private readonly HotelDbContext _context;
     private ILookup<string, RoomAllocation> _roomAllocation;
     private ILookup<string, SoldRoomByChannel> _soldRooms;
+    private ILookup<string, RoomAllocation> _roomAllocationMkt;
+    private ILookup<string, SoldRoomByChannel> _soldRoomsMkt;
 
     public DemandReportService(HotelDbContext context)
     {
@@ -32,10 +34,18 @@ public class DemandReportService : AbstractReportService, IDemandReportService
             .Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.GroupID == p.GroupId).ToListAsync()
             ).ToLookup(x => x.Segment.Trim());
 
+        _roomAllocationMkt = (await _context.RoomAllocation
+            .Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync()
+            ).ToLookup(x => x.Segment.Trim());
+
 
         _soldRooms = (await _context.SoldRoomByChannel
             .Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.GroupID == p.GroupId).ToListAsync())
             .ToLookup(x => x.Segment.Trim());
+
+        _soldRoomsMkt = (await _context.SoldRoomByChannel
+           .Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync())
+           .ToLookup(x => x.Segment.Trim());
 
         var (overAllWeekdayDemand, overAllWeekdayRoomSold) = await OverAllSegmentsAsync(p, true);
 
@@ -133,8 +143,8 @@ public class DemandReportService : AbstractReportService, IDemandReportService
 
     private DemandSegmentDto WeekEndMarket(string label)
     {
-        var demand = _roomAllocation[label].Where(p => !p.Weekday).Sum(x => x.ActualDemand);
-        var soldRoom = _soldRooms[label].Where(x => !x.Weekday).Sum(x => x.SoldRoom);
+        var demand = _roomAllocationMkt[label].Where(p => !p.Weekday).Sum(x => x.ActualDemand);
+        var soldRoom = _soldRoomsMkt[label].Where(x => !x.Weekday).Sum(x => x.SoldRoom);
         return new DemandSegmentDto
         {
             Label = "WeekEnd",
@@ -146,8 +156,8 @@ public class DemandReportService : AbstractReportService, IDemandReportService
 
     private DemandSegmentDto WeekDayMarket(string label)
     {
-        var demand = _roomAllocation[label].Where(p => p.Weekday).Sum(x => x.ActualDemand);
-        var soldRoom = _soldRooms[label].Where(x => x.Weekday).Sum(x => x.SoldRoom);
+        var demand = _roomAllocationMkt[label].Where(p => p.Weekday).Sum(x => x.ActualDemand);
+        var soldRoom = _soldRoomsMkt[label].Where(x => x.Weekday).Sum(x => x.SoldRoom);
         return new DemandSegmentDto
         {
             Label = "WeekDay",

@@ -40,7 +40,7 @@ export class SummeryAllHotelComponent {
     this.reportParam.ClassId = this.classId!;
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter = this.selectedHotel?.serial!;
+    this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence);
     this.reportService
       .summeryAllHotels(this.reportParam)
       .subscribe((reportData) => {
