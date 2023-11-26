@@ -1,4 +1,4 @@
-import { ReportCommon,QualityRatingAttribute } from "./ReportCommon.moel";
+import { ReportCommon,QualityRatingAttribute } from "./ReportCommon.model";
 
 
 export interface QualityRatingReportResponse {

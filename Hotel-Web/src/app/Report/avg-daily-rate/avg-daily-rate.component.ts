@@ -8,7 +8,7 @@ import { ReportParams } from '../model/ReportParams.model';
 import {AvgDailyRateReportResponse} from '../model/AvgDailyRateResponse.model';
 import { find } from 'rxjs';
 import Chart from 'chart.js/auto';
-import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "../model/ReportCommon.moel";
+import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "../model/ReportCommon.model";
 
 @Component({
   selector: 'app-avg-daily-rate',

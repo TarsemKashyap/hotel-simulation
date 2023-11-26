@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {RevParGopalReportResponse} from '../model/RevParGoparResponse.model';
 import Chart from 'chart.js/auto';
-import {avgdailyrateReportAttribute } from "../model/ReportCommon.moel";
+import {avgdailyrateReportAttribute } from "../model/ReportCommon.model";
 import { isNgTemplate } from '@angular/compiler';
 @Component({
   selector: 'app-rev-par-gopar',

@@ -1,4 +1,4 @@
-import { ReportCommon,currentAssests,ReportAttribute,propertyEquipement,libilitiesAndOwnerEquity1 } from "./ReportCommon.moel";
+import { ReportCommon,currentAssests,ReportAttribute,propertyEquipement,libilitiesAndOwnerEquity1 } from "./ReportCommon.model";
 
 
 export interface BalanceReportResponse {

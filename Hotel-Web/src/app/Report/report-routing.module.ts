@@ -21,6 +21,8 @@ import { PositionMapComponent } from './position-map/position-map.component';
 import { QualityRatingComponent } from './quality-rating/quality-rating.component';
 import { PerformanceInstComponent } from './performance-inst/performance-inst.component';
 import { SummeryAllHotelComponent } from './summery-all-hotel/summery-all-hotel.component';
+import { DemandReportComponent } from './demand-report/demand-report.component';
+
 export const reportRoutes: Routes = [
   {
     path: 'report',
@@ -64,6 +66,10 @@ export const reportRoutes: Routes = [
       {
         path: ':id/inst-hotels-summery-report',
         component: SummeryAllHotelComponent,
+      },
+      {
+        path: ':id/demand-report',
+        component: DemandReportComponent,
       },
     ],
     canActivate: [checkAccessPermission],

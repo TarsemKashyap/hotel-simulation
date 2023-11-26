@@ -7,7 +7,7 @@ import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
 import {MarketSharePositionAloneReportResponse} from '../model/MarketSharePositionAloneResponse.model';
 import Chart from 'chart.js/auto';
-import {possitionAloneReportAttribute } from "../model/ReportCommon.moel";
+import {possitionAloneReportAttribute } from "../model/ReportCommon.model";
 @Component({
   selector: 'app-market-share-position-alone',
   templateUrl: './market-share-position-alone.component.html',

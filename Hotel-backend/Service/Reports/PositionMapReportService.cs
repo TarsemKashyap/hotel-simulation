@@ -40,10 +40,10 @@ public class PositionMapReportService : AbstractReportService, IPositionMapRepor
         {
 
             var groups = (await _context.ClassGroups.Where(x => x.ClassId == p.ClassId).ToListAsync()).Adapt<List<ClassGroupDto>>();
+            string overAllSegment = "OverAll";
 
-            if (string.IsNullOrEmpty(p.Segment))
+            if (p.Segment.Equals(overAllSegment, StringComparison.OrdinalIgnoreCase))
             {
-                string overAllSegment = "OverAll";
 
                 //weightedRatingAdpt.ScalarHotelOverallRatingBasedOnSoldRoom
                 var _overAllRating = (from weight in _context.WeightedAttributeRating

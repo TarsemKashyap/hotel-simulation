@@ -35,7 +35,7 @@ public class GoalReportService : IGoalReportService
             .Include(x => x.Months)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = classSession.CurrentQuater;
+        int quarter = goalArgs.CurrentQuarter;
         int monthId = goalArgs.MonthId;
         int hotelCount = classSession.HotelsCount;
 
@@ -46,13 +46,13 @@ public class GoalReportService : IGoalReportService
 
 
 
-        decimal soldRoomsByMonthGroup = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.SoldRoom);
-        decimal ScalarMarketRomSoldByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
+        decimal ScalarGroupRomSoldByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.SoldRoom);
+        decimal ScalarMarketSoldRomByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
         // decimal soldRoomsMarketAverage = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.SoldRoom);
-        decimal perf = soldRoomsByMonthGroup / 500 / 30;
-        decimal marketAverage = (ScalarMarketRomSoldByMonth / 500 / 30) / classSession.Groups.Count;
+        decimal perf = ScalarGroupRomSoldByMonth / 500 / 30;
+        decimal marketAverage = (ScalarMarketSoldRomByMonth / 500 / 30) / classSession.Groups.Count;
         Goal goalByMonthGroup = _context.Goal.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefault();
-        decimal occupancyM = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.OccupancyM);
+        decimal occupancyM = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM);
         GoalReportDto occupancyPercentage = new GoalReportDto
         {
 
@@ -88,22 +88,22 @@ public class GoalReportService : IGoalReportService
         GoalReportDto marketShareByRooms = new GoalReportDto
         {
             Indicators = "Market Share based on Number of Rooms",
-            M_P = ScalarMarketRomSoldByMonth == 0 ? 0 : soldRoomsByMonthGroup / ScalarMarketRomSoldByMonth,
-            M_M = 1 / classSession.Groups.Count,
+            M_P = ScalarMarketSoldRomByMonth == 0 ? 0 : ScalarGroupRomSoldByMonth / ScalarMarketSoldRomByMonth,
+            M_M = Convert.ToDecimal(1.0) / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ShareRoomM),
             Formatter = "P"
         };
-        var roomSoldByRevenue = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
-        var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter).SumAsync(x => x.Revenue);
+        var ScalarGroupRoomRevenueByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
+        var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.MonthID==monthId && x.QuarterNo == quarter).SumAsync(x => x.Revenue);
         GoalReportDto marketShareByRevenue = new GoalReportDto
         {
             Indicators = "Market Share based on Revenues",
-            M_P = roomSoldByRevenuMonthly == 0 ? 0 : roomSoldByRevenue / roomSoldByRevenuMonthly,
-            M_M = 1 / classSession.Groups.Count,
+            M_P = roomSoldByRevenuMonthly == 0 ? 0 : ScalarGroupRoomRevenueByMonth / roomSoldByRevenuMonthly,
+            M_M = Convert.ToDecimal(1) / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ShareRevenM),
             Formatter = "P"
         };
-        var groupIds = classSession.Groups.Select(x => x.GroupId).ToList();
+        var groupIds = classSession.Groups.Select(x => x.Serial).ToList();
         int revParRoomSold = await _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.RoomsAllocated);
         var groupRoomAllocatedsum = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).SumAsync(x => x.Revenue);
         int roomAllocatedRevPar = 15000 * classSession.Groups.Count;
@@ -111,10 +111,10 @@ public class GoalReportService : IGoalReportService
         GoalReportDto RevPar = new GoalReportDto
         {
             Indicators = "REVPAR",
-            M_P = roomSoldByRevenue / 15000,
+            M_P = ScalarGroupRoomRevenueByMonth / 15000,
             M_M = roomAllocatedRevPar == 0 ? 0 : groupRoomAllocatedsum / roomAllocatedRevPar,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.RevparM),
-            Formatter = "P"
+            Formatter = "C"
         };
 
         var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
@@ -123,22 +123,22 @@ public class GoalReportService : IGoalReportService
         GoalReportDto ADR = new GoalReportDto
         {
             Indicators = "ADR",
-            M_P = soldRoomsByMonthGroup == 0 ? 0 : roomSoldByRevenue / soldRoomsByMonthGroup,
+            M_P = ScalarGroupRomSoldByMonth == 0 ? 0 : ScalarGroupRoomRevenueByMonth / ScalarGroupRomSoldByMonth,
             M_M = adrRoomSold == 0 ? 0 : adrGroupRevenuSum / adrRoomSold,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ADRM),
             Formatter = "C"
         };
 
         decimal yieldOccupancy = 0, AARate = 0, potentialRate = 0;
-        yieldOccupancy = soldRoomsByMonthGroup == 0 ? 0 : (soldRoomsByMonthGroup / 500 / 30);
-        AARate = soldRoomsByMonthGroup == 0 ? 0 : roomSoldByRevenue / soldRoomsByMonthGroup;
+        yieldOccupancy = ScalarGroupRomSoldByMonth == 0 ? 0 : (ScalarGroupRomSoldByMonth / 500 / 30);
+        AARate = ScalarGroupRomSoldByMonth == 0 ? 0 : ScalarGroupRoomRevenueByMonth / ScalarGroupRomSoldByMonth;
         //  roomSoldByRevenuMonthly ,soldRoomsByMonth
-        potentialRate = roomSoldByRevenuMonthly == 0 ? 0 : roomSoldByRevenuMonthly / roomSoldByRevenuMonthly;
+        potentialRate = ScalarMarketSoldRomByMonth == 0 ? 0 : roomSoldByRevenuMonthly / ScalarMarketSoldRomByMonth;
         GoalReportDto yieldManagement = new GoalReportDto
         {
             Indicators = "Yield Management",
             M_P = potentialRate == 0 ? 0 : yieldOccupancy * AARate / potentialRate,
-            M_M = (ScalarMarketRomSoldByMonth / 500 / 30) / classSession.Groups.Count,
+            M_M = ScalarMarketSoldRomByMonth / 500 / 30 / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.YieldMgtM),
             Formatter = "P"
         };
@@ -154,7 +154,7 @@ public class GoalReportService : IGoalReportService
         {
             Indicators = "Operating Efficiency Ratio",
             M_P = roomSoldIncomestate == 0 ? 0 : incomeState.IncomBfCharg / roomSoldIncomestate,
-            M_M = Convert.ToDecimal(ScalarMonthAvgIncomeBFcharge / ScalarMonthAvgRoomRevenue),
+            M_M = ScalarMonthAvgIncomeBFcharge / roomSoldIncomestate,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM),
             Formatter = "P"
         };
@@ -182,7 +182,8 @@ public class GoalReportService : IGoalReportService
             RevPar.ToGoalReportResponse(),
             ADR.ToGoalReportResponse(),
             yieldManagement.ToGoalReportResponse(),
-            operatingEffeciyRatio.ToGoalReportResponse()
+            operatingEffeciyRatio.ToGoalReportResponse(),
+            profitMargin.ToGoalReportResponse()
         };
 
 

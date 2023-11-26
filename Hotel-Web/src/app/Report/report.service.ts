@@ -24,6 +24,7 @@ import {
   PerformanceResponse,
 } from './model/PerformanceResponse.model';
 import { SummeryAllHotelsReport } from './model/SummeryAllHotelsReport';
+import { DemandReportModel } from './model/demand-report.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -188,6 +189,15 @@ export class ReportService {
   ): Observable<Array<SummeryAllHotelsReport>> {
     return this.httpClient.post<Array<SummeryAllHotelsReport>>(
       `api/ReportInstructor/summary-all-hotels`,
+      reportParams
+    );
+  }
+
+  demandReport(
+    reportParams: ReportParams
+  ): Observable<DemandReportModel> {
+    return this.httpClient.post<DemandReportModel>(
+      `api/Report/demand-report`,
       reportParams
     );
   }

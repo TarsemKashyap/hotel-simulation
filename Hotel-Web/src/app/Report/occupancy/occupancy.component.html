@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -27,102 +35,83 @@
 </span>
 <h2>Occupancy for the Month</h2>
 <div class="chart-container">
-  <canvas  id="MyChart" >{{ chart }}</canvas>
+  <canvas id="MyChart">{{ chart }}</canvas>
 </div>
 <table class="style1">
   <tr>
-    <td class="style2">
-        Overall Occupancy Percentage
-    </td>
-      <td class="style2">
-        &nbsp;</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      &nbsp;
-    </td>
+    <td class="style2">Overall Occupancy Percentage</td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">&nbsp;</td>
   </tr>
   <tr>
-  <td class="style2">
-    </td>
-  <td class="style2">
-   Hotel</td>
-    <td class="style2">
-    marketAverage</td>
-    <td class="style2">
-    index
-</td>
-</tr>
+    <td class="style2"></td>
+    <td class="style2">Hotel</td>
+    <td class="style2">marketAverage</td>
+    <td class="style2">index</td>
+  </tr>
 
-  <tr *ngFor="let overAllPercentagesData of occupancyReportResponse.overAllPercentages">
-      
-    
+  <tr
+    *ngFor="
+      let overAllPercentagesData of occupancyReportResponse.overAllPercentages
+    "
+  >
     <td class="style2">
-      {{overAllPercentagesData.label}}</td>
-      <td class="style2">
-        {{numberToDecimal(overAllPercentagesData.hotel)}}%</td>
-     
+      {{ overAllPercentagesData.label }}
+    </td>
+    <td class="style2">
+      {{ overAllPercentagesData.hotel | fmt2 : "P" }}
+    </td>
+
     <td class="style3">
-      {{numberToDecimal(overAllPercentagesData.marketAverage) }}%
+      {{ overAllPercentagesData.marketAverage | fmt2 : "P" }}
     </td>
     <td class="style3">
-        {{numberToDecimal(overAllPercentagesData.index)}}
-      </td>
+      {{ overAllPercentagesData.index | fmt2 : "P" }}
+    </td>
   </tr>
-  
+
   <tr>
-    <td class="style2">
-        occupancy By Segment
-    </td>
-      <td class="style2">
-        &nbsp;</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      &nbsp;
-    </td>
+    <td class="style2">occupancy By Segment</td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">&nbsp;</td>
+    <td class="style2">&nbsp;</td>
   </tr>
   <tr>
-    <td class="style2">
-      </td>
-      <td colspan="3"><table><tr>
-        <td class="style2">
-            Weekdayweekend</td>
-        <td class="style2">
-        Hotel</td>
-         <td class="style2">
-         marketAverage</td>
-         <td class="style2">
-         index
-     </td></tr></table></td>
-    
-  </tr>
-  <tr *ngFor="let occupancyBySegmentData of occupancyReportResponse.occupancyBySegment">
-      
-    
-    <td class="style2">
-      {{occupancyBySegmentData.segmentTitle}}</td>
-      <td class="style2" colspan="3">
+    <td class="style2"></td>
+    <td colspan="3">
       <table>
-        <tr *ngFor="let SegmentData of occupancyBySegmentData.segments">
-            <td class="style2" >
-                {{SegmentData.label}}
-            </td>
-            <td class="style2" >
-                {{numberToDecimal(SegmentData.hotel)}}%
-            </td>
-              
-    <td class="style2">
-        {{numberToDecimal(SegmentData.marketAverage) }}%
-      </td>
-      <td class="style2">
-        {{numberToDecimal(SegmentData.index) }}
-      </td>
+        <tr>
+          <td class="style2">Weekdayweekend</td>
+          <td class="style2">Hotel</td>
+          <td class="style2">marketAverage</td>
+          <td class="style2">index</td>
         </tr>
       </table>
     </td>
-   
-    
   </tr>
-  
+  <tr
+    *ngFor="
+      let occupancyBySegmentData of occupancyReportResponse.occupancyBySegment
+    "
+  >
+    <td class="style2">
+      {{ occupancyBySegmentData.segmentTitle }}
+    </td>
+    <td class="style2" colspan="3">
+      <table>
+        <tr *ngFor="let SegmentData of occupancyBySegmentData.segments">
+          <td class="style2">
+            {{ SegmentData.label }}
+          </td>
+          <td class="style2">{{ SegmentData.hotel | fmt2 : "P" }}</td>
+
+          <td class="style2">{{ SegmentData.marketAverage | fmt2 : "P" }}</td>
+          <td class="style2">
+            {{ SegmentData.index | fmt2 : "P" }}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 </table>

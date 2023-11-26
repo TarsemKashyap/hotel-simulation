@@ -1,4 +1,4 @@
-import { ReportCommon,MarketExpenditureReportAttribute,MarketExpenditureAttribute } from "./ReportCommon.moel";
+import { ReportCommon,MarketExpenditureReportAttribute,MarketExpenditureAttribute } from "./ReportCommon.model";
 
 
 export interface MarketExpenditureReportResponse {

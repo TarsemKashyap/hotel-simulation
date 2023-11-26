@@ -11,7 +11,7 @@ import {
   MarketExpenditureReportAttribute,
   Sector,
   MarketingStrategy,
-} from '../model/ReportCommon.moel';
+} from '../model/ReportCommon.model';
 
 @Component({
   selector: 'app-market-expenditure',
@@ -80,8 +80,6 @@ export class MarketExpenditureComponent {
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
-    console.log('selectedSector', this.selectedSector);
-    console.log('selectedMarketingStrategy', this.selectedMarketingStrategy);
 
     this.reportService
       .marketExpenditureReportDetails(this.reportParam)
@@ -90,11 +88,9 @@ export class MarketExpenditureComponent {
 
         // console.log(reportData);
         this.marketExpenditureReportResponse = reportData;
-
-        this.ChartData = this.marketExpenditureReportResponse.segments;
-
-        let selectorName: string = this.selectedSector?.value!;
-        let strategyName: string = this.selectedMarketingStrategy?.value!;
+        this.ChartData = this.marketExpenditureReportResponse.segments.filter(
+          (x) => x.label != null
+        );
 
         this.Xaxis = this.ChartData.map((item) => item.label);
         if (this.selectedSector?.value == 'Labor') {
@@ -198,7 +194,6 @@ export class MarketExpenditureComponent {
   createChart() {
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
-
       data: {
         // values on X-Axis
         labels: this.Xaxis,
@@ -206,17 +201,27 @@ export class MarketExpenditureComponent {
           {
             label: this.chartLabel,
             data: this.YaxisSaleForce,
-            backgroundColor: 'blue',
+            backgroundColor: 'skyblue',
+            type: 'bar',
           },
-          // {
-          //   label: "Advertisement",
-          //   data: this.YaxisAdv,
-          //   backgroundColor: 'limegreen'
-          // }
+          {
+            label: this.chartLabel,
+            data: this.YaxisSaleForce,
+            backgroundColor: 'red',
+            borderColor: 'red',
+            type: 'line',
+            order:1
+          },
         ],
       },
       options: {
         aspectRatio: 2.5,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+          
+        }
       },
     });
   }
