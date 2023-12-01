@@ -79,7 +79,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         finacialRatio.LiquidtyRatios.AddChild(Number("Quick (Acid Test) Ratio", currentMonthBalSheet.TotCurrentLiab == 0 ? 0 : quickAcidTest / currentMonthBalSheet.TotCurrentLiab));
 
         //Accounts Receivable Percentage
-        Month lastMonth = await GetLastMonth(monthId,quarter);
+        Month lastMonth = await GetLastMonth(monthId, quarter);
         decimal b = incomeState.Room1 * 100 / 52;
         decimal a = currentMonthBalSheet.AcctReceivable;
         if (quarter > 1)
@@ -242,7 +242,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
     }
 
-    private async Task<Month> GetLastMonth(int monthId,int quarter)
+    private async Task<Month> GetLastMonth(int monthId, int quarter)
     {
         var classMonths = await _context.Months
                         .Include(x => x.Class)
@@ -271,7 +271,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             FinancialRatio = new List<FinancialRatio>()
         };
 
-        Month lastMonth = await GetLastMonth(monthId,goalArgs.CurrentQuarter);
+        Month lastMonth = await GetLastMonth(monthId, goalArgs.CurrentQuarter);
 
         int quarter = goalArgs.CurrentQuarter;
         foreach (var group in classSession.Groups)
@@ -474,8 +474,8 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
         foreach (var group in classSession.Groups)
         {
-            decimal totalSoldRoom = await _context.SoldRoomByChannel.Where(x => x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.SoldRoom);
-            decimal totalRoomAllocated = await _context.RoomAllocation.Where(x => x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.RoomsAllocated);
+            decimal totalSoldRoom = await _context.SoldRoomByChannel.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.SoldRoom);
+            decimal totalRoomAllocated = await _context.RoomAllocation.Where(x => x.MonthID == report.MonthId && x.QuarterNo == report.CurrentQuarter && x.GroupID == group.Serial).SumAsync(x => x.RoomsAllocated);
             StatisticsHotelDto dto = new StatisticsHotelDto() { HotelName = group.Name };
             dto.OccupancyPercentage = Percent(totalRoomAllocated == 0 ? 0 : (totalSoldRoom / 500 / 30));
 

@@ -33,61 +33,61 @@
     <tr>
       <td>Occupancy Percentage</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].occupancyPercentage | fmt }}
+        {{ reportDto[index].occupancyPercentage.value | fmt2:"P" }}
       </td>
     </tr>
     <tr>
       <td>Room Revenue</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].roomRevenue | fmt }}
+        {{ reportDto[index].roomRevenue.value | fmt2:"C" }}
       </td>
     </tr>
     <tr>
       <td>Total Revenue</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].totalRevenue | fmt }}
+        {{ reportDto[index].totalRevenue.value | fmt2:"C" }}
       </td>
     </tr>
     <tr>
       <td>Market Share based on Rooms Sold</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].marketShareRoomsSold | fmt }}
+        {{ reportDto[index].marketShareRoomsSold.value | fmt2:"P" }}
       </td>
     </tr>
     <tr>
       <td>Market Share based on Revenue</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].marketShareRevenue | fmt }}
+        {{ reportDto[index].marketShareRevenue.value | fmt2:"P" }}
       </td>
     </tr>
     <tr>
       <td>REVPAR</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].revpar | fmt }}
+        {{ reportDto[index].revpar.value | fmt2:"C2" }}
       </td>
     </tr>
     <tr>
       <td>ADR</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].adr | fmt }}
+        {{ reportDto[index].adr.value | fmt2:"C2" }}
       </td>
     </tr>
     <tr>
       <td>Yield Management</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].yieldMgmt | fmt }}
+        {{ reportDto[index].yieldMgmt.value | fmt2:"P" }}
       </td>
     </tr>
     <tr>
       <td>Operating Efficiency Ratio</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].operatingEfficiencyRatio | fmt }}
+        {{ reportDto[index].operatingEfficiencyRatio.value | fmt2:"P" }}
       </td>
     </tr>
     <tr>
       <td>Profit Margin</td>
       <td *ngFor="let finc of reportDto; let index = index">
-        {{ reportDto[index].profitMargin | fmt }}
+        {{ reportDto[index].profitMargin.value | fmt2:"P" }}
       </td>
     </tr>
   </table>
