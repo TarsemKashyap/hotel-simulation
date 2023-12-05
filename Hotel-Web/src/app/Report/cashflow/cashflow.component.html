@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -26,85 +34,46 @@
   </mat-form-field>
 </span>
 <h2>CashFlow for the Month</h2>
-<table class="style1" *ngIf="cashFlowreportResponse">
-  <tr>
-    
-    <td class="style2">
-      
-      {{cashFlowreportResponse.netIncome.label}} NetIncome
-    </td>
-      <td class="style2">
-        &nbsp;</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      &nbsp;
-
-    </td>
-  </tr>
-</table>
-<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
-  
- <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
-      <td class="style2">
-        &nbsp;</td>
-    
-    <td class="style2">
-      {{netIncomeData.label}}</td>
-      <td class="style2">
-        &nbsp;</td>
-    <td class="style3">
-      {{numberWithCommas(netIncomeData.data.value) | ValueFormatterPipe: netIncomeData.data.format }}
-    
-
-    </td>
-  </tr>
-</table>
-<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
+<table  *ngIf="cashFlowreportResponse">
   <tr>
     <td class="style2">
-      
-      {{cashFlowreportResponse.netCashFlow.label}} 
-    </td>
-      <td class="style2">
-        &nbsp;</td>
-    <td class="style2">
-      &nbsp;</td>
-    <td class="style2">
-      &nbsp;
-
+      {{ cashFlowreportResponse.netIncome.label }} NetIncome
     </td>
   </tr>
 </table>
 <table class="style1" *ngIf="cashFlowreportResponse.netIncome">
-  <tr *ngFor="let netCashFlowData of cashFlowreportResponse.netCashFlow.childern">
+  <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
+    <td class="label1">
+      {{ netIncomeData.label }}
+    </td>
+    <td>
+      {{ netIncomeData.data | fmt }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      {{ cashFlowreportResponse.netCashFlow.label }}
+    </td>
+    <td>
+      {{ cashFlowreportResponse.netCashFlow.data | fmt }}
+    </td>
+  </tr>
+  <tr
+    *ngFor="let netCashFlowData of cashFlowreportResponse.netCashFlow.childern"
+  >
+    <td class="label1">
+      {{ netCashFlowData.label }}
+    </td>
     <td class="style2">
-      &nbsp;</td>
-  
-  <td class="style2">
-    {{netCashFlowData.label}}</td>
+      {{ netCashFlowData.data | fmt }}
+    </td>
+  </tr>
+  <tr>
     <td class="style2">
-      &nbsp;</td>
-  <td class="style3">
-    {{numberWithCommas(netCashFlowData.data.value) | ValueFormatterPipe: netCashFlowData.data.format }}
-  
-
-  </td>
-</tr>
-</table>
-<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
-<tr>
-  <td class="style2">
-    
-    {{cashFlowreportResponse.currentCashBalnce.label}} 
-  </td>
+      {{ cashFlowreportResponse.currentCashBalnce.label }}
+    </td>
     <td class="style2">
-      &nbsp;</td>
-  <td class="style2">
-    &nbsp;</td>
-  <td class="style2" style="text-align: right;">
-    {{numberWithCommas(cashFlowreportResponse.currentCashBalnce.data.value) | ValueFormatterPipe: cashFlowreportResponse.currentCashBalnce.data.format }}
-
-  </td>
-</tr>
+      {{ cashFlowreportResponse.currentCashBalnce.data | fmt }}
+    </td>
+  </tr>
 </table>

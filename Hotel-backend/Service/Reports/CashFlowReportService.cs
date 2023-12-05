@@ -19,40 +19,28 @@ namespace Service
         {
             _context = context;
         }
-        private int PreviousMonthFinder(int monthID)
-        {
-            var prevMonths = _context.Months
-                            .Include(x => x.Class)
-                            .ThenInclude(x => x.Months)
-                            .Where(x => x.MonthId == monthID)
-                            .SelectMany(x => x.Class.Months)
-                            .OrderBy(x => x.MonthId)
-                           .Select(x => x.MonthId)
-                            .ToList();
 
-            int prevMonthIndex = prevMonths.FindIndex(p => p == monthID);
-            return prevMonths[prevMonthIndex - 1];
-        }
         public async Task<CashFlowDto> GenerateReport(ReportParams parms)
         {
-            var currentMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == parms.MonthId);
-            var lastMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == PreviousMonthFinder(parms.MonthId));
-            if (lastMonth == null)
+            var currentMonth = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.QuarterNo == parms.CurrentQuarter && x.MonthID == parms.MonthId);
+            TryFindLastMonth(_context, parms.MonthId, out Month lastMonth);
+            var lastMonthBalance = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == lastMonth.MonthId && x.QuarterNo == lastMonth.Sequence);
+            if (lastMonthBalance == null)
             {
-                lastMonth = new BalanceSheet { AcctReceivable = 0, Inventories = 0, TotLiab = 0, Cash = 0 };
+                lastMonthBalance = new BalanceSheet { AcctReceivable = 0, Inventories = 0, TotLiab = 0, Cash = 0 };
             }
             var incomestate = await _context.IncomeState.AsNoTracking().FirstOrDefaultAsync(x => x.GroupID == parms.GroupId && x.MonthID == parms.MonthId);
             var cashflow = new CashFlowDto();
 
             decimal netIncome = incomestate.NetIncom;
-            decimal changeInAsset = (currentMonth.AcctReceivable - lastMonth.AcctReceivable) * 97 / 100 + (currentMonth.Inventories - lastMonth.Inventories);
-            decimal changeInLiabi = currentMonth.TotLiab - lastMonth.TotLiab;
+            decimal changeInAsset = (currentMonth.AcctReceivable - lastMonthBalance.AcctReceivable) * 97 / 100 + (currentMonth.Inventories - lastMonthBalance.Inventories);
+            decimal changeInLiabi = currentMonth.TotLiab - lastMonthBalance.TotLiab;
             decimal changeInPropertyEquip = await _context.AttributeDecision.AsNoTracking()
                 .Where(x => x.GroupID == parms.GroupId && x.MonthID == parms.MonthId)
                 .SumAsync(x => x.NewCapital);
 
             decimal netCashFlow = netIncome - changeInAsset + changeInLiabi + incomestate.PropDepreciationerty;
-            decimal previousCash = lastMonth.Cash;
+            decimal previousCash = lastMonthBalance.Cash;
             decimal currentCash = netCashFlow + previousCash - changeInPropertyEquip;
             cashflow.NetIncome.AddChild("Net Income", netIncome);
             cashflow.NetIncome.AddChild("Increase/Decrease in Current Assets", changeInAsset);
