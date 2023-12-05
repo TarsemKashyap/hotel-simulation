@@ -28,7 +28,7 @@
 <h2>Hotel Attribute And Amenities Report</h2>
 
  <table class="style1">
-  <tr><td colspan="2"></td><td><b>Capital investment</b></td><td colspan="2"><b>operating Expenditures</b></td></tr>
+  <tr><td colspan="2"></td><td><b>Capital investment</b></td><td colspan="2"><b>Operating Expenditures</b></td></tr>
   <tr>
     
     <td class="style2">
@@ -52,22 +52,22 @@
     <td class="style2">
       {{AttributeAmentitesData.label}}</td>
       <td class="style2">
-       $ {{ decimalnumberWithCommas(AttributeAmentitesData.accumulatedCapital)}}</td>
+       {{ AttributeAmentitesData.accumulatedCapital|fmt2:"C"}}</td>
      
     
     <td class="style3">
-    $  {{ decimalnumberWithCommas(AttributeAmentitesData.newCaptial) }}
+     {{ AttributeAmentitesData.newCaptial|fmt2:"C" }}
     </td>
     <td class="style3">
-     $ {{ decimalnumberWithCommas(AttributeAmentitesData.operationBudget) }}
+      {{ AttributeAmentitesData.operationBudget|fmt2:"C" }}
     </td>
     <td class="style3">
-     $ {{ decimalnumberWithCommas(AttributeAmentitesData.laborBudget) }}
+     {{ AttributeAmentitesData.laborBudget|fmt2:"C" }}
     </td>
    
   </tr>
   <!-- <tr><td colspan="4"><hr/></td></tr> -->
-  <tr><td>Total Expense:${{ decimalnumberWithCommas(attributeAmentitesReportResponse.totalExpense)}}</td></tr>
+  <tr><td>Total Expense:{{ attributeAmentitesReportResponse.totalExpense|fmt2:"C"}}</td></tr>
  
   
 </table>

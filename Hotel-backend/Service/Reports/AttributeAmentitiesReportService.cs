@@ -1,4 +1,5 @@
-﻿using Common.ReportDto;
+﻿using Common;
+using Common.ReportDto;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -52,9 +53,12 @@ namespace Service.Reports
                 "Concierge",
                 "Housekeeping",
                 "Maintanence and security",
-                "Courtesy (Rooms)"
+               ATTRIBUTES.COURTESY
             };
-            List<AttributeAmentiDto> attrubtes = atrNames.Select(x => GetAttribute(x)).ToList();
+            List<AttributeAmentiDto> attributes = atrNames.Select(x => GetAttribute(x)).ToList();
+
+            int index = attributes.FindIndex(x => x.Label == ATTRIBUTES.COURTESY);
+            attributes[index].Label = ATTRIBUTES.BUILDING;
 
 
             decimal totalAccumu = _attributeDecision.Where(x => atrNames.Contains(x.Attribute)).Sum(x => x.AccumulatedCapital);
@@ -73,11 +77,11 @@ namespace Service.Reports
                 OperationBudget = totalBudget,
 
             };
-            attrubtes.Add(total);
+            attributes.Add(total);
             return new AttributeAmentitiesReportDto
             {
                 TotalExpense = accoumlator,
-                Attributes = attrubtes
+                Attributes = attributes
             };
         }
 
