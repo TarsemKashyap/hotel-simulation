@@ -453,7 +453,7 @@ namespace Service
                             MonthID = monthID,
                             QuarterNo = currentQuarter + 1,
                             GroupID = groupID,
-                            Attribute = item.AttributeName,
+                            Attribute = item.AttributeName.Trim(),
                             AccumulatedCapital = (int)accumuCapital,
                             NewCapital = AttPlist.NewCapital,
                             OperationBudget = AttPlist.OperationBudget,

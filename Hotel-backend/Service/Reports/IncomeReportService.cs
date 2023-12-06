@@ -98,7 +98,7 @@ public class IncomeReportService : AbstractReportService, IIncomeReportService
 
     private ReportAttribute GetTotalReveue(IncomeState incomeState)
     {
-        decimal totalRevnew = incomeState.Room1 + incomeState.FoodB1 + incomeState.Other1 + incomeState.Rent;
+        decimal totalRevnew = incomeState.Room1 + incomeState.FoodB + incomeState.Other + incomeState.Rent;
         return new ReportAttribute { Label = "TOTAL REVENUE", Data = new Common.Currency(totalRevnew) };
     }
 

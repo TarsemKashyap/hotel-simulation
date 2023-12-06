@@ -26,7 +26,7 @@ namespace Service
         Task<ResponseData> Calculation(MonthDto month);
 
     }
-    public class CalculationServices : ICalculationServices
+    public class CalculationServices : AbstractReportService, ICalculationServices
     {
         private readonly IMapper _mapper;
         private readonly HotelDbContext _context;
@@ -1374,12 +1374,12 @@ namespace Service
                                 row.TotLiab = row.TotCurrentLiab + row.LongDebt + row.ShortDebt;
                                 row.NetPrptyEquip = await ScalarTotalAccumuCapitalInAMonthAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID);
                                 {
-                                    BalanceSheetDto balanceRowPrevious = GetDataBySingleRowBallanceSheet(row.MonthID, row.QuarterNo - 1, row.GroupID);
+                                    BalanceSheetDto balanceRowPrevious = LastMonthBalance(row.MonthID, row.QuarterNo, row.GroupID);
                                     decimal previousCash = balanceRowPrevious.Cash;
                                     decimal netIncome = incoRow.NetIncom;
                                     decimal changeInNetReceivableInventory = (row.AcctReceivable - balanceRowPrevious.AcctReceivable) * 97 / 100 + row.Inventories - balanceRowPrevious.Inventories;
                                     decimal changeInTotalLiabi = row.TotLiab - balanceRowPrevious.TotLiab;
-                                    decimal changeInPropertyEquip = Convert.ToDecimal(ScalarMonthlyTotalNewCapitalAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID));
+                                    decimal changeInPropertyEquip = ScalarMonthlyTotalNewCapitalAttributeDecision(row.MonthID, row.QuarterNo, row.GroupID);
                                     row.Cash = previousCash + netIncome - changeInNetReceivableInventory + changeInTotalLiabi + incoRow.PropDepreciationerty - changeInPropertyEquip;
                                 }
                                 if (row.Cash < 0)
@@ -1393,7 +1393,7 @@ namespace Service
                                 row.RetainedEarn = row.TotAsset - 10000000 - row.TotLiab;
                                 _context.Update(row);
                             }
-                            _context.SaveChanges();
+                                _context.SaveChanges();
 
                         }
 
@@ -2562,19 +2562,9 @@ namespace Service
 
         private decimal ScalarGroupRoomRevenueByMonthSoldRoomByChannel(int monthId, int quarterNo, int groupId)
         {
-
-            decimal groupRevenue = 0;
-            var list = (from c in _context.SoldRoomByChannel
-                        where (c.MonthID == monthId && c.QuarterNo == quarterNo && c.GroupID == groupId)
-                        select new { Revenue = c.Revenue }).ToList();
-
-            if (list.Count > 0)
-            {
-                groupRevenue = list.Sum(x => x.Revenue);
-            }
-            return groupRevenue;
-
+            return _context.SoldRoomByChannel.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).Sum(x => x.Revenue);
         }
+
         private decimal ScalarAttributeRevenueScoreRoomAllocation(int monthId, int quarterNo, int groupId, string attribute)
         {
             decimal RevenueScore = 0;
@@ -2649,47 +2639,75 @@ namespace Service
 
         }
 
+        private BalanceSheetDto LastMonthBalance(int currentMonth, int currentQuater, int groupId)
+        {
+            if (currentQuater == 0)
+            {
+                return new BalanceSheetDto();
+            }
+            if (currentQuater == 1)
+            {
+                return _context.BalanceSheet.
+                    SingleOrDefault(x => x.MonthID == currentMonth && x.QuarterNo == 0 && x.GroupID == groupId
+                    ).Adapt<BalanceSheetDto>();
+            }
+            TryFindLastMonth(_context, currentMonth, out Month lastMonth);
+
+            return _context.BalanceSheet.
+                    SingleOrDefault(x => x.MonthID == lastMonth.MonthId && x.QuarterNo == lastMonth.Sequence && x.GroupID == groupId
+                    ).Adapt<BalanceSheetDto>();
+
+
+        }
+
         private decimal ScalarMonthDepreciationTotalAttributeDecision(int monthId, int quarter, int groupID)
         {
+            /*
+             
+                SELECT SUM((attributeDecision.accumulatedCapital + attributeDecision.newCapital) * attributeMaxCapitalOperationConfig.depreciationYearly / 12) AS TotalDepreciation
+                    FROM attributeDecision
+                    INNER JOIN quarterlyMarket ON attributeDecision.sessionID = quarterlyMarket.sessionID
+	                    AND attributeDecision.quarterNo = quarterlyMarket.quarterNo
+                    INNER JOIN attributeMaxCapitalOperationConfig ON quarterlyMarket.configID = attributeMaxCapitalOperationConfig.configID
+	                    AND attributeDecision.attribute = attributeMaxCapitalOperationConfig.attribute
+                    WHERE (attributeDecision.sessionID = @sessionID)
+	                    AND (attributeDecision.quarterNo = @quarterNo)
+	                    AND (attributeDecision.groupID = @groupID)
 
-            decimal TotalDepreciation = 0;
-            var list = (from ad in _context.AttributeDecision
-                        join m in _context.Months on ad.MonthID equals m.MonthId
-                        where (ad.QuarterNo == m.Sequence)
-                        join amcoc in _context.AttributeMaxCapitalOperationConfig on m.ConfigId equals amcoc.ConfigID
-                        where (ad.Attribute == amcoc.Attribute && ad.MonthID == monthId && ad.QuarterNo == quarter && ad.GroupID == groupID)
-                        select new
-                        {
+             */
 
-                            AccumulatedCapital = ad.AccumulatedCapital,
-                            NewCapital = ad.NewCapital,
-                            DepreciationYearly = amcoc.DepreciationYearly
-
-                        }).ToList();
-
-            if (list.Count > 0)
-            {
-                TotalDepreciation = list.Sum(x => ((x.AccumulatedCapital + x.NewCapital) * x.DepreciationYearly / 12));
-            }
+            decimal TotalDepreciation = (from ad in _context.AttributeDecision
+                                         join m in _context.Months on ad.MonthID equals m.MonthId
+                                         join amcoc in _context.AttributeMaxCapitalOperationConfig on m.ConfigId equals amcoc.ConfigID
+                                         where ad.Attribute == amcoc.Attribute && ad.MonthID == monthId && ad.QuarterNo == quarter && ad.GroupID == groupID
+                                         select new { Total = (ad.AccumulatedCapital + ad.NewCapital) * amcoc.DepreciationYearly / 12 }).Sum(x => x.Total);
             return TotalDepreciation;
+
+
+            //decimal TotalDepreciation = 0;
+            //var list = (from ad in _context.AttributeDecision
+            //            join m in _context.Months on ad.MonthID equals m.MonthId
+            //            join amcoc in _context.AttributeMaxCapitalOperationConfig on m.ConfigId equals amcoc.ConfigID
+            //            where (ad.Attribute == amcoc.Attribute && ad.MonthID == monthId && ad.QuarterNo == quarter && ad.GroupID == groupID)
+            //            select new
+            //            {
+
+            //                AccumulatedCapital = ad.AccumulatedCapital,
+            //                NewCapital = ad.NewCapital,
+            //                DepreciationYearly = amcoc.DepreciationYearly
+
+            //            }).ToList();
+
+            //if (list.Count > 0)
+            //{
+            //    TotalDepreciation = list.Sum(x => ((x.AccumulatedCapital + x.NewCapital) * x.DepreciationYearly / 12));
+            //}
+            //return TotalDepreciation;
         }
 
         private decimal ScalarMonthlyTotalNewCapitalAttributeDecision(int monthId, int quarterNo, int groupId)
         {
-
-            decimal TotalNewCapital = 0;
-            var list = (from r in _context.AttributeDecision
-
-                        where (r.MonthID == monthId && r.QuarterNo == quarterNo
-                        && r.GroupID == groupId)
-                        select new { TotalNewCapital = r.NewCapital }).ToList();
-
-            if (list.Count > 0)
-            {
-                TotalNewCapital = list.Sum(x => x.TotalNewCapital);
-            }
-            return TotalNewCapital;
-
+            return _context.AttributeDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).Sum(x => x.NewCapital);
         }
 
         private decimal ScalarGetTotalRevenueIncomeState(int monthId, int groupId, int quarterNo)
@@ -2772,18 +2790,7 @@ namespace Service
 
         public async Task<decimal> ScalarTotalOtherExpenAttributeDecision(int monthId, int quarterNo, int groupId)
         {
-            var data = await (from a in _context.AttributeDecision.
-                         Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId)
-                              select new { TotalOtherExpens = a.OperationBudget }).ToListAsync();
-            decimal TotalOtherExpens = 0;
-            if (data.Count > 0)
-            {
-                TotalOtherExpens = data.Sum(x => x.TotalOtherExpens);
-
-            }
-
-
-            return TotalOtherExpens;
+            return await _context.AttributeDecision.Where(x => x.MonthID == monthId && x.QuarterNo == quarterNo && x.GroupID == groupId).SumAsync(x => x.OperationBudget);
         }
         public async Task<decimal> ScalarTotalAccumuCapitalInAMonthAttributeDecision(int monthId, int quarterNo, int groupId)
         {
