@@ -49,7 +49,7 @@ namespace Service.Reports
 
             _idealRatingList = await (from ideal in _context.IdealRatingAttributeWeightConfig
                                       join month in _context.Months on ideal.ConfigID equals month.ConfigId
-                                      where month.Sequence == p.CurrentQuarter && month.ClassId == p.ClassId
+                                      where month.MonthId == p.MonthId && month.Sequence == p.CurrentQuarter && month.ClassId == p.ClassId && ideal.Segment == p.Segment
                                       select ideal).ToListAsync();
             _weightedRatingList = await _context.WeightedAttributeRating.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter).ToListAsync();
 
@@ -73,7 +73,8 @@ namespace Service.Reports
             SegmentRating concierge = GetAttributeRating(ATTRIBUTES.CONCIERGE);
             SegmentRating houseKeeping = GetAttributeRating(ATTRIBUTES.HOUSEKEEPING);
             SegmentRating maintanence = GetAttributeRating(ATTRIBUTES.MAINTANENCE);
-            SegmentRating building = GetAttributeRating(ATTRIBUTES.BUILDING);
+            SegmentRating building = GetAttributeRating(ATTRIBUTES.COURTESY);
+            building.Label = ATTRIBUTES.BUILDING;
 
             QualityPreceptionReportDto reportDto = new QualityPreceptionReportDto();
 
@@ -142,7 +143,8 @@ namespace Service.Reports
             decimal rawRating = attr.RawRating;
 
             decimal idealRating = attr2.IdealRating;
-            return (rawRating * 10) / idealRating;
+            decimal avgIdealRating = (rawRating * 10) / idealRating;
+            return avgIdealRating;
         }
 
         private decimal MktAvg(string attribute)
@@ -154,7 +156,8 @@ namespace Service.Reports
 
             decimal rawRating = attr1.Average(x => x.RawRating);
             decimal idealRating = attr2.Average(x => x.IdealRating);
-            return (rawRating * 10) / idealRating;
+            decimal rawMktRating = (rawRating * 10) / idealRating;
+            return rawMktRating;
         }
 
         private SegmentRating GetSegmentRating(string segment, int weight, ReportParams p)
