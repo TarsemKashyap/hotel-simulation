@@ -10,6 +10,7 @@ import Chart from 'chart.js/auto';
 import { PositionMapAttribute } from '../model/ReportCommon.model';
 import { SeedData, Segment } from '../model/Segment';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-position-map',
   templateUrl: './position-map.component.html',
@@ -59,17 +60,6 @@ export class PositionMapComponent {
       .subscribe((reportData) => {
         this.positionMapReportResponse = reportData;
         this.ChartData = this.positionMapReportResponse.groupRating;
-        // this.YaxisData.push.apply(this.YaxisData, this.ChartData);
-        // this.YaxisQualityRating.push.apply(
-        //   this.YaxisQualityRating,
-        //   this.ChartData.map((i) => i.qualityRating)
-        // );
-        // this.YaxisRoomRating.push.apply(
-        //   this.YaxisRoomRating,
-        //   this.ChartData.map((i) => i.roomRate)
-        // );
-        // this.Xaxis = this.ChartData.map((item) => item.roomRate);
-
         this.createChart(reportData.groupRating);
       });
   }
@@ -91,10 +81,18 @@ export class PositionMapComponent {
     });
   }
   createChart(data: PositionMapAttribute[]) {
+    const colors = ['red', 'green', 'blue', 'brown', 'orange'];
+
     var datasets = data.map((x, index) => {
       return {
         label: x.classGroup,
-        pointRadius: 10,
+        backgroundColor: () => {
+          return colors[index];
+        },
+        pointRadius: 5 + index * 5,
+        offset: (index + 5) * 25,
+        borderRadius: 23,
+        borderWidth: 10,
         data: [
           {
             y: <any>data[index].qualityRating,
@@ -121,10 +119,16 @@ export class PositionMapComponent {
                 data!.x
               )},${this.numberToDecimal(data!.y)})`;
             },
-            align: 'top',
-            offset: 10,
-            padding: 5,
-            display: 'auto',
+            align: (context) => {
+              return (context.datasetIndex + 1) * 70;
+            },
+            offset: 25,
+            color: (context) => {
+              
+              return colors[context.datasetIndex];
+            },
+            clamp: true,
+            //padding: 5,
           },
         },
       },
