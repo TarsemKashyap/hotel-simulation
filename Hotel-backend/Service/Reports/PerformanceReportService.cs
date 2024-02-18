@@ -34,30 +34,30 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
     private IQueryable<IncomeState> IncomeStateQuery => _context.IncomeState.AsNoTracking();
     private IQueryable<SoldRoomByChannel> SoldRoomByChannelQuery => _context.SoldRoomByChannel.AsNoTracking();
 
-    public async Task<PerformanceReportDto> PerformanceReport(ReportParams goalArgs)
+    public async Task<PerformanceReportDto> PerformanceReport(ReportParams reportParams)
     {
-        int monthId = goalArgs.MonthId;
+        int monthId = reportParams.MonthId;
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
             .Include(x => x.Months)
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
-        int quarter = goalArgs.CurrentQuarter;
-        int groupId = goalArgs.GroupId;
-        int hotelCount = classSession.HotelsCount;
-        var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.MonthID == goalArgs.MonthId && x.GroupID == goalArgs.GroupId);
+            .FirstOrDefaultAsync(x => x.ClassId == reportParams.ClassId);
+        int quarter = reportParams.CurrentQuarter;
+        int groupId = reportParams.GroupId;
+        int hotelCount = classSession.Groups.Count;
+        var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.MonthID == reportParams.MonthId && x.GroupID == reportParams.GroupId);
         decimal monthlyProfit = incomeState.NetIncom;
-        decimal accumplateProfit = IncomeStateQuery.Where(x => x.QuarterNo <= quarter).Sum(x => x.NetIncom);
+        decimal accumplateProfit = IncomeStateQuery.Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo <= quarter).Sum(x => x.NetIncom);
         var soldRoomListMonth = await _context.SoldRoomByChannel.AsNoTracking()
-            .Where(x => x.QuarterNo == goalArgs.CurrentQuarter).ToListAsync();
-        var ScalarGroupRoomRevenueByMonth = soldRoomListMonth.Where(x => x.GroupID == goalArgs.GroupId).Sum(x => x.Revenue);
+            .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter).ToListAsync();
+        var ScalarGroupRoomRevenueByMonth = soldRoomListMonth.Where(x => x.GroupID == reportParams.GroupId).Sum(x => x.Revenue);
         var ScalarMarketRomRevenByMonth = await _context.SoldRoomByChannel.AsNoTracking()
-            .Where(x => x.QuarterNo == goalArgs.CurrentQuarter)
+            .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter)
             .SumAsync(x => x.Revenue);
-        var ScalarGroupRomSoldByMonth = soldRoomListMonth.Where(x => x.GroupID == goalArgs.GroupId).Sum(x => x.SoldRoom);
+        var ScalarGroupRomSoldByMonth = soldRoomListMonth.Where(x => x.GroupID == reportParams.GroupId).Sum(x => x.SoldRoom);
         var ScalarMarketRomSoldByMonth = soldRoomListMonth.Sum(x => x.SoldRoom);
         var ScalarQueryRoomAllocated = await _context.RoomAllocation.AsNoTracking()
-            .Where(x => x.QuarterNo == goalArgs.CurrentQuarter && x.GroupID == goalArgs.GroupId)
+            .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter && x.GroupID == reportParams.GroupId)
             .SumAsync(x => x.RoomsAllocated);
 
         StatisticsDto statisticsDto = new StatisticsDto
@@ -254,16 +254,16 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         return lastMonth;
     }
 
-    public async Task<PerformanceInstructorReportDto> InstructorPerformanceReport(ReportParams goalArgs)
+    public async Task<PerformanceInstructorReportDto> InstructorPerformanceReport(ReportParams reportParams)
     {
         // AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
-        int monthId = goalArgs.MonthId;
+        int monthId = reportParams.MonthId;
 
         ClassSession classSession = await _context.ClassSessions
             .Include(x => x.Groups)
             .Include(x => x.Months)
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
+            .FirstOrDefaultAsync(x => x.ClassId == reportParams.ClassId);
 
         PerformanceInstructorReportDto report = new PerformanceInstructorReportDto()
         {
@@ -271,26 +271,26 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
             FinancialRatio = new List<FinancialRatio>()
         };
 
-        Month lastMonth = await GetLastMonth(monthId, goalArgs.CurrentQuarter);
+        Month lastMonth = await GetLastMonth(monthId, reportParams.CurrentQuarter);
 
-        int quarter = goalArgs.CurrentQuarter;
+        int quarter = reportParams.CurrentQuarter;
         foreach (var group in classSession.Groups)
         {
             int groupId = group.Serial;
-            int hotelCount = classSession.HotelsCount;
-            var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.QuarterNo == quarter && x.GroupID == groupId);
+            int hotelCount = classSession.Groups.Count;
+            var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.MonthID == reportParams.MonthId && x.QuarterNo == quarter && x.GroupID == groupId);
             decimal monthlyProfit = incomeState.NetIncom;
-            decimal accumplateProfit = IncomeStateQuery.Where(x => x.QuarterNo <= quarter).Sum(x => x.NetIncom);
+            decimal accumplateProfit = IncomeStateQuery.Where(x => x.MonthID == reportParams.MonthId && x.GroupID == groupId && x.QuarterNo <= quarter).Sum(x => x.NetIncom);
             var soldRoomListMonth = await _context.SoldRoomByChannel.AsNoTracking()
-                .Where(x => x.QuarterNo == goalArgs.CurrentQuarter).ToListAsync();
+                .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter).ToListAsync();
             var ScalarGroupRoomRevenueByMonth = soldRoomListMonth.Where(x => x.GroupID == groupId).Sum(x => x.Revenue);
             var ScalarMarketRomRevenByMonth = await _context.SoldRoomByChannel.AsNoTracking()
-                .Where(x => x.QuarterNo == goalArgs.CurrentQuarter)
+                .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter)
                 .SumAsync(x => x.Revenue);
-            var ScalarGroupRomSoldByMonth = soldRoomListMonth.Where(x => x.GroupID == groupId).Sum(x => x.SoldRoom);
+            var ScalarGroupRomSoldByMonth = soldRoomListMonth.Where(x => x.MonthID == reportParams.MonthId && x.GroupID == groupId).Sum(x => x.SoldRoom);
             var ScalarMarketRomSoldByMonth = soldRoomListMonth.Sum(x => x.SoldRoom);
             var ScalarQueryRoomAllocated = await _context.RoomAllocation.AsNoTracking()
-                .Where(x => x.QuarterNo == goalArgs.CurrentQuarter && x.GroupID == groupId)
+                .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter && x.GroupID == groupId)
                 .SumAsync(x => x.RoomsAllocated);
             StatisticsDto statisticsDto = new StatisticsDto
             {
@@ -298,10 +298,11 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
                 MonthlyProfit = new Currency(monthlyProfit),
                 AccumulativeProfit = new Currency(accumplateProfit),
                 MarketShareRevenueBased = new Percent(ScalarMarketRomRevenByMonth == 0 ? 0 : ScalarGroupRoomRevenueByMonth / ScalarMarketRomRevenByMonth),
-                MarketShareRoomSoldBased = new Percent(ScalarMarketRomSoldByMonth == 0 ? 0 : ScalarGroupRomSoldByMonth / ScalarMarketRomSoldByMonth),
-                Occupancy = new Percent(ScalarQueryRoomAllocated == 0 ? 0 : (ScalarGroupRomSoldByMonth / 500 / 30)),
-                REVPAR = new Currency(ScalarGroupRomSoldByMonth == 0 ? 0 : (ScalarGroupRoomRevenueByMonth / 15000))
+                MarketShareRoomSoldBased = new Percent(ScalarMarketRomSoldByMonth == 0 ? 0 : Convert.ToDecimal(ScalarGroupRomSoldByMonth) / Convert.ToDecimal(ScalarMarketRomSoldByMonth)),
+                Occupancy = new Percent(ScalarQueryRoomAllocated == 0 ? 0 : (Convert.ToDecimal(ScalarGroupRomSoldByMonth) / 500 / 30)),
+                REVPAR = new Currency(ScalarGroupRomSoldByMonth == 0 ? 0 : (Convert.ToDecimal(ScalarGroupRoomRevenueByMonth) / 15000))
             };
+
             report.Statstics.Add(statisticsDto);
 
             BalanceSheet currentMonthBalSheet = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == groupId);
@@ -315,8 +316,8 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
             //Accounts Receivable Percentage
 
-            decimal b = incomeState.Room1 * 100 / 52;
             decimal a = currentMonthBalSheet.AcctReceivable;
+            decimal b = incomeState.Room1 * 100 / 52;
             if (quarter > 1)
             {
                 var lastMonthBalSheet = await _context.BalanceSheet.Where(x => x.QuarterNo == (quarter - 1) && x.MonthID == lastMonth.MonthId && x.GroupID == groupId).FirstOrDefaultAsync();
@@ -366,7 +367,7 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
 
             decimal aIncom = incomeState.NetIncom;
             decimal bIncomeStateRooml = incomeState.Room1 * 100 / 52;
-            finacialRatio.ProfitablityRation.AddChild(Number("Net Income to Revenue (Profit Margin)", b == 0 ? 0 : new Number(a / b)));
+            finacialRatio.ProfitablityRation.AddChild(Number("Net Income to Revenue (Profit Margin)", bIncomeStateRooml == 0 ? 0 : new Number(aIncom / bIncomeStateRooml)));
 
             //Gross Return on Assests (Gross ROA)
             //Net Returun on Assests (Net ROA)

@@ -56,8 +56,7 @@
     <td class="style2">Market Share based on Revenue</td>
     <td *ngFor="let stat of reportDto.statstics" class="style2">
       {{
-        numberWithCommas(stat.marketShareRevenueBased.value)
-          | ValueFormatterPipe : stat.marketShareRevenueBased.format
+        stat.marketShareRevenueBased.value|fmt2:"P2"
       }}
     </td>
   </tr>
@@ -65,8 +64,7 @@
     <td class="style2">Market Share based on Rooms Sold</td>
     <td *ngFor="let stat of reportDto.statstics" class="style2">
       {{
-        numberWithCommas(stat.marketShareRoomSoldBased.value)
-          | ValueFormatterPipe : stat.marketShareRoomSoldBased.format
+        stat.marketShareRoomSoldBased.value| fmt2:"P2"
       }}
     </td>
   </tr>
@@ -74,8 +72,7 @@
     <td class="style2">Occupancy Percentage</td>
     <td *ngFor="let stat of reportDto.statstics" class="style2">
       {{
-        numberWithCommas(stat.occupancy.value)
-          | ValueFormatterPipe : stat.occupancy.format
+        stat.occupancy.value|fmt2:"P2"
       }}
     </td>
   </tr>
@@ -83,8 +80,7 @@
     <td class="style2">REVPAR</td>
     <td *ngFor="let stat of reportDto.statstics" class="style2">
       {{
-        numberWithCommas(stat.revpar.value)
-          | ValueFormatterPipe : stat.revpar.format
+        stat.revpar.value|fmt2:"C2"
       }}
     </td>
   </tr>
@@ -107,8 +103,7 @@
     <td>Current Ratio</td>
     <td *ngFor="let finc of reportDto.financialRatio; let index = index">
       {{
-        numberWithCommas(finc.liquidtyRatios.childern[0].data.value)
-          | ValueFormatterPipe : finc.liquidtyRatios.childern[0].data.format
+        finc.liquidtyRatios.childern[0].data |fmt
       }}
     </td>
   </tr>
@@ -141,7 +136,7 @@
     <td>&nbsp;</td>
     <td>Total Assets to Total Liabilities</td>
     <td *ngFor="let finc of reportDto.financialRatio; let index = index">
-      {{ finc.solvencyRatios.childern[0].data | fmt }}
+      {{ finc.solvencyRatios.childern[0].data.value | fmt2:"N2" }}
     </td>
   </tr>
   <tr>

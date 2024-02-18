@@ -37,7 +37,7 @@ public class GoalReportService : IGoalReportService
             .FirstOrDefaultAsync(x => x.ClassId == goalArgs.ClassId);
         int quarter = goalArgs.CurrentQuarter;
         int monthId = goalArgs.MonthId;
-        int hotelCount = classSession.HotelsCount;
+        int hotelCount = classSession.Groups.Count;
 
 
 

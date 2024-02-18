@@ -1635,7 +1635,7 @@ namespace Service
                         && pd.QuarterNo == quarterNo && pd.MonthID == monthId)
                         select new
                         {
-                            FairMarket = m.TotalMarket * Convert.ToDecimal(sc.Percentage) * wvsc.Percentage * pmasc.Percentage * dcvsc.Percentage / c.HotelsCount,
+                            FairMarket = m.TotalMarket * Convert.ToDecimal(sc.Percentage) * wvsc.Percentage * pmasc.Percentage * dcvsc.Percentage / c.Groups.Count,
 
                         }).ToList();
 
@@ -1826,7 +1826,7 @@ namespace Service
 
                         select new
                         {
-                            FairMarket = Convert.ToDecimal(sc.Percentage) * pmasc.Percentage * m.TotalMarket / c.HotelsCount,
+                            FairMarket = Convert.ToDecimal(sc.Percentage) * pmasc.Percentage * m.TotalMarket / c.Groups.Count,
 
                         }).ToList();
 
@@ -2548,7 +2548,7 @@ namespace Service
                         where (c.ClassId == classId)
                         select new
                         {
-                            noOfHotels = c.HotelsCount
+                            noOfHotels = c.Groups.Count
 
                         }).ToList();
 

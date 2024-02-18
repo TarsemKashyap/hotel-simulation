@@ -91,7 +91,7 @@ public class ClassSessionService : IClassSessionService
         classSessionEntity.CurrentQuater = classSession.CurrentQuater;
         classSessionEntity.Title = classSession.Title;
         classSessionEntity.CurrentQuater = classSession.CurrentQuater;
-        classSessionEntity.HotelsCount = classSession.HotelsCount;
+        classSessionEntity.HotelsCount = classSession.Groups.Count();
         var result = _context.ClassSessions.Update(classSessionEntity);
         await _context.SaveChangesAsync();
         return _mapper.Map<ClassSessionDto>(result);

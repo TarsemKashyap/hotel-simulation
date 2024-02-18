@@ -188,7 +188,7 @@ WHERE     (priceMarketingAttributeSegmentConfig.PMA = N'Marketing') AND (marketi
                        select new
                        {
 
-                           FairMarket = Convert.ToDecimal(msc.Percentage) * pmasc.Percentage * m.TotalMarket * Convert.ToDecimal(sc.Percentage) / c.HotelsCount
+                           FairMarket = Convert.ToDecimal(msc.Percentage) * pmasc.Percentage * m.TotalMarket * Convert.ToDecimal(sc.Percentage) / c.Groups.Count
 
                        }
                        ).ToList();
