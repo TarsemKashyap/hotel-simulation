@@ -60,7 +60,7 @@ public class GoalReportService : IGoalReportService
             M_P = perf, //ToString("p"),
             M_M = ScalarQueryMarketRoomAllocated == 0 ? 0 : marketAverage,//ToString("p")
             M_G = occupancyM,//ToString("p")
-            Formatter = "P"
+            Formatter = "P2"
         };
 
         var incomeState = await _context.IncomeState.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefaultAsync();
@@ -71,7 +71,7 @@ public class GoalReportService : IGoalReportService
             M_P = incomeState == null ? 0 : incomeState.Room1, // C0
             M_M = (decimal)incomeStateMonthlyList.Average(x => x.Room1),
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.RoomRevenM),
-            Formatter = "C0"
+            Formatter = "C2"
         };
 
         GoalReportDto totalRevenu = new GoalReportDto
@@ -80,7 +80,7 @@ public class GoalReportService : IGoalReportService
             M_P = (incomeState == null ? 0 : incomeState.Room1) * 100 / 52,
             M_M = (decimal)incomeStateMonthlyList.Average(x => x.TotReven),
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.TotalRevenM),
-            Formatter = "C0"
+            Formatter = "C2"
         };
 
 
@@ -91,7 +91,7 @@ public class GoalReportService : IGoalReportService
             M_P = ScalarMarketSoldRomByMonth == 0 ? 0 : ScalarGroupRomSoldByMonth / ScalarMarketSoldRomByMonth,
             M_M = Convert.ToDecimal(1.0) / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ShareRoomM),
-            Formatter = "P"
+            Formatter = "P2"
         };
         var ScalarGroupRoomRevenueByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
         var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.MonthID==monthId && x.QuarterNo == quarter).SumAsync(x => x.Revenue);
@@ -101,7 +101,7 @@ public class GoalReportService : IGoalReportService
             M_P = roomSoldByRevenuMonthly == 0 ? 0 : ScalarGroupRoomRevenueByMonth / roomSoldByRevenuMonthly,
             M_M = Convert.ToDecimal(1) / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ShareRevenM),
-            Formatter = "P"
+            Formatter = "P2"
         };
         var groupIds = classSession.Groups.Select(x => x.Serial).ToList();
         int revParRoomSold = await _context.RoomAllocation.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.RoomsAllocated);
@@ -114,7 +114,7 @@ public class GoalReportService : IGoalReportService
             M_P = ScalarGroupRoomRevenueByMonth / 15000,
             M_M = roomAllocatedRevPar == 0 ? 0 : groupRoomAllocatedsum / roomAllocatedRevPar,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.RevparM),
-            Formatter = "C"
+            Formatter = "C2"
         };
 
         var adRSoldRoomList = await SoldRoomQueryAsync.Where(x => x.QuarterNo == quarter && groupIds.Contains(x.GroupID)).Select(x => new { x.Revenue, x.SoldRoom }).ToListAsync();
@@ -126,7 +126,7 @@ public class GoalReportService : IGoalReportService
             M_P = ScalarGroupRomSoldByMonth == 0 ? 0 : ScalarGroupRoomRevenueByMonth / ScalarGroupRomSoldByMonth,
             M_M = adrRoomSold == 0 ? 0 : adrGroupRevenuSum / adrRoomSold,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ADRM),
-            Formatter = "C"
+            Formatter = "C2"
         };
 
         decimal yieldOccupancy = 0, AARate = 0, potentialRate = 0;
@@ -140,7 +140,7 @@ public class GoalReportService : IGoalReportService
             M_P = potentialRate == 0 ? 0 : yieldOccupancy * AARate / potentialRate,
             M_M = ScalarMarketSoldRomByMonth / 500 / 30 / classSession.Groups.Count,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.YieldMgtM),
-            Formatter = "P"
+            Formatter = "P2"
         };
 
 
@@ -156,7 +156,7 @@ public class GoalReportService : IGoalReportService
             M_P = roomSoldIncomestate == 0 ? 0 : incomeState.IncomBfCharg / roomSoldIncomestate,
             M_M = ScalarMonthAvgIncomeBFcharge / roomSoldIncomestate,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM),
-            Formatter = "P"
+            Formatter = "P2"
         };
 
 
@@ -169,7 +169,7 @@ public class GoalReportService : IGoalReportService
             M_P = profit == 0 ? 0 : incomState.NetIncom / profit,
             M_M = Convert.ToDecimal(ScalarMonthAvgProfit / ScalarMonthAvgTotalRevenue),
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.ProfitMarginM),
-            Formatter = "P"
+            Formatter = "P2"
         };
 
 
