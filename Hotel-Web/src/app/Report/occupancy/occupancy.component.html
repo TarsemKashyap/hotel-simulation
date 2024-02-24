@@ -67,7 +67,7 @@
       {{ overAllPercentagesData.marketAverage | fmt2 : "P" }}
     </td>
     <td class="style3">
-      {{ overAllPercentagesData.index | fmt2 : "P" }}
+      {{ overAllPercentagesData.index|fmt2:"N2" }}
     </td>
   </tr>
 
@@ -108,7 +108,7 @@
 
           <td class="style2">{{ SegmentData.marketAverage | fmt2 : "P" }}</td>
           <td class="style2">
-            {{ SegmentData.index | fmt2 : "P" }}
+            {{ SegmentData.index | fmt2 : "N2" }}
           </td>
         </tr>
       </table>

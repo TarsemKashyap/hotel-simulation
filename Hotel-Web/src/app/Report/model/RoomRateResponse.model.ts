@@ -1,12 +1,17 @@
-import { ReportCommon,roomRateReportAttribute } from "./ReportCommon.model";
-
+import { ReportCommon, roomRateReportAttribute } from './ReportCommon.model';
 
 export interface RoomRateReportResponse {
-   
-    direct:roomRateReportAttribute[],
-    onlineTravelAgent:roomRateReportAttribute[],
-    opaque:roomRateReportAttribute[],
-    travelAgent:roomRateReportAttribute[]
-    
+  direct: RoomRateAgg;
+  onlineTravelAgent: RoomRateAgg;
+  opaque: RoomRateAgg;
+  travelAgent: RoomRateAgg;
 }
 
+export interface RoomRateAgg {
+  sumWeekdayRoomSold: Number;
+  sumWeekEndRoomSold: Number;
+  sumWeekdayCost: Number;
+  sumWeekEndCost: Number;
+  sumTotalCost: Number;
+  segments: Array<roomRateReportAttribute>
+}

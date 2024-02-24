@@ -58,14 +58,14 @@ export class ClassListComponent implements OnInit {
             mode: 'icon',
             onClick: this.navigateToReport(),
             hide: () => false,
-            tooltip:'View class Reports'
+            tooltip: 'View class Reports',
           },
           {
             placeHolder: 'visibility',
             mode: 'icon',
             onClick: this.onOverviewClick(),
             hide: () => false,
-            tooltip:'Class overview'
+            tooltip: 'Class overview',
           },
           {
             placeHolder: 'delete',
@@ -73,7 +73,7 @@ export class ClassListComponent implements OnInit {
             cssClass: 'text-red-500  hover:text-primary',
             onClick: this.onDeleteback(),
             hide: () => false,
-            tooltip:'Delete class'
+            tooltip: 'Delete class',
           },
         ] as RowAction[],
       } as GridActionParmas,

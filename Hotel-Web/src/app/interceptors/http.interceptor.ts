@@ -9,10 +9,11 @@ import {
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 import { AccountService } from '../public/account';
 import { Router } from '@angular/router';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Injectable()
 export class RefreshTokennterceptor implements HttpInterceptor {
-  constructor(private accountService: AccountService,private router:Router) {}
+  constructor(private accountService: AccountService, private router: Router) {}
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
@@ -20,9 +21,7 @@ export class RefreshTokennterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error) => {
         console.log('Refresh Interceptor', error);
-        if (
-          error instanceof HttpErrorResponse &&
-          error.status == 401        ) {
+        if (error instanceof HttpErrorResponse) {
           this.refreshToken(next, req);
         }
         return throwError(() => error);
@@ -31,9 +30,23 @@ export class RefreshTokennterceptor implements HttpInterceptor {
   }
 
   private refreshToken(next: HttpHandler, req: HttpRequest<any>) {
-    this.accountService.refreshToken().pipe(
-      switchMap(() => next.handle(req)),
-      catchError((error2) => this.router.navigate(["/","login"]))
-    );
+    this.accountService
+      .refreshToken()
+      .pipe(
+        switchMap((d) => {
+          return next.handle(req);
+        }),
+        catchError((error) => {
+          return this.router.navigate(['/', 'login']);
+        })
+      )
+      .subscribe({
+        next: (res) => {
+         // return next.handle(req);
+        },
+        error: (err) => {
+          console.log('subscribe::', err);
+        },
+      });
   }
 }

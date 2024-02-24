@@ -1,301 +1,160 @@
-        <h1>Room Rate and Distribution Channel Cost Report</h1>
-        <span class="inline-grid grid-cols-3 gap-8">
-        <mat-form-field class="align-right">
-            <mat-label>
-            <i *ngIf="MonthList.length"> Select Month</i>
-            <i *ngIf="!MonthList.length"> No month available</i>
-            </mat-label>
-            <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
-            <mat-label>Choose an month</mat-label>
-            <mat-option *ngFor="let month of MonthList" [value]="month">
-                {{ month.sequence }}
-            </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field class="align-right">
-            <mat-label>
-            <i *ngIf="groups.length"> Select Hotel</i>
-            <i *ngIf="!groups.length"> No hotel available</i>
-            </mat-label>
-            <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
-            <mat-label>Choose an month</mat-label>
-            <mat-option *ngFor="let group of groups" [value]="group">
-                {{ group.name }}
-            </mat-option>
-            </mat-select>
-        </mat-form-field>
-        </span>
-        <h2>Room Rate and Distribution Channel Cost for the Month</h2>
-        <table class="style1">
-            <!--==Direct====-->
-            <tr>
-                
-                    <td class="style3" colspan="6">
-                      <b> Direct</b>
-                    </td>
-            </tr>
-            <tr>
-                <td class="style2" style="padding: 0px 0px 0px 30px">
-                    &nbsp;</td>
-                    <td class="style3">
-                     
-                    </td>
-                <td class="style3" colspan="3">
-                   weekDay
-                </td>
-                    <td class="style3" colspan="3">
-                        weekend 
-                    </td>
-            </tr>
-            <tr>
-                <td class="style2" style="padding: 0px 0px 0px 30px">
-                    &nbsp;</td>
-                    <td class="style3">
-                       Rate
-                    </td>
-                <td class="style3">
-                   RoomSold
-                </td>
-                <td class="style3">
-                    Cost
-                    </td>
-                    <td class="style3">
-                    Rate 
-                    </td>
-                    <td class="style3">
-                       RoomSold 
-                    </td>
-                    
-                    <td class="style3">
-                       Cost 
-                    </td>
-            </tr>
+<h1>Room Rate and Distribution Channel Cost Report</h1>
+<span class="inline-grid grid-cols-3 gap-8">
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="MonthList.length"> Select Month</i>
+      <i *ngIf="!MonthList.length"> No month available</i>
+    </mat-label>
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let month of MonthList" [value]="month">
+        {{ month.sequence }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="align-right">
+    <mat-label>
+      <i *ngIf="groups.length"> Select Hotel</i>
+      <i *ngIf="!groups.length"> No hotel available</i>
+    </mat-label>
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
+      <mat-label>Choose an month</mat-label>
+      <mat-option *ngFor="let group of groups" [value]="group">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>
+<h2>Room Rate and Distribution Channel Cost for the Month</h2>
+<span *ngIf="roomRateReportResponse">
+  <table class="style1">
+    <!--==Direct====-->
+    <tr>
+      <td class="style3" colspan="7">
+        <b> Direct</b>
+      </td>
+    </tr>
+    <ng-container
+      [ngTemplateOutlet]="roomRateAgg"
+      [ngTemplateOutletContext]="{
+        roomRateAggs: roomRateReportResponse.direct
+      }"
+    >
+    </ng-container>
 
-            <tr *ngFor="let directData of roomRateReportResponse.direct" >
-        
-                <td class="style2" style="padding: 0px 0px 0px 30px">
-                    {{directData.label}}</td>
-                    <td class="style3">
-                        ${{numberWithCommas(directData.weekdayRate) }}
-                        </td>
-                <td class="style3">
-                    {{directData.weekDayRoomSold }}
-                </td>
-                <td class="style3">
-                    ${{numberWithCommas(directData.weekdayCost) }}
-                    </td>
-                    <td class="style3">
-                       $ {{numberWithCommas(directData.weekendRate) }}
-                    </td>
-                    <td class="style3">
-                        {{directData.weekendRoomSold }}
-                    </td>
-                    <td class="style3">
-                       $ {{numberWithCommas(directData.weekendCost) }}
-                    </td>
-            </tr>
+    <!--==    travelAgent====-->
+    <tr>
+      <td class="style3" colspan="7">
+        <b> Travel Agent</b>
+      </td>
+    </tr>
 
-<!--==    travelAgent====-->
-<tr>
-                
-    <td class="style3" colspan="6">
-      <b> Travel Agent</b>
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
-    <td class="style3">
-     
-    </td>
-<td class="style3" colspan="3">
-   weekDay
-</td>
-    <td class="style3" colspan="3">
-        weekend 
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
-    <td class="style3">
-       Rate
-    </td>
-<td class="style3">
-   RoomSold
-</td>
-<td class="style3">
-    Cost
-    </td>
-    <td class="style3">
-    Rate 
-    </td>
-    <td class="style3">
-       RoomSold 
-    </td>
-    
-    <td class="style3">
-       Cost 
-    </td>
-</tr>
+    <ng-container
+      [ngTemplateOutlet]="roomRateAgg"
+      [ngTemplateOutletContext]="{
+        roomRateAggs: roomRateReportResponse.travelAgent
+      }"
+    >
+    </ng-container>
+    <!--==    onlineTravelAgent====-->
+    <tr>
+      <td class="style3" colspan="7">
+        <b> Online Travel Agent</b>
+      </td>
+    </tr>
+    <ng-container
+      [ngTemplateOutlet]="roomRateAgg"
+      [ngTemplateOutletContext]="{
+        roomRateAggs: roomRateReportResponse.onlineTravelAgent
+      }"
+    >
+    </ng-container>
+    <!--==    opaque====-->
+    <tr>
+      <td class="style3" colspan="7">
+        <b> Opaque</b>
+      </td>
+    </tr>
+    <ng-container
+      [ngTemplateOutlet]="roomRateAgg"
+      [ngTemplateOutletContext]="{
+        roomRateAggs: roomRateReportResponse.opaque
+      }"
+    >
+    </ng-container>
+  </table>
+</span>
 
-<tr *ngFor="let travelAgentData of roomRateReportResponse.travelAgent" >
+<ng-template let-roomRateAggs="roomRateAggs" #roomRateAgg>
+  <tr>
+    <td class="style2" style="padding: 0px 0px 0px 30px">&nbsp;</td>
+    <td class="style3"></td>
+    <td class="style3" colspan="3">Week Day</td>
+    <td class="style3" colspan="3">Week end</td>
+  </tr>
+  <tr>
+    <td class="style2" style="padding: 0px 0px 0px 30px">&nbsp;</td>
+    <td class="style3">Rate</td>
+    <td class="style3">Room Sold</td>
+    <td class="style3">Cost</td>
+    <td class="style3">Rate</td>
+    <td class="style3">Room Sold</td>
 
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    {{travelAgentData.label}}</td>
-    <td class="style3">
-        ${{numberWithCommas(travelAgentData.weekdayRate) }}
-        </td>
-<td class="style3">
-    {{travelAgentData.weekDayRoomSold }}
-</td>
-<td class="style3">
-    ${{numberWithCommas(travelAgentData.weekdayCost) }}
+    <td class="style3">Cost</td>
+    <td class="style3">Total Cost</td>
+  </tr>
+  <tr *ngFor="let roomRateAgg of roomRateAggs.segments">
+    <td class="style2" style="padding: 0px 0px 0px 30px">
+      {{ roomRateAgg.label }}
     </td>
     <td class="style3">
-       $ {{numberWithCommas(travelAgentData.weekendRate) }}
+      {{ roomRateAgg.weekdayRate | fmt2 : "C2" }}
     </td>
     <td class="style3">
-        {{travelAgentData.weekendRoomSold }}
+      {{ roomRateAgg.weekDayRoomSold }}
     </td>
     <td class="style3">
-       $ {{numberWithCommas(travelAgentData.weekendCost) }}
-    </td>
-</tr>
-
-<!--==    onlineTravelAgent====-->
-<tr>
-                
-    <td class="style3" colspan="6">
-      <b> Online Travel Agent</b>
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
-    <td class="style3">
-     
-    </td>
-<td class="style3" colspan="3">
-   weekDay
-</td>
-    <td class="style3" colspan="3">
-        weekend 
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
-    <td class="style3">
-       Rate
-    </td>
-<td class="style3">
-   RoomSold
-</td>
-<td class="style3">
-    Cost
+      {{ roomRateAgg.weekdayCost | fmt2 : "C2" }}
     </td>
     <td class="style3">
-    Rate 
+      {{ roomRateAgg.weekendRate | fmt2 : "C2" }}
     </td>
     <td class="style3">
-       RoomSold 
-    </td>
-    
-    <td class="style3">
-       Cost 
-    </td>
-</tr>
-
-<tr *ngFor="let onlineTravelAgentData of roomRateReportResponse.onlineTravelAgent" >
-
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    {{onlineTravelAgentData.label}}</td>
-    <td class="style3">
-        ${{numberWithCommas(onlineTravelAgentData.weekdayRate) }}
-        </td>
-<td class="style3">
-    {{onlineTravelAgentData.weekDayRoomSold }}
-</td>
-<td class="style3">
-    ${{numberWithCommas(onlineTravelAgentData.weekdayCost) }}
+      {{ roomRateAgg.weekendRoomSold }}
     </td>
     <td class="style3">
-       $ {{numberWithCommas(onlineTravelAgentData.weekendRate) }}
+      {{ roomRateAgg.weekendCost | fmt2 : "C2" }}
     </td>
     <td class="style3">
-        {{onlineTravelAgentData.weekendRoomSold }}
+      {{ roomRateAgg.totalCost | fmt2 : "C2" }}
+    </td>
+  </tr>
+  <tr>
+    <td class="style2" style="padding: 0px 0px 0px 30px">TOTAL</td>
+    <td class="style3"></td>
+    <td class="style3">
+      {{ roomRateAggs.sumWeekdayRoomSold | fmt2 : "N" }}
     </td>
     <td class="style3">
-       $ {{numberWithCommas(onlineTravelAgentData.weekendCost) }}
+      {{ roomRateAggs.sumWeekdayCost | fmt2 : "C2" }}
     </td>
-</tr>
-<!--==    opaque====-->
-<tr>
-                
-    <td class="style3" colspan="6">
-      <b> Opaque</b>
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
+    <td class="style3"></td>
     <td class="style3">
-     
-    </td>
-<td class="style3" colspan="3">
-   weekDay
-</td>
-    <td class="style3" colspan="3">
-        weekend 
-    </td>
-</tr>
-<tr>
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    &nbsp;</td>
-    <td class="style3">
-       Rate
-    </td>
-<td class="style3">
-   RoomSold
-</td>
-<td class="style3">
-    Cost
+      {{ roomRateAggs.sumWeekEndRoomSold | fmt2 : "N" }}
     </td>
     <td class="style3">
-    Rate 
+      {{ roomRateAggs.sumWeekEndCost | fmt2 : "C2" }}
     </td>
     <td class="style3">
-       RoomSold 
+      {{ roomRateAggs.sumTotalCost | fmt2 : "C2" }}
     </td>
-    
-    <td class="style3">
-       Cost 
-    </td>
-</tr>
-
-<tr *ngFor="let opaqueData of roomRateReportResponse.opaque" >
-
-<td class="style2" style="padding: 0px 0px 0px 30px">
-    {{opaqueData.label}}</td>
-    <td class="style3">
-        ${{numberWithCommas(opaqueData.weekdayRate) }}
-        </td>
-<td class="style3">
-    {{opaqueData.weekDayRoomSold }}
-</td>
-<td class="style3">
-    ${{numberWithCommas(opaqueData.weekdayCost) }}
-    </td>
-    <td class="style3">
-       $ {{numberWithCommas(opaqueData.weekendRate) }}
-    </td>
-    <td class="style3">
-        {{opaqueData.weekendRoomSold }}
-    </td>
-    <td class="style3">
-       $ {{numberWithCommas(opaqueData.weekendCost) }}
-    </td>
-</tr>
-       
-        </table>
+  </tr>
+</ng-template>

@@ -105,8 +105,8 @@ public class BalanceReportService : AbstractReportService, IBalanceReportService
             decimal totCurrentLiab = totalOperationBudget + advanceDeposit + incomeState.IncomTAX;
 
             currentLibailities.AddChild("Total Current Liabilities", totCurrentLiab);
-
-            decimal totalandtotal = totalShareholder + totCurrentLiab;
+            decimal totalLib = totCurrentLiab + balance.LongDebt + balance.ShortDebt;
+            decimal totalandtotal = totalShareholder + totalLib;
             report.TotalLiablitiesAndEquity.Data = Money(totalandtotal);
 
         }

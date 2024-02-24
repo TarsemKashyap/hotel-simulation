@@ -73,6 +73,7 @@ export interface roomRateReportAttribute {
   weekendCost: AbstractDecimal;
   weekendRate: AbstractDecimal;
   weekendRoomSold: AbstractDecimal;
+  totalCost:Number;
 }
 export interface possitionAloneReportAttribute {
   label: string;

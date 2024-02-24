@@ -44,9 +44,9 @@ public class RoomRateReportService : AbstractReportService, IRoomRateReportServi
 
     }
 
-    private List<RoomRateDto> GetRoomRate(string channel)
+    private RoomRateAgg GetRoomRate(string channel)
     {
-        return SEGMENTS.list.Select(segment =>
+        var segemnts = SEGMENTS.list.Select(segment =>
         {
             var soldRoom = _soldRoomList[channel].Where(x => x.Segment == segment).ToList();
             var priceDecision = _priceDecisionList[channel].Where(x => x.Segment == segment);
@@ -54,6 +54,8 @@ public class RoomRateReportService : AbstractReportService, IRoomRateReportServi
             return dto;
 
         }).ToList();
+
+        return new RoomRateAgg(segemnts);
 
 
     }
@@ -85,7 +87,7 @@ public class RoomRateReportService : AbstractReportService, IRoomRateReportServi
         }
         else
         {
-            dto.WeekendRate = soldRoomWeekend.Revenue / soldRoomWeeday.SoldRoom;
+            dto.WeekendRate = soldRoomWeekend.Revenue / soldRoomWeekend.SoldRoom;
         }
         dto.WeekendRoomSold = soldRoomWeekend.SoldRoom;
         dto.WeekendCost = soldRoomWeekend.Cost;
