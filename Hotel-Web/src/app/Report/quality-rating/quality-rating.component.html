@@ -41,7 +41,7 @@
 <table class="style1">
   <tr>
     <td class="style2">&nbsp;</td>
-    <td class="style2"><b>Hotel</b></td>
+    <td class="style2"><b>{{selectedHotel?.name}}</b></td>
     <td class="style2"><b>Market Avarage</b></td>
   </tr>
   <tr *ngIf="qualityRatingReportResponse.overAll">
@@ -58,7 +58,7 @@
   </tr>
   <tr>
     <td class="style2"><b>Segment</b></td>
-    <td class="style2"><b>Hotel</b></td>
+    <td class="style2"><b>{{selectedHotel?.name}}</b></td>
     <td class="style2"><b>Market Avarage</b></td>
   </tr>
   <tr *ngFor="let qualityRatingData of qualityRatingReportResponse.segments">
@@ -95,12 +95,12 @@
   </tr>
   <tr>
     <td class="style2"><b>Attribute</b></td>
-    <td class="style2"><b>Hotel</b></td>
+    <td class="style2"><b>{{selectedHotel?.name}}</b></td>
     <td class="style2"><b>Market Avarage</b></td>
   </tr>
   <tr *ngFor="let attributesData of qualityRatingReportResponse.attributes">
     <td class="style2">{{ attributesData.label }}</td>
-    <td class="style2">{{ numberToDecimal(attributesData.hotel) }}</td>
-    <td class="style2">{{ numberToDecimal(attributesData.marketAverage) }}</td>
+    <td class="style2">{{ attributesData.hotel|fmt2:"N2" }}</td>
+    <td class="style2">{{ attributesData.marketAverage|fmt2:"N2" }}</td>
   </tr>
 </table>
