@@ -16,6 +16,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { publicModule } from './public/public.module';
 import { StudentModule } from './student';
 import { InstructorModule } from './instructor';
+import { OverlayInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -48,6 +49,11 @@ import { InstructorModule } from './instructor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RefreshTokennterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: OverlayInterceptor,
       multi: true,
     },
   ],

@@ -12,10 +12,17 @@ import { ConfirmDialogComponent } from './dialog/confirm-dialog.component';
 import { NumericEditor } from './editors';
 import { CustomTooltip } from './editors';
 import { CellRenderComponent } from './render';
-
+import { SpinnerComponent } from './spinner/spinner.component';
+import { OverlayService } from './overlay.service';
 
 @NgModule({
-  declarations: [TextboxEditor, ConfirmDialogComponent,NumericEditor,CustomTooltip,CellRenderComponent],
+  declarations: [
+    TextboxEditor,
+    ConfirmDialogComponent,
+    NumericEditor,
+    CustomTooltip,
+    CellRenderComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -23,7 +30,7 @@ import { CellRenderComponent } from './render';
     HttpClientModule,
     MaterialModule,
   ],
-  exports: [ClassModule,ConfirmDialogComponent],
-  providers: [SessionStore, JwtHelperService],
+  exports: [ClassModule, ConfirmDialogComponent],
+  providers: [SessionStore, JwtHelperService, OverlayService],
 })
 export class SharedModule {}
