@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #monthGrd {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -35,4 +39,12 @@
   }
   .br1px{
     border: solid 1px black;
+  }
+
+  .green-row{
+   background-color: #04AA6D;
+  }
+
+  .yellow-row {
+   background-color: yellow;
   }

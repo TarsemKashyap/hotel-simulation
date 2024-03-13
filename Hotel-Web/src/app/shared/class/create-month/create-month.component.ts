@@ -13,6 +13,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GridActionComponent } from '../grid-action/grid-action.component';
+import { RowAction, GridActionParmas } from '../grid-action/grid-action.model';
+import { MonthCalculationService } from '../month-calculation/monthcalculation.service';
 
 @Component({
   selector: 'app-create-month',
@@ -22,7 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CreateMonthComponent {
   $rows: MonthDto[] = [];
- // monthList: MonthDto[] = [];
+  // monthList: MonthDto[] = [];
   classInfo: ClassDto = {
     classId: '',
     title: '',
@@ -44,7 +47,7 @@ export class CreateMonthComponent {
     totalMarket: '',
     status: '',
     configId: '',
-    isComplete:false
+    isComplete: false,
   };
   classId: number | undefined;
   //classId: any;
@@ -61,40 +64,24 @@ export class CreateMonthComponent {
   configId = '2853c04b-3f2d-4e4c-b930-a7fc924871df';
   currentQuarter: Number = 0;
   MarketTextBox: string = '';
-  btnfinltext:string="Finalize Now";
-  btnCreateNewMonth:string="Create a New Month";
+  btnfinltext: string = 'Finalize Now';
+  btnCreateNewMonth: string = 'Create a New Month';
   apiBody = {};
-  displayedColumns: string[] = [
-    'MonthId',
-    'ClassId',
-    'Sequence',
-    'TotalMarket',
-    'Status',
-    'ConfigId',
-  ];
 
   columnDefs: ColDef[] = [
-    // {
-    //   field: 'monthId',
-      
-    // },
-    // { field: 'classId' },
     {
       field: 'sequence',
-      
+      headerName: 'Sequence',
     },
     {
       field: 'totalMarket',
-      
+      headerName: 'Total Market',
     },
     {
       field: 'configId',
-      
+      headerName: 'Config Id',
     },
-    { field: 'status' },
-    
-    
-    
+    { field: 'status', headerName: 'Status' },
   ];
   defaultColDef: ColDef = {
     flex: 1,
@@ -105,27 +92,40 @@ export class CreateMonthComponent {
 
   constructor(
     private monthService: MonthService,
+    private monthCalculationService: MonthCalculationService,
     private router: Router,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
     public route: ActivatedRoute
   ) {}
+
   @ViewChild(MatSort)
   sort!: MatSort;
   ngOnInit(): void {
     this.classId = this.route.snapshot.params['id'];
     this.pageload();
   }
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
+
+  rowClassRules = {
+    'green-row': function (params: any) {
+      return params.data.isComplete;
+    },
+    'yellow-row': function (params: any) {
+      return !params.data.isComplete;
+    },
+  };
+
   pageload() {
     this.classId = this.route.snapshot.params['id'];
     this.apiBody = { ClassId: this.classId };
     this.monthService.quarterlyMarketList(this.apiBody).subscribe((data) => {
-     // this.monthList = data;
-    this.$rows=data;
-     // console.log(this.monthList[0]);
+      // this.monthList = data;
+      this.$rows = data;
+      // console.log(this.monthList[0]);
       this.dataSourceMonth.data = data;
     });
 
@@ -138,10 +138,8 @@ export class CreateMonthComponent {
         .subscribe((data) => {
           this.monthInfo = data;
           this.isMonthCompleted = this.monthInfo.isComplete;
-          
 
-          if (this.currentQuarter != 0) 
-          {
+          if (this.currentQuarter != 0) {
             this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
             // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
             if (this.isMonthCompleted == false) {
@@ -150,23 +148,20 @@ export class CreateMonthComponent {
                 'Month ' +
                 this.currentQuarter +
                 " hasn't finished. You can't create new month at this moment.";
-            }
-            else{
+            } else {
               this.isNewQuarterButtonDisable = false;
               this.MessageLabel =
-              'Month ' +
-              this.currentQuarter +
-              " has been finished. You can create new month at this moment.";
+                'Month ' +
+                this.currentQuarter +
+                ' has been finished. You can create new month at this moment.';
             }
-          } 
-          else if (this.currentQuarter == 0) {
+          } else if (this.currentQuarter == 0) {
             this.isNewQuarterButtonDisable = false;
             this.MessageLabel = 'No month has been created.';
           }
           if (this.classInfo.status != 'T') {
             this.isFinalizeButtonDisable = true;
-          }
-          else{
+          } else {
             this.isFinalizeButtonDisable = false;
           }
           ////"C" means that calucation is not finished yet.
@@ -177,36 +172,50 @@ export class CreateMonthComponent {
         });
     });
   }
+
+  monthCalculation() {
+    this.apiBody = {
+      ClassId: this.route.snapshot.params['id'],
+    };
+    this.monthCalculationService
+      .monthCalculate(this.apiBody)
+      .subscribe((data) => {
+        this.dataSourceMonth.data = data;
+        this.pageload();
+        this.snackBar.open('Calculate successfully', 'close', {
+          duration: 3000,
+        });
+      });
+  }
+
   CreateNewMonth() {
-    this.btnCreateNewMonth="Processing.......";
-    console.log('it does nothing', this.MarketTextBox);
+    this.btnCreateNewMonth = 'Processing.......';
     this.isError = false;
-      this.errorMsg = '';
-      
-    if (this.MarketTextBox==null || this.MarketTextBox.length == 0) {
+    this.errorMsg = '';
+
+    if (this.MarketTextBox == null || this.MarketTextBox.length == 0) {
       this.isError = true;
       this.errorMsg = 'Required Field';
-      this.btnCreateNewMonth="Create a New Month";
+      this.btnCreateNewMonth = 'Create a New Month';
       return;
     }
-    
+
     this.isNewQuarterButtonDisable = true;
     this.apiBody = { ClassId: this.classId, TotalMarket: this.MarketTextBox };
     this.monthService.createNewMonth(this.apiBody).subscribe((data) => {
       this.isError = false;
       this.errorMsg = '';
       this.pageload();
-      console.log('MonthID:=' + data.data.monthId);
-      console.log(data.message);
-      this.btnCreateNewMonth="Create a New Month";
-      this.snackBar.open('Create a New Month successfully','close',{
-        duration: 3000
+      this.btnCreateNewMonth = 'Create a New Month';
+      this.snackBar.open('Create a New Month successfully', 'close', {
+        duration: 3000,
       });
       //console.log(data.Data.monthID);
     });
   }
+
   FinalizeMonth() {
-    this.btnfinltext="Processing.......";
+    this.btnfinltext = 'Processing.......';
     this.apiBody = {
       ClassId: this.classId,
       Sequence: this.currentQuarter,
@@ -222,9 +231,9 @@ export class CreateMonthComponent {
         this.monthService.UpdateClassStatus(this.apiBody).subscribe((data) => {
           console.log('isClass CompletedDone:=' + data);
           this.pageload();
-          this.btnfinltext="Finalize Now";
-          this.snackBar.open('Finalize successfully','close',{
-            duration: 3000
+          this.btnfinltext = 'Finalize Now';
+          this.snackBar.open('Finalize successfully', 'close', {
+            duration: 3000,
           });
           //console.log(data.message);
           //console.log(data.Data.monthID);
