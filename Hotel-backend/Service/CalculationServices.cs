@@ -1393,7 +1393,7 @@ namespace Service
                                 row.RetainedEarn = row.TotAsset - 10000000 - row.TotLiab;
                                 _context.Update(row);
                             }
-                                _context.SaveChanges();
+                            _context.SaveChanges();
 
                         }
 
@@ -1512,7 +1512,7 @@ namespace Service
                 CalculationResponse cr = new CalculationResponse();
                 //item.Status = MonthStatus(item.MonthId, currentQuarter, item.Status);
                 cr.MonthId = item.MonthId;
-                cr.Status = MonthStatus(item.MonthId, currentQuarter, item.Status, item.IsMonthCompleted);
+                cr.Status = GetCompletionStatus(item.Status, item.IsMonthCompleted);
                 listnew.Add(cr);
 
 
@@ -1526,44 +1526,26 @@ namespace Service
             return resObj;
 
         }
-        protected string MonthStatus(int quartarno, int currentQuartarNo, ClassStatus status, bool isMonthCompleted)
+       public static string GetCompletionStatus(ClassStatus status, bool isMonthCompleted)
         {
-            string returnStatus = "";
-            //if (currentQuartarNo < quartarno)
-            //{
-            //    returnStatus = "Calculated";
-            //}
-            //else
             if (isMonthCompleted == true)
             {
-                returnStatus = "Calculated";
+                return "Calculated";
             }
-            else
-            {
 
-                if (status == ClassStatus.T)
-                {
-                    returnStatus = "Calculated";
-                }
-                else if (status == ClassStatus.S)
-                {
-                    returnStatus = "This Month Has Been Just Created.";
-                }
-                else if (status == ClassStatus.A)
-                {
-                    returnStatus = "This Month Has Been Finalized. Please Go Ahead and Create A New Month.";
-                }
-                else if (status == ClassStatus.C)
-                {
-                    returnStatus = "Calculation is not finished yet, please wait...";
-                }
-                else
-                {
-                    returnStatus = "Ready For Calculation";
-                }
-            }
-            return returnStatus;
+            return status switch
+            {
+                ClassStatus.T => "Calculated",
+                ClassStatus.S => "This Month Has Been Just Created.",
+                ClassStatus.A => "This Month Has Been Finalized. Please Go Ahead and Create A New Month.",
+                ClassStatus.C => "Calculation is not finished yet, please wait...",
+                _ => "Ready For Calculation"
+            };
+
+
         }
+
+
         public IEnumerable<MonthDto> monthList()
         {
             throw new NotImplementedException();

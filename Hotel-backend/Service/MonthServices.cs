@@ -224,38 +224,21 @@ namespace Service
 
         public IList<MonthDto> List(MonthDto month)
         {
-            //IQueryable<Month> query = _context.Months;
-            //if (month.ClassId > 0)
-            //{
-            //    query = query.Where(x => x.ClassId == month.ClassId);
-            //}
-            //var result = query.Select(x => new MonthDto
-            //{
-            //    MonthId = x.MonthId,
-            //    ClassId = x.ClassId,
-            //    Sequence = x.Sequence,
-            //    TotalMarket = x.TotalMarket,
-            //    ConfigId = x.ConfigId,
-            //    IsComplete = x.IsComplete,
-            //    Status = x.IsComplete == true ? "Completed" : "Not Completed"
 
-            //}).OrderBy(x => x.Sequence);
-            //return result.AsEnumerable();
-
-            var list = (from m in _context.Months
-                        where (m.ClassId == month.ClassId)
-                        select new
-                        {
-                            MonthId = m.MonthId,
-                            ClassId = m.ClassId,
-                            Sequence = m.Sequence,
-                            TotalMarket = m.TotalMarket,
-                            ConfigId = m.ConfigId,
-                            IsComplete = m.IsComplete,
-                            Status = m.IsComplete == true ? "Completed" : "Not Completed"
-                        }
-                       ).ToList();
-            return list.Adapt<IList<MonthDto>>();
+            return (from c in _context.ClassSessions
+                    join m in _context.Months on c.ClassId equals m.ClassId
+                    where (c.ClassId == month.ClassId)
+                    select new MonthDto
+                    {
+                        MonthId = m.MonthId,
+                        ClassId = m.ClassId,
+                        Sequence = m.Sequence,
+                        TotalMarket = m.TotalMarket,
+                        ConfigId = m.ConfigId,
+                        IsComplete = m.IsComplete,
+                        Status = CalculationServices.GetCompletionStatus(c.Status, m.IsComplete)
+                    }
+                     ).ToList();
 
 
         }
