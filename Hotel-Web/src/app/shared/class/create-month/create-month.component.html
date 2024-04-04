@@ -16,10 +16,7 @@
     >
     </ag-grid-angular>
   </div>
-  <button
-    class="bg-primary float-left px-6 py-2 m-2 text-white"
-    (click)="monthCalculation()"
-  >
+  <button id="calcbtn" [disabled]="disableBtn" (click)="monthCalculation()">
     Calculation Current Month
   </button>
 

@@ -236,7 +236,8 @@ namespace Service
                         TotalMarket = m.TotalMarket,
                         ConfigId = m.ConfigId,
                         IsComplete = m.IsComplete,
-                        Status = CalculationServices.GetCompletionStatus(c.Status, m.IsComplete)
+                        Status = c.Status.ToString(),
+                        StatusText = CalculationServices.GetCompletionStatus(c.Status, m.IsComplete)
                     }
                      ).ToList();
 

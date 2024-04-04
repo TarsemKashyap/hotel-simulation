@@ -55,11 +55,12 @@ namespace Service
                     StudentId = x.StudentId,
                     GroupName = x.ClassGroup.Name,
                     StartDate = x.Class.StartDate,
-                    EndDate = x.Class.EndDate
+                    EndDate = x.Class.EndDate,
+
                 })
                 .ToList();
 
-            var classSessions = _context.ClassSessions.FirstOrDefault(x => x.ClassId == ClassId);
+            var classSessions = _context.ClassSessions.Include(x => x.Months).FirstOrDefault(x => x.ClassId == ClassId);
 
             var classDetails = new ClassSessionDto
             {
@@ -67,6 +68,7 @@ namespace Service
                 TotalStudentCount = studentList.Count,
                 StartDate = classSessions.StartDate,
                 EndDate = classSessions.EndDate,
+                CurrentQuater = classSessions.Months.Count,
             };
 
 
@@ -106,7 +108,7 @@ namespace Service
             var defaultClass = studentList.Count == 1 ? studentList.FirstOrDefault() : studentList.FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
             if (defaultClass == null)
                 throw new ValidationException("No default class found");
-           
+
             if (defaultClass.ClassGroup == null)
                 throw new ValidationException("Student not assigned to any group");
 

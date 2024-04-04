@@ -22,7 +22,7 @@ export class RefreshTokennterceptor implements HttpInterceptor {
       catchError((error) => {
         console.log('Refresh Interceptor', error);
         if (error instanceof HttpErrorResponse) {
-          this.refreshToken(next, req);
+         // this.refreshToken(next, req);
         }
         return throwError(() => error);
       })
@@ -42,7 +42,7 @@ export class RefreshTokennterceptor implements HttpInterceptor {
       )
       .subscribe({
         next: (res) => {
-         // return next.handle(req);
+          // return next.handle(req);
         },
         error: (err) => {
           console.log('subscribe::', err);

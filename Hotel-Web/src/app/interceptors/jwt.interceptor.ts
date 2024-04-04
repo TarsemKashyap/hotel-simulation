@@ -5,13 +5,11 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpResponse,
-  HttpEventType,
 } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AccountService } from '../public/account/account.service';
 import { SessionStore } from '../store';
 import { environment } from 'src/environments/environment';
-import { OverlayService } from '../shared/overlay.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -34,25 +32,4 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 }
 
-@Injectable()
-export class OverlayInterceptor implements HttpInterceptor {
-  constructor(private accountService: OverlayService) {}
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const dialog = this.accountService.open('loading data');
-
-    return next.handle(request).pipe(
-      tap({
-        next: (e: HttpEvent<any>) => {
-          console.log('next handle', e.type, e);
-          if (e.type == HttpEventType.Response) {
-            dialog.close();
-          }
-        },
-      })
-    );
-  }
-}

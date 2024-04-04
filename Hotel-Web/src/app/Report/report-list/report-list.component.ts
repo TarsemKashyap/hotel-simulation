@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from './IHyperLinks.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-report-list',
@@ -91,13 +92,16 @@ export class ReportListComponent {
       link: 'demand-report',
     },
   ];
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, public activeRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.isInstructorOrAdmin = this.accountService.userHasAnyRole([
       AppRoles.Instructor,
       AppRoles.Admin,
     ]);
+    const classId = this.activeRoute.snapshot.params['id'];
+
+    
     this.activeLinks = this.studentLink.filter((x) => {
       if (!x.enable) return true;
       return x.enable();

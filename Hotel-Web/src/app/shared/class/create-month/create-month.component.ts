@@ -4,7 +4,7 @@ import { ColDef, GridOptions } from 'ag-grid-community';
 //import { MonthDto } from './month.model';
 import { MonthService } from './month.service';
 
-import { MonthDto } from './month.model';
+import { ClassStatus, MonthDto } from './month.model';
 import { ClassDto } from './month.model';
 //import { QuarterlyMarketDto } from './quarterly-market.model';
 import { MatRow, MatTableDataSource } from '@angular/material/table';
@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { GridActionComponent } from '../grid-action/grid-action.component';
 import { RowAction, GridActionParmas } from '../grid-action/grid-action.model';
 import { MonthCalculationService } from '../month-calculation/monthcalculation.service';
+import { OverlayService } from '../../overlay.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-create-month',
@@ -67,7 +69,7 @@ export class CreateMonthComponent {
   btnfinltext: string = 'Finalize Now';
   btnCreateNewMonth: string = 'Create a New Month';
   apiBody = {};
-
+  disableBtn: boolean = true;
   columnDefs: ColDef[] = [
     {
       field: 'sequence',
@@ -81,7 +83,7 @@ export class CreateMonthComponent {
       field: 'configId',
       headerName: 'Config Id',
     },
-    { field: 'status', headerName: 'Status' },
+    { field: 'statusText', headerName: 'Status' },
   ];
   defaultColDef: ColDef = {
     flex: 1,
@@ -96,7 +98,8 @@ export class CreateMonthComponent {
     private router: Router,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private overlayService: OverlayService
   ) {}
 
   @ViewChild(MatSort)
@@ -123,9 +126,8 @@ export class CreateMonthComponent {
     this.classId = this.route.snapshot.params['id'];
     this.apiBody = { ClassId: this.classId };
     this.monthService.quarterlyMarketList(this.apiBody).subscribe((data) => {
-      // this.monthList = data;
       this.$rows = data;
-      // console.log(this.monthList[0]);
+      this.disableBtn = data.every((x) => x.isComplete);
       this.dataSourceMonth.data = data;
     });
 
@@ -138,7 +140,6 @@ export class CreateMonthComponent {
         .subscribe((data) => {
           this.monthInfo = data;
           this.isMonthCompleted = this.monthInfo.isComplete;
-
           if (this.currentQuarter != 0) {
             this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
             // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
@@ -159,7 +160,7 @@ export class CreateMonthComponent {
             this.isNewQuarterButtonDisable = false;
             this.MessageLabel = 'No month has been created.';
           }
-          if (this.classInfo.status != 'T') {
+          if (this.classInfo.status != ClassStatus.T) {
             this.isFinalizeButtonDisable = true;
           } else {
             this.isFinalizeButtonDisable = false;
@@ -177,15 +178,15 @@ export class CreateMonthComponent {
     this.apiBody = {
       ClassId: this.route.snapshot.params['id'],
     };
-    this.monthCalculationService
-      .monthCalculate(this.apiBody)
-      .subscribe((data) => {
-        this.dataSourceMonth.data = data;
-        this.pageload();
-        this.snackBar.open('Calculate successfully', 'close', {
-          duration: 3000,
-        });
+    // const dialog = this.overlayService.open('Calculating month');
+    const obs = this.monthCalculationService.monthCalculate(this.apiBody);
+    this.overlayService.loader('Calculating month', obs).subscribe((data) => {
+      this.dataSourceMonth.data = data;
+      this.pageload();
+      this.snackBar.open('Calculate successfully', 'close', {
+        duration: 3000,
       });
+    });
   }
 
   CreateNewMonth() {
@@ -199,19 +200,23 @@ export class CreateMonthComponent {
       this.btnCreateNewMonth = 'Create a New Month';
       return;
     }
+    const dialog = this.overlayService.open('Please wait, Creating new month');
 
     this.isNewQuarterButtonDisable = true;
     this.apiBody = { ClassId: this.classId, TotalMarket: this.MarketTextBox };
-    this.monthService.createNewMonth(this.apiBody).subscribe((data) => {
-      this.isError = false;
-      this.errorMsg = '';
-      this.pageload();
-      this.btnCreateNewMonth = 'Create a New Month';
-      this.snackBar.open('Create a New Month successfully', 'close', {
-        duration: 3000,
+    this.monthService
+      .createNewMonth(this.apiBody)
+      .pipe(finalize(() => dialog.close()))
+      .subscribe((data) => {
+        this.isError = false;
+        dialog.close();
+        this.errorMsg = '';
+        this.pageload();
+        this.btnCreateNewMonth = 'Create a New Month';
+        this.snackBar.open('Create a New Month successfully', 'close', {
+          duration: 3000,
+        });
       });
-      //console.log(data.Data.monthID);
-    });
   }
 
   FinalizeMonth() {
@@ -221,6 +226,8 @@ export class CreateMonthComponent {
       Sequence: this.currentQuarter,
       IsComplete: true,
     };
+    const dialog = this.overlayService.open('Finalizing month');
+
     this.monthService
       .updateMonthCompletedStatus(this.apiBody)
       .subscribe((data) => {
@@ -228,16 +235,19 @@ export class CreateMonthComponent {
         //console.log(data.message);
         //console.log(data.Data.monthID);
         this.apiBody = { ClassId: this.classId, Status: 'A' };
-        this.monthService.UpdateClassStatus(this.apiBody).subscribe((data) => {
-          console.log('isClass CompletedDone:=' + data);
-          this.pageload();
-          this.btnfinltext = 'Finalize Now';
-          this.snackBar.open('Finalize successfully', 'close', {
-            duration: 3000,
+        this.monthService
+          .UpdateClassStatus(this.apiBody)
+          .pipe(finalize(() => dialog.close()))
+
+          .subscribe((data) => {
+            this.pageload();
+            this.btnfinltext = 'Finalize Now';
+            this.snackBar.open('Finalize successfully', 'close', {
+              duration: 3000,
+            });
+            //console.log(data.message);
+            //console.log(data.Data.monthID);
           });
-          //console.log(data.message);
-          //console.log(data.Data.monthID);
-        });
       });
   }
 }

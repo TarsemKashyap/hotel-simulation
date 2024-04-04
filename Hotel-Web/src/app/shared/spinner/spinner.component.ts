@@ -9,6 +9,7 @@ import {
   MatProgressSpinnerModule,
 } from '@angular/material/progress-spinner';
 import { ConfirmDialogModel } from '../dialog/confirm-dialog.component';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-spinner',
   templateUrl: './spinner.component.html',
@@ -17,5 +18,6 @@ import { ConfirmDialogModel } from '../dialog/confirm-dialog.component';
   imports: [MatProgressSpinnerModule],
 })
 export class SpinnerComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: string) {
+  }
 }

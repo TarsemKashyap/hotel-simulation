@@ -14,7 +14,8 @@ using System.Threading.Tasks;
         public bool IsComplete { get; set; }
         public int ConfigId { get; set; }
         public string Status { get; set; }
-        public virtual ClassSessionDto Class { get; set; }
+        public string StatusText { get; set; }
+    public virtual ClassSessionDto Class { get; set; }
 
     
 }
