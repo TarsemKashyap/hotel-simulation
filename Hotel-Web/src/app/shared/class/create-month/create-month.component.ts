@@ -64,12 +64,12 @@ export class CreateMonthComponent {
   dataSource = new MatTableDataSource<MonthDto>();
   dataSourceMonth = new MatTableDataSource<MonthDto>();
   configId = '2853c04b-3f2d-4e4c-b930-a7fc924871df';
-  currentQuarter: Number = 0;
+  currentQuarter: number = 0;
   MarketTextBox: string = '';
   btnfinltext: string = 'Finalize Now';
   btnCreateNewMonth: string = 'Create a New Month';
   apiBody = {};
-  disableBtn: boolean = true;
+  disableCalcBtn: boolean = true;
   columnDefs: ColDef[] = [
     {
       field: 'sequence',
@@ -127,20 +127,24 @@ export class CreateMonthComponent {
     this.apiBody = { ClassId: this.classId };
     this.monthService.quarterlyMarketList(this.apiBody).subscribe((data) => {
       this.$rows = data;
-      this.disableBtn = data.every((x) => x.isComplete);
       this.dataSourceMonth.data = data;
     });
 
     this.monthService.classInfo(this.classId).subscribe((data) => {
       this.classInfo = data;
-      this.currentQuarter = Number(this.classInfo.currentQuater);
-      console.log(this.classInfo);
+      this.currentQuarter = parseInt(this.classInfo.currentQuater);
+      console.log({ classInfo: data });
       this.monthService
         .monthInfo(this.classId, this.currentQuarter)
         .subscribe((data) => {
           this.monthInfo = data;
           this.isMonthCompleted = this.monthInfo.isComplete;
+          this.disableCalcBtn = this.isCalcbtnDisable(
+            data,
+            this.currentQuarter
+          );
           if (this.currentQuarter != 0) {
+            this.monthInfo.status;
             this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
             // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
             if (this.isMonthCompleted == false) {
@@ -172,6 +176,23 @@ export class CreateMonthComponent {
           }
         });
     });
+  }
+
+  isCalcbtnDisable(month: MonthDto, querter: number): boolean {
+    if (querter == 0) {
+      return true;
+    }
+    switch (month.status) {
+      case ClassStatus.T:
+      case ClassStatus.S:
+      case ClassStatus.A:
+      case ClassStatus.C:
+        return true;
+      case ClassStatus.I:
+        return false;
+      default:
+        return false;
+    }
   }
 
   monthCalculation() {

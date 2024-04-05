@@ -67,7 +67,8 @@ namespace Api.Controllers
         public Task<MonthDto> MonthInfo(int classId, int quarterNo)
         {
             // string instructorId = IsAdmin ? null : LoggedUserId;
-
+            var MonthResult = _monthService.List(month);
+            return Ok(MonthResult);
             var MonthResult = _monthService.GetMonthInfoById(classId, quarterNo);
             return MonthResult;
 

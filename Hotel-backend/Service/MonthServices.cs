@@ -191,34 +191,23 @@ namespace Service
 
         public async Task<MonthDto> GetMonthInfoById(int classId, int quarterNo)
         {
-            var data = _context.Months.SingleOrDefault(x => x.ClassId == classId && x.Sequence == quarterNo);
-            if (data == null)
-            {
-                return new MonthDto();
-            }
-            //    throw new ValidationException("data not found ");
-            return data.Adapt<MonthDto>();
-            //IQueryable<Month> query = _context.Months.Where(x => x.ClassId == classId && x.Sequence == quarterNo);
-            //var result = query.Select(x => new MonthDto
-            //{
-            //    MonthId = x.MonthId,
-            //    ClassId = x.ClassId,
-            //    Sequence = x.Sequence,
-            //    TotalMarket = x.TotalMarket,
-            //    ConfigId = x.ConfigId,
-            //    IsComplete = x.IsComplete
-            //}).ToList();
-            //MonthDto obj = new MonthDto();
-            //if (result.Count > 0)
-            //{
-            //    obj.MonthId = result[0].MonthId;
-            //    obj.ClassId = result[0].ClassId;
-            //    obj.Sequence = result[0].Sequence;
-            //    obj.TotalMarket = result[0].TotalMarket;
-            //    obj.ConfigId = result[0].ConfigId;
-            //    obj.IsComplete = result[0].IsComplete;
-            //}
-            //return obj;
+
+            return (from c in _context.ClassSessions
+                    join m in _context.Months on c.ClassId equals m.ClassId
+                    where (c.ClassId == classId && m.Sequence == quarterNo)
+                    select new MonthDto
+                    {
+                        MonthId = m.MonthId,
+                        ClassId = m.ClassId,
+                        Sequence = m.Sequence,
+                        TotalMarket = m.TotalMarket,
+                        ConfigId = m.ConfigId,
+                        IsComplete = m.IsComplete,
+                        Status = c.Status.ToString(),
+                        StatusText = CalculationServices.GetCompletionStatus(c.Status, m.IsComplete)
+                    }
+                    ).FirstOrDefault();
+
 
         }
 

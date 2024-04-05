@@ -16,7 +16,7 @@
     >
     </ag-grid-angular>
   </div>
-  <button id="calcbtn" [disabled]="disableBtn" (click)="monthCalculation()">
+  <button id="calcbtn" class="btn2" [disabled]="disableCalcBtn" (click)="monthCalculation()">
     Calculation Current Month
   </button>
 
@@ -33,7 +33,7 @@
           ID="FinalizeButton"
           type="button"
           Text="Finalize Now"
-          class="bg-primary float-left m-2 text-white py-3 px-5 hover:shadow-md mt-5"
+          class="bg-primary float-left m-2 text-white py-3 px-5 hover:shadow-md mt-5 btn2"
           [disabled]="isFinalizeButtonDisable"
           (click)="FinalizeMonth()"
         >
@@ -106,18 +106,12 @@
           <dd
             class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
           >
-            <!-- <a
-                    [routerLink]="['../','edit']"
-                    routerLinkActive="router-link-active"
-                    class="bg-primary float-left px-6 py-2 m-2 text-white"
-                  >
-                    Edit Class
-                  </a> -->
+           
 
             <button
               ID="NewQuarterButton"
               type="button"
-              class="bg-primary float-left px-6 py-2 m-2 text-white"
+              class="bg-primary float-left px-6 py-2 m-2 text-white btn2"
               (click)="CreateNewMonth()"
               [disabled]="isNewQuarterButtonDisable"
             >
