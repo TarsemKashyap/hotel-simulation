@@ -133,46 +133,38 @@ export class CreateMonthComponent {
     this.monthService.classInfo(this.classId).subscribe((data) => {
       this.classInfo = data;
       this.currentQuarter = parseInt(this.classInfo.currentQuater);
-      console.log({ classInfo: data });
+
+      this.isFinalizeButtonDisable = this.classInfo.status != ClassStatus.T;
+
+      //"C" means that calucation is not finished yet.
+      if (this.classInfo.status == ClassStatus.C) {
+        this.isFinalizeButtonDisable = true;
+        this.isNewQuarterButtonDisable = true;
+      }
       this.monthService
         .monthInfo(this.classId, this.currentQuarter)
         .subscribe((data) => {
-          this.monthInfo = data;
-          this.isMonthCompleted = this.monthInfo.isComplete;
-          this.disableCalcBtn = this.isCalcbtnDisable(
-            data,
-            this.currentQuarter
-          );
-          if (this.currentQuarter != 0) {
-            this.monthInfo.status;
-            this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
-            // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
-            if (this.isMonthCompleted == false) {
-              this.isNewQuarterButtonDisable = true;
-              this.MessageLabel =
-                'Month ' +
-                this.currentQuarter +
-                " hasn't finished. You can't create new month at this moment.";
-            } else {
-              this.isNewQuarterButtonDisable = false;
-              this.MessageLabel =
-                'Month ' +
-                this.currentQuarter +
-                ' has been finished. You can create new month at this moment.';
-            }
-          } else if (this.currentQuarter == 0) {
+          if (data) {
+            this.monthInfo = data;
+            this.isMonthCompleted = this.monthInfo.isComplete;
+            this.disableCalcBtn = this.isCalcbtnDisable(
+              data,
+              this.currentQuarter
+            );
+          }
+
+          if (this.currentQuarter == 0) {
             this.isNewQuarterButtonDisable = false;
             this.MessageLabel = 'No month has been created.';
-          }
-          if (this.classInfo.status != ClassStatus.T) {
-            this.isFinalizeButtonDisable = true;
-          } else {
-            this.isFinalizeButtonDisable = false;
-          }
-          ////"C" means that calucation is not finished yet.
-          if (this.classInfo.status == 'C') {
-            this.isFinalizeButtonDisable = true;
-            this.isNewQuarterButtonDisable = true;
+          } else if (this.currentQuarter != 0) {
+            this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
+            // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
+            this.isNewQuarterButtonDisable = this.isMonthCompleted;
+            if (this.isMonthCompleted == false) {
+              this.MessageLabel = `Month ${this.currentQuarter} hasn't finished. You can't create new month at this moment.`;
+            } else {
+              this.MessageLabel = `Month ${this.currentQuarter} has been finished. You can create new month at this moment.`;
+            }
           }
         });
     });
