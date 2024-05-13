@@ -6,37 +6,37 @@ import { Observable } from 'rxjs';
 //MonthCalculationService
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MonthCalculationService {
-
   constructor(private httpClient: HttpClient) {}
 
-  monthList(apiBody:any): Observable<any> {
-    return this.httpClient.post<MonthDto[]>('month/calculationList',apiBody);
+  monthList(apiBody: any): Observable<any> {
+    return this.httpClient.post<MonthDto[]>('Calculation/calculationList', apiBody);
   }
-  monthCalculate(apiBody:any): Observable<any> {
-    return this.httpClient.post<MonthDto[]>('month/Calculation',apiBody);
+  monthCalculate(apiBody: any): Observable<any> {
+    return this.httpClient.post<MonthDto[]>('Calculation/Calculation', apiBody);
   }
 
-  
   quarterlyMarketList(): Observable<MonthDto[]> {
     return this.httpClient.get<MonthDto[]>('month/list');
   }
-  createNewMonth(apiBody:any): Observable<any> {
-    return this.httpClient.post('month/Create',apiBody);
+  createNewMonth(apiBody: any): Observable<any> {
+    return this.httpClient.post('month/Create', apiBody);
   }
-  classInfo(classId:any): Observable<ClassDto> {
-    return this.httpClient.get<ClassDto>('month/classInfo/'+classId);
+  classInfo(classId: any): Observable<ClassDto> {
+    return this.httpClient.get<ClassDto>('month/classInfo/' + classId);
   }
-  monthInfo(classId:any,quarterno:any): Observable<MonthDto> {
-    return this.httpClient.get<MonthDto>('month/monthInfo/'+classId+'/'+quarterno);
+  monthInfo(classId: any, quarterno: any): Observable<MonthDto> {
+    return this.httpClient.get<MonthDto>(
+      'month/monthInfo/' + classId + '/' + quarterno
+    );
   }
-  updateMonthCompletedStatus(apiBody:any): Observable<any> {
-    return this.httpClient.post('month/UpdateMonthCompletedStatus',apiBody);
+  updateMonthCompletedStatus(apiBody: any): Observable<any> {
+    return this.httpClient.post('month/UpdateMonthCompletedStatus', apiBody);
   }
-  UpdateClassStatus(apiBody:any): Observable<any> {
-    return this.httpClient.post('month/UpdateClassStatus',apiBody);
+  UpdateClassStatus(apiBody: any): Observable<any> {
+    return this.httpClient.post('month/UpdateClassStatus', apiBody);
   }
   //UpdateClassStatus
 }

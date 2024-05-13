@@ -22,6 +22,7 @@ namespace Common.ReportDto
         public decimal SalesForce { get; set; }
         public decimal Promotions { get; set; }
         public decimal PublicRelations { get; set; }
+        public decimal MarketAvg { get; set; }
         public decimal Total => Advertising + SalesForce + Promotions + PublicRelations;
     }
 

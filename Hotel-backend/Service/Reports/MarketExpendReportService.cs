@@ -17,7 +17,6 @@ public interface IMarketExpendReportService
 public class MarketExpendReportService : IMarketExpendReportService
 {
     private readonly HotelDbContext _context;
-    private List<MarketingDecision> _marketingList;
 
     public MarketExpendReportService(HotelDbContext context)
     {
@@ -26,21 +25,21 @@ public class MarketExpendReportService : IMarketExpendReportService
     }
     public async Task<MarketingExpensReportDto> ReportAsync(ReportParams p)
     {
-        _marketingList = await _context.MarketingDecision.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.GroupID == p.GroupId).ToListAsync();
+        var _marketingList = await _context.MarketingDecision.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.GroupID == p.GroupId).ToListAsync();
 
-        MarketingSegment business = Segment(SEGMENTS.BUSINESS);
-        MarketingSegment smallBusiness = Segment(SEGMENTS.SMALL_BUSINESS);
-        MarketingSegment CoroporateContract = Segment(SEGMENTS.CORPORATE_CONTRACT);
-        MarketingSegment families = Segment(SEGMENTS.FAMILIES);
-        MarketingSegment afluentMatureTravlers = Segment(SEGMENTS.AFLUENT_MATURE_TRAVELERS);
-        MarketingSegment internationLeisureTravel = Segment(SEGMENTS.INTERNATIONAL_LEISURE_TRAVELERS);
-        MarketingSegment corporateBusinessMeet = Segment(SEGMENTS.CORPORATE_BUSINESS_MEETINGS);
-        MarketingSegment associationMeetings = Segment(SEGMENTS.ASSOCIATION_MEETINGS);
+        MarketingSegment business = Segment(SEGMENTS.BUSINESS, _marketingList);
+        MarketingSegment smallBusiness = Segment(SEGMENTS.SMALL_BUSINESS, _marketingList);
+        MarketingSegment CoroporateContract = Segment(SEGMENTS.CORPORATE_CONTRACT, _marketingList);
+        MarketingSegment families = Segment(SEGMENTS.FAMILIES, _marketingList);
+        MarketingSegment afluentMatureTravlers = Segment(SEGMENTS.AFLUENT_MATURE_TRAVELERS, _marketingList);
+        MarketingSegment internationLeisureTravel = Segment(SEGMENTS.INTERNATIONAL_LEISURE_TRAVELERS, _marketingList);
+        MarketingSegment corporateBusinessMeet = Segment(SEGMENTS.CORPORATE_BUSINESS_MEETINGS, _marketingList);
+        MarketingSegment associationMeetings = Segment(SEGMENTS.ASSOCIATION_MEETINGS, _marketingList);
 
         MarketingExpensReportDto reportDto = new MarketingExpensReportDto();
         reportDto.Segments = new List<MarketingSegment>() { business, smallBusiness, CoroporateContract, families, afluentMatureTravlers, internationLeisureTravel, CoroporateContract, associationMeetings };
 
-
+        await SetMarketAvg(p, reportDto.Segments);
 
         MarketingSegment subTotal = new MarketingSegment
         {
@@ -79,7 +78,20 @@ public class MarketExpendReportService : IMarketExpendReportService
 
     }
 
-    private MarketingSegment Segment(string segment)
+    private async Task SetMarketAvg(ReportParams p, List<MarketingSegment> marketingSegments)
+    {
+
+        foreach (var marketingSegment in marketingSegments)
+        {
+
+            var data = await _context.MarketingDecision.Where(x => x.MonthID == p.MonthId && x.QuarterNo == p.CurrentQuarter && x.Segment == marketingSegment.Label && x.MarketingTechniques == p.Segment).Select(x => new { x.LaborSpending, x.Spending }).ToListAsync();
+            marketingSegment.Labor.MarketAvg = data.Average(x => x.LaborSpending);
+            marketingSegment.Other.MarketAvg = data.Average(x => x.Spending);
+        }
+
+    }
+
+    private MarketingSegment Segment(string segment, List<MarketingDecision> _marketingList)
     {
         var dict = _marketingList.Where(x => x.Segment == segment).ToDictionary(x => x.MarketingTechniques);
         return new MarketingSegment

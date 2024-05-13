@@ -9,7 +9,7 @@ using System;
 namespace Api.Controllers
 {
     [ApiController]
-    // [Authorize]
+    [Authorize]
     [Route("month")]
     public class MonthController : AbstractBaseController
     {

@@ -197,7 +197,7 @@ namespace Service
                                 }
                                 decimal fairmarket = (objCalculation.ScalarQueryFairMarketMarketingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo));
                                 decimal AverageSpendingMarktingDecision = objCalculation.ScalarQueryAverageSpendingMarktingDecision(_context, mDRow.Segment, mDRow.MarketingTechniques, mDRow.MonthID, mDRow.QuarterNo);
-                                if (AverageSpendingMarktingDecision > 0)
+                                if (AverageSpendingMarktingDecision > 0 && industryNorm > 0)
                                     ratio = (((weightedSpending * weightedSpending) / AverageSpendingMarktingDecision) / industryNorm);
                                 else
                                     ratio = 0;
@@ -1526,7 +1526,7 @@ namespace Service
             return resObj;
 
         }
-       public static string GetCompletionStatus(ClassStatus status, bool isMonthCompleted)
+        public static string GetCompletionStatus(ClassStatus status, bool isMonthCompleted)
         {
             if (isMonthCompleted == true)
             {

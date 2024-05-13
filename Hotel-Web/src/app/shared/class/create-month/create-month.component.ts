@@ -133,6 +133,7 @@ export class CreateMonthComponent {
     this.monthService.classInfo(this.classId).subscribe((data) => {
       this.classInfo = data;
       this.currentQuarter = parseInt(this.classInfo.currentQuater);
+      console.log({ classInfo: data });
 
       this.isFinalizeButtonDisable = this.classInfo.status != ClassStatus.T;
 
@@ -159,7 +160,7 @@ export class CreateMonthComponent {
           } else if (this.currentQuarter != 0) {
             this.QuarterNoLabel = String(Number(this.currentQuarter) + 1);
             // ifComplete = Convert.ToBoolean(quarterAdapter.ScalarQueryIfCompleted((Guid)Session["session"], currentQuarter));
-            this.isNewQuarterButtonDisable = this.isMonthCompleted;
+            this.isNewQuarterButtonDisable = !this.isMonthCompleted;
             if (this.isMonthCompleted == false) {
               this.MessageLabel = `Month ${this.currentQuarter} hasn't finished. You can't create new month at this moment.`;
             } else {
