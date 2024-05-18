@@ -71,7 +71,6 @@ export class StudentListComponent {
 
   private loadStudentList() {
     this.classService.studentClassMappingList(this.classId!).subscribe((x) => {
-      ;
       this.$rows = x.studentClassMappingDto;
       this.classSession = x.classSessionDto;
     });
