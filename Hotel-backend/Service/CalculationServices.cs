@@ -18,6 +18,25 @@ using System.Timers;
 
 namespace Service
 {
+
+    public static class DbSetExtensions
+    {
+        public static async Task<int> LastMonthId(this DbSet<Month> months, int monthID)
+        {
+            var allMonths = await months
+                            .Include(x => x.Class)
+                            .ThenInclude(x => x.Months)
+                            .Where(x => x.MonthId == monthID)
+                            .SelectMany(x => x.Class.Months)
+                            .OrderBy(x => x.MonthId)
+                            .Select(x => x.MonthId)
+                            .ToListAsync();
+            int currentIndex = allMonths.FindIndex(x => x == monthID);
+            return allMonths.ElementAt(currentIndex - 1);
+
+        }
+    }
+
     public interface ICalculationServices
     {
         IEnumerable<MonthDto> monthList();

@@ -55,24 +55,15 @@ export class StudentDashboard {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);
 
-      this.studentRolePageList = JSON.parse(this.sessionStore.GetStudentRole());
-      this.studentRolePageList.unshift(
-        {
-          pageKey: 'ChangePwd',
-          pageName: 'Change password',
-          roleName: '',
-          childPageLink: 'change-password',
-        }
-      );
+      this.studentRolePageList = this.sessionStore.GetStudentRole();
+     
     });
   }
 
   openLink(studentRolePage: RolePagesDtl) {
     this.sessionStore.SetCurrentRole(studentRolePage.roleName);
     this.router.navigate(['./student',studentRolePage.childPageLink])
-    // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-    //   this.router.navigate([studentRolePage.childPageLink]);
-    // });
+    
   }
 
   reloadCurrentRoute() {

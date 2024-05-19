@@ -179,8 +179,33 @@ namespace Service
         }
 
         */
+        public async Task<int> CreateMarketingDecision(HotelDbContext context, int newMonth, int currentQuarter, int noOfHotels)
+        {
+            //SELECT actualDemand, confirmed, groupID, laborSpending, marketingTechniques, quarterNo, segment, sessionID, spending FROM marketingDecision WHERE (sessionID = @sessionID) AND (quarterNo = @quarterNo)
+            int lastMonth = await context.Months.LastMonthId(newMonth);
+            var mktDecisions = context.MarketingDecision.Where(x => x.MonthID == lastMonth).AsEnumerable();
+            foreach (var item in mktDecisions)
+            {
+                var decision = new MarketingDecision()
+                {
+                    QuarterNo = currentQuarter + 1,
+                    GroupID = item.GroupID,
+                    LaborSpending = item.LaborSpending,
+                    Segment = item.Segment,
+                    MarketingTechniques = item.MarketingTechniques,
+                    Spending = item.Spending,
+                    ActualDemand = 0,
+                    Confirmed = false,
+                    MonthID = newMonth,
+                };
+                context.MarketingDecision.Add(decision);
+            }
+            return await context.SaveChangesAsync();
 
-        public async Task<int> CreateMarketingDecision(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
+        }
+
+
+        public async Task<int> CreateMarketingDecision2(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
             //int index = 1;
             //int groupID = index;
@@ -214,27 +239,6 @@ namespace Service
                             int affected = await context.SaveChangesAsync();
                         }
 
-                        //var data = lstmarketingTechniques.Select(mktTech =>
-                        //{
-                        //    MarketDecisionPriceList obj = GetMarketDecisionPriceList(mktTech.Techniques.Trim(), segment.SegmentName.Trim());
-
-                        //    return new MarketingDecision()
-                        //    {
-                        //        // ID = Random.Shared.Next(100),
-                        //        MonthID = monthID,
-                        //        QuarterNo = currentQuarter + 1,
-                        //        GroupID = groupID,
-                        //        MarketingTechniques = mktTech.Techniques,
-                        //        Segment = segment.SegmentName,
-                        //        Spending = (int)obj.Spending,
-                        //        LaborSpending = (int)obj.LaborSpending,
-                        //        ActualDemand = (int)obj.ActualDemand,
-                        //        Confirmed = false
-                        //    };
-                        //}).ToList();
-
-                        //context.MarketingDecision.AddRange(data);
-                        //int affected = await context.SaveChangesAsync();
 
                     }
                 }
@@ -476,9 +480,9 @@ namespace Service
                             GroupID = groupID,
                             Attribute = item.AttributeName,
                             AccumulatedCapital = (int)accumuCapital,
-                            NewCapital = AttPlist.NewCapital,
-                            OperationBudget = AttPlist.OperationBudget,
-                            LaborBudget = AttPlist.LaborBudget,
+                            NewCapital = row.NewCapital,
+                            OperationBudget = row.OperationBudget,
+                            LaborBudget = row.LaborBudget,
                             Confirmed = false,
                             QuarterForecast = currentQuarter
                         };
@@ -688,7 +692,7 @@ namespace Service
             return 1;
         }
 
-       
+
         public async Task<int> CreateIncomeState(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
         {
 
@@ -1263,22 +1267,11 @@ namespace Service
             PriceListCreated objPC = new PriceListCreated();
             var data = objPC.MarketDecisionPriceList().SingleOrDefault(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim());
 
-            // var data = context.ClassSessions.SingleOrDefault(x => x.ClassId == classID);
             if (data == null)
                 throw new ValidationException("data not found ");
             return data.Adapt<MarketDecisionPriceList>();
 
-            //PriceListCreated objPC = new PriceListCreated();
-            //var plist = objPC.MarketDecisionPriceList().Where(x => x.MarketingTechniques == marketingTech.Trim() && x.Segment == segment.Trim()).ToList();
 
-            //MarketDecisionPriceList obj = new MarketDecisionPriceList();
-            //obj.ActualDemand = plist[0].ActualDemand;
-            //obj.LaborSpending = plist[0].LaborSpending;
-            //obj.Spending = plist[0].Spending;
-
-
-
-            //return obj;
         }
 
         public async Task<BalanceSheet> GetDataBySingleRowBalanceSheet(HotelDbContext context, int monthId, int quarterNo, int groupId)

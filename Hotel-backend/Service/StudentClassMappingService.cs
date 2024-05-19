@@ -41,7 +41,8 @@ namespace Service
 
             var studentList = _context.StudentClassMapping
                 .Include(x => x.Class)
-                .Include(x => x.Student).Include(x => x.ClassGroup)
+                .Include(x => x.Student)
+                .Include(x => x.ClassGroup)
                 .Where(x => x.ClassId == ClassId)
                 .Select(x => new StudentClassMappingDto
                 {
