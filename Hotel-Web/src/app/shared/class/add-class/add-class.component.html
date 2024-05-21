@@ -135,8 +135,10 @@
                 <input
                   type="number"
                   placeholder=""
-                  formControlName="hotelsCount"
+                  [value]="hotelCount"
                   class="input-field"
+                  [disabled]="true"
+                  readonly="true"
                 />
               </div>
             </div>
@@ -201,9 +203,9 @@
                   </div>
                 </div>
                 <div class="md:w-1/3 flex justify-start">
-                  
                   <button
                     type="button"
+                    *ngIf="i == groups.length - 1"
                     class="w-[30%] h-full cursor-pointer rounded-md border bg-secondary text-base text-white transition duration-300 ease-in-out hover:shadow-md"
                     (click)="addGroup($event, i)"
                   >
@@ -213,6 +215,7 @@
                   <button
                     type="button"
                     [hidden]="i == 0"
+                    *ngIf="i == groups.length - 1"
                     class="w-[40%] cursor-pointer rounded-md border bg-red-300 h-auto text-base text-white transition duration-300 ease-in-out hover:shadow-md"
                     (click)="removeGroup($event, i)"
                   >

@@ -19,10 +19,7 @@ namespace Api.Controllers
 
         public MonthController(IMonthService monthService)
         {
-            //_validator = validator;
-            //_classGroupValidator = classGroupValidator;
             _monthService = monthService;
-            //_validator = validator;
         }
 
         [HttpPost("Create")]

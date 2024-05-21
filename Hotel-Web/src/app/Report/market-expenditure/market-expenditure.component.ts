@@ -12,6 +12,7 @@ import {
   Sector,
   MarketingStrategy,
 } from '../model/ReportCommon.model';
+import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-market-expenditure',
@@ -255,6 +256,7 @@ export class MarketExpenditureComponent {
           axis: 'x',
           intersect: true,
         },
+
         plugins: {
           legend: {
             position: 'top',

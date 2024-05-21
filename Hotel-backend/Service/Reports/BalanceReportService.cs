@@ -25,7 +25,7 @@ public class BalanceReportService : AbstractReportService, IBalanceReportService
     {
         int quater = reportParams.CurrentQuarter, groupId = reportParams.GroupId, monthId = reportParams.MonthId;
         BalanceReportDto report = new BalanceReportDto();
-        BalanceSheet balance = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.QuarterNo == quater && x.GroupID == groupId);
+        BalanceSheet balance = await _context.BalanceSheet.AsNoTracking().FirstOrDefaultAsync(x => x.MonthID == monthId && x.QuarterNo == quater && x.GroupID == groupId);
 
         CurrentAssests currentAssests = new CurrentAssests();
         currentAssests.Cash.Data = Money(balance.Cash);

@@ -274,13 +274,15 @@ public class PerformanceReportService : AbstractReportService, IPerformanceRepor
         Month lastMonth = await GetLastMonth(monthId, reportParams.CurrentQuarter);
 
         int quarter = reportParams.CurrentQuarter;
+        List<int> monthlist = classSession.Months.Where(x => x.Sequence <= quarter).Select(x => x.MonthId).ToList();
+
         foreach (var group in classSession.Groups)
         {
             int groupId = group.Serial;
             int hotelCount = classSession.Groups.Count;
             var incomeState = await IncomeStateQuery.FirstOrDefaultAsync(x => x.MonthID == reportParams.MonthId && x.QuarterNo == quarter && x.GroupID == groupId);
             decimal monthlyProfit = incomeState.NetIncom;
-            decimal accumplateProfit = IncomeStateQuery.Where(x => x.MonthID == reportParams.MonthId && x.GroupID == groupId && x.QuarterNo <= quarter).Sum(x => x.NetIncom);
+            decimal accumplateProfit = IncomeStateQuery.Where(x => monthlist.Contains(x.MonthID) && x.GroupID == groupId && x.QuarterNo <= quarter).Sum(x => x.NetIncom);
             var soldRoomListMonth = await _context.SoldRoomByChannel.AsNoTracking()
                 .Where(x => x.MonthID == reportParams.MonthId && x.QuarterNo == reportParams.CurrentQuarter).ToListAsync();
             var ScalarGroupRoomRevenueByMonth = soldRoomListMonth.Where(x => x.GroupID == groupId).Sum(x => x.Revenue);

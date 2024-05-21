@@ -13,6 +13,9 @@ import { ClassSession } from '..';
 import { ClassService } from '../class.service';
 import { ClassGroup } from '../model/classSession.model';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import { Observable, Subject } from 'rxjs';
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'app-add-class',
@@ -23,14 +26,12 @@ export class AddClassComponent {
   form: FormGroup;
   submitted = false;
   classCode = null || '';
-  hotelCount = 4;
+  hotelCount: number = 4;
 
   constructor(
     private fb: FormBuilder,
     private classService: ClassService,
     private _snackBar: MatSnackBar,
-    private http: HttpClient,
-    private route: ActivatedRoute,
     private router: Router
   ) {
     this.form = this.createForm();
@@ -43,7 +44,7 @@ export class AddClassComponent {
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      hotelsCount: [this.hotelCount, Validators.required],
+     // hotelsCount: [{ value: this.hotelCount }, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
       groups: this.fb.array(this.createGroups()),
     });
@@ -64,9 +65,9 @@ export class AddClassComponent {
     return <FormArray>this.form.get('groups');
   }
 
-  createItem() {
+  createItem(initValue: string = '') {
     return new FormGroup({
-      name: new FormControl('', Validators.required),
+      name: new FormControl(initValue, Validators.required),
     });
   }
 
@@ -75,11 +76,14 @@ export class AddClassComponent {
   }
 
   addGroup($event: Event, index: number): void {
-    this.groups.push(this.createItem());
+    const val = `Hotel ${this.groups.length + 1}`;
+    this.hotelCount += 1;
+    this.groups.push(this.createItem(val));
   }
 
   removeGroup($event: Event, index: number): void {
     this.groups.removeAt(index);
+    this.hotelCount -= 1;
   }
 
   onSubmit(): void {
@@ -100,7 +104,7 @@ export class AddClassComponent {
       title: this.form.value.title,
       startDate: this.form.value.startDate,
       endDate: this.form.value.endDate,
-      hotelsCount: this.form.value.hotelsCount,
+      hotelsCount: groups.length,
       roomInEachHotel: 500,
       currentQuater: 0, //this.form.value.currentQuater,
       code: this.form.value.code,
