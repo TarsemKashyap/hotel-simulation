@@ -80,7 +80,6 @@ export class OccupancyComponent {
         this.YaxisMarketAvg = this.YaxisData.map((item) => item.marketAverage);
         this.YaxisHotel = this.YaxisData.map((item) => item.hotel);
         this.Xaxis = this.ChartData.map((item) => item.segmentTitle);
-
         this.createChart();
       });
   }
@@ -101,6 +100,7 @@ export class OccupancyComponent {
     });
   }
   createChart() {
+    console.log("sdfsdf",{YaxisMarketAvg:this.YaxisMarketAvg,Hotel:this.YaxisHotel});
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 
@@ -109,20 +109,20 @@ export class OccupancyComponent {
         labels: this.Xaxis,
         datasets: [
           {
-            label: 'marketAvg',
+            label: 'Market Average',
             data: this.YaxisMarketAvg,
-            backgroundColor: 'blue',
+            backgroundColor: 'red',
+            borderColor:'red',
+            type:'line',
           },
           {
             label: 'hotel',
             data: this.YaxisHotel,
-            backgroundColor: 'limegreen',
+            backgroundColor: 'skyblue',
           },
         ],
       },
-      options: {
-        aspectRatio: 2.5,
-      },
+     
     });
   }
   numberToDecimal(x: any) {

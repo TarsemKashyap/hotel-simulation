@@ -86,14 +86,14 @@ export class MarketSharePositionAloneComponent {
         labels: this.Xaxis, 
 	       datasets: [
           {
-            label: "MarketSharePosition",
+            label: "Market share by position",
             data: this.YaxisMktShrPos,
-            backgroundColor: 'blue'
+            backgroundColor: 'skyblue'
           },
           {
             label: "Actual Maket Share",
             data: this.YaxisActualMktShr,
-            backgroundColor: 'limegreen'
+            backgroundColor: 'orange'
           }  
         ]
       },

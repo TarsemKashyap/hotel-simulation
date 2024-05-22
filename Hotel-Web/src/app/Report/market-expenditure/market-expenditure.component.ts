@@ -13,6 +13,9 @@ import {
   MarketingStrategy,
 } from '../model/ReportCommon.model';
 import { tick } from '@angular/core/testing';
+import { ChartConfig, Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { CurrencyPipe, formatCurrency } from '@angular/common';
 
 @Component({
   selector: 'app-market-expenditure',
@@ -239,6 +242,7 @@ export class MarketExpenditureComponent {
             backgroundColor: 'skyblue',
             type: 'bar',
             order: 1,
+            barPercentage: ChartConfig.BarThickness,
           },
           {
             label: 'Market Average',
@@ -249,17 +253,21 @@ export class MarketExpenditureComponent {
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
-        aspectRatio: 2.5,
-        interaction: {
-          mode: 'nearest',
-          axis: 'x',
-          intersect: true,
-        },
-
+        // aspectRatio: 2.5,
         plugins: {
-          legend: {
-            position: 'top',
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToCurrency(value);
+            },
+            color:'black',
+            align: 'top',
+            anchor: 'center',
+            display: 'auto',
+            offset: 5,
+            clamp: true,
+            padding: 5,
           },
         },
       },
