@@ -126,7 +126,8 @@ export class MarketShareRevenueComponent {
         ],
       },
       options: {
-        aspectRatio: 2.5,
+        aspectRatio: 4,
+        
       },
     });
   }

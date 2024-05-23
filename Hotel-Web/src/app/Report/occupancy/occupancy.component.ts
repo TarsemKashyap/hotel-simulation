@@ -12,6 +12,7 @@ import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
+import { ChartConfig } from 'src/app/shared/utility';
 
 @Component({
   selector: 'app-occupancy',
@@ -62,21 +63,17 @@ export class OccupancyComponent {
       .occupancyReportDetails(this.reportParam)
       .subscribe((reportData) => {
         // console.log('DATA...........');
-
         // console.log(reportData);
         this.occupancyReportResponse = reportData;
         this.occupancyBySegment =
           this.occupancyReportResponse.occupancyBySegment;
         this.overAllPercentages =
           this.occupancyReportResponse.overAllPercentages;
-        this.occupancyBySegmentSeg = this.occupancyBySegment.map(
-          (i) => i.segments
-        );
+        this.YaxisData = this.occupancyBySegment
+          .flatMap((x) => x.segments)
+          .filter((x) => x.label == 'Overall');
         this.ChartData = this.occupancyReportResponse.occupancyBySegment;
-        for (let entry of this.occupancyBySegmentSeg) {
-          this.YaxisData.push.apply(this.YaxisData, entry);
-        }
-        this.YaxisData.push.apply(this.YaxisData, this.overAllPercentages);
+
         this.YaxisMarketAvg = this.YaxisData.map((item) => item.marketAverage);
         this.YaxisHotel = this.YaxisData.map((item) => item.hotel);
         this.Xaxis = this.ChartData.map((item) => item.segmentTitle);
@@ -100,10 +97,9 @@ export class OccupancyComponent {
     });
   }
   createChart() {
-    console.log("sdfsdf",{YaxisMarketAvg:this.YaxisMarketAvg,Hotel:this.YaxisHotel});
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
-
+      options: { aspectRatio: 3 },
       data: {
         // values on X-Axis
         labels: this.Xaxis,
@@ -112,17 +108,17 @@ export class OccupancyComponent {
             label: 'Market Average',
             data: this.YaxisMarketAvg,
             backgroundColor: 'red',
-            borderColor:'red',
-            type:'line',
+            borderColor: 'red',
+            type: 'line',
           },
           {
-            label: 'hotel',
+            label: 'Hotel',
             data: this.YaxisHotel,
+            barThickness: ChartConfig.BarThickness,
             backgroundColor: 'skyblue',
           },
         ],
       },
-     
     });
   }
   numberToDecimal(x: any) {

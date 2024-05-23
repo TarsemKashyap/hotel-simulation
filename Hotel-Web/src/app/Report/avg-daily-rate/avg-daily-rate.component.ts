@@ -13,6 +13,7 @@ import {
   ReportAttribute,
   avgdailyrateReportAttribute,
 } from '../model/ReportCommon.model';
+import { ChartConfig } from 'src/app/shared/utility';
 
 @Component({
   selector: 'app-avg-daily-rate',
@@ -99,6 +100,7 @@ export class AvgDailyRateComponent {
             data: this.YaxisHotel,
             backgroundColor: 'skyblue',
             type: 'bar',
+            barPercentage:0.4,
             order: 1,
           },
           {
@@ -111,7 +113,7 @@ export class AvgDailyRateComponent {
         ],
       },
       options: {
-        aspectRatio: 2.5,
+        aspectRatio: 4,
       },
     });
   }

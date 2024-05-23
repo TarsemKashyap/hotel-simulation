@@ -11,6 +11,7 @@ import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
+import { ChartConfig } from 'src/app/shared/utility';
 @Component({
   selector: 'app-market-share-roomsold',
   templateUrl: './market-share-roomsold.component.html',
@@ -117,11 +118,13 @@ export class MarketShareRoomSoldComponent {
             label: 'Hotel',
             data: this.YaxisHotel,
             backgroundColor: 'skyblue',
+            barPercentage: ChartConfig.BarThickness,
           },
         ],
       },
       options: {
-        aspectRatio: 2.5,
+        //responsive:true,
+        aspectRatio: 3,
       },
     });
   }

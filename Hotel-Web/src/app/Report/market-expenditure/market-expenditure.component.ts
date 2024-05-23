@@ -120,12 +120,7 @@ export class MarketExpenditureComponent {
       return sector.marketAvg;
     });
     this.createChart();
-    console.log('NewChart', {
-      MketAvg: this.YMketAvg,
-      x: this.Xaxis,
-      y: this.YaxisSaleForce,
-      yAxis: this.YaxisAdv,
-    });
+   
   }
 
   private oldMethod(reportData: MarketExpenditureReportResponse) {
@@ -255,13 +250,13 @@ export class MarketExpenditureComponent {
       },
       plugins: [ChartDataLabels],
       options: {
-        // aspectRatio: 2.5,
+        aspectRatio: 4,
         plugins: {
           datalabels: {
             formatter: (value, context) => {
               return Utility.ToCurrency(value);
             },
-            color:'black',
+            color: 'black',
             align: 'top',
             anchor: 'center',
             display: 'auto',
