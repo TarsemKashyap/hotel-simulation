@@ -67,7 +67,6 @@ export class InstructorComponent {
       institute: this.form.value.institute,
     };
     this.accountService.CreateAccount(sigup).subscribe((x) => {
-      console.log('Signup', x);
       this._snackBar.open('Instructor Account created');
       this.router.navigate(['admin/instructor', 'list']);
     });

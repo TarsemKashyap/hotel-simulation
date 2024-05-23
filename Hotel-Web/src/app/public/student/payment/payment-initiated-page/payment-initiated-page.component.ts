@@ -45,7 +45,6 @@ export class PaymentInitiatedPageComponent {
   }
 
   private initConfig(): void {
-    console.log(this.studentPaymentDtls?.totalAmount,"d")
     this.payPalConfig = {
         currency: 'USD',
         clientId: 'ASJKwWf8dvQt2b5iSMB8mSldtpopiH6KHZ9RLYaEwRos9u4vpp1ox0P--bnexBfHc1NOxopRV123BJ2t',
@@ -69,14 +68,9 @@ export class PaymentInitiatedPageComponent {
             fundingicons:true
         },
         onApprove: (data, actions) => {
-            console.log('onApprove - transaction was approved, but not authorized', data, actions.order.get());
-            // actions.order.get().then(details => {
-            //     console.log('onApprove - you can get full order details inside onApprove: ', details);
-            // });
 
         },
         onClientAuthorization: (data) => {
-            console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
             var _amount = data.purchase_units[0].amount.value.toString();
             this.paypalTransaction = new PaymentTransaction;
             this.paypalTransaction.first_name = data.payer.name?.given_name;
@@ -100,15 +94,12 @@ export class PaymentInitiatedPageComponent {
             
         },
         onCancel: (data, actions) => {
-            console.log('OnCancel', data, actions);
         },
         onError: err => {
-            console.log('OnError', err);
             this.isPaymentApprove = false;
             this.responseMessage = "Your Payment Failed!";
         },
         onClick: (data, actions) => {
-            console.log('onClick', data, actions);
             
         }
     };
@@ -119,7 +110,6 @@ export class PaymentInitiatedPageComponent {
       next: (data: StudentPaymentSignUp) => {
 
         this.studentPaymentDtls = data;
-        console.log(this.studentPaymentDtls)
         this.initConfig();
       },
       error: (err) => {

@@ -72,7 +72,6 @@ export class MonthCalculationComponent {
     this.monthCalculationService.monthList(this.apiBody).subscribe((data) => {
       // this.monthList = data;
       this.$rows = data.data;
-      console.log(data.data);
       this.dataSourceMonth.data = data;
     });
   }
@@ -85,7 +84,6 @@ export class MonthCalculationComponent {
       .monthCalculate(this.apiBody)
       .subscribe((data) => {
         // this.monthList = data;
-        console.log(data.data);
         this.dataSourceMonth.data = data;
         this.pageload();
         this.btnCalculationText = 'Calculate Now';

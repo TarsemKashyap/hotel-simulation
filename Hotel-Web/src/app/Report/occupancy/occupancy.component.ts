@@ -62,8 +62,6 @@ export class OccupancyComponent {
     this.reportService
       .occupancyReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-        // console.log(reportData);
         this.occupancyReportResponse = reportData;
         this.occupancyBySegment =
           this.occupancyReportResponse.occupancyBySegment;
@@ -114,7 +112,7 @@ export class OccupancyComponent {
           {
             label: 'Hotel',
             data: this.YaxisHotel,
-            barThickness: ChartConfig.BarThickness,
+            barPercentage: ChartConfig.BarThickness,
             backgroundColor: 'skyblue',
           },
         ],

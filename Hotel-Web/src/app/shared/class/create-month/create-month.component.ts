@@ -133,7 +133,6 @@ export class CreateMonthComponent {
     this.monthService.classInfo(this.classId).subscribe((data) => {
       this.classInfo = data;
       this.currentQuarter = parseInt(this.classInfo.currentQuater);
-      console.log({ classInfo: data });
 
       this.isFinalizeButtonDisable = this.classInfo.status != ClassStatus.T;
 

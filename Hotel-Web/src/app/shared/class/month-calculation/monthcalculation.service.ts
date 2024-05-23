@@ -12,7 +12,10 @@ export class MonthCalculationService {
   constructor(private httpClient: HttpClient) {}
 
   monthList(apiBody: any): Observable<any> {
-    return this.httpClient.post<MonthDto[]>('Calculation/calculationList', apiBody);
+    return this.httpClient.post<MonthDto[]>(
+      'Calculation/calculationList',
+      apiBody
+    );
   }
   monthCalculate(apiBody: any): Observable<any> {
     return this.httpClient.post<MonthDto[]>('Calculation/Calculation', apiBody);

@@ -16,7 +16,7 @@ const routes: Routes = [
       { path: 'class', redirectTo: 'class' },
       { path: 'change-password', component: ChangePasswordComponent },
       ...classRoute,
-      ...reportRoutes
+      ...reportRoutes,
     ],
     canActivate: [checkAccessPermission],
   },

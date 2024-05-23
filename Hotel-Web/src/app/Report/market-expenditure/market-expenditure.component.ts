@@ -202,10 +202,6 @@ export class MarketExpenditureComponent {
 
       //  }
     }
-    //this.YaxisData.push.apply(this.YaxisData,this.ChartData);
-    //  this.YaxisAdv.push.apply(this.YaxisAdv,this.ChartData.map(i=>i.labor.advertising));
-    console.log('this.YaxisAdv', this.YaxisAdv);
-    console.log('this.YaxisSaleforce', this.YaxisSaleForce);
     this.createChart();
   }
 

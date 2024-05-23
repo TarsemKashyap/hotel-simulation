@@ -101,7 +101,6 @@ export class PositionMapComponent {
         ],
       };
     });
-    console.log(datasets);
     this.chart = new Chart('MyChart', {
       type: 'scatter', //this denotes tha type of chart
 
@@ -113,6 +112,7 @@ export class PositionMapComponent {
         aspectRatio: 2.5,
         plugins: {
           datalabels: {
+            
             formatter: (value, context) => {
               let data = <any>context.dataset.data[0];
               return `${context.dataset.label} ($${this.numberToDecimal(
@@ -124,7 +124,6 @@ export class PositionMapComponent {
             },
             offset: 25,
             color: (context) => {
-              
               return colors[context.datasetIndex];
             },
             clamp: true,

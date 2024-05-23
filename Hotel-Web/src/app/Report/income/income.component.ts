@@ -48,11 +48,7 @@ export class IncomeComponent {
     this.reportService
       .incomeReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
         this.incomereportResponse = reportData;
-        console.log('DataLenght', this.incomereportResponse);
       });
   }
 

@@ -59,9 +59,6 @@ export class AvgDailyRateComponent {
     this.reportService
       .avgDailyRateReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        console.log('DATA', reportData);
-
-        // console.log(reportData);
         this.avgDailyRateReportResponse = reportData;
 
         this.ChartData = this.avgDailyRateReportResponse.data;

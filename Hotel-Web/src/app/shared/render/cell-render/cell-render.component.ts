@@ -19,7 +19,6 @@ export class CellRenderComponent implements ICellRendererAngularComp {
   agInit(params: any): void {
     this.params = params;
     this.cellValue = this.getValueToDisplay(params);
-    console.log('render',params.value)
   }
 
   

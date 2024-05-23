@@ -72,7 +72,6 @@ export class MarketShareRoomSoldComponent {
           this.marketShareRoomSoldReportResponse.occupancyBySegment;
         for (let entry of this.occupancyBySegmentSeg) {
           this.YaxisData.push.apply(this.YaxisData, entry);
-          console.log('entry', entry);
         }
         this.YaxisData.push.apply(this.YaxisData, this.overAllPercentages);
         this.YaxisMarketAvg = this.YaxisData.map((item) => item.marketAverage);

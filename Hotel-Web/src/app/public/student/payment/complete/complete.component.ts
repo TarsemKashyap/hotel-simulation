@@ -61,7 +61,6 @@ export class CompleteComponent {
           this.paymentTrasa.verify_sign = params['verify_sign'];
           this.paymentTrasa.custom = params['custom'];
         }
-        console.log(this.paymentTrasa);
         this.paymentTransaction();
       });
   }

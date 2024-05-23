@@ -60,9 +60,6 @@ export class MarketShareRevenueComponent {
     this.reportService
       .marketShareRevenueReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
         this.marketShareRevenueReportResponse = reportData;
         this.occupancyBySegment =
           this.marketShareRevenueReportResponse.occupancyBySegment;

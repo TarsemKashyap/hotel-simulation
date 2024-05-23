@@ -22,7 +22,6 @@ export class OverlayInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             tap({
                 next: (e: HttpEvent<any>) => {
-                    console.log('next handle', e.type, e);
                     if (e.type == HttpEventType.Response) {
                         dialog.close();
                     }
