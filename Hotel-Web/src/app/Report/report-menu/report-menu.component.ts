@@ -10,13 +10,13 @@ import { MatMenuTrigger } from '@angular/material/menu';
   styleUrls: ['./report-menu.component.css'],
 })
 export class ReportMenuComponent extends ReportListComponent {
-//  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   constructor(accountService: AccountService, activeRoute: ActivatedRoute) {
     super(accountService, activeRoute);
   }
 
 
   openMyMenu() {
-    // this.trigger.openMenu();
+     this.trigger.openMenu();
   }
 }
