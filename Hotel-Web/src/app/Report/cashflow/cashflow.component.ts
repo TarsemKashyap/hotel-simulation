@@ -20,7 +20,7 @@ export class CashflowComponent {
   selectedHotel : ClassGroup | undefined;
 
   reportParam:ReportParams = {} as ReportParams;
-  cashFlowreportResponse : CashFlowReportResponse = {} as CashFlowReportResponse;
+  cashFlowreportResponse : CashFlowReportResponse;
 
   constructor(
     private reportService: ReportService,

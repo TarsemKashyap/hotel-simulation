@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ReportListComponent {
   isInstructorOrAdmin: boolean = false;
   activeLinks: IHyperLinks[] = [];
-  private studentLink: IHyperLinks[] = [
+ studentLink: IHyperLinks[] = [
     {
       text: 'Objectives Report',
       link: 'objective-report',
@@ -99,7 +99,6 @@ export class ReportListComponent {
       AppRoles.Instructor,
       AppRoles.Admin,
     ]);
-    const classId = this.activeRoute.snapshot.params['id'];
 
     
     this.activeLinks = this.studentLink.filter((x) => {

@@ -33,15 +33,17 @@
     </mat-select>
   </mat-form-field>
 </span>
+<app-report-menu></app-report-menu>
+
 <h2>CashFlow for the Month</h2>
-<table  *ngIf="cashFlowreportResponse">
+<table *ngIf="cashFlowreportResponse">
   <tr>
     <td class="style2">
-      {{ cashFlowreportResponse.netIncome.label }} NetIncome
+      {{ cashFlowreportResponse.netIncome.label}} NetIncome
     </td>
   </tr>
 </table>
-<table class="style1" *ngIf="cashFlowreportResponse.netIncome">
+<table class="style1" *ngIf="cashFlowreportResponse">
   <tr *ngFor="let netIncomeData of cashFlowreportResponse.netIncome.childern">
     <td class="label1">
       {{ netIncomeData.label }}

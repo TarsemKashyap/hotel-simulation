@@ -26,6 +26,8 @@ import { PerformanceComponent } from './performance/performance.component';
 import { ReportListComponent } from './report-list/report-list.component';
 import { ReportRoutingModule } from './report-routing.module';
 import { DemandReportComponent } from './demand-report/demand-report.component';
+import { ReportMenuComponent } from './report-menu/report-menu.component';
+import { ClassModule } from '../shared/class/class.module';
 
 
 @NgModule({
@@ -52,13 +54,14 @@ import { DemandReportComponent } from './demand-report/demand-report.component';
     QualityRatingComponent,
     PerformanceInstComponent,
     SummeryAllHotelComponent,
-    DemandReportComponent
+    DemandReportComponent,
+    ReportMenuComponent
   ],
   imports: [
     CommonModule,
     ReportRoutingModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
   ]
 })
 export class ReportModule { }

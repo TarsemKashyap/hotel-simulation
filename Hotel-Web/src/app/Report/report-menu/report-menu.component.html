@@ -1,0 +1,22 @@
+<div class="float-right pl-2 pr-2 flex-row bg-primary">
+  <button mat-button (mouseenter)="openMyMenu()" [matMenuTriggerFor]="menu">
+    <span class="order-1 pr-2 text-white"> Reports</span>
+
+    <mat-icon
+      class="pt-0 order-2 text-white"
+      aria-hidden="false"
+      fontIcon="arrow_drop_down"
+    >
+    </mat-icon>
+  </button>
+</div>
+<mat-menu #menu="matMenu" class="flex-auto">
+  <ul class="flex-row font-normal p-2 m-2">
+    <li
+      class="text-sm p-[1px] border-b-gray-100 border-b-[1px] hover:bg-primary hover:text-white"
+      *ngFor="let link of activeLinks; let i = index"
+    >
+      <a [routerLink]="['../', link.link]">{{ link.text }}</a>
+    </li>
+  </ul>
+</mat-menu>
