@@ -220,7 +220,7 @@ namespace Service
 
             return (from c in _context.ClassSessions
                     join m in _context.Months on c.ClassId equals m.ClassId
-                    where (c.ClassId == month.ClassId)
+                    where (c.ClassId == month.ClassId && m.Sequence > 0)
                     select new MonthDto
                     {
                         MonthId = m.MonthId,

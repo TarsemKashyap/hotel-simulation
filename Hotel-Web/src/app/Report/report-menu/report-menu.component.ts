@@ -19,4 +19,7 @@ export class ReportMenuComponent extends ReportListComponent {
   openMyMenu() {
      this.trigger.openMenu();
   }
+  closeMenu(){
+    this.trigger.closeMenu();
+  }
 }

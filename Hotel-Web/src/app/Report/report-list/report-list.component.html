@@ -1,16 +1,16 @@
 <section>
   <div class="container">
-    <div class="text-2xl text-white bg-primary px-3 py-2">Reports</div>
-    <div class="-mx-4 flex flex-wrap">
+    <div class="text-2xl text-white bg-primary px-2 py-2">Reports</div>
+    <div class="mx-4 flex flex-wrap pr-10">
       <ul class="flex-row text-justify font-normal">
         <li
-          class="p-1 m-1 text-base"
+          class="text-base"
           *ngFor="let link of activeLinks; let i = index"
         >
           {{ i + 1 }}.
           <a
             [routerLink]="['../', link.link]"
-            class="decision-link hover:text-blue-600 hover:underline"
+            class="hover:text-blue-600 hover:underline"
             >{{ link.text }}</a
           >
         </li>
