@@ -39,7 +39,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("studentClasslist")]
-        public async Task<ActionResult> StudentClassList()
+        public ActionResult StudentClassList()
         {
             var userId = LoggedUserId;
             var studentListByClassId = _studentClassMappingService.GetMissingClassList();
@@ -47,7 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("studentClassAssign")]
-        public async Task<IActionResult> studentClassAssign(StudentClassMappingDto studentClassMappingDto)
+        public async Task<IActionResult> StudentClassAssign(StudentClassMappingDto studentClassMappingDto)
         {
             var userId = LoggedUserId;
             // var userId = "47dee4d6-f687-4373-b66c-47de7489589c";
