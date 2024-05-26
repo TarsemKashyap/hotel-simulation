@@ -9,9 +9,7 @@ import {
   InstructorEditComponent,
   InstructorListComponent,
 } from './instructor';
-import {
-  hasAdminRole,
-} from '../shared/auth.gurad';
+import { AuthCheckGuard, AuthGuard, hasAdminRole } from '../shared/auth.gurad';
 import { reportRoutes } from '../Report/report-routing.module';
 import { AppRoles } from '../public/account';
 
@@ -20,7 +18,7 @@ const routes: Routes = [
     path: '',
     title: '',
     component: DashboardComponent,
-    canActivate: [hasAdminRole],
+    canActivate: [hasAdminRole, AuthCheckGuard],
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'instructor/create', component: InstructorComponent },
@@ -29,7 +27,6 @@ const routes: Routes = [
       ...classRoute,
       ...reportRoutes,
     ],
-    
   },
 ];
 

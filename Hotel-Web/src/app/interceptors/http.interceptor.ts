@@ -31,7 +31,7 @@ export class RefreshTokennterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((error) => {
-        if (error instanceof HttpErrorResponse || error.status == 401) {
+        if (error.status == 401) {
           this.handle401Error(next, req).subscribe((x) =>
             console.log('handle401Error', x)
           );
