@@ -29,7 +29,7 @@ export class OccupancyComponent {
   reportParam: ReportParams = {} as ReportParams;
   occupancyReportResponse: OccupancyReportResponse =
     {} as OccupancyReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: IoccupancyBySegment[] = [];
   occupancyBySegment: IoccupancyBySegment[] = [];
   occupancyBySegmentSeg: occupancyReportAttribute[][] = [];
@@ -95,6 +95,7 @@ export class OccupancyComponent {
     });
   }
   createChart() {
+    this.chart.clear();
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
       options: { aspectRatio: 3 },
