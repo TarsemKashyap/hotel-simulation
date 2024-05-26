@@ -31,9 +31,10 @@ export class RefreshTokennterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((error) => {
-        console.log('Http Interceptor', error);
-        if (error.status == 401) {
-          return this.handle401Error(next, req);
+        if (error instanceof HttpErrorResponse || error.status == 401) {
+          this.handle401Error(next, req).subscribe((x) =>
+            console.log('handle401Error', x)
+          );
         }
         return throwError(error);
       })
@@ -48,28 +49,24 @@ export class RefreshTokennterceptor implements HttpInterceptor {
     });
   }
   private handle401Error(next: HttpHandler, request: HttpRequest<any>) {
+    this.isRefreshing = false;
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
-console.log("hello");
-      this.accountService
-        .refreshToken()
-        .pipe(
-          tap((t) => console.log('refreshToken-top', t)),
-          switchMap((token: any) => {
-            console.log('Switch Map', token);
-            this.isRefreshing = false;
-            this.refreshTokenSubject.next(token.accessToken);
-            return next.handle(this.addToken(request, token.accessToken));
-          }),
-          catchError((er) => {
-            console.log('session expired');
-            this.accountService.$sessionExpired.next(null);
-            return throwError(() => er);
-          })
-        )
-        .subscribe((ee) => console.log(ee));
-      return next.handle(request);
+      return this.accountService.refreshToken2().pipe(
+        switchMap((token: any) => {
+          this.isRefreshing = false;
+
+          this.refreshTokenSubject.next(this.accountService.getAccessToken());
+          return next.handle(
+            this.addToken(request, this.accountService.getAccessToken()!)
+          );
+        }),
+        catchError((er) => {
+          this.accountService.$sessionExpired.next(null);
+          return throwError(() => er);
+        })
+      );
     } else {
       return this.refreshTokenSubject.pipe(
         filter((token) => token != null),

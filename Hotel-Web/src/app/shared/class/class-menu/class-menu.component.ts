@@ -18,7 +18,6 @@ export class ClassMenuComponent {
     this.isClassManageShow = this.currentRoles.some(
       (x) => x == AppRoles.Admin || x == AppRoles.Instructor
     );
-    console.log('roles', this.sessionStore.GetRole());
     this.classId=this.route.snapshot.params['id'];
   }
 }

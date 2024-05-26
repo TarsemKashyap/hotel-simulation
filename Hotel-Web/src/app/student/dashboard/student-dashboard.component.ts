@@ -32,23 +32,7 @@ export class StudentDashboard {
     this.router.navigate([`login`]);
   }
 
-  // private studentRolesList() {
-  //   // this.studentId = '01b96b31-649a-4b87-a4a4-4c63f6c4d636';
-  //   this.studentService
-  //     .StudentRoleslist({ studentId: this.studentId })
-  //     .subscribe((data) => {
-  //       this.studentRoleList = data;
-  //       this.sessionStore.SetStudentRole(this.studentRoleList);
-  //       //var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '[]');
-  //       this.studentRolePageList = JSON.parse(
-  //         this.sessionStore.GetStudentRole()
-  //       );
-  //       console.log(
-  //         this.studentRolePageList,
-  //         this.sessionStore.GetStudentRole()
-  //       );
-  //     });
-  // }
+  
 
   private studentRolesList() {
     this.studentService.StudentRoleslist().subscribe((data) => {

@@ -79,7 +79,6 @@ export class StudentRolesEditComponent {
   }
 
   isRoleSelected(option: StudentRoles, selectedRoles: StudentRoles): boolean {
-    console.log(selectedRoles.roleName);
     return option.id === selectedRoles.id;
   }
 

@@ -45,7 +45,6 @@ export class AuthGuard {
   }
 
   private tryRefreshingTokens() {
-    console.log('Validaing session:: authguarrd');
     return this.authService.refreshToken();
   }
 }
@@ -107,7 +106,6 @@ export const AuthCheckGuard: CanActivateFn = (
     .isJwtTokenValid()
     .pipe(
       tap((exp) => {
-        console.log('AuthCheckGuard:isJwtToken', exp);
         if (!exp) {
           accountService.$sessionExpired.next(null);
         }

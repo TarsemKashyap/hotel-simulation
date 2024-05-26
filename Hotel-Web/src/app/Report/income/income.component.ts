@@ -45,11 +45,11 @@ export class IncomeComponent {
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
-    this.reportService
-      .incomeReportDetails(this.reportParam)
-      .subscribe((reportData) => {
+    this.reportService.incomeReportDetails(this.reportParam).subscribe({
+      next: (reportData) => {
         this.incomereportResponse = reportData;
-      });
+      },
+    });
   }
 
   private loadGroups() {

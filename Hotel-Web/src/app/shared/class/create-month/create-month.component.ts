@@ -244,9 +244,6 @@ export class CreateMonthComponent {
     this.monthService
       .updateMonthCompletedStatus(this.apiBody)
       .subscribe((data) => {
-        console.log('isCompletedDone:=' + data);
-        //console.log(data.message);
-        //console.log(data.Data.monthID);
         this.apiBody = { ClassId: this.classId, Status: 'A' };
         this.monthService
           .UpdateClassStatus(this.apiBody)
@@ -258,8 +255,6 @@ export class CreateMonthComponent {
             this.snackBar.open('Finalize successfully', 'close', {
               duration: 3000,
             });
-            //console.log(data.message);
-            //console.log(data.Data.monthID);
           });
       });
   }

@@ -291,7 +291,6 @@ export class AttributeComponent {
         
         
         var totalAccumu = 0;
-        console.log(spaAttribute, fitnessCenterAttribute)
         totalAccumu = parseFloat(spaAttribute?.accumulatedCapital === undefined ? '0' : spaAttribute?.accumulatedCapital.toString());
         totalAccumu = totalAccumu + parseFloat(fitnessCenterAttribute?.accumulatedCapital === undefined ? '0' : fitnessCenterAttribute?.accumulatedCapital.toString());
         totalAccumu = totalAccumu + parseFloat(banquetAttribute?.accumulatedCapital === undefined ? '0' : banquetAttribute?.accumulatedCapital.toString());

@@ -69,15 +69,31 @@ export class AccountService {
     }
     const credentials = { accessToken: token, refreshToken: refreshToken };
     return this.httpClient.post<any>('account/token/refresh', credentials).pipe(
-      shareReplay(),
       map((x) => {
-        console.trace('New Refreshtoken set', x);
         this.sessionStore.SetAccessToken(x.accessToken);
         this.sessionStore.SetRefreshToken(x.refreshToken);
         return true;
       }),
       catchError((er, ob) => {
-        console.log('CatchError while refresh', er);
+        return new Observable((sub) => sub.next(false));
+      })
+    );
+  }
+
+  refreshToken2(): Observable<any> {
+    const refreshToken = this.sessionStore.GetRefreshToken();
+    const token = this.sessionStore.GetAccessToken();
+    if (!token || !refreshToken) {
+      return new Observable((ob) => ob.next(false));
+    }
+    const credentials = { accessToken: token, refreshToken: refreshToken };
+    return this.httpClient.post<any>('account/token/refresh', credentials).pipe(
+      map((x) => {
+        this.sessionStore.SetAccessToken(x.accessToken);
+        this.sessionStore.SetRefreshToken(x.refreshToken);
+        return x;
+      }),
+      catchError((er, ob) => {
         return new Observable((sub) => sub.next(false));
       })
     );
@@ -93,7 +109,6 @@ export class AccountService {
   userHasAnyRole(roles: AppRoles[]): boolean {
     const savedRole = this.sessionStore.GetRole();
     const hasRole = savedRole.some((x) => roles.some((y) => y == x));
-    console.log('userHasAnyRole:', { savedRole, hasRole });
     return hasRole;
   }
 

@@ -85,8 +85,6 @@ export class ClassEditComponent {
     const classGroup: ClassGroup = this.groups.controls[index].value;
     this.groups.removeAt(index);
     Object.assign(classGroup, { action: Action.Removed });
-    console.log('ClassGroup removed', classGroup);
-    //only add which are saved on database
     if (classGroup.groupId) {
       this.removedGroups.push(classGroup);
     }
