@@ -9,18 +9,16 @@
     <ag-grid-angular
       style="height: 300px"
       class="ag-theme-alpine"
+      [rowClassRules]="rowClassRules"
       [rowData]="$rows"
       [defaultColDef]="defaultColDef"
       [columnDefs]="columnDefs"
     >
     </ag-grid-angular>
   </div>
-    <a
-      class="bg-primary float-left px-6 py-2 m-2 text-white"
-      [routerLink]="['../month-calculation']"
-      routerLinkActive="router-link-active"
-      >Calculation Current Month</a
-    >
+  <button id="calcbtn" class="btn2" [disabled]="disableCalcBtn" (click)="monthCalculation()">
+    Calculation Current Month
+  </button>
 
   <section style="margin-top: 55px">
     <div>
@@ -35,7 +33,7 @@
           ID="FinalizeButton"
           type="button"
           Text="Finalize Now"
-          class="bg-primary float-left px-6 py-2 m-2 text-white py-3 px-5 hover:shadow-md mt-5"
+          class="bg-primary float-left m-2 text-white py-3 px-5 hover:shadow-md mt-5 btn2"
           [disabled]="isFinalizeButtonDisable"
           (click)="FinalizeMonth()"
         >
@@ -45,18 +43,6 @@
     </div>
   </section>
 </section>
-
-<!-- <div style="margin-top: 12px;margin-bottom: 10px;">
-    <h2>Finalize The Current Month</h2>
-    <p>
-        You can't create new month before finalizing current 
-        month. Be careful, once 
-        you finalize current month, it is not allowed to rollback. You can only review 
-        finalized months.
-        <br />
-        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="bordder-primary cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md" [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">Finalize Now</button>
-    </p>
-    </div> -->
 
 <section style="margin-top: 75px">
   <div>
@@ -120,18 +106,12 @@
           <dd
             class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
           >
-            <!-- <a
-                    [routerLink]="['../','edit']"
-                    routerLinkActive="router-link-active"
-                    class="bg-primary float-left px-6 py-2 m-2 text-white"
-                  >
-                    Edit Class
-                  </a> -->
+           
 
             <button
               ID="NewQuarterButton"
               type="button"
-              class="bg-primary float-left px-6 py-2 m-2 text-white"
+              class="bg-primary float-left px-6 py-2 m-2 text-white btn2"
               (click)="CreateNewMonth()"
               [disabled]="isNewQuarterButtonDisable"
             >
@@ -143,99 +123,3 @@
     </div>
   </div>
 </section>
-
-<!-- <h2>
-    Previous 
-    Months
-</h2>
-<table id="monthGrd">
-    <tr>
-        <th>
-            Month
-        </th>
-        <th>ClassID</th>
-        <th>
-            Quarter No
-        </th>
-        <th>
-            Monthly Market
-        </th>
-        <th>
-            Completed
-        </th>
-        <th>
-            Configuration
-        </th>
-        
-    </tr>
-    <tr  *ngFor="let month of monthList">
-        <td>{{ month.monthId }}</td>
-        <td>{{month.classId}}</td>
-        <td>{{ month.sequence }}</td>
-        <td>{{month.totalMarket}}</td>
-        <td>{{ month.isComplete }}</td>
-        <td>{{ month.configId }}</td>
-        
-    </tr>
-    </table>
-    <div style="margin-top: 12px;margin-bottom: 10px;">
-    <h2>Finalize The Current Month</h2>
-    <p>
-        You can't create new month before finalizing current 
-        month. Be careful, once 
-        you finalize current month, it is not allowed to rollback. You can only review 
-        finalized months.
-        <br />
-        <button ID="FinalizeButton" type="button" Text="Finalize Now" class="button" [disabled]="isFinalizeButtonDisable" (click)="FinalizeMonth()">Finalize Now</button>
-    </p>
-    </div>
-    <table id="monthGrd">
-        <tr>
-            <th  >
-                <h2>Create A New Month</h2>
-            </th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <td >
-                Month Number
-            </td>
-            <td >
-                <span ID="QuarterNoLabel"  Text="">{{QuarterNoLabel}}</span>
-            </td>
-            
-        </tr>
-        <tr>
-            <td >
-                Average Expected Market Occupancy Percentage<span style="color: red;"> *</span>
-            </td>
-            <td >
-                <input type="number" ID="MarketTextBox" [(ngModel)]="MarketTextBox" required><span style="margin-left: 5px;">%</span>
-<span id="ErrorMsg" [hidden]="!isError" style="color: red;">Enter Number Value </span>
-            </td>
-            
-        </tr>
-        <tr>
-            <td >
-                Configuration
-            </td>
-            <td >
-                <span ID="ConfigurationLabel"  >{{configId}}</span>
-            </td>
-            
-        </tr>
-        <tr>
-            <td >
-                Message
-            </td>
-            <td >
-                <span ID="MessageLabel" runat="server" Text="">{{MessageLabel}}</span>
-            </td>
-            <td >
-               
-                <button ID="NewQuarterButton" type="button" class="button" (click)="CreateNewMonth()" [disabled]="isNewQuarterButtonDisable" >Create a New Month</button>
-                    
-            </td>
-        </tr>
-    </table> -->

@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
 namespace Api.Controllers
 {
     [ApiController]
-    // [Authorize]
-    [Route("month")]
+    [Authorize]
+    [Route("Calculation")]
     public class CalculationController : AbstractBaseController
     {
         private readonly IValidator<MonthDto> _validator;

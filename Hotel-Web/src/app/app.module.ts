@@ -16,6 +16,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { publicModule } from './public/public.module';
 import { StudentModule } from './student';
 import { InstructorModule } from './instructor';
+import { OverlayInterceptor } from './interceptors/OverlayInterceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,6 +51,11 @@ import { InstructorModule } from './instructor';
       useClass: RefreshTokennterceptor,
       multi: true,
     },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: OverlayInterceptor,
+    //   multi: true,
+    // },
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

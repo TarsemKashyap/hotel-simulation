@@ -18,9 +18,17 @@ import { MarketingComponent } from './marketing/marketing.component';
 import { GoalSettingComponent } from './goal-setting/goal-setting.component';
 import { LoanComponent } from './loan/loan.component';
 
-
 @NgModule({
-  declarations: [StudentDashboard, DecisionComponent, RoomComponent, AttributeComponent, PriceComponent, MarketingComponent, GoalSettingComponent, LoanComponent],
+  declarations: [
+    StudentDashboard,
+    DecisionComponent,
+    RoomComponent,
+    AttributeComponent,
+    PriceComponent,
+    MarketingComponent,
+    GoalSettingComponent,
+    LoanComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -29,9 +37,9 @@ import { LoanComponent } from './loan/loan.component';
     AgGridModule,
     MaterialModule,
     StudentRouteModule,
-    FormsModule
+    FormsModule,
   ],
-  providers: [ChangePasswordService,AccountService],
+  providers: [ChangePasswordService, AccountService],
   bootstrap: [StudentDashboard],
 })
 export class StudentModule {}

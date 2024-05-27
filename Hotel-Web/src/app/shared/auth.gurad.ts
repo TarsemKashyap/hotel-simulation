@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
+  CanActivateChildFn,
   CanActivateFn,
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AccountService } from '../public/account/account.service';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable, switchMap, tap } from 'rxjs';
 import { AppRoles } from '../public/account';
 
 @Injectable({
@@ -22,43 +23,92 @@ export class AuthGuard {
     private authService: AccountService
   ) {}
 
-  async validateSession(routeData: AuthRouteData) {
-    
+  async validateSession() {
     const tokenValid = await this.isJwtTokenValid();
-    const hasRole = this.authService.userHasAnyRole(routeData.roles);
-    if (tokenValid && hasRole) {
+    if (tokenValid) {
       return true;
     }
-    if (tokenValid && !hasRole) {
-      return this.authService.redirectToDashboard();
-    }
+
     this.authService.clearSession();
     return this.router.navigate(['login']);
   }
 
-  private async isJwtTokenValid(): Promise<boolean> {
-    const token: string | null = this.authService.getAccessToken();
-    if (token && this.jwtHelper.isTokenExpired(token)) {
-      return await this.tryRefreshingTokens();
+  isJwtTokenValid() {
+    if (this.hasTokenExpired()) {
+      return this.tryRefreshingTokens();
     }
-    return Promise.resolve(true);
+    return new Observable((sub) => sub.next(true));
+  }
+  hasTokenExpired(): boolean {
+    const token: string | null = this.authService.getAccessToken();
+    return this.jwtHelper.isTokenExpired(token);
   }
 
-  private async tryRefreshingTokens(): Promise<boolean> {
-    return lastValueFrom(this.authService.refreshToken()).then(
-      (x) => Promise.resolve(true),
-      (error) => Promise.resolve(false)
-    );
+  private tryRefreshingTokens() {
+    return this.authService.refreshToken();
   }
 }
 
-export const checkAccessPermission: CanActivateFn = (
+export const hasInstructorRole: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
-  return inject(AuthGuard).validateSession(route.data as AuthRouteData);
+  return hasRole(AppRoles.Instructor);
 };
 
-export interface AuthRouteData {
-  roles: AppRoles[];
-}
+export const hasAdminRole: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  return hasRole(AppRoles.Admin);
+};
+export const hasStudentRole: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  return hasRole(AppRoles.Student);
+};
+
+const hasRole = (role: AppRoles) => {
+  const accountService = inject(AccountService);
+  const hasRole = accountService.userHasRole(role);
+  if (!hasRole) {
+    accountService.$sessionExpired.next(null);
+  }
+  console.log('hasRole', { role, hasRole });
+  return hasRole;
+};
+
+export const canAccessReports: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const accountService = inject(AccountService);
+  const result = accountService.userHasAnyRole([
+    AppRoles.Admin,
+    AppRoles.Instructor,
+    AppRoles.Student,
+  ]);
+  if (!result) {
+    accountService.$sessionExpired.next(null);
+  }
+  console.log('canAccessReports', result);
+  return result;
+};
+
+export const AuthCheckGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const accountService = inject(AccountService);
+
+  return inject(AuthGuard)
+    .isJwtTokenValid()
+    .pipe(
+      tap((exp) => {
+        if (!exp) {
+          accountService.$sessionExpired.next(null);
+        }
+      })
+    );
+};

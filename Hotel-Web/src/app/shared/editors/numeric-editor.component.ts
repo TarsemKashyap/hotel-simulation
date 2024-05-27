@@ -30,7 +30,6 @@ import {
   
     agInit(params: ICellEditorParams): void {
       this.params = params;
-      console.log("params",this.params.value);
       this.setInitialState(this.params);
       this.numericEditor = new FormControl(params.value,[Validators.required]);
       // only start edit if key pressed is a number, not a letter
@@ -70,9 +69,6 @@ import {
 
      }
       const value = this.value;
-      //let errorMgs= value === '' || value == null ? 'Value is required' : 'value is here';
-      //var errorObj = {value:this.value,errorMsg:errorMgs};
-      //console.log('this.value',errorObj)
       return parseInt(value);
     }
   

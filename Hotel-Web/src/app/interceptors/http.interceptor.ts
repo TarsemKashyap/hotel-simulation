@@ -6,47 +6,75 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+  throwError,
+} from 'rxjs';
 import { AccountService } from '../public/account';
 import { Router } from '@angular/router';
-import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Injectable()
 export class RefreshTokennterceptor implements HttpInterceptor {
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
+    null
+  );
   constructor(private accountService: AccountService, private router: Router) {}
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((error) => {
-        console.log('Refresh Interceptor', error);
-        if (error instanceof HttpErrorResponse) {
-          this.refreshToken(next, req);
+        if (error.status == 401) {
+          this.handle401Error(next, req).subscribe((x) =>
+            console.log('handle401Error', x)
+          );
         }
-        return throwError(() => error);
+        return throwError(error);
       })
     );
   }
 
-  private refreshToken(next: HttpHandler, req: HttpRequest<any>) {
-    this.accountService
-      .refreshToken()
-      .pipe(
-        switchMap((d) => {
-          return next.handle(req);
+  private addToken(request: HttpRequest<any>, token: string) {
+    return request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+  private handle401Error(next: HttpHandler, request: HttpRequest<any>) {
+    this.isRefreshing = false;
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      return this.accountService.refreshToken2().pipe(
+        switchMap((token: any) => {
+          this.isRefreshing = false;
+
+          this.refreshTokenSubject.next(this.accountService.getAccessToken());
+          return next.handle(
+            this.addToken(request, this.accountService.getAccessToken()!)
+          );
         }),
-        catchError((error) => {
-          return this.router.navigate(['/', 'login']);
+        catchError((er) => {
+          this.accountService.$sessionExpired.next(null);
+          return throwError(() => er);
         })
-      )
-      .subscribe({
-        next: (res) => {
-         // return next.handle(req);
-        },
-        error: (err) => {
-          console.log('subscribe::', err);
-        },
-      });
+      );
+    } else {
+      return this.refreshTokenSubject.pipe(
+        filter((token) => token != null),
+        take(1),
+        switchMap((jwt) => {
+          return next.handle(this.addToken(request, jwt));
+        })
+      );
+    }
   }
 }

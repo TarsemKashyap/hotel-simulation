@@ -46,7 +46,6 @@ export class InstructorListComponent {
   }
 
   editClick(row: InstructorDto) {
-    console.log(row);
     this.router.navigate([`instructor/edit/${row.id}`], {
       relativeTo: this.activateRoute,
     });

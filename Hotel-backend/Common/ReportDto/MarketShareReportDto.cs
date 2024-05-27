@@ -61,7 +61,7 @@ namespace Common.ReportDto
 
         public Segment WeekEnd(decimal hotel, decimal marketAvg)
         {
-            Segments.Add(new CategoryLine { Label = "Weekday", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
+            Segments.Add(new CategoryLine { Label = "Weekend", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
         public Segment Overall(decimal hotel, decimal marketAvg)

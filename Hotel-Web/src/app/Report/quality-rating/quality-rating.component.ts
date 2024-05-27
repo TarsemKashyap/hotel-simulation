@@ -54,35 +54,23 @@ export class QualityRatingComponent {
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
-    this.reportParam.Segment=this.selectedSegment?.value!;
+    this.reportParam.Segment = this.selectedSegment?.value!;
     this.reportService
       .qualityRatingReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
         this.qualityRatingReportResponse = reportData;
-
         this.ChartData = this.qualityRatingReportResponse.segments;
+        this.YaxisData.push(reportData.overAll, ...reportData.segments);
+        this.YaxisHotel = this.YaxisData.map((i) => i.hotel);
+        this.YaxisMarketAvg = this.YaxisData.map((i) => i.marketAverage);
+        this.Xaxis = this.YaxisData.map((item) => item.label);
 
-        //this.YaxisData.push.apply(this.YaxisData,this.ChartData);
-        this.YaxisHotel.push.apply(
-          this.YaxisHotel,
-          this.ChartData.map((i) => i.hotel)
-        );
-        this.YaxisMarketAvg.push.apply(
-          this.YaxisMarketAvg,
-          this.ChartData.map((i) => i.marketAverage)
-        );
-        this.Xaxis = this.ChartData.map((item) => item.label);
-
-        console.log('this.YaxisAdv', this.YaxisMarketAvg);
         this.createChart();
       });
   }
 
   private loadGroups() {
-    this.selectedSegment=this.segments.at(0);
+    this.selectedSegment = this.segments.at(0);
     this.reportService.groupFilterList(this.classId!).subscribe((groups) => {
       this.groups = groups;
       this.selectedHotel = this.groups.at(0);
@@ -111,16 +99,15 @@ export class QualityRatingComponent {
             backgroundColor: 'skyblue',
           },
           {
-            label: 'MarketAvgAge',
+            label: 'Market Average',
             data: this.YaxisMarketAvg,
             backgroundColor: 'orange',
-          
           },
         ],
       },
-      
+
       options: {
-        aspectRatio: 2.5,
+        aspectRatio: 4,
       },
     });
   }

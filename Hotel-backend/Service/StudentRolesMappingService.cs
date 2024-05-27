@@ -32,22 +32,22 @@ namespace Service
 
         public async Task<List<StudentRoleDto>> GetStudentRolesById(string studentId)
         {
-            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Join(_context.StudentRoles,mapping=>mapping.RoleId,roles=>roles.Id,(mapping, roles) => new StudentRoleDto
+            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Join(_context.StudentRoles, mapping => mapping.RoleId, roles => roles.Id, (mapping, roles) => new StudentRoleDto
             {
-                Id=mapping.RoleId,
+                Id = mapping.RoleId,
                 RoleName = roles.RoleName
             }).ToList();
-            
+
 
             return selectedRoles;
         }
 
-            public async Task<StudentRoleGroupRequest> StudentRolesList(string studentId, int classId)
+        public async Task<StudentRoleGroupRequest> StudentRolesList(string studentId, int classId)
         {
             var roles = _context.StudentRoles.ProjectToType<StudentRoleDto>().ToList();
             var groups = _context.ClassGroups.Where(x => x.ClassId == classId).ProjectToType<ClassGroupDto>().ToList();
             var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Select(x => x.RoleId).ToList();
-            var selectedGrupid = _context.StudentClassMapping.FirstOrDefault(x => x.StudentId == studentId);
+            var selectedGrupid = _context.StudentClassMapping.FirstOrDefault(x => x.StudentId == studentId && x.ClassId == classId);
 
             var request = new StudentRoleGroupRequest
             {

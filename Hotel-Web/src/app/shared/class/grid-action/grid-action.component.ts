@@ -12,8 +12,7 @@ export class GridActionComponent implements ICellRendererAngularComp {
   classId: any;
   params: GridActionParmas | undefined;
   actions: RowAction[] = [];
-  constructor(
-  ) {}
+  constructor() {}
 
   // gets called once before the renderer is used
   agInit(params: GridActionParmas): void {
@@ -24,6 +23,10 @@ export class GridActionComponent implements ICellRendererAngularComp {
 
   localClick($event: Event, action: RowAction) {
     action.onClick($event, this.params?.node);
+  }
+
+  hide(action: RowAction): boolean {
+    return action.hide(this.params?.node);
   }
   // gets called whenever the user gets the cell to refresh
   refresh(params: ICellRendererParams) {

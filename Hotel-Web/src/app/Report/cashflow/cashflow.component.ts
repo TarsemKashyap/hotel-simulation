@@ -20,7 +20,7 @@ export class CashflowComponent {
   selectedHotel : ClassGroup | undefined;
 
   reportParam:ReportParams = {} as ReportParams;
-  cashFlowreportResponse : CashFlowReportResponse = {} as CashFlowReportResponse;
+  cashFlowreportResponse : CashFlowReportResponse;
 
   constructor(
     private reportService: ReportService,
@@ -45,11 +45,7 @@ export class CashflowComponent {
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
     this.reportService.cashFlowReportDetails(this.reportParam).subscribe((reportData) => {
-      // console.log('DATA...........');
-      
-      // console.log(reportData);
         this.cashFlowreportResponse = reportData;  
-        console.log('DataLenght',this.cashFlowreportResponse);      
     });
   }
 

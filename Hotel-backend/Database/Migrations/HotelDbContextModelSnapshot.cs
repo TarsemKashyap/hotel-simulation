@@ -1212,8 +1212,8 @@ namespace Database.Migrations
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("MonthID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -1435,6 +1435,9 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -1442,6 +1445,8 @@ namespace Database.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("RoleId")
                         .HasDatabaseName("IX_StudentRoleMapping_RoleId");
@@ -1744,6 +1749,12 @@ namespace Database.Migrations
 
             modelBuilder.Entity("StudentRoleMapping", b =>
                 {
+                    b.HasOne("ClassSession", "Class")
+                        .WithMany("StudentRoleMappings")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Database.Domain.StudentRoles", "StudentRoles")
                         .WithMany("StudentRoleMappings")
                         .HasForeignKey("RoleId")
@@ -1753,6 +1764,8 @@ namespace Database.Migrations
                     b.HasOne("Student", "Student")
                         .WithMany("StudentRoleMapping")
                         .HasForeignKey("StudentId");
+
+                    b.Navigation("Class");
 
                     b.Navigation("Student");
 
@@ -1807,6 +1820,8 @@ namespace Database.Migrations
                     b.Navigation("Months");
 
                     b.Navigation("StudentClassMappings");
+
+                    b.Navigation("StudentRoleMappings");
                 });
 
             modelBuilder.Entity("Database.Domain.StudentRoles", b =>

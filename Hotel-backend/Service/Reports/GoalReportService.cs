@@ -29,7 +29,7 @@ public class GoalReportService : IGoalReportService
 
     public async Task<List<GoalReportResponse>> GenerateReport(ReportParams goalArgs)
     {
-      //  AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
+        //  AppUser student = await _userManager.FindByIdAsync(goalArgs.UserId);
 
         ClassSession classSession = await _context.ClassSessions.Include(x => x.Groups)
             .Include(x => x.Months)
@@ -94,7 +94,7 @@ public class GoalReportService : IGoalReportService
             Formatter = "P2"
         };
         var ScalarGroupRoomRevenueByMonth = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).SumAsync(x => x.Revenue);
-        var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.MonthID==monthId && x.QuarterNo == quarter).SumAsync(x => x.Revenue);
+        var roomSoldByRevenuMonthly = await SoldRoomQueryAsync.Where(x => x.MonthID == monthId && x.QuarterNo == quarter).SumAsync(x => x.Revenue);
         GoalReportDto marketShareByRevenue = new GoalReportDto
         {
             Indicators = "Market Share based on Revenues",
@@ -154,7 +154,7 @@ public class GoalReportService : IGoalReportService
         {
             Indicators = "Operating Efficiency Ratio",
             M_P = roomSoldIncomestate == 0 ? 0 : incomeState.IncomBfCharg / roomSoldIncomestate,
-            M_M = ScalarMonthAvgIncomeBFcharge / roomSoldIncomestate,
+            M_M = roomSoldIncomestate == 0 ? 0 : ScalarMonthAvgIncomeBFcharge / roomSoldIncomestate,
             M_G = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM),
             Formatter = "P2"
         };

@@ -8,8 +8,16 @@ import {
   Signup,
 } from '../student/model/signup.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import {
+  retry,
+  catchError,
+  map,
+  switchMap,
+  tap,
+  startWith,
+  shareReplay,
+} from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
 import { appRoutes } from '../public-routing.module';
@@ -18,6 +26,8 @@ import { appRoutes } from '../public-routing.module';
   providedIn: 'root',
 })
 export class AccountService {
+  $sessionExpired = new Subject();
+  isRefreshing: boolean;
   constructor(
     private httpClient: HttpClient,
     private sessionStore: SessionStore,
@@ -51,32 +61,54 @@ export class AccountService {
     return this.sessionStore.GetAccessToken();
   }
 
-  refreshToken(): Observable<boolean> {
+  refreshToken(): Observable<any> {
     const refreshToken = this.sessionStore.GetRefreshToken();
     const token = this.sessionStore.GetAccessToken();
     if (!token || !refreshToken) {
       return new Observable((ob) => ob.next(false));
     }
-
     const credentials = { accessToken: token, refreshToken: refreshToken };
     return this.httpClient.post<any>('account/token/refresh', credentials).pipe(
       map((x) => {
         this.sessionStore.SetAccessToken(x.accessToken);
         this.sessionStore.SetRefreshToken(x.refreshToken);
         return true;
+      }),
+      catchError((er, ob) => {
+        return new Observable((sub) => sub.next(false));
+      })
+    );
+  }
+
+  refreshToken2(): Observable<any> {
+    const refreshToken = this.sessionStore.GetRefreshToken();
+    const token = this.sessionStore.GetAccessToken();
+    if (!token || !refreshToken) {
+      return new Observable((ob) => ob.next(false));
+    }
+    const credentials = { accessToken: token, refreshToken: refreshToken };
+    return this.httpClient.post<any>('account/token/refresh', credentials).pipe(
+      map((x) => {
+        this.sessionStore.SetAccessToken(x.accessToken);
+        this.sessionStore.SetRefreshToken(x.refreshToken);
+        return x;
+      }),
+      catchError((er, ob) => {
+        return new Observable((sub) => sub.next(false));
       })
     );
   }
 
   userHasRole(role: AppRoles): boolean {
     const savedRole = this.sessionStore.GetRole();
-    return savedRole.some((x) => x == role);
+    let b = savedRole.some((x) => x == role);
+    console.log('userHasRole', { [role]: b });
+    return b;
   }
 
-  userHasAnyRole(roles:AppRoles[]):boolean{
+  userHasAnyRole(roles: AppRoles[]): boolean {
     const savedRole = this.sessionStore.GetRole();
-    const hasRole= savedRole.some((x) => roles.some(y=>y==x));
-    console.log("userHasAnyRole:",{savedRole,hasRole});
+    const hasRole = savedRole.some((x) => roles.some((y) => y == x));
     return hasRole;
   }
 

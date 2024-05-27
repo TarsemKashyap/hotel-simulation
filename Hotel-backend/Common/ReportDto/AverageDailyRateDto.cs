@@ -7,18 +7,18 @@
         public void OverAllADR(decimal hotel, decimal mktAvg)
         {
 
-            Data.Add(new AvgDailyRate { Label = "Overall ADR", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
+            Data.Add(new AvgDailyRate { Label = "Overall", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
         }
 
         public void WeekdayADR(decimal hotel, decimal mktAvg)
         {
 
-            Data.Add(new AvgDailyRate { Label = "Weekday ADR", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
+            Data.Add(new AvgDailyRate { Label = "Weekday", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
         }
         public void WeekendADR(decimal hotel, decimal mktAvg)
         {
 
-            Data.Add(new AvgDailyRate { Label = "Weekend ADR", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
+            Data.Add(new AvgDailyRate { Label = "Weekend", Hotel = hotel, MarketAvg = mktAvg, Index = mktAvg > 0 ? hotel / mktAvg : 0 });
         }
 
         public class AvgDailyRate

@@ -30,7 +30,7 @@ public class PriceDecisionEntityConfig : IEntityTypeConfiguration<PriceDecision>
         builder.ToTable("PriceDecision");
         builder.HasKey(x => x.ID);
         builder.Property(x => x.ID).IsRequired().ValueGeneratedOnAdd();
-        builder.Property(x => x.MonthID).IsRequired();
+        builder.Property<int>(x => x.MonthID).IsRequired();
         builder.HasOne(x => x.Month).WithMany(x => x.PriceDecision);
         builder.Property(x => x.QuarterNo).IsRequired();
         builder.Property(x => x.GroupID).IsRequired();

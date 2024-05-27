@@ -1,5 +1,5 @@
 <h1>MARKETING EXPENDITURE REPORT</h1>
-<span class="inline-grid grid-cols-3 gap-8">
+<span class="inline-grid grid-cols-4 gap-8">
   <mat-form-field class="align-right">
     <mat-label>
       <i *ngIf="MonthList.length"> Select Month</i>
@@ -70,6 +70,8 @@
     </mat-select>
   </mat-form-field>
 </span>
+<app-report-menu></app-report-menu>
+
 <h2>MARKETING EXPENDITURE REPORT</h2>
 <div class="chart-container">
   <canvas id="MyChart">{{ chart }}</canvas>

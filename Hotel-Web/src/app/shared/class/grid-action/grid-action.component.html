@@ -1,22 +1,24 @@
-<span *ngFor="let btn of actions">
-  <button *ngIf="btn.mode == 'icon'">
+<span class="pr-3" *ngFor="let btn of actions">
+  <button *ngIf="btn.mode == 'icon' && !hide(btn)">
     <mat-icon
       [ngClass]="
         btn.cssClass ? btn.cssClass : 'text-gray-500  hover:text-primary'
       "
       matRipple
-      matTooltip="{{btn.tooltip}}"
+      matTooltip="{{ btn.tooltip }}"
       fontIcon="{{ btn.placeHolder }}"
       (click)="localClick($event, btn)"
     ></mat-icon>
   </button>
   <button
-    *ngIf="btn.mode == 'text'"
+    *ngIf="btn.mode == 'text' && !hide(btn)"
     [ngClass]="
-      btn.cssClass ? btn.cssClass : 'text-sm rounded py-2 px-2 bg-primary-light border text-black hover:bg-opacity-100 hover:bg-primary hover:text-white'
+      btn.cssClass
+        ? btn.cssClass
+        : 'text-sm rounded py-2 px-2 bg-primary-light border text-black hover:bg-opacity-100 hover:bg-primary hover:text-white'
     "
     matRipple
-    matTooltip="{{btn.tooltip}}"
+    matTooltip="{{ btn.tooltip }}"
     (click)="localClick($event, btn)"
   >
     {{ btn.placeHolder }}

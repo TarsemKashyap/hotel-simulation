@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 #monthGrd {
   font-family: Arial, Helvetica, sans-serif;
@@ -5,34 +8,54 @@
   width: 100%;
 }
 
-#monthGrd td, #monthGrd th {
+#monthGrd td,
+#monthGrd th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#monthGrd tr:nth-child(even){background-color: #f2f2f2;}
+#monthGrd tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-#monthGrd tr:hover {background-color: #ddd;}
+#monthGrd tr:hover {
+  background-color: #ddd;
+}
 
 #monthGrd th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #04AA6D;
+  background-color: #04aa6d;
   color: white;
 }
 .button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
-  .br1px{
-    border: solid 1px black;
-  }
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.br1px {
+  border: solid 1px black;
+}
+
+.green-row {
+  background-color: #04aa6d;
+}
+
+.yellow-row {
+  background-color: yellow;
+}
+.btn2 {
+  @apply bg-primary float-left text-white px-6 py-2 m-2;
+}
+
+.btn2:disabled {
+  @apply bg-gray-400 float-left text-white px-6 py-2 m-2;
+}

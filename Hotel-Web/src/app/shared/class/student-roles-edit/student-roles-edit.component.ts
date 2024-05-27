@@ -23,7 +23,7 @@ export class StudentRolesEditComponent {
   data: StudentList | undefined;
   roles: StudentRoleGroupRequest[] = [];
   selectedRoles: StudentRoles[] = [];
-  selectedGroup: ClassGroup|undefined;
+  selectedGroup: ClassGroup | undefined;
   myForm!: FormGroup;
   groups: ClassGroup[] = [];
   StudentAssignRoles: StudentRoles[] = [];
@@ -43,17 +43,14 @@ export class StudentRolesEditComponent {
   }
 
   ngOnInit(): void {
-    
     this.studentId = this.route.snapshot.params['id'];
     this.studentRoles();
   }
 
   private studentRoles() {
-    
     this.classService
       .Roleslist({ studentId: this.row.studentId, classId: this.row.classId })
       .subscribe((data) => {
-        
         this.selectedRoles = data.selectedRoles;
         this.selectedGroup = data.selectedGroup;
         this.groups = data.classGroups;
@@ -69,6 +66,7 @@ export class StudentRolesEditComponent {
       studentId: studentId,
       GroupId: groupId!,
       Roles: roleIds,
+      classId: this.row.classId,
     };
     this.classService.AddRoles(studentAssignRoles).subscribe((response) => {
       this._snackBar.open('Student Role Assign successfully');
@@ -81,7 +79,6 @@ export class StudentRolesEditComponent {
   }
 
   isRoleSelected(option: StudentRoles, selectedRoles: StudentRoles): boolean {
-    console.log(selectedRoles.roleName);
     return option.id === selectedRoles.id;
   }
 

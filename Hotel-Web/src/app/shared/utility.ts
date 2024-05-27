@@ -1,5 +1,7 @@
+import { formatCurrency } from '@angular/common';
+
 export class Utility {
- public static copyToClipboard(val: any) {
+  public static copyToClipboard(val: any) {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -12,4 +14,18 @@ export class Utility {
     document.execCommand('copy');
     document.body.removeChild(selBox);
   }
+
+  public static ToCurrency(
+    value: number | any,
+    digitInfo: string = '1.0-0'
+  ): string {
+    return formatCurrency(value, 'en-US', '$', undefined, digitInfo);
+  }
 }
+
+export const ChartConfig = {
+  BarThickness: 0.7,
+  LineBgColor: 'red',
+  BarBgColor: 'skyblue',
+  LineBorderColor: 'red',
+};

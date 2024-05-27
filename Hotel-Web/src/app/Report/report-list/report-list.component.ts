@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from './IHyperLinks.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-report-list',
@@ -10,7 +11,7 @@ import { IHyperLinks } from './IHyperLinks.model';
 export class ReportListComponent {
   isInstructorOrAdmin: boolean = false;
   activeLinks: IHyperLinks[] = [];
-  private studentLink: IHyperLinks[] = [
+ studentLink: IHyperLinks[] = [
     {
       text: 'Objectives Report',
       link: 'objective-report',
@@ -91,13 +92,15 @@ export class ReportListComponent {
       link: 'demand-report',
     },
   ];
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, public activeRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.isInstructorOrAdmin = this.accountService.userHasAnyRole([
       AppRoles.Instructor,
       AppRoles.Admin,
     ]);
+
+    
     this.activeLinks = this.studentLink.filter((x) => {
       if (!x.enable) return true;
       return x.enable();

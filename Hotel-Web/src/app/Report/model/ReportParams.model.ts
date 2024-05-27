@@ -5,6 +5,7 @@ export interface ReportParams {
   GroupId: number;
   MonthId: number;
   Segment: string;
+  Sector:string
 }
 
 

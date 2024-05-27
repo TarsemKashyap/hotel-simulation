@@ -45,11 +45,7 @@ export class RoomRateComponent {
     this.reportService
       .roomRateReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
         this.roomRateReportResponse = reportData;
-        console.log('DataLenght', this.roomRateReportResponse);
       });
   }
 

@@ -5,7 +5,7 @@ export interface RowAction {
   placeHolder: string;
   mode: ActionBtnType;
   cssClass?: string;
-  hide: ($event: Event, row: any) => boolean;
+  hide: (row: any) => boolean;
   onClick: ($event: Event, row: any) => void;
   tooltip?:string;
 }

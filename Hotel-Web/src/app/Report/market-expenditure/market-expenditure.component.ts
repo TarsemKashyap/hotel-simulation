@@ -12,6 +12,10 @@ import {
   Sector,
   MarketingStrategy,
 } from '../model/ReportCommon.model';
+import { tick } from '@angular/core/testing';
+import { ChartConfig, Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { CurrencyPipe, formatCurrency } from '@angular/common';
 
 @Component({
   selector: 'app-market-expenditure',
@@ -39,7 +43,9 @@ export class MarketExpenditureComponent {
   YaxisData: any[] = [];
   Xaxis: any[] = [];
   YaxisSaleForce: any[] = [];
+  YMketAvg: any[] = [];
   YaxisAdv: any[] = [];
+  private fieldMap = { '': '' };
 
   constructor(
     private reportService: ReportService,
@@ -52,14 +58,18 @@ export class MarketExpenditureComponent {
     this.classId = this.activeRoute.snapshot.params['id'];
     this.loadMonths();
     this.selectedMarketingStrategyList.push(
-      { name: 'Advertising', value: 'Advertising' },
-      { name: 'Sales Force', value: 'Sales Force' },
-      { name: 'Promotions', value: 'Promotions' },
-      { name: 'Public Relations', value: 'Public Relations' }
+      { name: 'Advertising', value: 'Advertising', field: 'advertising' },
+      { name: 'Sales Force', value: 'Sales Force', field: 'salesForce' },
+      { name: 'Promotions', value: 'Promotions', field: 'promotions' },
+      {
+        name: 'Public Relations',
+        value: 'Public Relations',
+        field: 'publicRelations',
+      }
     );
     this.selectedSectorlist.push(
-      { name: 'Labor', value: 'Labor' },
-      { name: 'Other', value: 'Other' }
+      { name: 'Labor', value: 'Labor', field: 'labor' },
+      { name: 'Other', value: 'Other', field: 'other' }
     );
 
     this.selectedMarketingStrategy = this.selectedMarketingStrategyList.at(0);
@@ -80,100 +90,119 @@ export class MarketExpenditureComponent {
     this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
     this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
+    this.reportParam.Segment = this.selectedMarketingStrategy?.value!;
+    this.reportParam.Sector = this.selectedSector?.value!;
 
     this.reportService
       .marketExpenditureReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        // console.log('DATA...........');
-
-        // console.log(reportData);
-        this.marketExpenditureReportResponse = reportData;
-        this.ChartData = this.marketExpenditureReportResponse.segments.filter(
-          (x) => x.label != null
-        );
-
-        this.Xaxis = this.ChartData.map((item) => item.label);
-        if (this.selectedSector?.value == 'Labor') {
-          this.YaxisSaleForce = [];
-
-          if (this.selectedMarketingStrategy?.value == 'Advertising') {
-            this.chartLabel = 'Advertising';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.labor.advertising)
-            );
-          } else if (this.selectedMarketingStrategy?.value === 'Sales Force') {
-            this.chartLabel = 'Sales Force';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.labor.salesForce)
-            );
-          } else if (this.selectedMarketingStrategy?.value == 'Promotions') {
-            this.chartLabel = 'Promotions';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.labor.promotions)
-            );
-          } else if (
-            this.selectedMarketingStrategy?.value == 'Public Relations'
-          ) {
-            this.chartLabel = 'Public Relations';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.labor.publicRelations)
-            );
-          }
-
-          // }
-        } else {
-          this.YaxisSaleForce = [];
-          // switch(this.selectedMarketingStrategy?.name)
-          // {
-          if (
-            this.selectedMarketingStrategy?.name ==
-            this.selectedMarketingStrategyList.at(0)?.name
-          ) {
-            this.chartLabel = 'Advertising';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.other.advertising)
-            );
-          }
-          if (
-            this.selectedMarketingStrategy?.name ==
-            this.selectedMarketingStrategyList.at(1)?.name
-          ) {
-            this.chartLabel = 'Sales Force';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.other.salesForce)
-            );
-          }
-          if (this.selectedMarketingStrategy?.name == 'Promotions') {
-            this.chartLabel = 'Promotions';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.other.promotions)
-            );
-          }
-          if (this.selectedMarketingStrategy?.name == 'Public Relations') {
-            this.chartLabel = 'Public Relations';
-            this.YaxisSaleForce.push.apply(
-              this.YaxisSaleForce,
-              this.ChartData.map((i) => i.other.publicRelations)
-            );
-          }
-
-          //  }
-        }
-        //this.YaxisData.push.apply(this.YaxisData,this.ChartData);
-
-        //  this.YaxisAdv.push.apply(this.YaxisAdv,this.ChartData.map(i=>i.labor.advertising));
-
-        console.log('this.YaxisAdv', this.YaxisAdv);
-        console.log('this.YaxisSaleforce', this.YaxisSaleForce);
-        this.createChart();
+        //this.oldMethod(reportData);
+        this.newChartWay(reportData);
       });
+  }
+
+  private newChartWay(reportData: MarketExpenditureReportResponse) {
+    this.marketExpenditureReportResponse = reportData;
+    this.ChartData = this.marketExpenditureReportResponse.segments.filter(
+      (x) => x.label != null
+    );
+
+    this.Xaxis = this.ChartData.map((item) => item.label);
+    this.chartLabel = this.selectedMarketingStrategy?.name!;
+    this.YaxisSaleForce = this.ChartData.map((i: any) => {
+      let sector = i[this.selectedSector!.field];
+      let stragy = sector[this.selectedMarketingStrategy!.field];
+      return stragy;
+    });
+    this.YMketAvg = this.ChartData.map((i: any) => {
+      let sector = i[this.selectedSector!.field];
+      let stragy = sector[this.selectedMarketingStrategy!.field];
+      return sector.marketAvg;
+    });
+    this.createChart();
+   
+  }
+
+  private oldMethod(reportData: MarketExpenditureReportResponse) {
+    this.marketExpenditureReportResponse = reportData;
+    this.ChartData = this.marketExpenditureReportResponse.segments.filter(
+      (x) => x.label != null
+    );
+
+    this.Xaxis = this.ChartData.map((item) => item.label);
+
+    if (this.selectedSector?.value == 'Labor') {
+      this.YaxisSaleForce = [];
+
+      if (this.selectedMarketingStrategy?.value == 'Advertising') {
+        this.chartLabel = 'Advertising';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.labor.advertising)
+        );
+      } else if (this.selectedMarketingStrategy?.value === 'Sales Force') {
+        this.chartLabel = 'Sales Force';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.labor.salesForce)
+        );
+      } else if (this.selectedMarketingStrategy?.value == 'Promotions') {
+        this.chartLabel = 'Promotions';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.labor.promotions)
+        );
+      } else if (this.selectedMarketingStrategy?.value == 'Public Relations') {
+        this.chartLabel = 'Public Relations';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.labor.publicRelations)
+        );
+      }
+
+      // }
+    } else {
+      this.YaxisSaleForce = [];
+      // switch(this.selectedMarketingStrategy?.name)
+      // {
+      if (
+        this.selectedMarketingStrategy?.name ==
+        this.selectedMarketingStrategyList.at(0)?.name
+      ) {
+        this.chartLabel = 'Advertising';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.other.advertising)
+        );
+      }
+      if (
+        this.selectedMarketingStrategy?.name ==
+        this.selectedMarketingStrategyList.at(1)?.name
+      ) {
+        this.chartLabel = 'Sales Force';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.other.salesForce)
+        );
+      }
+      if (this.selectedMarketingStrategy?.name == 'Promotions') {
+        this.chartLabel = 'Promotions';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.other.promotions)
+        );
+      }
+      if (this.selectedMarketingStrategy?.name == 'Public Relations') {
+        this.chartLabel = 'Public Relations';
+        this.YaxisSaleForce.push.apply(
+          this.YaxisSaleForce,
+          this.ChartData.map((i) => i.other.publicRelations)
+        );
+      }
+
+      //  }
+    }
+    this.createChart();
   }
 
   private loadGroups() {
@@ -203,25 +232,35 @@ export class MarketExpenditureComponent {
             data: this.YaxisSaleForce,
             backgroundColor: 'skyblue',
             type: 'bar',
+            order: 1,
+            barPercentage: ChartConfig.BarThickness,
           },
           {
-            label: this.chartLabel,
-            data: this.YaxisSaleForce,
+            label: 'Market Average',
+            data: this.YMketAvg,
             backgroundColor: 'red',
             borderColor: 'red',
             type: 'line',
-            order:1
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
-        aspectRatio: 2.5,
+        aspectRatio: 4,
         plugins: {
-          legend: {
-            position: 'top',
-          }
-          
-        }
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToCurrency(value);
+            },
+            color: 'black',
+            align: 'top',
+            anchor: 'center',
+            display: 'auto',
+            offset: 5,
+            clamp: true,
+            padding: 5,
+          },
+        },
       },
     });
   }

@@ -5,30 +5,36 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MonthDto } from 'src/app/shared/class/create-month/month.model';
 import { ClassGroup } from 'src/app/shared/class/model/classSession.model';
 import { ReportParams } from '../model/ReportParams.model';
-import {AvgDailyRateReportResponse} from '../model/AvgDailyRateResponse.model';
+import { AvgDailyRateReportResponse } from '../model/AvgDailyRateResponse.model';
 import { find } from 'rxjs';
 import Chart from 'chart.js/auto';
-import { ReportCommon,ReportAttribute,avgdailyrateReportAttribute } from "../model/ReportCommon.model";
+import {
+  ReportCommon,
+  ReportAttribute,
+  avgdailyrateReportAttribute,
+} from '../model/ReportCommon.model';
+import { ChartConfig } from 'src/app/shared/utility';
 
 @Component({
   selector: 'app-avg-daily-rate',
   templateUrl: './avg-daily-rate.component.html',
-  styleUrls: ['./avg-daily-rate.component.css']
+  styleUrls: ['./avg-daily-rate.component.css'],
 })
 export class AvgDailyRateComponent {
-  MonthList : MonthDto[] = [];
-  selectedMonth : MonthDto = {} as MonthDto;
+  MonthList: MonthDto[] = [];
+  selectedMonth: MonthDto = {} as MonthDto;
   classId: number | undefined;
   groups: ClassGroup[] = [];
-  selectedHotel : ClassGroup | undefined;
+  selectedHotel: ClassGroup | undefined;
 
-  reportParam:ReportParams = {} as ReportParams;
-  avgDailyRateReportResponse : AvgDailyRateReportResponse = {} as AvgDailyRateReportResponse;
+  reportParam: ReportParams = {} as ReportParams;
+  avgDailyRateReportResponse: AvgDailyRateReportResponse =
+    {} as AvgDailyRateReportResponse;
   public chart: any;
-  ChartData:avgdailyrateReportAttribute[]=[];
-  Xaxis:any[]=[];
-  YaxisMarketAvg:any[]=[];
-  YaxisHotel:any[]=[];
+  ChartData: avgdailyrateReportAttribute[] = [];
+  Xaxis: any[] = [];
+  YaxisMarketAvg: any[] = [];
+  YaxisHotel: any[] = [];
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -39,75 +45,76 @@ export class AvgDailyRateComponent {
   ngOnInit(): void {
     this.classId = this.activeRoute.snapshot.params['id'];
     this.loadMonths();
-    
   }
 
-   onOptionChange() {
-     this.loadReportDetails();
-   }
+  onOptionChange() {
+    this.loadReportDetails();
+  }
 
-  loadReportDetails() {    
-    this.reportParam.ClassId =  this.classId!;
-    this.reportParam.GroupId =this.selectedHotel?.serial!;
+  loadReportDetails() {
+    this.reportParam.ClassId = this.classId!;
+    this.reportParam.GroupId = this.selectedHotel?.serial!;
     this.reportParam.MonthId = parseInt(this.selectedMonth.monthId!);
-    this.reportParam.CurrentQuarter =parseInt(this.selectedMonth.sequence!);
-    this.reportService.avgDailyRateReportDetails(this.reportParam).subscribe((reportData) => {
-      // console.log('DATA...........');
-      
-      // console.log(reportData);
+    this.reportParam.CurrentQuarter = parseInt(this.selectedMonth.sequence!);
+    this.reportService
+      .avgDailyRateReportDetails(this.reportParam)
+      .subscribe((reportData) => {
         this.avgDailyRateReportResponse = reportData;
-        
-        this.ChartData=this.avgDailyRateReportResponse.data;
-       this.YaxisMarketAvg=this.ChartData.map(item=>item.marketAvg);
-       this.YaxisHotel=this.ChartData.map(item=>item.hotel);
-       this.Xaxis=this.ChartData.map(item=>item.label);
-        this.createChart();     
-    });
+
+        this.ChartData = this.avgDailyRateReportResponse.data;
+        this.YaxisMarketAvg = this.ChartData.map((item) => item.marketAvg);
+        this.YaxisHotel = this.ChartData.map((item) => item.hotel);
+        this.Xaxis = this.ChartData.map((item) => item.label);
+        this.createChart();
+      });
   }
 
   private loadGroups() {
     this.reportService.groupFilterList(this.classId!).subscribe((groups) => {
       this.groups = groups;
-      this.selectedHotel =  this.groups.at(0);
+      this.selectedHotel = this.groups.at(0);
       this.loadReportDetails();
     });
   }
 
   private loadMonths() {
     this.reportService.monthFilterList(this.classId!).subscribe((months) => {
-      this.MonthList = months;  
-      this.selectedMonth = this.MonthList.at(this.MonthList.length -1)!;
+      this.MonthList = months;
+      this.selectedMonth = this.MonthList.at(this.MonthList.length - 1)!;
       this.loadGroups();
     });
   }
-  createChart(){
-  
-    this.chart = new Chart("MyChart", {
+  createChart() {
+    this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 
-      data: {// values on X-Axis
-        labels: this.Xaxis, 
-	       datasets: [
+      data: {
+        // values on X-Axis
+        labels: this.Xaxis,
+        datasets: [
           {
-            label: "marketAvg",
-            data: this.YaxisMarketAvg,
-            backgroundColor: 'blue'
+            label: 'Hotel',
+            data: this.YaxisHotel,
+            backgroundColor: 'skyblue',
+            type: 'bar',
+            barPercentage:0.4,
+            order: 1,
           },
           {
-            label: "hotel",
-            data: this.YaxisHotel,
-            backgroundColor: 'limegreen'
-          }  
-        ]
+            label: 'Market Average',
+            data: this.YaxisMarketAvg,
+            backgroundColor: 'red',
+            borderColor: 'red',
+            type: 'line',
+          },
+        ],
       },
       options: {
-        aspectRatio:2.5
-      }
-      
+        aspectRatio: 4,
+      },
     });
   }
-  numberToDecimal(x:any)
-  {
+  numberToDecimal(x: any) {
     return this.reportService.numberToDecimal(x);
   }
 }

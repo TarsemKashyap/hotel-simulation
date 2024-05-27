@@ -21,3 +21,11 @@ export interface ClassDto {
   createdBy: string;
   status: string;
 }
+
+export enum ClassStatus {
+  T = 'T',
+  I = 'I',
+  S = 'S',
+  A = 'A',
+  C = 'C',
+}

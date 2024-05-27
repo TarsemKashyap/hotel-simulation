@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthRouteData, checkAccessPermission } from '../shared/auth.gurad';
-import { AppRoles } from '../public/account';
+import {
+  canAccessReports,
+  AuthCheckGuard
+} from '../shared/auth.gurad';
 import { ReportListComponent } from './report-list/report-list.component';
 import { ObjectiveReportComponent } from './objective-report/objective-report.component';
 import { PerformanceComponent } from './performance/performance.component';
@@ -26,6 +28,7 @@ import { DemandReportComponent } from './demand-report/demand-report.component';
 export const reportRoutes: Routes = [
   {
     path: 'report',
+    canActivateChild: [AuthCheckGuard,canAccessReports],
     children: [
       { path: ':id/list', component: ReportListComponent },
       { path: ':id/objective-report', component: ObjectiveReportComponent },
@@ -72,10 +75,6 @@ export const reportRoutes: Routes = [
         component: DemandReportComponent,
       },
     ],
-    canActivate: [checkAccessPermission],
-    data: {
-      roles: [AppRoles.Student, AppRoles.Instructor, AppRoles.Admin],
-    } as AuthRouteData,
   },
 ];
 

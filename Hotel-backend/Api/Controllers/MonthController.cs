@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid;
 using Service;
+using System;
 
 namespace Api.Controllers
 {
     [ApiController]
-    // [Authorize]
+    [Authorize]
     [Route("month")]
     public class MonthController : AbstractBaseController
     {
@@ -18,10 +19,7 @@ namespace Api.Controllers
 
         public MonthController(IMonthService monthService)
         {
-            //_validator = validator;
-            //_classGroupValidator = classGroupValidator;
             _monthService = monthService;
-            //_validator = validator;
         }
 
         [HttpPost("Create")]
@@ -67,7 +65,6 @@ namespace Api.Controllers
         public Task<MonthDto> MonthInfo(int classId, int quarterNo)
         {
             // string instructorId = IsAdmin ? null : LoggedUserId;
-
             var MonthResult = _monthService.GetMonthInfoById(classId, quarterNo);
             return MonthResult;
 

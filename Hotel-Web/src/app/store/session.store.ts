@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppRoles } from '../public/account';
 import { RolePagesDtl } from '../shared/class/model/Roles';
+import { JsonPipe } from '@angular/common';
 
 const RefreshToken = 'RefreshToken';
 const AccessToken = 'AccessToken';
@@ -11,8 +12,10 @@ const roManagerPagesArr: RolePagesDtl[] = [];
 const fbManagerPagesArr: RolePagesDtl[] = [];
 const marketManagerPagesArr: RolePagesDtl[] = [];
 const roomManagerPagesArr: RolePagesDtl[] = [];
+const noRoles: RolePagesDtl[] = [];
 let studentRole = 'studentRole';
 let currentRole = 'currentRole';
+
 revenueManagerPagesArr.push(
   {
     pageKey: 'rmChangeClass',
@@ -175,6 +178,20 @@ roomManagerPagesArr.push(
     childPageLink: 'loan',
   }
 );
+noRoles.push(
+  {
+    pageKey: 'ChangePwd',
+    pageName: 'Change password',
+    roleName: '',
+    childPageLink: 'change-password',
+  },
+  {
+    pageKey: 'noRoleChangeClass',
+    pageName: 'Class Overview',
+    roleName: '',
+    childPageLink: 'change-class',
+  }
+);
 
 let RolesDetails = new Map<number, RolePagesDtl[]>([
   [1, revenueManagerPagesArr],
@@ -214,11 +231,11 @@ export class SessionStore {
   }
 
   GetStudentRole() {
-    var rolesArray: string = '';
-    var selectedRolesArr = JSON.parse(
-      localStorage.getItem(studentRole) || '[]'
-    );
-    const roleArray: any = [];
+    var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '');
+    if (!selectedRolesArr.length) {
+      return noRoles;
+    }
+    const roleArray: RolePagesDtl[] = [];
     selectedRolesArr.forEach((element: any) => {
       let arrDtl =
         RolesDetails.get(element.id) == undefined
@@ -226,9 +243,7 @@ export class SessionStore {
           : RolesDetails.get(element.id);
       roleArray.push(...(arrDtl ? arrDtl : []));
     });
-    rolesArray += JSON.stringify(roleArray);
-
-    return rolesArray;
+    return roleArray;
   }
 
   SetAccessToken(value: string) {

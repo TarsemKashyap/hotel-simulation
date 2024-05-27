@@ -27,7 +27,6 @@ export class AddRemovedClassComponent {
       tooltipValueGetter: () => 'Click to copy code',
       onCellClicked: (event) => {
         Utility.copyToClipboard(event.value);
-        console.log('code', event.value);
         this.snackBar.open(`class code ${event.value} copied.`);
       },
     },

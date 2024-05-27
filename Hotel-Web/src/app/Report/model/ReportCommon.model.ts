@@ -102,6 +102,8 @@ export interface MarketExpenditureAttribute {
   publicRelations: AbstractDecimal;
   salesForce: AbstractDecimal;
   total: AbstractDecimal;
+  marketAvg:number;
+
 }
 export interface PositionMapAttribute {
   classGroup: string;
@@ -116,8 +118,10 @@ export interface QualityRatingAttribute {
 export interface Sector {
   name: string;
   value: string;
+  field:string;
 }
 export interface MarketingStrategy {
   name: string;
   value: string;
+  field:string;
 }

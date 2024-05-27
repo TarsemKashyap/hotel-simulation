@@ -34,13 +34,13 @@ namespace Service
 
             var roleMapping = await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId).ToListAsync();
 
-            var classSession = await _context.StudentClassMapping.FirstOrDefaultAsync(x => x.StudentId == newRole.StudentId);
+            var classSession = await _context.StudentClassMapping.FirstOrDefaultAsync(x => x.ClassId == newRole.ClassId && x.StudentId == newRole.StudentId);
             classSession.GroupId = newRole.GroupId;
             _context.StudentClassMapping.Update(classSession);
             await _context.SaveChangesAsync();
             if (!roleMapping.Any())
             {
-                var newRoles = newRole.Roles.Select(x => new StudentRoleMapping { RoleId = x, StudentId = newRole.StudentId });
+                var newRoles = newRole.Roles.Select(x => new StudentRoleMapping { RoleId = x, ClassId = newRole.ClassId, StudentId = newRole.StudentId });
                 _context.StudentRoleMapping.AddRange(newRoles);
                 await _context.SaveChangesAsync();
                 return newRoles.Adapt<StudentRoleGroupAssign>();
@@ -55,7 +55,7 @@ namespace Service
             var newRolesToAdd = newRole.Roles.Except(dbRoles);
 
             var addnewRoleObject = newRole.Roles.Where(x => newRolesToAdd.Contains(x)).
-                Select(x => new StudentRoleMapping { RoleId = x, StudentId = newRole.StudentId });
+                Select(x => new StudentRoleMapping { RoleId = x, ClassId = newRole.ClassId, StudentId = newRole.StudentId });
 
             _context.StudentRoleMapping.AddRange(addnewRoleObject);
             await _context.SaveChangesAsync();

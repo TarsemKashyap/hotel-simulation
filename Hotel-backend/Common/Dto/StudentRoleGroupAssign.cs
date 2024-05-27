@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 public class StudentRoleGroupAssign
 {
+    public int ClassId { get; set; }
     public string StudentId { get; set; }
     public int GroupId { get; set; }
     public int[] Roles { get; set; }

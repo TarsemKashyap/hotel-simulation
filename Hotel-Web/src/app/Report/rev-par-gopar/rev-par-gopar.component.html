@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -25,83 +33,70 @@
     </mat-select>
   </mat-form-field>
 </span>
+<app-report-menu></app-report-menu>
+
 <h2>RevPAR,TOTAL REVPAR And Gophar for the Month</h2>
-<div class="chart-container">
-  <canvas  id="MyChart" >{{ chart }}</canvas>
+<div class="chart-container w-[70%]">
+  <canvas id="MyChart">{{ chart }}</canvas>
 </div>
 <table class="style1" *ngIf="revParGopalReportResponse">
   <tr>
-    <td class="style2">
-        &nbsp;
-      </td>
-    <td class="style2">
-      Hotel1
-    </td>
-      <td class="style2">
-       MarketAvarage
-    </td>
-    <td class="style2">
-     Index</td>
-    
+    <td class="style2">&nbsp;</td>
+    <td class="style2">Hotel1</td>
+    <td class="style2">MarketAvarage</td>
+    <td class="style2">Index</td>
   </tr>
-  <tr  *ngIf="revParGopalReportResponse.overAll">
+  <tr *ngIf="revParGopalReportResponse.overAll">
     <td class="style2">
-       {{ revParGopalReportResponse.overAll.label}}
-      </td>
-    <td class="style2">
-       $ {{ numberToDecimal(revParGopalReportResponse.overAll.hotel)}}
-    </td>
-      <td class="style2">
-       $ {{numberToDecimal(revParGopalReportResponse.overAll.marketAvg)}}
+      {{ revParGopalReportResponse.overAll.label }}
     </td>
     <td class="style2">
-        {{numberToDecimal(revParGopalReportResponse.overAll.index)}}
+      $ {{ numberToDecimal(revParGopalReportResponse.overAll.hotel) }}
     </td>
-    
+    <td class="style2">
+      $ {{ numberToDecimal(revParGopalReportResponse.overAll.marketAvg) }}
+    </td>
+    <td class="style2">
+      {{ numberToDecimal(revParGopalReportResponse.overAll.index) }}
+    </td>
   </tr>
- <tr *ngFor="let overAllChildData of revParGopalReportResponse.overAllChild" >
-  
-  <td class="style2" style="padding: 0px 0px 0px 30px">
-      {{overAllChildData.label}}</td>
-      
+  <tr *ngFor="let overAllChildData of revParGopalReportResponse.overAllChild">
+    <td class="style2" style="padding: 0px 0px 0px 30px">
+      {{ overAllChildData.label }}
+    </td>
+
+    <td class="style3">${{ numberToDecimal(overAllChildData.hotel) }}</td>
+    <td class="style3">${{ numberToDecimal(overAllChildData.marketAvg) }}</td>
     <td class="style3">
-      ${{numberToDecimal(overAllChildData.hotel) }}
+      {{ numberToDecimal(overAllChildData.index) }}
     </td>
-    <td class="style3">
-        ${{numberToDecimal(overAllChildData.marketAvg) }}
-      </td>
-      <td class="style3">
-        {{numberToDecimal(overAllChildData.index) }}
-      </td>
- </tr>
- <tr  *ngIf="revParGopalReportResponse.totalRevpar">
-  <td class="style2">
-     {{ revParGopalReportResponse.totalRevpar.label}}
-    </td>
-  <td class="style2">
-      ${{ numberToDecimal(revParGopalReportResponse.totalRevpar.hotel)}}
-  </td>
+  </tr>
+  <tr *ngIf="revParGopalReportResponse.totalRevpar">
     <td class="style2">
-      ${{numberToDecimal(revParGopalReportResponse.totalRevpar.marketAvg)}}
-  </td>
-  <td class="style2">
-      {{numberToDecimal(revParGopalReportResponse.totalRevpar.index)}}
-  </td>
-  
-</tr>
-<tr *ngIf="revParGopalReportResponse.goPar">
-  <td class="style2">
-     {{ revParGopalReportResponse.goPar.label}}
+      {{ revParGopalReportResponse.totalRevpar.label }}
     </td>
-  <td class="style2">
-      ${{ numberToDecimal(revParGopalReportResponse.goPar.hotel)}}
-  </td>
     <td class="style2">
-      ${{numberToDecimal(revParGopalReportResponse.goPar.marketAvg)}}
-  </td>
-  <td class="style2">
-      {{numberToDecimal(revParGopalReportResponse.goPar.index)}}
-  </td>
-  
-</tr>
+      ${{ numberToDecimal(revParGopalReportResponse.totalRevpar.hotel) }}
+    </td>
+    <td class="style2">
+      ${{ numberToDecimal(revParGopalReportResponse.totalRevpar.marketAvg) }}
+    </td>
+    <td class="style2">
+      {{ numberToDecimal(revParGopalReportResponse.totalRevpar.index) }}
+    </td>
+  </tr>
+  <tr *ngIf="revParGopalReportResponse.goPar">
+    <td class="style2">
+      {{ revParGopalReportResponse.goPar.label }}
+    </td>
+    <td class="style2">
+      ${{ numberToDecimal(revParGopalReportResponse.goPar.hotel) }}
+    </td>
+    <td class="style2">
+      ${{ numberToDecimal(revParGopalReportResponse.goPar.marketAvg) }}
+    </td>
+    <td class="style2">
+      {{ numberToDecimal(revParGopalReportResponse.goPar.index) }}
+    </td>
+  </tr>
 </table>
