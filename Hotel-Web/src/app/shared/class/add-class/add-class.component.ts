@@ -32,7 +32,8 @@ export class AddClassComponent {
     private fb: FormBuilder,
     private classService: ClassService,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.form = this.createForm();
   }
@@ -44,7 +45,7 @@ export class AddClassComponent {
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-     // hotelsCount: [{ value: this.hotelCount }, Validators.required],
+      // hotelsCount: [{ value: this.hotelCount }, Validators.required],
       roomInEachHotel: [{ value: 500, disabled: true }, Validators.required],
       groups: this.fb.array(this.createGroups()),
     });
@@ -113,7 +114,7 @@ export class AddClassComponent {
     };
     this.classService.addClass(sigup).subscribe((x) => {
       this.classCode = x.code;
-      this.router.navigate(['admin/class', 'list']);
+      this.router.navigate(['../list'], { relativeTo: this.route });
       this._snackBar.open('Class Created successfully');
       // this._snackBar.open(
       //   `Class has been created. Class Code is ${x.code}`,

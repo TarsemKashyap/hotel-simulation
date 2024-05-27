@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {
-  hasStudentRole,
-  hasAdminRole,
-  hasInstructorRole,
-  AuthGuard,
   canAccessReports,
-  AuthCheckGuard,
+  AuthCheckGuard
 } from '../shared/auth.gurad';
-import { AppRoles } from '../public/account';
 import { ReportListComponent } from './report-list/report-list.component';
 import { ObjectiveReportComponent } from './objective-report/objective-report.component';
 import { PerformanceComponent } from './performance/performance.component';

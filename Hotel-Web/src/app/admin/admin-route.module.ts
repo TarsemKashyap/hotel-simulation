@@ -1,5 +1,4 @@
-import { Component, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/admin-dashboard.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
@@ -9,16 +8,15 @@ import {
   InstructorEditComponent,
   InstructorListComponent,
 } from './instructor';
-import { AuthCheckGuard, AuthGuard, hasAdminRole } from '../shared/auth.gurad';
+import { AuthCheckGuard, hasAdminRole } from '../shared/auth.gurad';
 import { reportRoutes } from '../Report/report-routing.module';
-import { AppRoles } from '../public/account';
 
 const routes: Routes = [
   {
     path: '',
     title: '',
     component: DashboardComponent,
-    canActivate: [hasAdminRole, AuthCheckGuard],
+    canActivateChild: [hasAdminRole, AuthCheckGuard],
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'instructor/create', component: InstructorComponent },

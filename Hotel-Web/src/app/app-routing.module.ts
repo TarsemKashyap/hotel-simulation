@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './shared';
 import {
   AuthCheckGuard,
   canAccessReports,
@@ -8,7 +7,6 @@ import {
   hasInstructorRole,
   hasStudentRole,
 } from './shared/auth.gurad';
-import { AppRoles } from './public/account';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,25 +19,25 @@ export const appRoutes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import('./admin/admin.module').then((x) => x.AdminModule),
-   // canActivate: [AuthCheckGuard],
+    canActivate: [AuthCheckGuard, hasAdminRole],
   },
   {
     path: 'student',
     loadChildren: () =>
       import('./student/student.module').then((x) => x.StudentModule),
-   // canActivate: [AuthCheckGuard],
+    canActivate: [AuthCheckGuard, hasStudentRole],
   },
   {
     path: 'report/:id',
     loadChildren: () =>
       import('./Report/report.module').then((x) => x.ReportModule),
-  //  canActivate: [AuthCheckGuard,canAccessReports],
+    canActivate: [AuthCheckGuard, canAccessReports],
   },
   {
     path: 'instructor',
     loadChildren: () =>
       import('./instructor/instructor.module').then((x) => x.InstructorModule),
-    //canActivate: [AuthCheckGuard],
+    canActivate: [AuthCheckGuard, hasInstructorRole],
   },
 ];
 

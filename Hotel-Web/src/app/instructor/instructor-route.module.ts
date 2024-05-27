@@ -13,7 +13,7 @@ const routes: Routes = [
     path: '',
     title: '',
     component: InstructorDashboard,
-    canActivateChild: [hasInstructorRole,AuthCheckGuard],
+    canActivateChild: [hasInstructorRole, AuthCheckGuard],
     children: [
       { path: 'class', redirectTo: 'class' },
       {
