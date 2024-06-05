@@ -24,7 +24,7 @@ export class RevParGoparComponent {
   reportParam: ReportParams = {} as ReportParams;
   revParGopalReportResponse: RevParGopalReportResponse =
     {} as RevParGopalReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: avgdailyrateReportAttribute[] = [];
   Xaxis: any[] = [];
   YaxisMarketAvg: any[] = [];
@@ -86,6 +86,9 @@ export class RevParGoparComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
       data: {

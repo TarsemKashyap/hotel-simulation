@@ -30,7 +30,7 @@ export class AvgDailyRateComponent {
   reportParam: ReportParams = {} as ReportParams;
   avgDailyRateReportResponse: AvgDailyRateReportResponse =
     {} as AvgDailyRateReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: avgdailyrateReportAttribute[] = [];
   Xaxis: any[] = [];
   YaxisMarketAvg: any[] = [];
@@ -85,6 +85,9 @@ export class AvgDailyRateComponent {
     });
   }
   createChart() {
+if(this.chart){
+  this.chart.destroy();
+}
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 

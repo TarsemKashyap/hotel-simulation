@@ -155,41 +155,7 @@ namespace Service
             }
             // throw new ValidationException("data not found ");
             return data.Adapt<ClassSessionDto>();
-            //IQueryable<ClassSession> query = _context.ClassSessions.Where(x => x.ClassId == classId);
-            //var result = query.Select(x => new ClassSessionDto
-            //{
-            //    ClassId = x.ClassId,
-            //    Title = x.Title,
-            //    Memo = x.Memo,
-            //    StartDate = x.StartDate,
-            //    EndDate = x.EndDate,
-            //    HotelsCount = x.HotelsCount,
-            //    RoomInEachHotel = x.RoomInEachHotel,
-            //    CurrentQuater = x.CurrentQuater,
-            //    CreatedOn = x.CreatedOn,
-            //    Code = x.Code,
-            //    CreatedBy = x.CreatedBy,
-            //    Status = x.Status.ToString(),
-
-
-            //}).ToList();
-            //ClassSessionDto obj = new ClassSessionDto();
-            //if (result.Count > 0)
-            //{
-            //    obj.ClassId = classId;
-            //    obj.Title = result[0].Title;
-            //    obj.Memo = result[0].Memo;
-            //    obj.StartDate = result[0].StartDate;
-            //    obj.EndDate = result[0].EndDate;
-            //    obj.HotelsCount = result[0].HotelsCount;
-            //    obj.RoomInEachHotel = result[0].RoomInEachHotel;
-            //    obj.CurrentQuater = result[0].CurrentQuater;
-            //    obj.CreatedOn = result[0].CreatedOn;
-            //    obj.Code = result[0].Code;
-            //    obj.CreatedBy = result[0].CreatedBy;
-            //    obj.Status = result[0].Status.ToString();
-            //}
-            //return obj;
+           
 
         }
 

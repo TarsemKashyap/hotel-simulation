@@ -37,7 +37,7 @@ export class MarketExpenditureComponent {
   reportParam: ReportParams = {} as ReportParams;
   marketExpenditureReportResponse: MarketExpenditureReportResponse =
     {} as MarketExpenditureReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: MarketExpenditureReportAttribute[] = [];
 
   YaxisData: any[] = [];
@@ -221,6 +221,9 @@ export class MarketExpenditureComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
       data: {

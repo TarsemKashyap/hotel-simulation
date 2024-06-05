@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from './IHyperLinks.model';
 import { ActivatedRoute } from '@angular/router';
+import { ClassService, ClassSession } from 'src/app/shared/class';
 
 @Component({
   selector: 'app-report-list',
@@ -11,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ReportListComponent {
   isInstructorOrAdmin: boolean = false;
   activeLinks: IHyperLinks[] = [];
- studentLink: IHyperLinks[] = [
+  studentLink: IHyperLinks[] = [
     {
       text: 'Objectives Report',
       link: 'objective-report',
@@ -19,17 +20,20 @@ export class ReportListComponent {
     {
       text: 'Performance Report',
       link: 'performance-report',
-      enable: () => !this.isInstructorOrAdmin,
+      enable: () =>
+        !this.isInstructorOrAdmin && this.classInfo.currentQuater > 1,
     },
     {
       text: 'Performance Report',
       link: 'inst-performance-report',
-      enable: () => this.isInstructorOrAdmin,
+      enable: () =>
+        this.isInstructorOrAdmin && this.classInfo.currentQuater > 1,
     },
     {
       text: 'Instructor Hotels Summery Report',
       link: 'inst-hotels-summery-report',
-      enable: () => this.isInstructorOrAdmin,
+      enable: () =>
+        this.isInstructorOrAdmin && this.classInfo.currentQuater > 1,
     },
     {
       text: 'Income Report',
@@ -38,10 +42,13 @@ export class ReportListComponent {
     {
       text: 'Balance Report',
       link: 'balance-report',
+      enable: () => this.classInfo.currentQuater > 0,
+
     },
     {
       text: 'Cash Flow Report',
       link: 'cashflow-report',
+      enable: () => this.classInfo.currentQuater > 2,
     },
     {
       text: 'Occupancy Report',
@@ -92,17 +99,31 @@ export class ReportListComponent {
       link: 'demand-report',
     },
   ];
-  constructor(private accountService: AccountService, public activeRoute: ActivatedRoute) {}
+  classInfo: ClassSession;
+  constructor(
+    private accountService: AccountService,
+    public activeRoute: ActivatedRoute,
+    public classService: ClassService
+  ) {}
 
   ngOnInit() {
     this.isInstructorOrAdmin = this.accountService.userHasAnyRole([
       AppRoles.Instructor,
       AppRoles.Admin,
     ]);
+    this.classService
+      .getClass(this.activeRoute.snapshot.params['id'])
+      .subscribe((x) => {
+        this.classInfo = x;
+        this.links();
+      });
+  }
 
-    
+  private links() {
     this.activeLinks = this.studentLink.filter((x) => {
-      if (!x.enable) return true;
+      if (!x.enable) {
+        return this.classInfo.currentQuater > 1;
+      }
       return x.enable();
     });
   }

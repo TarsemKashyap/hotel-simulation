@@ -26,7 +26,7 @@ export class PositionMapComponent {
   reportParam: ReportParams = {} as ReportParams;
   positionMapReportResponse: PositionMapReportResponse =
     {} as PositionMapReportResponse;
-  public chart: Chart | any;
+  public chart: Chart;
   ChartData: PositionMapAttribute[] = [];
 
   YaxisData: any[] = [];
@@ -81,8 +81,7 @@ export class PositionMapComponent {
     });
   }
   createChart(data: PositionMapAttribute[]) {
-    const colors = ['red', 'green', 'blue', 'brown', 'orange'];
-
+    const colors = ['red', 'green', 'blue', 'brown', 'orange', 'grey'];
     var datasets = data.map((x, index) => {
       return {
         label: x.classGroup,
@@ -91,8 +90,8 @@ export class PositionMapComponent {
         },
         pointRadius: 5 + index * 5,
         offset: (index + 5) * 25,
-        borderRadius: 23,
-        borderWidth: 10,
+        borderRadius: 2,
+        borderWidth: 2,
         data: [
           {
             y: <any>data[index].qualityRating,
@@ -101,6 +100,10 @@ export class PositionMapComponent {
         ],
       };
     });
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'scatter', //this denotes tha type of chart
 
@@ -109,10 +112,9 @@ export class PositionMapComponent {
       },
       plugins: [ChartDataLabels],
       options: {
-        aspectRatio: 2.5,
+        aspectRatio: 3,
         plugins: {
           datalabels: {
-            
             formatter: (value, context) => {
               let data = <any>context.dataset.data[0];
               return `${context.dataset.label} ($${this.numberToDecimal(
@@ -120,14 +122,28 @@ export class PositionMapComponent {
               )},${this.numberToDecimal(data!.y)})`;
             },
             align: (context) => {
-              return (context.datasetIndex + 1) * 70;
+              return (context.datasetIndex + 175) * 50;
             },
-            offset: 25,
+            offset: 10 * datasets.length,
             color: (context) => {
               return colors[context.datasetIndex];
             },
-            clamp: true,
+            //  clamp: true,
             //padding: 5,
+          },
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Room Rate',
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Quality Rating',
+            },
           },
         },
       },

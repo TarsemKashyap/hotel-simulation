@@ -3,6 +3,7 @@ import { ReportListComponent } from '../report-list/report-list.component';
 import { AccountService } from 'src/app/public/account';
 import { ActivatedRoute } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ClassService } from 'src/app/shared/class';
 
 @Component({
   selector: 'app-report-menu',
@@ -11,15 +12,18 @@ import { MatMenuTrigger } from '@angular/material/menu';
 })
 export class ReportMenuComponent extends ReportListComponent {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  constructor(accountService: AccountService, activeRoute: ActivatedRoute) {
-    super(accountService, activeRoute);
+  constructor(
+    accountService: AccountService,
+    activeRoute: ActivatedRoute,
+    classService: ClassService
+  ) {
+    super(accountService, activeRoute, classService);
   }
-
 
   openMyMenu() {
-     this.trigger.openMenu();
+    this.trigger.openMenu();
   }
-  closeMenu(){
+  closeMenu() {
     this.trigger.closeMenu();
   }
 }

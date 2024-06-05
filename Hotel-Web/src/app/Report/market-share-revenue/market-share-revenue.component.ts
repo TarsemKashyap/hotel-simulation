@@ -27,7 +27,7 @@ export class MarketShareRevenueComponent {
   reportParam: ReportParams = {} as ReportParams;
   marketShareRevenueReportResponse: MarketShareRevenueReportResponse =
     {} as MarketShareRevenueReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: IoccupancyBySegment[] = [];
   occupancyBySegment: IoccupancyBySegment[] = [];
   occupancyBySegmentSeg: occupancyReportAttribute[][] = [];
@@ -98,6 +98,9 @@ export class MarketShareRevenueComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 

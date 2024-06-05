@@ -25,7 +25,7 @@ export class QualityRatingComponent {
   reportParam: ReportParams = {} as ReportParams;
   qualityRatingReportResponse: QualityRatingReportResponse =
     {} as QualityRatingReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: QualityRatingAttribute[] = [];
 
   YaxisData: any[] = [];
@@ -86,6 +86,9 @@ export class QualityRatingComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 
