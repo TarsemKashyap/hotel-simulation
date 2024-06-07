@@ -110,19 +110,19 @@ public class ClassSessionService : IClassSessionService
     }
     public async Task<IList<ClassGroupDto>> StudentGroupList()
     {
-        var users = _context.ClassGroups.ToList();
+        var users = await _context.ClassGroups.ToListAsync();
         return users.Adapt<IList<ClassGroupDto>>();
 
     }
 
     public async Task<IList<ClassGroupDto>> GetGroupList(int classId)
     {
-        var groups = _context.ClassGroups.Where(c => c.ClassId == classId).ToList();
+        var groups = await _context.ClassGroups.Where(c => c.ClassId == classId).ToListAsync();
         return groups.Adapt<IList<ClassGroupDto>>();
     }
     public async Task<IList<MonthDto>> MonthFilterList(int classId)
     {
-        var sequence = _context.Months.Where(c => c.ClassId == classId && c.Sequence != 0 && c.IsComplete).OrderBy(s => s.Sequence).ToList();
+        var sequence = await _context.Months.Where(c => c.ClassId == classId && c.Sequence != 0 && c.IsComplete).OrderBy(s => s.Sequence).ToListAsync();
         return sequence.Adapt<IList<MonthDto>>();
 
     }
@@ -165,14 +165,13 @@ public class ClassSessionService : IClassSessionService
         .ToList();
 
         return result;
-        //return query.OrderByDescending(x => x.CreatedOn).ProjectToType<ClassSessionDto>().AsEnumerable();
 
     }
 
 
     public async Task<ClassSessionUpdateDto> GetById(int classId)
     {
-        var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);
+        var appUser = await _context.ClassSessions.Include(x => x.Groups).FirstOrDefaultAsync(x => x.ClassId == classId);
         ;
         if (appUser == null)
             throw new ValidationException("class not found for given classId");
