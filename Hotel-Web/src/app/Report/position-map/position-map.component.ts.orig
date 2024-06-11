@@ -100,10 +100,13 @@ export class PositionMapComponent {
         ],
       };
     });
+<<<<<<< HEAD
 
     if (this.chart) {
       this.chart.destroy();
     }
+=======
+>>>>>>> origin/dev
     this.chart = new Chart('MyChart', {
       type: 'scatter', //this denotes tha type of chart
 
