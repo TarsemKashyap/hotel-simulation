@@ -4,7 +4,11 @@ import { ChangePasswordComponent } from '../admin';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ClassListComponent } from '../shared/class/class-list/class-list.component';
 import { AddRemovedClassComponent } from '../shared/class';
-import { AuthCheckGuard, AuthGuard, hasStudentRole} from '../shared/auth.gurad';
+import {
+  AuthCheckGuard,
+  AuthGuard,
+  hasStudentRole,
+} from '../shared/auth.gurad';
 import { DecisionComponent } from './decision/decision.component';
 import { RoomComponent } from './room/room.component';
 import { AttributeComponent } from './attribute/attribute.component';
@@ -21,7 +25,7 @@ const routes: Routes = [
     path: '',
     title: '',
     component: StudentDashboard,
-    canActivateChild:[AuthCheckGuard,hasStudentRole],
+    canActivateChild: [AuthCheckGuard, hasStudentRole],
     children: [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'change-class', component: AddRemovedClassComponent },
@@ -33,14 +37,11 @@ const routes: Routes = [
       { path: 'marketing', component: MarketingComponent },
       { path: 'goalSetting', component: GoalSettingComponent },
       { path: 'loan', component: LoanComponent },
-      ...reportRoutes
-      
+      ...reportRoutes,
     ],
-    canActivate:[AuthCheckGuard,hasStudentRole],
+    canActivate: [AuthCheckGuard, hasStudentRole],
   },
 ];
-
-
 
 @NgModule({
   declarations: [],

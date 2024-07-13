@@ -53,6 +53,7 @@ export class MarketSharePositionAloneComponent {
     this.reportService
       .marketSharePositionAloneReportDetails(this.reportParam)
       .subscribe((reportData) => {
+        this.ChartData=[];
         this.marketSharePositionAloneReportResponse = reportData;
         this.ChartData.push.apply(
           this.ChartData,

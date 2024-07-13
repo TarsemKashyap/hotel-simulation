@@ -60,7 +60,7 @@ export class AvgDailyRateComponent {
       .avgDailyRateReportDetails(this.reportParam)
       .subscribe((reportData) => {
         this.avgDailyRateReportResponse = reportData;
-
+        this.ChartData = [];
         this.ChartData = this.avgDailyRateReportResponse.data;
         this.YaxisMarketAvg = this.ChartData.map((item) => item.marketAvg);
         this.YaxisHotel = this.ChartData.map((item) => item.hotel);
@@ -85,9 +85,9 @@ export class AvgDailyRateComponent {
     });
   }
   createChart() {
-if(this.chart){
-  this.chart.destroy();
-}
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 
@@ -100,7 +100,7 @@ if(this.chart){
             data: this.YaxisHotel,
             backgroundColor: 'skyblue',
             type: 'bar',
-            barPercentage:0.4,
+            barPercentage: 0.4,
             order: 1,
           },
           {

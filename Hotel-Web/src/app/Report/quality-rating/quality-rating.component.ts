@@ -60,6 +60,9 @@ export class QualityRatingComponent {
       .subscribe((reportData) => {
         this.qualityRatingReportResponse = reportData;
         this.ChartData = this.qualityRatingReportResponse.segments;
+        this.YaxisData=[];
+        this.YaxisHotel=[];
+        this.YaxisMarketAvg=[];
         this.YaxisData.push(reportData.overAll, ...reportData.segments);
         this.YaxisHotel = this.YaxisData.map((i) => i.hotel);
         this.YaxisMarketAvg = this.YaxisData.map((i) => i.marketAverage);

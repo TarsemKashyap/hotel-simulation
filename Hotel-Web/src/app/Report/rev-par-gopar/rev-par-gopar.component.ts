@@ -54,6 +54,7 @@ export class RevParGoparComponent {
       .revParGopalReportDetails(this.reportParam)
       .subscribe((reportData) => {
         this.revParGopalReportResponse = reportData;
+        this.ChartData=[];
         this.ChartData.push(this.revParGopalReportResponse.overAll);
         this.ChartData.push.apply(
           this.ChartData,
@@ -116,7 +117,6 @@ export class RevParGoparComponent {
           y: {
             ticks: { crossAlign: 'far' },
           },
-         
         },
       },
     });
