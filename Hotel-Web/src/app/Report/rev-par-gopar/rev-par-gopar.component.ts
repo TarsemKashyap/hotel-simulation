@@ -24,7 +24,7 @@ export class RevParGoparComponent {
   reportParam: ReportParams = {} as ReportParams;
   revParGopalReportResponse: RevParGopalReportResponse =
     {} as RevParGopalReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: avgdailyrateReportAttribute[] = [];
   Xaxis: any[] = [];
   YaxisMarketAvg: any[] = [];
@@ -54,6 +54,7 @@ export class RevParGoparComponent {
       .revParGopalReportDetails(this.reportParam)
       .subscribe((reportData) => {
         this.revParGopalReportResponse = reportData;
+        this.ChartData=[];
         this.ChartData.push(this.revParGopalReportResponse.overAll);
         this.ChartData.push.apply(
           this.ChartData,
@@ -86,6 +87,9 @@ export class RevParGoparComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
       data: {
@@ -113,7 +117,6 @@ export class RevParGoparComponent {
           y: {
             ticks: { crossAlign: 'far' },
           },
-         
         },
       },
     });

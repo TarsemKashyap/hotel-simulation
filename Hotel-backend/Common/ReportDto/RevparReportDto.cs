@@ -13,9 +13,27 @@ namespace Common.ReportDto
         public class RevPar
         {
             public string Label { get; set; }
-            public decimal Hotel { get; set; }
-            public decimal MarketAvg { get; set; }
             public decimal? Index { get; set; }
+
+
+            private decimal _mketAvg;
+
+            public decimal MarketAvg
+            {
+                get { return _mketAvg; }
+                set { _mketAvg = Math.Abs(value); }
+            }
+
+
+            private decimal _hotel;
+
+            public decimal Hotel
+            {
+                get { return _hotel; }
+                set { _hotel = Math.Abs(value); }
+            }
+
+
         }
 
         public void AddOverAll(decimal hotel, decimal marketAvg)
@@ -37,6 +55,8 @@ namespace Common.ReportDto
         {
             GoPar = new RevPar { Label = "GOPAR", Hotel = hotel, MarketAvg = marketAvg, Index = GetIndex(hotel, marketAvg) };
         }
+
+
 
         public void WeekdayRevPar(decimal hotel, decimal marketAvg)
         {

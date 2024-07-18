@@ -29,8 +29,8 @@ export class ClassService {
     return this.httpClient.get<ClassSession[]>('class/list');
   }
 
-  getClass(classId: number): Observable<any> {
-    return this.httpClient.get<ClassSession[]>(`class/${classId}`);
+  getClass(classId: number): Observable<ClassSession> {
+    return this.httpClient.get<ClassSession>(`class/${classId}`);
   }
 
   classUpdate(id: any, update: ClassSession): Observable<any> {
@@ -98,6 +98,12 @@ export class ClassService {
     return this.httpClient.post(
       'studentClassMapping/studentClassAssign',
       classSession
+    );
+  }
+
+  getStudentDefaultClass(): Observable<ClassSession> {
+    return this.httpClient.get<ClassSession>(
+      'studentClassMapping/defaultclass'
     );
   }
 

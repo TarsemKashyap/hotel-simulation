@@ -30,7 +30,7 @@ export class AvgDailyRateComponent {
   reportParam: ReportParams = {} as ReportParams;
   avgDailyRateReportResponse: AvgDailyRateReportResponse =
     {} as AvgDailyRateReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: avgdailyrateReportAttribute[] = [];
   Xaxis: any[] = [];
   YaxisMarketAvg: any[] = [];
@@ -60,7 +60,7 @@ export class AvgDailyRateComponent {
       .avgDailyRateReportDetails(this.reportParam)
       .subscribe((reportData) => {
         this.avgDailyRateReportResponse = reportData;
-
+        this.ChartData = [];
         this.ChartData = this.avgDailyRateReportResponse.data;
         this.YaxisMarketAvg = this.ChartData.map((item) => item.marketAvg);
         this.YaxisHotel = this.ChartData.map((item) => item.hotel);
@@ -85,6 +85,9 @@ export class AvgDailyRateComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 
@@ -97,7 +100,7 @@ export class AvgDailyRateComponent {
             data: this.YaxisHotel,
             backgroundColor: 'skyblue',
             type: 'bar',
-            barPercentage:0.4,
+            barPercentage: 0.4,
             order: 1,
           },
           {

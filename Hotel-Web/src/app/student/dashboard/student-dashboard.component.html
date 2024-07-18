@@ -1,20 +1,20 @@
 <div class="flex">
   <aside
-    class=" relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
+    class="relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
   >
-  <div class="roles-menu">
-    <div class="p-6">
-      <a
-        href="/student"
-        class="text-white text-3xl font-semibold uppercase hover:text-gray-300"
-        >Student</a
+    <div class="roles-menu">
+      <div class="p-6">
+        <a
+          href="/student"
+          class="text-white text-3xl font-semibold uppercase hover:text-gray-300"
+          >Student</a
+        >
+      </div>
+      <nav
+        *ngFor="let studentRolePage of studentRolePageList"
+        class="text-white text-base pt-3"
       >
-    </div>
-    <nav *ngFor="let studentRolePage of studentRolePageList" class="text-white text-base pt-3">
-     
-    
-
-      <!-- <a
+        <!-- <a
         routerLink="instructor/create"
         class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
@@ -23,19 +23,40 @@
         </button>
         Instructor Create
       </a> -->
-     
-      <a (click)="openLink(studentRolePage)" style="cursor: pointer;" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-        <button>
-          <mat-icon
-            class="text-white-500"
-            style="margin-right: 5px"
-            matRipple
-            fontIcon="school"
-          ></mat-icon>
-        </button>
-        {{studentRolePage.pageName}}
-      </a>
-      <!-- <a
+
+        <a
+          (click)="openLink(studentRolePage)"
+          style="cursor: pointer"
+          class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        >
+          <button>
+            <mat-icon
+              class="text-white-500"
+              style="margin-right: 5px"
+              matRipple
+              fontIcon="school"
+            ></mat-icon>
+          </button>
+          {{ studentRolePage.pageName }}
+        </a>
+
+        <a
+          (click)="navigateToReport()"
+          style="cursor: pointer"
+          class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        >
+          <button>
+            <mat-icon
+              class="text-white-500"
+              style="margin-right: 5px"
+              matRipple
+              fontIcon="school"
+            ></mat-icon>
+          </button>
+          Reports
+        </a>
+
+        <!-- <a
       routerLink="change-password"
       class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
     >
@@ -44,8 +65,8 @@
       </button>
       Change Password
     </a> -->
-    </nav>
-  </div>
+      </nav>
+    </div>
   </aside>
 
   <div class="w-full flex flex-col h-screen overflow-y-hidden">
@@ -60,11 +81,29 @@
           Home
         </a>
       </div>
+      <div class="w-full">
+        <p class="text-center text-xl font-medium" *ngIf="defaultClass">
+          Class:
+          <span class="text-blue-600 ">
+            {{ defaultClass.className }}
+          </span>
+          Month:
+          <span class="text-blue-600">
+            {{ defaultClass.currentQuater }}
+          </span>
+        </p>
+      </div>
+      <div class="text-left">
+        <h3></h3>
+      </div>
       <div class="relative w-1/2 flex justify-end">
-        <button [matMenuTriggerFor]="menu" class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
+        <button
+          [matMenuTriggerFor]="menu"
+          class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
+        >
           <img src="" />
         </button>
-        
+
         <mat-menu #menu="matMenu">
           <a mat-menu-item routerLink="change-password">Change Password</a>
           <button mat-menu-item (click)="logout()">Logout</button>
@@ -96,7 +135,7 @@
       <div class="flex items-center justify-between">
         <a
           href="index.html"
-          class="text-white text-3xl  uppercase hover:text-gray-300"
+          class="text-white text-3xl uppercase hover:text-gray-300"
           >Admin</a
         >
         <button class="text-white text-3xl focus:outline-none">
@@ -171,7 +210,7 @@
           Sign Out
         </a>
         <button
-          class="w-full bg-white cta-btn  py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center"
+          class="w-full bg-white cta-btn py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center"
         >
           <i class="fas fa-arrow-circle-up mr-3"></i> Upgrade to Pro!
         </button>

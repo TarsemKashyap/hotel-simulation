@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from './IHyperLinks.model';
 import { ActivatedRoute } from '@angular/router';
+<<<<<<< HEAD
 import { ClassService, ClassSession } from 'src/app/shared/class';
+=======
+>>>>>>> origin/dev
 
 @Component({
   selector: 'app-report-list',
@@ -12,7 +15,11 @@ import { ClassService, ClassSession } from 'src/app/shared/class';
 export class ReportListComponent {
   isInstructorOrAdmin: boolean = false;
   activeLinks: IHyperLinks[] = [];
+<<<<<<< HEAD
   studentLink: IHyperLinks[] = [
+=======
+ studentLink: IHyperLinks[] = [
+>>>>>>> origin/dev
     {
       text: 'Objectives Report',
       link: 'objective-report',
@@ -99,18 +106,23 @@ export class ReportListComponent {
       link: 'demand-report',
     },
   ];
+<<<<<<< HEAD
   classInfo: ClassSession;
   constructor(
     private accountService: AccountService,
     public activeRoute: ActivatedRoute,
     public classService: ClassService
   ) {}
+=======
+  constructor(private accountService: AccountService, public activeRoute: ActivatedRoute) {}
+>>>>>>> origin/dev
 
   ngOnInit() {
     this.isInstructorOrAdmin = this.accountService.userHasAnyRole([
       AppRoles.Instructor,
       AppRoles.Admin,
     ]);
+<<<<<<< HEAD
     this.classService
       .getClass(this.activeRoute.snapshot.params['id'])
       .subscribe((x) => {
@@ -120,6 +132,10 @@ export class ReportListComponent {
   }
 
   private links() {
+=======
+
+    
+>>>>>>> origin/dev
     this.activeLinks = this.studentLink.filter((x) => {
       if (!x.enable) {
         return this.classInfo.currentQuater > 1;

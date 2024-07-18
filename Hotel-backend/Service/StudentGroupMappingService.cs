@@ -32,11 +32,24 @@ namespace Service
         {
 
 
-            var roleMapping = await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId).ToListAsync();
+            var roleMapping = await _context.StudentRoleMapping.Where(x => x.StudentId == newRole.StudentId && x.ClassId == newRole.ClassId).ToListAsync();
 
             var classSession = await _context.StudentClassMapping.FirstOrDefaultAsync(x => x.ClassId == newRole.ClassId && x.StudentId == newRole.StudentId);
-            classSession.GroupId = newRole.GroupId;
-            _context.StudentClassMapping.Update(classSession);
+            if (classSession != null)
+            {
+                classSession.GroupId = newRole.GroupId;
+                _context.StudentClassMapping.Update(classSession);
+            }
+            else
+            {
+                StudentClassMapping classMapping = new StudentClassMapping()
+                {
+                    ClassId = newRole.ClassId,
+                    GroupId = newRole.GroupId,
+                    StudentId = newRole.StudentId,
+                };
+                _context.StudentClassMapping.Add(classMapping);
+            }
             await _context.SaveChangesAsync();
             if (!roleMapping.Any())
             {

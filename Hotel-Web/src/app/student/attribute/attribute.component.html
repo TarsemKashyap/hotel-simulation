@@ -1,708 +1,943 @@
-<section >
+<section>
+  <div class="container">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Make Atttibutes and Amenities Expenditures Decisions</h2>
+      <table id="attributeTable" class="table-fixed">
+        <tr>
+          <th colspan="1">Title</th>
+          <th colspan="2" class="text-center w-[50%]">Capital Investment</th>
+          <th colspan="2" class="text-center">Operating Expenditures</th>
+        </tr>
 
+        <tr>
+          <td></td>
+          <td>Accumulated upto current month</td>
+          <td>
+            Attributes and Amenities
+            <p>Investment for next month</p>
+          </td>
+          <td>Other</td>
+          <td class="flex-wrap">Labor</td>
+        </tr>
+        <tr>
+          <td>Spa</td>
+          <td>$<input type="text" formControlName="Accumulated1" /></td>
+          <td>
+            <label for="Amenities1">$</label>
+            <input
+              type="text"
+              formControlName="Amenities1"
+              matInput
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities1.errors }"
+            />
+            <div *ngIf="submitted && f.Amenities1.errors">
+              <div *ngIf="f.Amenities1.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities1.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            <label for="Amenities1">$</label>
 
-    <div class="container">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <h2>Make Atttibutes and Amenities Expenditures Decisions</h2>
-        <table id="attributeTable" class="table-auto">
-            <tr>
-                <th style="border-style: none none inset none;width: 25%;">
-                    &nbsp;</th>
-                <th style="border-style: none none inset none;width: 25%;">
-                  &nbsp;</th>
-                <th style="border-style: none none inset none;width: 25%;">
-                    Capital Investment</th>
-                <th style="border-style: none none inset none;width: 25%;" colspan="2">
-                    Operating Expenditures</th> 
-            </tr>
-           
-          <tr>
-              <th style="border-style: none none inset none;">
-                  &nbsp;</th>
-              <th style="border-style: none none inset none;">
-                Accumulated upto current month</th>
-              <th style="border-style: none none inset none;">
-                Attributes and Amenities Investment for next month</th>
-              <th style="border-style: none none inset none;">
-                    Other</th>
-              <th style="border-style: none none inset none;">
-                    Labor</th>
-          </tr>
-          <tr>
-              <td style="width: 10%;">
-                Spa
-              </td>
-              <td style="width: 30%;">
-                <input type="text" formControlName="Accumulated1">
-              </td>
-              <td style="width: 30%;">
-                <input type="text" formControlName="Amenities1" (change)="sum();"
-                [ngClass]="{ 'is-invalid': submitted && f.Amenities1.errors }" class="input-field" />
-                <div *ngIf="submitted && f.Amenities1.errors" >
-                    <div *ngIf="f.Amenities1.errors.required">Value is required</div>
-                    <div *ngIf="f.Amenities1.errors.pattern">Invalid value</div>
-                </div>
-              </td>
-              <td style="width: 10%;">
-                <input type="text" formControlName="Other1" (change)="sum();"
-                [ngClass]="{ 'is-invalid': submitted && f.Other1.errors }" class="input-field" />
-                <div *ngIf="submitted && f.Other1.errors" >
-                    <div *ngIf="f.Other1.errors.required">Value is required</div>
-                    <div *ngIf="f.Other1.errors.pattern">Invalid value</div>
-                </div>
-              </td>
-              <td style="width: 10%;">
-                <input type="text" formControlName="Labour1" (change)="sum();"
-                [ngClass]="{ 'is-invalid': submitted && f.Labour1.errors }" class="input-field" />
-                <div *ngIf="submitted && f.Labour1.errors" >
-                    <div *ngIf="f.Labour1.errors.required">Value is required</div>
-                    <div *ngIf="f.Labour1.errors.pattern">Invalid value</div>
-                </div>
-              </td>
-          </tr>
-          <tr>
-            <td>
-            Fitness Center
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated2">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities2" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities2.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities2.errors" >
-                  <div *ngIf="f.Amenities2.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities2.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other2" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other2.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other2.errors" >
-                  <div *ngIf="f.Other2.errors.required">Value is required</div>
-                  <div *ngIf="f.Other2.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour2" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour2.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour2.errors" >
-                  <div *ngIf="f.Labour2.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour2.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Business Center
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated3">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities3" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities3.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities3.errors" >
-                  <div *ngIf="f.Amenities3.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities3.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other3" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other3.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other3.errors" >
-                  <div *ngIf="f.Other3.errors.required">Value is required</div>
-                  <div *ngIf="f.Other3.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour3" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour3.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour3.errors" >
-                  <div *ngIf="f.Labour3.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour3.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Golf Course
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated4">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities4" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities4.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities4.errors" >
-                  <div *ngIf="f.Amenities4.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities4.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other4" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other4.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other4.errors" >
-                  <div *ngIf="f.Other4.errors.required">Value is required</div>
-                  <div *ngIf="f.Other4.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour4" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour4.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour4.errors" >
-                  <div *ngIf="f.Labour4.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour4.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              SpOther Recreation Facilities 
-              <br />
-              Pools, game rooms, tennis courts, ect
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated5">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities5" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities5.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities5.errors" >
-                  <div *ngIf="f.Amenities5.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities5.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other5" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other5.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other5.errors" >
-                  <div *ngIf="f.Other5.errors.required">Value is required</div>
-                  <div *ngIf="f.Other5.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour5" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour5.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour5.errors" >
-                  <div *ngIf="f.Labour5.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour5.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Management/Sales Attention
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated6">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities6" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities6.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities6.errors" >
-                  <div *ngIf="f.Amenities6.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities6.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other6" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other6.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other6.errors" >
-                  <div *ngIf="f.Other6.errors.required">Value is required</div>
-                  <div *ngIf="f.Other6.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour6" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour6.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour6.errors" >
-                  <div *ngIf="f.Labour6.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour6.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Restaurants
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated7">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities7" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities7.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities7.errors" >
-                  <div *ngIf="f.Amenities7.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities7.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other7" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other7.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other7.errors" >
-                  <div *ngIf="f.Other7.errors.required">Value is required</div>
-                  <div *ngIf="f.Other7.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour7" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour7.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour7.errors" >
-                  <div *ngIf="f.Labour7.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour7.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Bars
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated2">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities8" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities8.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities8.errors" >
-                  <div *ngIf="f.Amenities8.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities8.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other8" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other8.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other8.errors" >
-                  <div *ngIf="f.Other8.errors.required">Value is required</div>
-                  <div *ngIf="f.Other8.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour8" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour8.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour8.errors" >
-                  <div *ngIf="f.Labour8.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour8.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Room Service
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated9">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities9" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities9.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities9.errors" >
-                  <div *ngIf="f.Amenities9.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities9.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other9" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other9.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other9.errors" >
-                  <div *ngIf="f.Other9.errors.required">Value is required</div>
-                  <div *ngIf="f.Other9.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour9" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour9.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour9.errors" >
-                  <div *ngIf="f.Labour9.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour9.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Banquet &amp; Catering
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated2">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities10" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities10.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities10.errors" >
-                  <div *ngIf="f.Amenities10.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities10.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other10" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other10.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other10.errors" >
-                  <div *ngIf="f.Other10.errors.required">Value is required</div>
-                  <div *ngIf="f.Other10.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour10" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour10.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour10.errors" >
-                  <div *ngIf="f.Labour10.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour10.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Meeting Rooms
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated11">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities11" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities11.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities11.errors" >
-                  <div *ngIf="f.Amenities11.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities11.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other11" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other11.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other11.errors" >
-                  <div *ngIf="f.Other11.errors.required">Value is required</div>
-                  <div *ngIf="f.Other11.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour11" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour11.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour11.errors" >
-                  <div *ngIf="f.Labour11.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour11.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-            Entertainment
-            </td>
-            <td>
-              <input type="text" formControlName="Accumulated12">
-            </td>
-            <td>
-              <input type="text" formControlName="Amenities12" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities12.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities12.errors" >
-                  <div *ngIf="f.Amenities12.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities12.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Other12" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other12.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other12.errors" >
-                  <div *ngIf="f.Other12.errors.required">Value is required</div>
-                  <div *ngIf="f.Other12.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td>
-              <input type="text" formControlName="Labour12" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour12.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour12.errors" >
-                  <div *ngIf="f.Labour12.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour12.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td style="width: 10%;">
-            Courtesy(FB)
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated13">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities13" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities13.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities13.errors" >
-                  <div *ngIf="f.Amenities13.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities13.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other13" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other13.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other13.errors" >
-                  <div *ngIf="f.Other13.errors.required">Value is required</div>
-                  <div *ngIf="f.Other13.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour13" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour13.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour13.errors" >
-                  <div *ngIf="f.Labour13.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour13.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+            <input
+              type="text"
+              formControlName="Other1"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other1.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other1.errors">
+              <div *ngIf="f.Other1.errors.required">Value is required</div>
+              <div *ngIf="f.Other1.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            <span matPrefix>$</span>
+            <input
+              type="text"
+              matInput
+              formControlName="Labour1"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour1.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour1.errors">
+              <div *ngIf="f.Labour1.errors.required">Value is required</div>
+              <div *ngIf="f.Labour1.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Guest Rooms
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated14">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities14" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities14.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities14.errors" >
-                  <div *ngIf="f.Amenities14.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities14.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other14" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other14.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other14.errors" >
-                  <div *ngIf="f.Other14.errors.required">Value is required</div>
-                  <div *ngIf="f.Other14.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour14" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour14.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour14.errors" >
-                  <div *ngIf="f.Labour14.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour14.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Fitness Center</td>
+          <td>$<input type="text" formControlName="Accumulated2" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities2"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities2.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities2.errors">
+              <div *ngIf="f.Amenities2.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities2.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other2"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other2.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other2.errors">
+              <div *ngIf="f.Other2.errors.required">Value is required</div>
+              <div *ngIf="f.Other2.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour2"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour2.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour2.errors">
+              <div *ngIf="f.Labour2.errors.required">Value is required</div>
+              <div *ngIf="f.Labour2.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Reservations
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated15">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities15" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities15.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities15.errors" >
-                  <div *ngIf="f.Amenities15.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities15.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other15" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other15.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other15.errors" >
-                  <div *ngIf="f.Other15.errors.required">Value is required</div>
-                  <div *ngIf="f.Other15.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour15" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour15.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour15.errors" >
-                  <div *ngIf="f.Labour15.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour15.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Business Center</td>
+          <td>$<input type="text" formControlName="Accumulated3" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities3"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities3.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities3.errors">
+              <div *ngIf="f.Amenities3.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities3.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other3"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other3.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other3.errors">
+              <div *ngIf="f.Other3.errors.required">Value is required</div>
+              <div *ngIf="f.Other3.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour3"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour3.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour3.errors">
+              <div *ngIf="f.Labour3.errors.required">Value is required</div>
+              <div *ngIf="f.Labour3.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Guest Check in/Guest Check out
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated16">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities16" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities16.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities16.errors" >
-                  <div *ngIf="f.Amenities16.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities16.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other16" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other16.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other16.errors" >
-                  <div *ngIf="f.Other16.errors.required">Value is required</div>
-                  <div *ngIf="f.Other16.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour16" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour16.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour16.errors" >
-                  <div *ngIf="f.Labour16.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour16.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Golf Course</td>
+          <td>$<input type="text" formControlName="Accumulated4" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities4"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities4.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities4.errors">
+              <div *ngIf="f.Amenities4.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities4.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other4"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other4.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other4.errors">
+              <div *ngIf="f.Other4.errors.required">Value is required</div>
+              <div *ngIf="f.Other4.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour4"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour4.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour4.errors">
+              <div *ngIf="f.Labour4.errors.required">Value is required</div>
+              <div *ngIf="f.Labour4.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Concierge
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated17">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities17" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities17.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities17.errors" >
-                  <div *ngIf="f.Amenities17.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities17.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other17" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other17.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other17.errors" >
-                  <div *ngIf="f.Other17.errors.required">Value is required</div>
-                  <div *ngIf="f.Other17.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour17" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour17.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour17.errors" >
-                  <div *ngIf="f.Labour17.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour17.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>
+            Other Recreation Facilities
+            <br />
+            Pools, game rooms, tennis courts, ect
+          </td>
+          <td>$<input type="text" formControlName="Accumulated5" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities5"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities5.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities5.errors">
+              <div *ngIf="f.Amenities5.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities5.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other5"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other5.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other5.errors">
+              <div *ngIf="f.Other5.errors.required">Value is required</div>
+              <div *ngIf="f.Other5.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour5"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour5.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour5.errors">
+              <div *ngIf="f.Labour5.errors.required">Value is required</div>
+              <div *ngIf="f.Labour5.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Housekeeping
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated18">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities18" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities18.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities18.errors" >
-                  <div *ngIf="f.Amenities18.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities18.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other18" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other18.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other18.errors" >
-                  <div *ngIf="f.Other18.errors.required">Value is required</div>
-                  <div *ngIf="f.Other18.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour18" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour18.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour18.errors" >
-                  <div *ngIf="f.Labour18.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour18.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Management/Sales Attention</td>
+          <td>$<input type="text" formControlName="Accumulated6" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities6"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities6.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities6.errors">
+              <div *ngIf="f.Amenities6.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities6.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other6"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other6.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other6.errors">
+              <div *ngIf="f.Other6.errors.required">Value is required</div>
+              <div *ngIf="f.Other6.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour6"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour6.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour6.errors">
+              <div *ngIf="f.Labour6.errors.required">Value is required</div>
+              <div *ngIf="f.Labour6.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Maintanence and security
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated19">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities19" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities19.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities19.errors" >
-                  <div *ngIf="f.Amenities19.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities19.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other19" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other19.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other19.errors" >
-                  <div *ngIf="f.Other19.errors.required">Value is required</div>
-                  <div *ngIf="f.Other19.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour19" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour19.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour19.errors" >
-                  <div *ngIf="f.Labour19.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour19.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Restaurants</td>
+          <td>$<input type="text" formControlName="Accumulated7" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities7"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities7.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities7.errors">
+              <div *ngIf="f.Amenities7.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities7.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other7"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other7.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other7.errors">
+              <div *ngIf="f.Other7.errors.required">Value is required</div>
+              <div *ngIf="f.Other7.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour7"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour7.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour7.errors">
+              <div *ngIf="f.Labour7.errors.required">Value is required</div>
+              <div *ngIf="f.Labour7.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            Building
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Accumulated20">
-            </td>
-            <td style="width: 30%;">
-              <input type="text" formControlName="Amenities20" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Amenities20.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Amenities20.errors" >
-                  <div *ngIf="f.Amenities20.errors.required">Value is required</div>
-                  <div *ngIf="f.Amenities20.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Other20" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Other20.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Other20.errors" >
-                  <div *ngIf="f.Other20.errors.required">Value is required</div>
-                  <div *ngIf="f.Other20.errors.pattern">Invalid value</div>
-              </div>
-            </td>
-            <td style="width: 10%;">
-              <input type="text" formControlName="Labour20" (change)="sum();"
-              [ngClass]="{ 'is-invalid': submitted && f.Labour20.errors }" class="input-field" />
-              <div *ngIf="submitted && f.Labour20.errors" >
-                  <div *ngIf="f.Labour20.errors.required">Value is required</div>
-                  <div *ngIf="f.Labour20.errors.pattern">Invalid value</div>
-              </div>
-            </td>
+          <td>Bars</td>
+          <td>$<input type="text" formControlName="Accumulated2" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities8"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities8.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities8.errors">
+              <div *ngIf="f.Amenities8.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities8.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other8"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other8.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other8.errors">
+              <div *ngIf="f.Other8.errors.required">Value is required</div>
+              <div *ngIf="f.Other8.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            <input
+              type="text"
+              formControlName="Labour8"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour8.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour8.errors">
+              <div *ngIf="f.Labour8.errors.required">Value is required</div>
+              <div *ngIf="f.Labour8.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
         <tr>
-            <td style="width: 10%;">
-            TOTAL
-            </td>
-            <td style="width: 30%;">
-              {{totalAccumulated}}
-            </td>
-            <td style="width: 30%;">
-                {{totalAmenities}}
-            </td>
-            <td style="width: 10%;">
-                {{totalOther}}
-            </td>
-            <td style="width: 10%;">
-                {{totalLabour}}
-            </td>
+          <td>Room Service</td>
+          <td>$<input type="text" formControlName="Accumulated9" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities9"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities9.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities9.errors">
+              <div *ngIf="f.Amenities9.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities9.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other9"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other9.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other9.errors">
+              <div *ngIf="f.Other9.errors.required">Value is required</div>
+              <div *ngIf="f.Other9.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour9"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour9.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour9.errors">
+              <div *ngIf="f.Labour9.errors.required">Value is required</div>
+              <div *ngIf="f.Labour9.errors.pattern">Invalid value</div>
+            </div>
+          </td>
         </tr>
-      </table> 
+        <tr>
+          <td>Banquet &amp; Catering</td>
+          <td>$<input type="text" formControlName="Accumulated2" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities10"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities10.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities10.errors">
+              <div *ngIf="f.Amenities10.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities10.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other10"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other10.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other10.errors">
+              <div *ngIf="f.Other10.errors.required">Value is required</div>
+              <div *ngIf="f.Other10.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour10"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour10.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour10.errors">
+              <div *ngIf="f.Labour10.errors.required">Value is required</div>
+              <div *ngIf="f.Labour10.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Meeting Rooms</td>
+          <td>$<input type="text" formControlName="Accumulated11" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities11"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities11.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities11.errors">
+              <div *ngIf="f.Amenities11.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities11.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other11"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other11.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other11.errors">
+              <div *ngIf="f.Other11.errors.required">Value is required</div>
+              <div *ngIf="f.Other11.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour11"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour11.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour11.errors">
+              <div *ngIf="f.Labour11.errors.required">Value is required</div>
+              <div *ngIf="f.Labour11.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Entertainment</td>
+          <td>$<input type="text" formControlName="Accumulated12" /></td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Amenities12"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities12.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities12.errors">
+              <div *ngIf="f.Amenities12.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities12.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Other12"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other12.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other12.errors">
+              <div *ngIf="f.Other12.errors.required">Value is required</div>
+              <div *ngIf="f.Other12.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td>
+            $<input
+              type="text"
+              formControlName="Labour12"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour12.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour12.errors">
+              <div *ngIf="f.Labour12.errors.required">Value is required</div>
+              <div *ngIf="f.Labour12.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Courtesy(FB)</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated13" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities13"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities13.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities13.errors">
+              <div *ngIf="f.Amenities13.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities13.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other13"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other13.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other13.errors">
+              <div *ngIf="f.Other13.errors.required">Value is required</div>
+              <div *ngIf="f.Other13.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour13"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour13.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour13.errors">
+              <div *ngIf="f.Labour13.errors.required">Value is required</div>
+              <div *ngIf="f.Labour13.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Guest Rooms</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated14" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities14"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities14.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities14.errors">
+              <div *ngIf="f.Amenities14.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities14.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other14"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other14.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other14.errors">
+              <div *ngIf="f.Other14.errors.required">Value is required</div>
+              <div *ngIf="f.Other14.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour14"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour14.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour14.errors">
+              <div *ngIf="f.Labour14.errors.required">Value is required</div>
+              <div *ngIf="f.Labour14.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Reservations</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated15" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities15"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities15.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities15.errors">
+              <div *ngIf="f.Amenities15.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities15.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other15"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other15.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other15.errors">
+              <div *ngIf="f.Other15.errors.required">Value is required</div>
+              <div *ngIf="f.Other15.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour15"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour15.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour15.errors">
+              <div *ngIf="f.Labour15.errors.required">Value is required</div>
+              <div *ngIf="f.Labour15.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Guest Check in/Guest Check out</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated16" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities16"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities16.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities16.errors">
+              <div *ngIf="f.Amenities16.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities16.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other16"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other16.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other16.errors">
+              <div *ngIf="f.Other16.errors.required">Value is required</div>
+              <div *ngIf="f.Other16.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour16"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour16.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour16.errors">
+              <div *ngIf="f.Labour16.errors.required">Value is required</div>
+              <div *ngIf="f.Labour16.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Concierge</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated17" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities17"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities17.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities17.errors">
+              <div *ngIf="f.Amenities17.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities17.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other17"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other17.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other17.errors">
+              <div *ngIf="f.Other17.errors.required">Value is required</div>
+              <div *ngIf="f.Other17.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour17"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour17.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour17.errors">
+              <div *ngIf="f.Labour17.errors.required">Value is required</div>
+              <div *ngIf="f.Labour17.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Housekeeping</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated18" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities18"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities18.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities18.errors">
+              <div *ngIf="f.Amenities18.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities18.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other18"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other18.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other18.errors">
+              <div *ngIf="f.Other18.errors.required">Value is required</div>
+              <div *ngIf="f.Other18.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour18"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour18.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour18.errors">
+              <div *ngIf="f.Labour18.errors.required">Value is required</div>
+              <div *ngIf="f.Labour18.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Maintanence and security</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated19" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities19"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities19.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities19.errors">
+              <div *ngIf="f.Amenities19.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities19.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other19"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other19.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other19.errors">
+              <div *ngIf="f.Other19.errors.required">Value is required</div>
+              <div *ngIf="f.Other19.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour19"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour19.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour19.errors">
+              <div *ngIf="f.Labour19.errors.required">Value is required</div>
+              <div *ngIf="f.Labour19.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">Building</td>
+          <td style="width: 30%">
+            $<input type="text" formControlName="Accumulated20" />
+          </td>
+          <td style="width: 30%">
+            $<input
+              type="text"
+              formControlName="Amenities20"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Amenities20.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Amenities20.errors">
+              <div *ngIf="f.Amenities20.errors.required">Value is required</div>
+              <div *ngIf="f.Amenities20.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Other20"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Other20.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Other20.errors">
+              <div *ngIf="f.Other20.errors.required">Value is required</div>
+              <div *ngIf="f.Other20.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+          <td style="width: 10%">
+            $<input
+              type="text"
+              formControlName="Labour20"
+              (change)="sum()"
+              [ngClass]="{ 'is-invalid': submitted && f.Labour20.errors }"
+              class="input-field"
+            />
+            <div *ngIf="submitted && f.Labour20.errors">
+              <div *ngIf="f.Labour20.errors.required">Value is required</div>
+              <div *ngIf="f.Labour20.errors.pattern">Invalid value</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 10%">TOTAL</td>
+          <td style="width: 30%">
+            ${{ totalAccumulated|number:'1.0-3' }}
+          </td>
+          <td style="width: 30%">
+            ${{ totalAmenities|number:'1.0-3' }}
+          </td>
+          <td style="width: 10%">
+            ${{ totalOther|number:'1.0-3' }}
+          </td>
+          <td style="width: 10%">
+            ${{ totalLabour|number:'1.0-3' }}
+          </td>
+        </tr>
+      </table>
+
       <p>
-      <br />
-      Total expenses allocated:&nbsp;${{totalExpensesAllocated}}
+        <br />
+        Total expenses allocated:&nbsp;${{ totalExpensesAllocated|number:'1.0-3'  }}
       </p>
-    <div class="footer">
-      <div class="md:flex md:items-center mb-6">
-        <div class="md:w-1/2"></div>
-        <div class="md:w-4/3">
-          <button type="submit"
-            class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
-            Save
-          </button>
+      <div class="footer">
+        <div class="md:flex md:items-center mb-6">
+          <div class="md:w-1/2"></div>
+          <div class="md:w-4/3">
+            <button
+              type="submit"
+              class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 </section>

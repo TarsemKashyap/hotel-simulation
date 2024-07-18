@@ -23,7 +23,7 @@ export class MarketSharePositionAloneComponent {
   reportParam: ReportParams = {} as ReportParams;
   marketSharePositionAloneReportResponse: MarketSharePositionAloneReportResponse =
     {} as MarketSharePositionAloneReportResponse;
-  public chart: any;
+  public chart: Chart;
   ChartData: possitionAloneReportAttribute[] = [];
 
   Xaxis: any[] = [];
@@ -53,6 +53,7 @@ export class MarketSharePositionAloneComponent {
     this.reportService
       .marketSharePositionAloneReportDetails(this.reportParam)
       .subscribe((reportData) => {
+        this.ChartData=[];
         this.marketSharePositionAloneReportResponse = reportData;
         this.ChartData.push.apply(
           this.ChartData,
@@ -86,6 +87,9 @@ export class MarketSharePositionAloneComponent {
     });
   }
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
 

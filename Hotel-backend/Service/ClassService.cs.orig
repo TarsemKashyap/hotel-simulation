@@ -13,11 +13,9 @@ using System.Net.Mail;
 namespace Service;
 
 using Common.Dto;
-using Database.Domain;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Linq.Expressions;
 
@@ -43,15 +41,11 @@ public class ClassSessionService : IClassSessionService
 {
     private readonly IMapper _mapper;
     private readonly HotelDbContext _context;
-    private readonly IStudentGroupMappingService _studentGroupMappingService;
-    private readonly ILogger<ClassSessionService> _logger;
 
-    public ClassSessionService(IMapper mapper, HotelDbContext context, IStudentGroupMappingService studentGroupMappingService, ILogger<ClassSessionService> logger)
+    public ClassSessionService(IMapper mapper, HotelDbContext context)
     {
         _mapper = mapper;
         _context = context;
-        _studentGroupMappingService = studentGroupMappingService;
-        _logger = logger;
     }
     public async Task<ClassSessionDto> Create(ClassSessionDto classSession)
     {
@@ -128,7 +122,11 @@ public class ClassSessionService : IClassSessionService
     }
     public async Task<IList<MonthDto>> MonthFilterList(int classId)
     {
+<<<<<<< HEAD
         var sequence = await _context.Months.Where(c => c.ClassId == classId && c.Sequence != 0 && c.IsComplete).OrderBy(s => s.Sequence).ToListAsync();
+=======
+        var sequence = _context.Months.Where(c => c.ClassId == classId && c.Sequence != 0 && c.IsComplete).OrderBy(s => s.Sequence).ToList();
+>>>>>>> origin/dev
         return sequence.Adapt<IList<MonthDto>>();
 
     }
@@ -199,64 +197,18 @@ public class ClassSessionService : IClassSessionService
         Student student = await _context.Students.FindAsync(studentId);
         if (student == null)
             throw new ValidationException($"Student does not exist with id {studentId}");
-
-        ClassSession newClass = await _context.ClassSessions.Include(x => x.Groups).Where(x => x.Code.Equals(classCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
-        if (newClass == null)
+        ClassSession classSession = await _context.ClassSessions.Where(x => x.Code.Equals(classCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
+        if (classSession == null)
             throw new ValidationException($"Class does not exists with class code {classCode}");
 
-        bool alreadyExist = await _context.StudentClassMapping.AnyAsync(x => x.StudentId == studentId && x.ClassId == newClass.ClassId);
-
+        bool alreadyExist = await _context.StudentClassMapping.AnyAsync(x => x.StudentId == studentId && x.ClassId == classSession.ClassId);
         if (alreadyExist)
         {
             throw new ValidationException($"Mapping already exist for this student and class");
         }
 
-        StudentClassMapping prevClass = await _context
-            .StudentClassMapping
-            .Where(x => x.StudentId == studentId)
-            .OrderByDescending(x => x.ClassId)
-            .FirstOrDefaultAsync();
-
-        if (prevClass != null)
-        {
-            using (var tranx = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var roles = await _context.StudentRoleMapping.Where(x => x.ClassId == prevClass.ClassId && x.StudentId == studentId).ToListAsync();
-                    if (!roles.Any())
-                        throw new ValidationException("Previous class does not have any roles");
-
-                    var group = await _context.ClassGroups.FirstOrDefaultAsync(x => x.GroupId == prevClass.GroupId);
-
-                    var studentNewGroup = newClass.Groups.FirstOrDefault(x => x.Serial == group.Serial);
-                    if (studentNewGroup == null)
-                        throw new ValidationException($"{newClass.Title} does not have any group for serial {group.Serial}");
-
-
-                    StudentRoleGroupAssign studentRole = new StudentRoleGroupAssign()
-                    {
-                        ClassId = newClass.ClassId,
-                        StudentId = studentId,
-                        GroupId = studentNewGroup.GroupId,
-                        Roles = roles.Select(x => x.RoleId).ToArray()
-                    };
-                    await _studentGroupMappingService.UpsertStudentData(studentRole);
-                    await tranx.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await tranx.RollbackAsync();
-                }
-
-
-            }
-        }
-        else
-        {
-            var mapping = new Database.Domain.StudentClassMapping { Class = newClass, Student = student };
-            _context.StudentClassMapping.Add(mapping);
-            await _context.SaveChangesAsync();
-        }
+        var mapping = new Database.Domain.StudentClassMapping { Class = classSession, Student = student };
+        _context.StudentClassMapping.Add(mapping);
+        await _context.SaveChangesAsync();
     }
 }

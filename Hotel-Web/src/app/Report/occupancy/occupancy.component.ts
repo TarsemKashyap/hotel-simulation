@@ -95,7 +95,9 @@ export class OccupancyComponent {
     });
   }
   createChart() {
-    this.chart.clear();
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
       options: { aspectRatio: 3 },

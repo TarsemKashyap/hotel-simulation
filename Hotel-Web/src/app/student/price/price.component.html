@@ -1,5 +1,9 @@
 <section >
     <div class="container">
+        <h1>MAKE YOUR ROOM RATE DECISIONS</h1>
+        <p>
+            Make sure you enter a room rate for all segments and distribution channels. If you don't enter a room rate, it assumes that you are giving out those rooms for free for promotional purposes.
+        </p>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <table class="table-auto">
                 <tr>
@@ -12,16 +16,16 @@
                     <td style="border-style: none none inset none">
                         &nbsp;</td>
                     <td style="border-style: none none inset none">
-                        weekday</td>
+                        Week day</td>
                     <td style="border-style: none none inset none">
-                        weekend</td>
+                        Week end</td>
                 </tr>
                 <tr>
                     <td>
                         Business
                     </td>
                     <td>
-                        <input type="text" formControlName="DweekDay1"
+                        $<input type="text" formControlName="DweekDay1"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay1.errors">
                             <div *ngIf="f.DweekDay1.errors.required">Value is required</div>
@@ -29,7 +33,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend1"
+                        $<input type="text" formControlName="Dweekend1"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend1.errors">
                             <div *ngIf="f.Dweekend1.errors.required">Value is required</div>
@@ -41,7 +45,7 @@
                     <td>
                         Small Business</td>
                     <td>
-                        <input type="text" formControlName="DweekDay2"
+                        $<input type="text" formControlName="DweekDay2"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay2.errors">
                             <div *ngIf="f.DweekDay2.errors.required">Value is required</div>
@@ -49,7 +53,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend2"
+                        $<input type="text" formControlName="Dweekend2"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend2.errors">
                             <div *ngIf="f.Dweekend2.errors.required">Value is required</div>
@@ -61,7 +65,7 @@
                     <td>
                         Corporate contract</td>
                     <td>
-                        <input type="text" formControlName="DweekDay3"
+                        $<input type="text" formControlName="DweekDay3"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay3.errors">
                             <div *ngIf="f.DweekDay3.errors.required">Value is required</div>
@@ -69,7 +73,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend3"
+                        $<input type="text" formControlName="Dweekend3"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend3.errors">
                             <div *ngIf="f.Dweekend3.errors.required">Value is required</div>
@@ -81,7 +85,7 @@
                     <td>
                         Families</td>
                     <td>
-                        <input type="text" formControlName="DweekDay4"
+                        $<input type="text" formControlName="DweekDay4"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay4.errors">
                             <div *ngIf="f.DweekDay4.errors.required">Value is required</div>
@@ -89,7 +93,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend4"
+                        $<input type="text" formControlName="Dweekend4"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend4.errors">
                             <div *ngIf="f.Dweekend4.errors.required">Value is required</div>
@@ -101,7 +105,7 @@
                     <td>
                         Afluent Mature Travelers</td>
                     <td>
-                        <input type="text" formControlName="DweekDay5"
+                        $<input type="text" formControlName="DweekDay5"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay5.errors">
                             <div *ngIf="f.DweekDay5.errors.required">Value is required</div>
@@ -109,7 +113,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend5"
+                        $<input type="text" formControlName="Dweekend5"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend5.errors">
                             <div *ngIf="f.Dweekend5.errors.required">Value is required</div>
@@ -122,7 +126,7 @@
                         International leisure travelers
                     </td>
                     <td>
-                        <input type="text" formControlName="DweekDay6"
+                        $<input type="text" formControlName="DweekDay6"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay6.errors">
                             <div *ngIf="f.DweekDay6.errors.required">Value is required</div>
@@ -130,7 +134,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend6"
+                        $<input type="text" formControlName="Dweekend6"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend6.errors">
                             <div *ngIf="f.Dweekend6.errors.required">Value is required</div>
@@ -143,7 +147,7 @@
                         Corporate/Business Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="DweekDay7"
+                        $<input type="text" formControlName="DweekDay7"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay7.errors">
                             <div *ngIf="f.DweekDay7.errors.required">Value is required</div>
@@ -151,7 +155,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend7"
+                        $<input type="text" formControlName="Dweekend7"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend7.errors">
                             <div *ngIf="f.Dweekend7.errors.required">Value is required</div>
@@ -164,7 +168,7 @@
                         Association Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="DweekDay8"
+                        $<input type="text" formControlName="DweekDay8"
                             [ngClass]="{ 'is-invalid': submitted && f.DweekDay8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.DweekDay8.errors">
                             <div *ngIf="f.DweekDay8.errors.required">Value is required</div>
@@ -172,7 +176,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Dweekend8"
+                        $<input type="text" formControlName="Dweekend8"
                             [ngClass]="{ 'is-invalid': submitted && f.Dweekend8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Dweekend8.errors">
                             <div *ngIf="f.Dweekend8.errors.required">Value is required</div>
@@ -191,16 +195,16 @@
                     <td style="border-style: none none inset none">
                         &nbsp;</td>
                     <td style="border-style: none none inset none">
-                        weekday</td>
+                        week day</td>
                     <td style="border-style: none none inset none">
-                        weekend</td>
+                        week end</td>
                 </tr>
                 <tr>
                     <td>
                         Business
                     </td>
                     <td>
-                        <input type="text" formControlName="WweekDay1"
+                        $<input type="text" formControlName="WweekDay1"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay1.errors">
                             <div *ngIf="f.WweekDay1.errors.required">Value is required</div>
@@ -208,7 +212,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend1"
+                        $<input type="text" formControlName="Wweekend1"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend1.errors">
                             <div *ngIf="f.Wweekend1.errors.required">Value is required</div>
@@ -220,7 +224,7 @@
                     <td>
                         Small Business</td>
                     <td>
-                        <input type="text" formControlName="WweekDay2"
+                        $<input type="text" formControlName="WweekDay2"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay2.errors">
                             <div *ngIf="f.WweekDay2.errors.required">Value is required</div>
@@ -228,7 +232,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend2"
+                        $<input type="text" formControlName="Wweekend2"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend2.errors">
                             <div *ngIf="f.Wweekend2.errors.required">Value is required</div>
@@ -240,7 +244,7 @@
                     <td>
                         Corporate contract</td>
                     <td>
-                        <input type="text" formControlName="WweekDay3"
+                        $<input type="text" formControlName="WweekDay3"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay3.errors">
                             <div *ngIf="f.WweekDay3.errors.required">Value is required</div>
@@ -248,7 +252,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend3"
+                        $<input type="text" formControlName="Wweekend3"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend3.errors">
                             <div *ngIf="f.Wweekend3.errors.required">Value is required</div>
@@ -260,7 +264,7 @@
                     <td>
                         Families</td>
                     <td>
-                        <input type="text" formControlName="WweekDay4"
+                        $<input type="text" formControlName="WweekDay4"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay4.errors">
                             <div *ngIf="f.WweekDay4.errors.required">Value is required</div>
@@ -268,7 +272,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend4"
+                        $<input type="text" formControlName="Wweekend4"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend4.errors">
                             <div *ngIf="f.Wweekend4.errors.required">Value is required</div>
@@ -280,7 +284,7 @@
                     <td>
                         Afluent Mature Travelers</td>
                     <td>
-                        <input type="text" formControlName="WweekDay5"
+                        $<input type="text" formControlName="WweekDay5"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay5.errors">
                             <div *ngIf="f.WweekDay5.errors.required">Value is required</div>
@@ -288,7 +292,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend5"
+                        $<input type="text" formControlName="Wweekend5"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend5.errors">
                             <div *ngIf="f.Wweekend5.errors.required">Value is required</div>
@@ -301,7 +305,7 @@
                         International leisure travelers
                     </td>
                     <td>
-                        <input type="text" formControlName="WweekDay6"
+                        $<input type="text" formControlName="WweekDay6"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay6.errors">
                             <div *ngIf="f.WweekDay6.errors.required">Value is required</div>
@@ -309,7 +313,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend6"
+                        $<input type="text" formControlName="Wweekend6"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend6.errors">
                             <div *ngIf="f.Wweekend6.errors.required">Value is required</div>
@@ -322,7 +326,7 @@
                         Corporate/Business Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="WweekDay7"
+                        $<input type="text" formControlName="WweekDay7"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay7.errors">
                             <div *ngIf="f.WweekDay7.errors.required">Value is required</div>
@@ -330,7 +334,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend7"
+                        $<input type="text" formControlName="Wweekend7"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend7.errors">
                             <div *ngIf="f.Wweekend7.errors.required">Value is required</div>
@@ -343,7 +347,7 @@
                         Association Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="WweekDay8"
+                        $<input type="text" formControlName="WweekDay8"
                             [ngClass]="{ 'is-invalid': submitted && f.WweekDay8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.WweekDay8.errors">
                             <div *ngIf="f.WweekDay8.errors.required">Value is required</div>
@@ -351,7 +355,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Wweekend8"
+                        $<input type="text" formControlName="Wweekend8"
                             [ngClass]="{ 'is-invalid': submitted && f.Wweekend8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Wweekend8.errors">
                             <div *ngIf="f.Wweekend8.errors.required">Value is required</div>
@@ -370,16 +374,16 @@
                     <td style="border-style: none none inset none">
                         &nbsp;</td>
                     <td style="border-style: none none inset none">
-                        weekday</td>
+                        week day</td>
                     <td style="border-style: none none inset none">
-                        weekend</td>
+                        week end</td>
                 </tr>
                 <tr>
                     <td>
                         Business
                     </td>
                     <td>
-                        <input type="text" formControlName="OnweekDay1"
+                        $<input type="text" formControlName="OnweekDay1"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay1.errors">
                             <div *ngIf="f.OnweekDay1.errors.required">Value is required</div>
@@ -387,7 +391,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend1"
+                        $<input type="text" formControlName="Onweekend1"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend1.errors">
                             <div *ngIf="f.Onweekend1.errors.required">Value is required</div>
@@ -399,7 +403,7 @@
                     <td>
                         Small Business</td>
                     <td>
-                        <input type="text" formControlName="OnweekDay2"
+                        $<input type="text" formControlName="OnweekDay2"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay2.errors">
                             <div *ngIf="f.OnweekDay2.errors.required">Value is required</div>
@@ -407,7 +411,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend2"
+                        $<input type="text" formControlName="Onweekend2"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend2.errors">
                             <div *ngIf="f.Onweekend2.errors.required">Value is required</div>
@@ -419,7 +423,7 @@
                     <td>
                         Corporate contract</td>
                     <td>
-                        <input type="text" formControlName="OnweekDay3"
+                        $<input type="text" formControlName="OnweekDay3"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay3.errors">
                             <div *ngIf="f.OnweekDay3.errors.required">Value is required</div>
@@ -427,7 +431,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend3"
+                        $<input type="text" formControlName="Onweekend3"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend3.errors">
                             <div *ngIf="f.Onweekend3.errors.required">Value is required</div>
@@ -439,7 +443,7 @@
                     <td>
                         Families</td>
                     <td>
-                        <input type="text" formControlName="OnweekDay4"
+                        $<input type="text" formControlName="OnweekDay4"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay4.errors">
                             <div *ngIf="f.OnweekDay4.errors.required">Value is required</div>
@@ -447,7 +451,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend4"
+                        $<input type="text" formControlName="Onweekend4"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend4.errors">
                             <div *ngIf="f.Onweekend4.errors.required">Value is required</div>
@@ -459,7 +463,7 @@
                     <td>
                         Afluent Mature Travelers</td>
                     <td>
-                        <input type="text" formControlName="OnweekDay5"
+                        $<input type="text" formControlName="OnweekDay5"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay5.errors">
                             <div *ngIf="f.OnweekDay5.errors.required">Value is required</div>
@@ -467,7 +471,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend5"
+                        $<input type="text" formControlName="Onweekend5"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend5.errors">
                             <div *ngIf="f.Onweekend5.errors.required">Value is required</div>
@@ -480,7 +484,7 @@
                         International leisure travelers
                     </td>
                     <td>
-                        <input type="text" formControlName="OnweekDay6"
+                        $<input type="text" formControlName="OnweekDay6"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay6.errors">
                             <div *ngIf="f.OnweekDay6.errors.required">Value is required</div>
@@ -488,7 +492,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend6"
+                        $<input type="text" formControlName="Onweekend6"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend6.errors">
                             <div *ngIf="f.Onweekend6.errors.required">Value is required</div>
@@ -501,7 +505,7 @@
                         Corporate/Business Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="OnweekDay7"
+                        $<input type="text" formControlName="OnweekDay7"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay7.errors">
                             <div *ngIf="f.OnweekDay7.errors.required">Value is required</div>
@@ -509,7 +513,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend7"
+                        $<input type="text" formControlName="Onweekend7"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend7.errors">
                             <div *ngIf="f.Onweekend7.errors.required">Value is required</div>
@@ -522,7 +526,7 @@
                         Association Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="OnweekDay8"
+                        $<input type="text" formControlName="OnweekDay8"
                             [ngClass]="{ 'is-invalid': submitted && f.OnweekDay8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OnweekDay8.errors">
                             <div *ngIf="f.OnweekDay8.errors.required">Value is required</div>
@@ -530,7 +534,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Onweekend8"
+                        $<input type="text" formControlName="Onweekend8"
                             [ngClass]="{ 'is-invalid': submitted && f.Onweekend8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Onweekend8.errors">
                             <div *ngIf="f.Onweekend8.errors.required">Value is required</div>
@@ -549,16 +553,16 @@
                     <td style="border-style: none none inset none">
                         &nbsp;</td>
                     <td style="border-style: none none inset none">
-                        weekday</td>
+                        week day</td>
                     <td style="border-style: none none inset none">
-                        weekend</td>
+                        week end</td>
                 </tr>
                 <tr>
                     <td>
                         Business
                     </td>
                     <td>
-                        <input type="text" formControlName="OpweekDay1"
+                        $<input type="text" formControlName="OpweekDay1"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay1.errors">
                             <div *ngIf="f.OpweekDay1.errors.required">Value is required</div>
@@ -566,7 +570,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend1"
+                        $<input type="text" formControlName="Opweekend1"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend1.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend1.errors">
                             <div *ngIf="f.Opweekend1.errors.required">Value is required</div>
@@ -578,7 +582,7 @@
                     <td>
                         Small Business</td>
                     <td>
-                        <input type="text" formControlName="OpweekDay2"
+                        $<input type="text" formControlName="OpweekDay2"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay2.errors">
                             <div *ngIf="f.OpweekDay2.errors.required">Value is required</div>
@@ -586,7 +590,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend2"
+                        $<input type="text" formControlName="Opweekend2"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend2.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend2.errors">
                             <div *ngIf="f.Opweekend2.errors.required">Value is required</div>
@@ -598,7 +602,7 @@
                     <td>
                         Corporate contract</td>
                     <td>
-                        <input type="text" formControlName="OpweekDay3"
+                        $<input type="text" formControlName="OpweekDay3"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay3.errors">
                             <div *ngIf="f.OpweekDay3.errors.required">Value is required</div>
@@ -606,7 +610,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend3"
+                        $<input type="text" formControlName="Opweekend3"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend3.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend3.errors">
                             <div *ngIf="f.Opweekend3.errors.required">Value is required</div>
@@ -618,7 +622,7 @@
                     <td>
                         Families</td>
                     <td>
-                        <input type="text" formControlName="OpweekDay4"
+                        $<input type="text" formControlName="OpweekDay4"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay4.errors">
                             <div *ngIf="f.OpweekDay4.errors.required">Value is required</div>
@@ -626,7 +630,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend4"
+                        $<input type="text" formControlName="Opweekend4"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend4.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend4.errors">
                             <div *ngIf="f.Opweekend4.errors.required">Value is required</div>
@@ -638,7 +642,7 @@
                     <td>
                         Afluent Mature Travelers</td>
                     <td>
-                        <input type="text" formControlName="OpweekDay5"
+                        $<input type="text" formControlName="OpweekDay5"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay5.errors">
                             <div *ngIf="f.OpweekDay5.errors.required">Value is required</div>
@@ -646,7 +650,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend5"
+                        $<input type="text" formControlName="Opweekend5"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend5.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend5.errors">
                             <div *ngIf="f.Opweekend5.errors.required">Value is required</div>
@@ -659,7 +663,7 @@
                         International leisure travelers
                     </td>
                     <td>
-                        <input type="text" formControlName="OpweekDay6"
+                        $<input type="text" formControlName="OpweekDay6"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay6.errors">
                             <div *ngIf="f.OpweekDay6.errors.required">Value is required</div>
@@ -667,7 +671,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend6"
+                        $<input type="text" formControlName="Opweekend6"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend6.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend6.errors">
                             <div *ngIf="f.Opweekend6.errors.required">Value is required</div>
@@ -680,7 +684,7 @@
                         Corporate/Business Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="OpweekDay7"
+                        $<input type="text" formControlName="OpweekDay7"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay7.errors">
                             <div *ngIf="f.OpweekDay7.errors.required">Value is required</div>
@@ -688,7 +692,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend7"
+                        $<input type="text" formControlName="Opweekend7"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend7.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend7.errors">
                             <div *ngIf="f.Opweekend7.errors.required">Value is required</div>
@@ -701,7 +705,7 @@
                         Association Meetings
                     </td>
                     <td>
-                        <input type="text" formControlName="OpweekDay8"
+                        $<input type="text" formControlName="OpweekDay8"
                             [ngClass]="{ 'is-invalid': submitted && f.OpweekDay8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.OpweekDay8.errors">
                             <div *ngIf="f.OpweekDay8.errors.required">Value is required</div>
@@ -709,7 +713,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" formControlName="Opweekend8"
+                        $<input type="text" formControlName="Opweekend8"
                             [ngClass]="{ 'is-invalid': submitted && f.Opweekend8.errors }" class="input-field" />
                         <div *ngIf="submitted && f.Opweekend8.errors">
                             <div *ngIf="f.Opweekend8.errors.required">Value is required</div>
@@ -730,10 +734,11 @@
                     <div class="md:w-4/3">
                       <button type="submit"
                         class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
-                        Save
+                        Save Decisions
                       </button>
                     </div>
                   </div>
+                  <p>Make sure you enter a room rate for all segments and distribution channels. If you don't enter a room rate, it assumes that you are giving out those rooms for free for promotional purposes.</p>
             </div>
         </form>
     </div>
