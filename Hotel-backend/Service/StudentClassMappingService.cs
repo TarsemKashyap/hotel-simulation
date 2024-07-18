@@ -125,6 +125,8 @@ namespace Service
                 ClassName = defaultClass.Class.Title,
                 GroupSerial = defaultClass.ClassGroup.Serial,
                 IsDefault = defaultClass.isDefault,
+                CurrentQuater = defaultClass.Class.CurrentQuater
+
 
             };
 

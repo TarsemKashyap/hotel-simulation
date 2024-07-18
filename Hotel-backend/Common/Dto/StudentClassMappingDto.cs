@@ -34,5 +34,6 @@ namespace Common.Dto
 
         public int? GroupSerial { get; set; }
         public int? GroupId { get; set; }
+        public int CurrentQuater { get; set; }
     }
 }
