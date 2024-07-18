@@ -55,5 +55,17 @@ namespace Api.Controllers
             var studentData = await _studentClassMappingService.StudentAssignClass(studentClassMappingDto);
             return Ok(studentData);
         }
+
+        [HttpGet("defaultclass")]
+        public async Task<IActionResult> GetDefaultClass()
+        {
+            var defaultClass = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            if (defaultClass == null)
+            {
+                return NotFound();
+            }
+            return Ok(defaultClass);
+
+        }
     }
 }

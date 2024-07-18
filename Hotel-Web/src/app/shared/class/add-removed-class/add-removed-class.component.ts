@@ -128,6 +128,7 @@ export class AddRemovedClassComponent {
       this.classService.setAsDefault(row.data!).subscribe((data) => {
         this.loadClasses();
         this.snackBar.open('Class added succesfully');
+      window.location.reload();
       });
     };
   }

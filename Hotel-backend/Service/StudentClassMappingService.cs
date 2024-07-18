@@ -103,10 +103,14 @@ namespace Service
 
         public async Task<StudentClassMappingDto> GetDefaultByStudentID(string studentID)
         {
-            var studentList = await _context.StudentClassMapping.Include(x => x.Class)
-                .Include(x => x.ClassGroup)
-                .Include(x => x.Student).ToListAsync();
-            var defaultClass = studentList.Count == 1 ? studentList.FirstOrDefault() : studentList.FirstOrDefault(x => x.StudentId == studentID && x.isDefault);
+            var studentList = await _context.StudentClassMapping.Include(x => x.Class).ThenInclude(x => x.Groups)
+                .Where(x => x.StudentId == studentID).ToListAsync();
+
+
+
+
+
+            var defaultClass = studentList.Count == 1 ? studentList.FirstOrDefault() : studentList.FirstOrDefault(x => x.isDefault);
             if (defaultClass == null)
                 throw new ValidationException("No default class found");
 
@@ -118,7 +122,10 @@ namespace Service
                 Id = defaultClass.Id,
                 ClassId = defaultClass.ClassId,
                 GroupId = defaultClass.GroupId,
-                GroupSerial = defaultClass.ClassGroup.Serial
+                ClassName = defaultClass.Class.Title,
+                GroupSerial = defaultClass.ClassGroup.Serial,
+                IsDefault = defaultClass.isDefault,
+
             };
 
             return studentSignupDto;

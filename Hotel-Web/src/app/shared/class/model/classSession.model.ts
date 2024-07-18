@@ -11,6 +11,7 @@ export interface ClassSession {
   createdBy: string;
   groups: ClassGroup[];
   classId?: number;
+  className?:string
 }
 
 export interface ClassGroup {

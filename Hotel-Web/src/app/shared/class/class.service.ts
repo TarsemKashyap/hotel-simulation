@@ -101,6 +101,12 @@ export class ClassService {
     );
   }
 
+  getStudentDefaultClass(): Observable<ClassSession> {
+    return this.httpClient.get<ClassSession>(
+      'studentClassMapping/defaultclass'
+    );
+  }
+
   addStudentInClass(classCode: string): Observable<any> {
     const classRequest = {
       code: classCode,
