@@ -52,7 +52,7 @@ public class GoalReportService : IGoalReportService
         decimal perf = ScalarGroupRomSoldByMonth / 500 / 30;
         decimal marketAverage = (ScalarMarketSoldRomByMonth / 500 / 30) / classSession.Groups.Count;
         Goal goalByMonthGroup = _context.Goal.AsNoTracking().Where(x => x.MonthID == monthId && x.QuarterNo == quarter && x.GroupID == goalArgs.GroupId).FirstOrDefault();
-        decimal occupancyM = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.MgtEfficiencyM);
+        decimal occupancyM = Convert.ToDecimal(goalByMonthGroup == null ? 0 : goalByMonthGroup.OccupancyM);
         GoalReportDto occupancyPercentage = new GoalReportDto
         {
 

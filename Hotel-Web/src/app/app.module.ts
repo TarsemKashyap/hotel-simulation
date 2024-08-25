@@ -17,13 +17,13 @@ import { publicModule } from './public/public.module';
 import { StudentModule } from './student';
 import { InstructorModule } from './instructor';
 import { OverlayInterceptor } from './interceptors/OverlayInterceptor';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     HttpClientModule,
     publicModule,
     AdminModule,
@@ -32,6 +32,8 @@ import { OverlayInterceptor } from './interceptors/OverlayInterceptor';
     SharedModule,
     MaterialModule,
     AgGridModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,

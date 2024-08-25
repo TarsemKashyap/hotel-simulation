@@ -219,44 +219,53 @@ public class ClassSessionService : IClassSessionService
 
         if (prevClass != null)
         {
-            using (var tranx = await _context.Database.BeginTransactionAsync())
+
+            var roles = await _context.StudentRoleMapping.Where(x => x.ClassId == prevClass.ClassId && x.StudentId == studentId).ToListAsync();
+            var group = await _context.ClassGroups.FirstOrDefaultAsync(x => x.GroupId == prevClass.GroupId);
+            var studentNewGroup = newClass.Groups.FirstOrDefault(x => x.Serial == group.Serial);
+
+            if (roles.Any() && studentNewGroup != null)
             {
-                try
+                //throw new ValidationException("Previous class does not have any roles");
+                // throw new ValidationException($"{newClass.Title} does not have any group for serial {group.Serial}");
+
+                using (var tranx = await _context.Database.BeginTransactionAsync())
                 {
-                    var roles = await _context.StudentRoleMapping.Where(x => x.ClassId == prevClass.ClassId && x.StudentId == studentId).ToListAsync();
-                    if (!roles.Any())
-                        throw new ValidationException("Previous class does not have any roles");
-
-                    var group = await _context.ClassGroups.FirstOrDefaultAsync(x => x.GroupId == prevClass.GroupId);
-
-                    var studentNewGroup = newClass.Groups.FirstOrDefault(x => x.Serial == group.Serial);
-                    if (studentNewGroup == null)
-                        throw new ValidationException($"{newClass.Title} does not have any group for serial {group.Serial}");
-
-
-                    StudentRoleGroupAssign studentRole = new StudentRoleGroupAssign()
+                    try
                     {
-                        ClassId = newClass.ClassId,
-                        StudentId = studentId,
-                        GroupId = studentNewGroup.GroupId,
-                        Roles = roles.Select(x => x.RoleId).ToArray()
-                    };
-                    await _studentGroupMappingService.UpsertStudentData(studentRole);
-                    await tranx.CommitAsync();
+                        StudentRoleGroupAssign studentRole = new StudentRoleGroupAssign()
+                        {
+                            ClassId = newClass.ClassId,
+                            StudentId = studentId,
+                            GroupId = studentNewGroup.GroupId,
+                            Roles = roles.Select(x => x.RoleId).ToArray()
+                        };
+                        await _studentGroupMappingService.UpsertStudentData(studentRole);
+                        await tranx.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await tranx.RollbackAsync();
+                        throw;
+                    }
                 }
-                catch (Exception)
-                {
-                    await tranx.RollbackAsync();
-                }
-
+            }
+            else
+            {
+                await AddStudentToClass(student, newClass);
 
             }
         }
         else
         {
-            var mapping = new Database.Domain.StudentClassMapping { Class = newClass, Student = student };
-            _context.StudentClassMapping.Add(mapping);
-            await _context.SaveChangesAsync();
+            await AddStudentToClass(student, newClass);
         }
+    }
+
+    private async Task AddStudentToClass(Student student, ClassSession newClass)
+    {
+        var mapping = new Database.Domain.StudentClassMapping { Class = newClass, Student = student };
+        _context.StudentClassMapping.Add(mapping);
+        await _context.SaveChangesAsync();
     }
 }

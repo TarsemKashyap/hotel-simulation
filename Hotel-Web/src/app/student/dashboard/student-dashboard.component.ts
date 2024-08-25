@@ -6,6 +6,7 @@ import { RolePagesDtl, StudentRoles } from 'src/app/shared/class/model/Roles';
 import { SessionStore } from 'src/app/store';
 import { ClassService, ClassSession } from 'src/app/shared/class';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'student-dashboard',
@@ -24,7 +25,7 @@ export class StudentDashboard {
     private studentService: StudentService,
     private sessionStore: SessionStore,
     private classService: ClassService,
-    private sanckBar:MatSnackBar
+    private sanckBar:ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +40,9 @@ export class StudentDashboard {
         this.defaultClass = data;
       },
       error: (err) => {
-        this.sanckBar.open('No default class found for Student');
         console.log(err);
+        let mesg=Object.values(err.error).join(",");
+        this.sanckBar.error(mesg);
       },
     });
   }
