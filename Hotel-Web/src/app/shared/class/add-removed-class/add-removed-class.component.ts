@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { GridActionComponent } from '../grid-action/grid-action.component';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-removed-class',
@@ -83,7 +84,8 @@ export class AddRemovedClassComponent {
     private classService: ClassService,
     private router: Router,
     public snackBar: MatSnackBar,
-    public activeRoute: ActivatedRoute
+    public activeRoute: ActivatedRoute,
+    private toaster:ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -108,9 +110,16 @@ export class AddRemovedClassComponent {
   }
   addIntoClass() {
     if (this.selectedTitle) {
-      this.classService.addStudentInClass(this.selectedTitle).subscribe((x) => {
-        this.snackBar.open('Student has been added to class');
-        this.loadClasses();
+      this.classService.addStudentInClass(this.selectedTitle).subscribe({
+        next: () => {
+          this.toaster.success("has been added to class");
+          this.loadClasses();
+        },
+        error: (err) => {
+          let msg = Object.values(err.error).join(',');
+          this.toaster.error(msg);
+          console.log(err);
+        },
       });
     }
   }
@@ -128,7 +137,7 @@ export class AddRemovedClassComponent {
       this.classService.setAsDefault(row.data!).subscribe((data) => {
         this.loadClasses();
         this.snackBar.open('Class added succesfully');
-      window.location.reload();
+        window.location.reload();
       });
     };
   }

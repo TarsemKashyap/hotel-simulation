@@ -15,6 +15,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { CompleteComponent, PaymentInitiatedPageComponent } from './student';
 import { NgxPayPalModule } from 'ngx-paypal';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -27,6 +29,8 @@ import { NgxPayPalModule } from 'ngx-paypal';
     MatFormFieldModule,
     MatCardModule,
     NgxPayPalModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
   ],
   exports: [HeaderMenuComponent, BannerComponent, SignupComponent],
   declarations: [

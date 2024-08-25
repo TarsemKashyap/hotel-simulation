@@ -11,6 +11,7 @@ import {
   DecimalValidator,
   Goal,
 } from 'src/app/shared/class/model/classSession.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-goal-setting',
@@ -30,7 +31,7 @@ export class GoalSettingComponent {
   constructor(
     private studentService: StudentService,
     private fb: FormBuilder,
-    private _snackBar: MatSnackBar
+    private toaster: ToastrService
   ) {
     this.form = this.createForm();
   }
@@ -54,7 +55,7 @@ export class GoalSettingComponent {
       },
       error: (err) => {
         const message=Object.values(err.error).at(0) as string;
-        this._snackBar.open(message);
+        this.toaster.error(message);
       },
     });
   }
@@ -79,9 +80,7 @@ export class GoalSettingComponent {
     this.goalDetail.profitMarginM = parseFloat(this.form.value.profitMargin);
 
     this.studentService.UpdateGoalDetails(this.goalDetail).subscribe((x) => {
-      this._snackBar.open('Goal details updated successfully', 'Close', {
-        duration: 3000,
-      });
+      this.toaster.success('Goal details updated successfully');
       this.goalDetailList();
     });
   }

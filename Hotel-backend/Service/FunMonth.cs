@@ -682,8 +682,7 @@ namespace Service
                 };
                 context.Goal.Add(obj1);
             }
-            await context.SaveChangesAsync();
-            return 1;
+            return await context.SaveChangesAsync();
         }
 
         public async Task<int> CreateSoldRoomByChannel(HotelDbContext context, int monthID, int currentQuarter, int noOfHotels)
