@@ -8,6 +8,8 @@ import { ReportParams } from '../model/ReportParams.model';
 import { MarketSharePositionAloneReportResponse } from '../model/MarketSharePositionAloneResponse.model';
 import Chart from 'chart.js/auto';
 import { possitionAloneReportAttribute } from '../model/ReportCommon.model';
+import { Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
   selector: 'app-market-share-position-alone',
   templateUrl: './market-share-position-alone.component.html',
@@ -53,12 +55,17 @@ export class MarketSharePositionAloneComponent {
     this.reportService
       .marketSharePositionAloneReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        this.ChartData=[];
+        console.log('Market share', { reportData });
+        let reportData2 = reportData.data.map((p) => {
+          return {
+            label: p.label,
+            actualMarketShare: p.actualMarketShare * 100,
+            marketSharePosition: p.marketSharePosition * 100,
+          } as possitionAloneReportAttribute;
+        });
+        this.ChartData = [];
         this.marketSharePositionAloneReportResponse = reportData;
-        this.ChartData.push.apply(
-          this.ChartData,
-          this.marketSharePositionAloneReportResponse.data
-        );
+        this.ChartData = reportData2; //.marketSharePositionAloneReportResponse.data;
         this.YaxisMktShrPos = this.ChartData.map(
           (item) => item.marketSharePosition
         );
@@ -109,9 +116,26 @@ export class MarketSharePositionAloneComponent {
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
+        scales: {
+          y: {
+            ticks: {
+              callback: function (tickValue, index, ticks) {
+                return `${tickValue}%`;
+              },
+            },
+          },
+        },
         aspectRatio: 4,
         responsive: true,
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToPercent(value/100);
+            },
+          },
+        },
       },
     });
   }

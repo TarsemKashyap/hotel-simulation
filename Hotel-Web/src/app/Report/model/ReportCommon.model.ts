@@ -77,8 +77,8 @@ export interface roomRateReportAttribute {
 }
 export interface possitionAloneReportAttribute {
   label: string;
-  actualMarketShare: AbstractDecimal;
-  marketSharePosition: AbstractDecimal;
+  actualMarketShare: number;
+  marketSharePosition: number;
 }
 export interface AttributeAmentitesReportAttribute {
   label: string;

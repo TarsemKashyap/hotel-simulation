@@ -1,4 +1,4 @@
-import { formatCurrency } from '@angular/common';
+import { formatCurrency, formatPercent } from '@angular/common';
 
 export class Utility {
   public static copyToClipboard(val: any) {
@@ -20,6 +20,10 @@ export class Utility {
     digitInfo: string = '1.0-0'
   ): string {
     return formatCurrency(value, 'en-US', '$', undefined, digitInfo);
+  }
+
+  public static ToPercent(value:number|any){
+    return formatPercent(value,"en-US",'1.2-2');
   }
 }
 

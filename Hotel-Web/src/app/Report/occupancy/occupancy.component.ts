@@ -8,11 +8,12 @@ import { ReportParams } from '../model/ReportParams.model';
 import { OccupancyReportResponse } from '../model/OccupancyResponse.model';
 import { find } from 'rxjs';
 import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
-import { ChartConfig } from 'src/app/shared/utility';
+import { ChartConfig, Utility } from 'src/app/shared/utility';
 
 @Component({
   selector: 'app-occupancy',
@@ -100,7 +101,6 @@ export class OccupancyComponent {
     }
     this.chart = new Chart('MyChart', {
       type: 'bar', //this denotes tha type of chart
-      options: { aspectRatio: 3 },
       data: {
         // values on X-Axis
         labels: this.Xaxis,
@@ -119,6 +119,27 @@ export class OccupancyComponent {
             backgroundColor: 'skyblue',
           },
         ],
+      },
+      plugins: [ChartDataLabels],
+      options: {
+        scales: {
+          y: {
+            ticks: {
+              callback: function (tickValue, index, ticks) {
+                return `${tickValue}%`;
+              },
+            },
+          },
+        },
+        aspectRatio: 4,
+        responsive: true,
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToPercent(value*100);
+            },
+          },
+        },
       },
     });
   }
