@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { LoginComponent, SignupComponent } from './account';
 import { AccountService } from './account/account.service';
 import { BannerComponent } from './banner/banner.component';
@@ -29,7 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatFormFieldModule,
     MatCardModule,
     NgxPayPalModule,
-    BrowserAnimationsModule, // required animations module
+   // BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
   ],
   exports: [HeaderMenuComponent, BannerComponent, SignupComponent],

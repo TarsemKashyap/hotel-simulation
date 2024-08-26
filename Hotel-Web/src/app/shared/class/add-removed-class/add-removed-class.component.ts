@@ -112,7 +112,7 @@ export class AddRemovedClassComponent {
     if (this.selectedTitle) {
       this.classService.addStudentInClass(this.selectedTitle).subscribe({
         next: () => {
-          this.toaster.success("has been added to class");
+          this.toaster.success("Class added successfully!!");
           this.loadClasses();
         },
         error: (err) => {

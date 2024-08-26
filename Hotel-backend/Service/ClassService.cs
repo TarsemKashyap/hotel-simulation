@@ -211,55 +211,64 @@ public class ClassSessionService : IClassSessionService
             throw new ValidationException($"Mapping already exist for this student and class");
         }
 
-        StudentClassMapping prevClass = await _context
-            .StudentClassMapping
-            .Where(x => x.StudentId == studentId)
-            .OrderByDescending(x => x.ClassId)
-            .FirstOrDefaultAsync();
+        bool result = await CopyRoleAndGroup(studentId, newClass);
 
-        if (prevClass != null)
-        {
-
-            var roles = await _context.StudentRoleMapping.Where(x => x.ClassId == prevClass.ClassId && x.StudentId == studentId).ToListAsync();
-            var group = await _context.ClassGroups.FirstOrDefaultAsync(x => x.GroupId == prevClass.GroupId);
-            var studentNewGroup = newClass.Groups.FirstOrDefault(x => x.Serial == group.Serial);
-
-            if (roles.Any() && studentNewGroup != null)
-            {
-                //throw new ValidationException("Previous class does not have any roles");
-                // throw new ValidationException($"{newClass.Title} does not have any group for serial {group.Serial}");
-
-                using (var tranx = await _context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        StudentRoleGroupAssign studentRole = new StudentRoleGroupAssign()
-                        {
-                            ClassId = newClass.ClassId,
-                            StudentId = studentId,
-                            GroupId = studentNewGroup.GroupId,
-                            Roles = roles.Select(x => x.RoleId).ToArray()
-                        };
-                        await _studentGroupMappingService.UpsertStudentData(studentRole);
-                        await tranx.CommitAsync();
-                    }
-                    catch (Exception)
-                    {
-                        await tranx.RollbackAsync();
-                        throw;
-                    }
-                }
-            }
-            else
-            {
-                await AddStudentToClass(student, newClass);
-
-            }
-        }
-        else
+        if (!result)
         {
             await AddStudentToClass(student, newClass);
         }
+
+    }
+
+    private async Task<bool> CopyRoleAndGroup(string studentId, ClassSession newClass)
+    {
+        StudentClassMapping prevClass = await _context
+           .StudentClassMapping
+           .Where(x => x.StudentId == studentId)
+           .OrderByDescending(x => x.ClassId)
+           .FirstOrDefaultAsync();
+
+        if (prevClass == null)
+            return false;
+
+        var roles = await _context.StudentRoleMapping.Where(x => x.ClassId == prevClass.ClassId && x.StudentId == studentId).ToListAsync();
+        if (!roles.Any())
+            return false;
+
+        var group = await _context.ClassGroups.FirstOrDefaultAsync(x => x.GroupId == prevClass.GroupId);
+        if (group == null)
+            return false;
+
+        var studentNewGroup = newClass.Groups.FirstOrDefault(x => x.Serial == group.Serial);
+        if (studentNewGroup == null)
+            return false;
+
+
+        using (var tranx = await _context.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                StudentRoleGroupAssign studentRole = new StudentRoleGroupAssign()
+                {
+                    ClassId = newClass.ClassId,
+                    StudentId = studentId,
+                    GroupId = studentNewGroup.GroupId,
+                    Roles = roles.Select(x => x.RoleId).ToArray()
+                };
+                await _studentGroupMappingService.UpsertStudentData(studentRole);
+                await tranx.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await tranx.RollbackAsync();
+                return false;
+            }
+        }
+
+
+
+
     }
 
     private async Task AddStudentToClass(Student student, ClassSession newClass)
