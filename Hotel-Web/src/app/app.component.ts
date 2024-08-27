@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
   }
   ngOnInit(): void {
     this.accountService.$sessionExpired.subscribe((x) => {
-      console.log("$sessionExipred event got");
       this.accountService.clearSession();
       this.router.navigate(['login']);
     });

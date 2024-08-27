@@ -118,7 +118,6 @@ export class AddRemovedClassComponent {
         error: (err) => {
           let msg = Object.values(err.error).join(',');
           this.toaster.error(msg);
-          console.log(err);
         },
       });
     }

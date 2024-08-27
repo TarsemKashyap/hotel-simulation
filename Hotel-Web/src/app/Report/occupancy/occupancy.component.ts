@@ -14,6 +14,7 @@ import {
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
 import { ChartConfig, Utility } from 'src/app/shared/utility';
+import { formatNumber, formatPercent } from '@angular/common';
 
 @Component({
   selector: 'app-occupancy',
@@ -111,6 +112,7 @@ export class OccupancyComponent {
             backgroundColor: 'red',
             borderColor: 'red',
             type: 'line',
+            
           },
           {
             label: 'Hotel',
@@ -136,8 +138,10 @@ export class OccupancyComponent {
         plugins: {
           datalabels: {
             formatter: (value, context) => {
-              return Utility.ToPercent(value*100);
+              return Utility.ToPercent(value/100);
             },
+              color: 'black',
+            align: 'top',
           },
         },
       },

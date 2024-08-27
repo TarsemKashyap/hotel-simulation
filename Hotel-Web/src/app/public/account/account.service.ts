@@ -102,7 +102,6 @@ export class AccountService {
   userHasRole(role: AppRoles): boolean {
     const savedRole = this.sessionStore.GetRole();
     let b = savedRole.some((x) => x == role);
-    console.log('userHasRole', { [role]: b });
     return b;
   }
 

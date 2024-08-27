@@ -11,7 +11,9 @@ import {
   occupancyReportAttribute,
   IoccupancyBySegment,
 } from '../model/ReportCommon.model';
-import { ChartConfig } from 'src/app/shared/utility';
+import { ChartConfig, Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 @Component({
   selector: 'app-market-share-roomsold',
   templateUrl: './market-share-roomsold.component.html',
@@ -124,9 +126,28 @@ export class MarketShareRoomSoldComponent {
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
-        //responsive:true,
-        aspectRatio: 3,
+        scales: {
+          y: {
+            ticks: {
+              callback: function (tickValue, index, ticks) {
+                return `${tickValue}%`;
+              },
+            },
+          },
+        },
+        aspectRatio: 4,
+        responsive: true,
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToPercent(value / 100);
+            },
+            color: 'black',
+            align: 'top',
+          },
+        },
       },
     });
   }

@@ -40,7 +40,6 @@ export class StudentDashboard {
         this.defaultClass = data;
       },
       error: (err) => {
-        console.log(err);
         let mesg=Object.values(err.error).join(",");
         this.sanckBar.error(mesg);
       },

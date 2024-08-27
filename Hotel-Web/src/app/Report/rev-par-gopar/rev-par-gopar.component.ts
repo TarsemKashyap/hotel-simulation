@@ -9,6 +9,9 @@ import { RevParGopalReportResponse } from '../model/RevParGoparResponse.model';
 import Chart from 'chart.js/auto';
 import { avgdailyrateReportAttribute } from '../model/ReportCommon.model';
 import { isNgTemplate } from '@angular/compiler';
+import { Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 @Component({
   selector: 'app-rev-par-gopar',
   templateUrl: './rev-par-gopar.component.html',
@@ -54,7 +57,7 @@ export class RevParGoparComponent {
       .revParGopalReportDetails(this.reportParam)
       .subscribe((reportData) => {
         this.revParGopalReportResponse = reportData;
-        this.ChartData=[];
+        this.ChartData = [];
         this.ChartData.push(this.revParGopalReportResponse.overAll);
         this.ChartData.push.apply(
           this.ChartData,
@@ -110,12 +113,26 @@ export class RevParGoparComponent {
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
-        aspectRatio: 2.5,
-        indexAxis: 'x',
         scales: {
           y: {
-            ticks: { crossAlign: 'far' },
+            ticks: {
+              callback: function (tickValue, index, ticks) {
+                return Utility.ToCurrency(tickValue);
+              },
+            },
+          },
+        },
+        aspectRatio: 4,
+        responsive: true,
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToCurrency(value);
+            },
+            color: 'black',
+            align: 'top',
           },
         },
       },

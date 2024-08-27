@@ -9,7 +9,7 @@ namespace Common.ReportDto
         public List<Segment> OccupancyBySegment { get; private set; } = new List<Segment>();
         public void AddOverAll(string label, decimal hotel, decimal marketAvg)
         {
-            OverAllPercentages.Add(new CategoryLine { Label = label, Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
+            OverAllPercentages.Add(new CategoryLine { Label = label, Hotel = hotel * 100, MarketAverage = marketAvg * 100, Index = GetIndex(hotel, marketAvg) });
         }
 
         public void AddSegment(Segment overallPercentage)
@@ -50,7 +50,7 @@ namespace Common.ReportDto
 
         public Segment WeekDay(decimal hotel, decimal marketAvg)
         {
-            Segments.Add(new CategoryLine { Label = "Weekday", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
+            Segments.Add(new CategoryLine { Label = "Weekday", Hotel = hotel * 100, MarketAverage = marketAvg * 100, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
 
@@ -61,12 +61,12 @@ namespace Common.ReportDto
 
         public Segment WeekEnd(decimal hotel, decimal marketAvg)
         {
-            Segments.Add(new CategoryLine { Label = "Weekend", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
+            Segments.Add(new CategoryLine { Label = "Weekend", Hotel = hotel * 100, MarketAverage = marketAvg * 100, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
         public Segment Overall(decimal hotel, decimal marketAvg)
         {
-            Segments.Add(new CategoryLine { Label = "Overall", Hotel = hotel, MarketAverage = marketAvg, Index = GetIndex(hotel, marketAvg) });
+            Segments.Add(new CategoryLine { Label = "Overall", Hotel = hotel * 100, MarketAverage = marketAvg * 100, Index = GetIndex(hotel, marketAvg) });
             return this;
         }
     }

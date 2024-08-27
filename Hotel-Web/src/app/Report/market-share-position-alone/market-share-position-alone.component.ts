@@ -55,7 +55,6 @@ export class MarketSharePositionAloneComponent {
     this.reportService
       .marketSharePositionAloneReportDetails(this.reportParam)
       .subscribe((reportData) => {
-        console.log('Market share', { reportData });
         let reportData2 = reportData.data.map((p) => {
           return {
             label: p.label,

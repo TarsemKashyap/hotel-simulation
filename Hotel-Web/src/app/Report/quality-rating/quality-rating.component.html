@@ -43,7 +43,7 @@
   <tr>
     <td class="style2">&nbsp;</td>
     <td class="style2"><b>{{selectedHotel?.name}}</b></td>
-    <td class="style2"><b>Market Avarage</b></td>
+    <td class="style2"><b>Market Average</b></td>
   </tr>
   <tr *ngIf="qualityRatingReportResponse.overAll">
     <td class="style2">{{ qualityRatingReportResponse.overAll.label }}</td>
@@ -60,7 +60,7 @@
   <tr>
     <td class="style2"><b>Segment</b></td>
     <td class="style2"><b>{{selectedHotel?.name}}</b></td>
-    <td class="style2"><b>Market Avarage</b></td>
+    <td class="style2"><b>Market Average</b></td>
   </tr>
   <tr *ngFor="let qualityRatingData of qualityRatingReportResponse.segments">
     <td class="style2">{{ qualityRatingData.label }}</td>
@@ -97,7 +97,7 @@
   <tr>
     <td class="style2"><b>Attribute</b></td>
     <td class="style2"><b>{{selectedHotel?.name}}</b></td>
-    <td class="style2"><b>Market Avarage</b></td>
+    <td class="style2"><b>Market Average</b></td>
   </tr>
   <tr *ngFor="let attributesData of qualityRatingReportResponse.attributes">
     <td class="style2">{{ attributesData.label }}</td>

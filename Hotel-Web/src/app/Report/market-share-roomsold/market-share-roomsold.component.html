@@ -50,8 +50,8 @@
   </tr>
   <tr>
     <td class="style2"></td>
-    <td class="style2">Hotel</td>
-    <td class="style2">marketAverage</td>
+    <td class="style2">{{selectedHotel?.name}}</td>
+    <td class="style2">Market Average</td>
     <td class="style2">index</td>
   </tr>
 
@@ -64,11 +64,11 @@
       {{ marketShareRevenueData.label }}
     </td>
     <td class="style2">
-      {{ marketShareRevenueData.hotel | fmt2 : "P" }}
+      {{ marketShareRevenueData.hotel | fmt2 : "P0" }}
     </td>
 
     <td class="style3">
-      {{ marketShareRevenueData.marketAverage | fmt2 : "P" }}
+      {{ marketShareRevenueData.marketAverage | fmt2 : "P0" }}
     </td>
     <td class="style3">
       {{ marketShareRevenueData.index | fmt2 : "N2" }}
@@ -91,7 +91,7 @@
         <tr>
           <td class="style2">Weekdayweekend</td>
           <td class="style2">Hotel</td>
-          <td class="style2">marketAverage</td>
+          <td class="style2">Market Average</td>
           <td class="style2">index</td>
         </tr>
       </table>
@@ -113,11 +113,11 @@
             {{ SegmentData.label }}
           </td>
           <td class="style2">
-            {{ SegmentData.hotel | fmt2 : "P" }}
+            {{ SegmentData.hotel | fmt2 : "P0" }}
           </td>
 
           <td class="style2">
-            {{ SegmentData.marketAverage | fmt2 : "P" }}
+            {{ SegmentData.marketAverage | fmt2 : "P0" }}
 
           </td>
           <td class="style2">

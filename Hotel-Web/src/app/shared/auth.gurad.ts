@@ -75,7 +75,6 @@ const hasRole = (role: AppRoles) => {
   if (!hasRole) {
     accountService.$sessionExpired.next(null);
   }
-  console.log('hasRole', { role, hasRole });
   return hasRole;
 };
 
@@ -92,7 +91,6 @@ export const canAccessReports: CanActivateFn = (
   if (!result) {
     accountService.$sessionExpired.next(null);
   }
-  console.log('canAccessReports', result);
   return result;
 };
 

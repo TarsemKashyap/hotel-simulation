@@ -42,8 +42,8 @@
 <table class="style1" *ngIf="revParGopalReportResponse">
   <tr>
     <td class="style2">&nbsp;</td>
-    <td class="style2">Hotel1</td>
-    <td class="style2">MarketAvarage</td>
+    <td class="style2">{{selectedHotel?.name}}</td>
+    <td class="style2">Market Average</td>
     <td class="style2">Index</td>
   </tr>
   <tr *ngIf="revParGopalReportResponse.overAll">

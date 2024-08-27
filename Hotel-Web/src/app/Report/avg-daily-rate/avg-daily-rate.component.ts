@@ -13,7 +13,8 @@ import {
   ReportAttribute,
   avgdailyrateReportAttribute,
 } from '../model/ReportCommon.model';
-import { ChartConfig } from 'src/app/shared/utility';
+import { ChartConfig, Utility } from 'src/app/shared/utility';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-avg-daily-rate',
@@ -112,8 +113,30 @@ export class AvgDailyRateComponent {
           },
         ],
       },
+
+      plugins: [ChartDataLabels],
+
       options: {
+        scales: {
+          y: {
+            ticks: {
+              callback: function (tickValue, index, ticks) {
+                return Utility.ToCurrency(tickValue);
+              },
+            },
+          },
+        },
         aspectRatio: 4,
+        
+        plugins: {
+          datalabels: {
+            formatter: (value, context) => {
+              return Utility.ToCurrency(value);
+            },
+            color: 'black',
+            align: 'top',
+          },
+        },
       },
     });
   }

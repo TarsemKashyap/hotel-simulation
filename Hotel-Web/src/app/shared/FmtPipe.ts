@@ -1,4 +1,4 @@
-import { formatNumber } from '@angular/common';
+import { formatNumber, formatPercent } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -34,6 +34,9 @@ export class FmtPipe implements PipeTransform {
 export class Fmt2Pipe implements PipeTransform {
   transform(value: any, format: any, precision?: any) {
     switch (format) {
+      case 'P0': {
+        return `${formatNumber(value, 'en-US', '1.0-2')}%`;
+      }
       case 'P': {
         return `${formatNumber(value * 100, 'en-US', '1.0-2')}%`;
       }
