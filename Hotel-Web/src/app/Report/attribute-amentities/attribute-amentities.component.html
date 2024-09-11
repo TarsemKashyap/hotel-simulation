@@ -5,7 +5,11 @@
       <i *ngIf="MonthList.length"> Select Month</i>
       <i *ngIf="!MonthList.length"> No month available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedMonth" name="selectedMonth">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedMonth"
+      name="selectedMonth"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let month of MonthList" [value]="month">
         {{ month.sequence }}
@@ -17,7 +21,11 @@
       <i *ngIf="groups.length"> Select Hotel</i>
       <i *ngIf="!groups.length"> No hotel available</i>
     </mat-label>
-    <mat-select (selectionChange)="onOptionChange()" [(ngModel)]="selectedHotel" name="selectedHotel">
+    <mat-select
+      (selectionChange)="onOptionChange()"
+      [(ngModel)]="selectedHotel"
+      name="selectedHotel"
+    >
       <mat-label>Choose an month</mat-label>
       <mat-option *ngFor="let group of groups" [value]="group">
         {{ group.name }}
@@ -29,47 +37,57 @@
 
 <h2>Hotel Attribute And Amenities Report</h2>
 
- <table class="style1">
-  <tr><td colspan="2"></td><td><b>Capital investment</b></td><td colspan="2"><b>Operating Expenditures</b></td></tr>
+<table class="style1">
   <tr>
-    
+    <td colspan="2"></td>
+    <td><b>Capital investment</b></td>
+    <td colspan="2"><b>Operating Expenditures</b></td>
+  </tr>
+  <tr>
+    <td class="style2">&nbsp;</td>
+
     <td class="style2">
-      &nbsp;</td> 
-    
-  <td class="style2">
-  <b> Accumulated upto current month</b></td>
+      <b> Accumulated upto current month</b>
+    </td>
     <td class="style2">
-      <b>Attribute and Amentities Investment for current month</b> </td>
+      <b>Attribute and Amentities Investment for current month</b>
+    </td>
     <td class="style2">
       <b> Other</b>
-</td>
-<td class="style2">
-  <b>Labor</b>
-</td>
-</tr>
-
- <tr *ngFor="let AttributeAmentitesData of attributeAmentitesReportResponse.attributes">
-      
-  
+    </td>
     <td class="style2">
-      {{AttributeAmentitesData.label}}</td>
-      <td class="style2">
-       {{ AttributeAmentitesData.accumulatedCapital|fmt2:"C2"}}</td>
-     
-    
+      <b>Labor</b>
+    </td>
+  </tr>
+
+  <tr
+    *ngFor="
+      let AttributeAmentitesData of attributeAmentitesReportResponse.attributes
+    "
+  >
+    <td class="style2">
+      {{ AttributeAmentitesData.label }}
+    </td>
+    <td class="style2">
+      {{ AttributeAmentitesData.accumulatedCapital | fmt2 : "C2" }}
+    </td>
+
     <td class="style3">
-     {{ AttributeAmentitesData.newCaptial|fmt2:"C2" }}
+      {{ AttributeAmentitesData.newCaptial | fmt2 : "C2" }}
     </td>
     <td class="style3">
-      {{ AttributeAmentitesData.operationBudget|fmt2:"C2" }}
+      {{ AttributeAmentitesData.operationBudget | fmt2 : "C2" }}
     </td>
     <td class="style3">
-     {{ AttributeAmentitesData.laborBudget|fmt2:"C2" }}
+      {{ AttributeAmentitesData.laborBudget | fmt2 : "C2" }}
     </td>
-   
   </tr>
   <!-- <tr><td colspan="4"><hr/></td></tr> -->
-  <tr><td>Total Expense:{{ attributeAmentitesReportResponse.totalExpense|fmt2:"C2"}}</td></tr>
- 
-  
+  <tr>
+    <td>
+      Total Expense:{{
+        attributeAmentitesReportResponse.totalExpense | fmt2 : "C2"
+      }}
+    </td>
+  </tr>
 </table>

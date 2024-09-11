@@ -17,6 +17,7 @@ import { PriceComponent } from './price/price.component';
 import { MarketingComponent } from './marketing/marketing.component';
 import { GoalSettingComponent } from './goal-setting/goal-setting.component';
 import { LoanComponent } from './loan/loan.component';
+import { NumberCommaSeparatorDirective } from './comma-seperator';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,8 @@ import { LoanComponent } from './loan/loan.component';
     MarketingComponent,
     GoalSettingComponent,
     LoanComponent,
+    NumberCommaSeparatorDirective
+
   ],
   imports: [
     CommonModule,
