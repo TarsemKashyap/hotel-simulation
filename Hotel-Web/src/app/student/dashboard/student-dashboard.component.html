@@ -10,21 +10,9 @@
           >Student</a
         >
       </div>
-      <nav
-        *ngFor="let studentRolePage of studentRolePageList"
-        class="text-white text-base pt-3"
-      >
-        <!-- <a
-        routerLink="instructor/create"
-        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-      >
-        <button>
-          <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="library_books"></mat-icon>
-        </button>
-        Instructor Create
-      </a> -->
-
+      <nav class="text-white text-base pt-3">
         <a
+          *ngFor="let studentRolePage of studentRolePageList"
           (click)="openLink(studentRolePage)"
           style="cursor: pointer"
           class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
@@ -55,16 +43,6 @@
           </button>
           Reports
         </a>
-
-        <!-- <a
-      routerLink="change-password"
-      class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-    >
-      <button>
-        <mat-icon class="text-white-500" style="margin-right: 5px;" matRipple fontIcon="edit"></mat-icon>
-      </button>
-      Change Password
-    </a> -->
       </nav>
     </div>
   </aside>
@@ -84,7 +62,7 @@
       <div class="w-full">
         <p class="text-center text-xl font-medium" *ngIf="defaultClass">
           Class:
-          <span class="text-blue-600 ">
+          <span class="text-blue-600">
             {{ defaultClass.className }}
           </span>
           Month:

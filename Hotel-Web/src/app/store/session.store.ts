@@ -1,206 +1,55 @@
 import { Injectable } from '@angular/core';
 import { AppRoles } from '../public/account';
-import { RolePagesDtl } from '../shared/class/model/Roles';
+import { RolePagesDtl, StudentRoles } from '../shared/class/model/Roles';
 import { JsonPipe } from '@angular/common';
 
 const RefreshToken = 'RefreshToken';
 const AccessToken = 'AccessToken';
 const userRole = 'userRole';
-const revenueManagerPagesArr: RolePagesDtl[] = [];
-const generalManagerPagesArr: RolePagesDtl[] = [];
-const roManagerPagesArr: RolePagesDtl[] = [];
-const fbManagerPagesArr: RolePagesDtl[] = [];
-const marketManagerPagesArr: RolePagesDtl[] = [];
-const roomManagerPagesArr: RolePagesDtl[] = [];
-const noRoles: RolePagesDtl[] = [];
-let studentRole = 'studentRole';
-let currentRole = 'currentRole';
+const studentRole = 'studentRole';
+const currentRole = 'currentRole';
 
-revenueManagerPagesArr.push(
+const studentRoutes: RolePagesDtl[] = [
   {
     pageKey: 'rmChangeClass',
     pageName: 'Class Overview',
-    roleName: 'RM',
+    roleName: [1, 2, 3, 4, 5, 6],
     childPageLink: 'change-class',
   },
   {
     pageKey: 'rmMakeDecision',
     pageName: 'Make your decisions',
-    roleName: 'RM',
+    roleName: [1, 4, 2, 3, 6, 5],
     childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'rmViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'RM',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'rmLoan',
-    pageName: 'Borrow/Pay your loans',
-    roleName: 'RM',
-    childPageLink: 'loan',
-  }
-);
-generalManagerPagesArr.push(
-  {
-    pageKey: 'gmChangeClass',
-    pageName: 'Class Overview',
-    roleName: 'GM',
-    childPageLink: 'change-class',
   },
   {
     pageKey: 'gmSetYourObjective',
     pageName: 'Set your objective',
-    roleName: 'GM',
+    roleName: [4],
     childPageLink: 'goalSetting',
   },
   {
-    pageKey: 'rmMakeDecision',
-    pageName: 'Make your decisions',
-    roleName: 'GM',
-    childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'gmViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'GM',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'gmLoan',
+    pageKey: 'rmLoan',
     pageName: 'Borrow/Pay your loans',
-    roleName: 'GM',
+    roleName: [1, 4, 2, 3, 6, 5],
     childPageLink: 'loan',
-  }
-);
-roManagerPagesArr.push(
-  {
-    pageKey: 'roChangeClass',
-    pageName: 'Class Overview',
-    roleName: 'RT',
-    childPageLink: 'change-class',
   },
-  {
-    pageKey: 'roMakeDecision',
-    pageName: 'Make your decisions',
-    roleName: 'RT',
-    childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'roViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'RT',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'roLoan',
-    pageName: 'Borrow/Pay your loans',
-    roleName: 'RT',
-    childPageLink: 'loan',
-  }
-);
-fbManagerPagesArr.push(
-  {
-    pageKey: 'fbChangeClass',
-    pageName: 'Class Overview',
-    roleName: 'FB',
-    childPageLink: 'change-class',
-  },
-  {
-    pageKey: 'fbMakeDecision',
-    pageName: 'Make your decisions',
-    roleName: 'FB',
-    childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'fbViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'FB',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'fbLoan',
-    pageName: 'Borrow/Pay your loans',
-    roleName: 'FB',
-    childPageLink: 'loan',
-  }
-);
-marketManagerPagesArr.push(
-  {
-    pageKey: 'mmChangeClass',
-    pageName: 'Class Overview',
-    roleName: 'MM',
-    childPageLink: 'change-class',
-  },
-  {
-    pageKey: 'mmMakeDecision',
-    pageName: 'Make your decisions',
-    roleName: 'MM',
-    childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'mmViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'MM',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'mmLoan',
-    pageName: 'Borrow/Pay your loans',
-    roleName: 'MM',
-    childPageLink: 'loan',
-  }
-);
-roomManagerPagesArr.push(
-  {
-    pageKey: 'retailChangeClass',
-    pageName: 'Class Overview',
-    roleName: 'RO',
-    childPageLink: 'change-class',
-  },
-  {
-    pageKey: 'retailMakeDecision',
-    pageName: 'Make your decisions',
-    roleName: 'RO',
-    childPageLink: 'decision',
-  },
-  // {
-  //   pageKey: 'retailViewReport',
-  //   pageName: 'viewReports',
-  //   roleName: 'RO',
-  //   childPageLink: '',
-  // },
-  {
-    pageKey: 'retailLoan',
-    pageName: 'Borrow/Pay your loans',
-    roleName: 'RO',
-    childPageLink: 'loan',
-  }
-);
-noRoles.push(
+];
+
+const noRoles: RolePagesDtl[] = [
   {
     pageKey: 'ChangePwd',
     pageName: 'Change password',
-    roleName: '',
+    roleName: [],
     childPageLink: 'change-password',
   },
   {
     pageKey: 'noRoleChangeClass',
     pageName: 'Class Overview',
-    roleName: '',
+    roleName: [],
     childPageLink: 'change-class',
-  }
-);
-
-let RolesDetails = new Map<number, RolePagesDtl[]>([
-  [1, revenueManagerPagesArr],
-  [2, roManagerPagesArr],
-  [3, fbManagerPagesArr],
-  [4, generalManagerPagesArr],
-  [5, roomManagerPagesArr],
-  [6, marketManagerPagesArr],
-]);
+  },
+];
 
 @Injectable({ providedIn: 'root' })
 export class SessionStore {
@@ -214,7 +63,7 @@ export class SessionStore {
     return localStorage.getItem(RefreshToken);
   }
 
-  SetStudentRole(value: any) {
+  SetStudentRole(value: StudentRoles[]) {
     localStorage.setItem(studentRole, JSON.stringify(value));
   }
 
@@ -231,17 +80,19 @@ export class SessionStore {
   }
 
   GetStudentRole() {
-    var selectedRolesArr = JSON.parse(localStorage.getItem(studentRole) || '');
+    let savedRoles = localStorage.getItem(studentRole);
+    var selectedRolesArr: StudentRoles[] = savedRoles
+      ? JSON.parse(savedRoles)
+      : [];
     if (!selectedRolesArr.length) {
       return noRoles;
     }
-    const roleArray: RolePagesDtl[] = [];
-    selectedRolesArr.forEach((element: any) => {
-      let arrDtl =
-        RolesDetails.get(element.id) == undefined
-          ? []
-          : RolesDetails.get(element.id);
-      roleArray.push(...(arrDtl ? arrDtl : []));
+
+    const roleArray = studentRoutes.filter((route: RolePagesDtl) => {
+      return selectedRolesArr.some((p) => {
+         const rl = route.roleName.some((r) => r == p.id);
+         return rl;
+      });
     });
     return roleArray;
   }

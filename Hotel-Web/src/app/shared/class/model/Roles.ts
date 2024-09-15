@@ -6,10 +6,10 @@ export interface StudentRoles {
 }
 
 export class RolePagesDtl {
-  pageName: string = '';
-  pageKey: string = '';
-  roleName: string = '';
-  childPageLink: string = '';
+  pageName: string ;
+  pageKey: string;
+  roleName: number[];
+  childPageLink: string;
 }
 
 export interface StudentGroupList {

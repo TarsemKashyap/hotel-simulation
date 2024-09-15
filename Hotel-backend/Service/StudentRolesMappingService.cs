@@ -23,16 +23,19 @@ namespace Service
     {
         private readonly IMapper _mapper;
         private readonly HotelDbContext _context;
+        private readonly IStudentClassMappingService _studentClassMappingService;
 
-        public StudentRolesMappingService(IMapper mapper, HotelDbContext context)
+        public StudentRolesMappingService(IMapper mapper, HotelDbContext context, IStudentClassMappingService studentClassMappingService)
         {
             _mapper = mapper;
             _context = context;
+            _studentClassMappingService = studentClassMappingService;
         }
 
         public async Task<List<StudentRoleDto>> GetStudentRolesById(string studentId)
         {
-            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Join(_context.StudentRoles, mapping => mapping.RoleId, roles => roles.Id, (mapping, roles) => new StudentRoleDto
+            var defaultClass = await _studentClassMappingService.GetDefaultByStudentID(studentId);
+            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId && x.ClassId == defaultClass.ClassId).Join(_context.StudentRoles, mapping => mapping.RoleId, roles => roles.Id, (mapping, roles) => new StudentRoleDto
             {
                 Id = mapping.RoleId,
                 RoleName = roles.RoleName

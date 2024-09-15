@@ -25,7 +25,7 @@ export class StudentDashboard {
     private studentService: StudentService,
     private sessionStore: SessionStore,
     private classService: ClassService,
-    private sanckBar:ToastrService
+    private sanckBar: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +40,7 @@ export class StudentDashboard {
         this.defaultClass = data;
       },
       error: (err) => {
-        let mesg=Object.values(err.error).join(",");
+        let mesg = Object.values(err.error).join(',');
         this.sanckBar.error(mesg);
       },
     });
@@ -55,8 +55,10 @@ export class StudentDashboard {
     this.studentService.StudentRoleslist().subscribe((data) => {
       this.studentRoleList = data;
       this.sessionStore.SetStudentRole(this.studentRoleList);
-
       this.studentRolePageList = this.sessionStore.GetStudentRole();
+      console.log('studentRolePageList', {
+        studentRolePageList: this.studentRolePageList,
+      });
     });
   }
 
