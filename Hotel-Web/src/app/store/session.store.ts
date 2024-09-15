@@ -67,31 +67,29 @@ export class SessionStore {
     localStorage.setItem(studentRole, JSON.stringify(value));
   }
 
-  SetCurrentRole(value: any) {
-    localStorage.setItem(currentRole, value);
+  GetRoleids(): number[] {
+    const stdRoles = this.GetStudentRoleList();
+    return stdRoles.map((x) => x.id);
   }
 
-  GetCurrentRole() {
-    return localStorage.getItem(currentRole);
-  }
-
-  studentAssignRoleList() {
-    return localStorage.getItem(studentRole);
-  }
-
-  GetStudentRole() {
+  GetStudentRoleList() {
     let savedRoles = localStorage.getItem(studentRole);
     var selectedRolesArr: StudentRoles[] = savedRoles
       ? JSON.parse(savedRoles)
       : [];
+    return selectedRolesArr;
+  }
+
+  GetStudentRoutes() {
+    var selectedRolesArr = this.GetStudentRoleList();
     if (!selectedRolesArr.length) {
       return noRoles;
     }
 
     const roleArray = studentRoutes.filter((route: RolePagesDtl) => {
       return selectedRolesArr.some((p) => {
-         const rl = route.roleName.some((r) => r == p.id);
-         return rl;
+        const rl = route.roleName.some((r) => r == p.id);
+        return rl;
       });
     });
     return roleArray;

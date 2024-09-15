@@ -19,13 +19,11 @@ import { Utility } from '../shared/utility';
 export class NumberCommaSeparatorDirective implements OnInit {
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   @HostListener('input', ['$event.target.value'])
   onInput(value: string) {
-   // const formattedValue = Utility.formatNumber(value);
-
-   // this.renderer.setProperty(this.el.nativeElement, 'value', formattedValue);
+    const formattedValue = Utility.formatNumber(value);
+    this.renderer.setProperty(this.el.nativeElement, 'value', formattedValue);
   }
 }

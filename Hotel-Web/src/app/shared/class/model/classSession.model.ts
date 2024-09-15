@@ -1,4 +1,4 @@
-import { Validators } from "@angular/forms";
+import { Validators } from '@angular/forms';
 
 export interface ClassSession {
   title: string;
@@ -11,7 +11,7 @@ export interface ClassSession {
   createdBy: string;
   groups: ClassGroup[];
   classId?: number;
-  className?:string
+  className?: string;
 }
 
 export interface ClassGroup {
@@ -40,29 +40,27 @@ export interface AddRemoveClassDto {
 }
 
 export interface ClassInformation extends ClassSession {
-  totalStudentCount : number;
+  totalStudentCount: number;
 }
 
 export interface RoomAllocations {
-  id:number;
-  monthID : number;
-  quarterNo : number;
-  groupID : number;
-  weekday : boolean;
-  segment : string;
-  roomsAllocated : number;
-  actualDemand : number;
-  roomsSold : number;
-  confirmed : boolean;
-  revenue : number;
+  id: number;
+  monthID: number;
+  quarterNo: number;
+  groupID: number;
+  weekday: boolean;
+  segment: string;
+  roomsAllocated: number;
+  actualDemand: number;
+  roomsSold: number;
+  confirmed: boolean;
+  revenue: number;
 }
 
-
-
 export interface RoomAllocationDetails {
-    roomAllocation: RoomAllocations[];
-    weekdayTotal: number;
-    weekendTotal: number;
+  roomAllocation: RoomAllocations[];
+  weekdayTotal: number;
+  weekendTotal: number;
 }
 
 export interface AttributeDecision {
@@ -81,16 +79,16 @@ export interface AttributeDecision {
 
 export interface PriceDecision {
   ID: number;
-  monthID : number;
-  quarterNo : number;
-  groupID : number;
-  weekday : boolean;
-  distributionChannel : string;
-  segment : string;
-  price : number;
-  actualDemand : number;
-  confirmed : boolean;
-  priceNOFormat : string;
+  monthID: number;
+  quarterNo: number;
+  groupID: number;
+  weekday: boolean;
+  distributionChannel: string;
+  segment: string;
+  price: number;
+  actualDemand: number;
+  confirmed: boolean;
+  priceNOFormat: string;
 }
 
 export interface MarketingDecision {
@@ -153,7 +151,7 @@ export interface BalanceSheet {
   shortDebtPay: number;
   totLiab: number;
   retainedEarn: number;
-  longBorrow : number;
+  longBorrow: number;
 }
 
-export const DecimalValidator = Validators.pattern("^(?:\\d*\.\\d{1,5}|\\d+)$");
+export const DecimalValidator = Validators.pattern('^(?:\\d*.\\d{1,5}|\\d+)$');

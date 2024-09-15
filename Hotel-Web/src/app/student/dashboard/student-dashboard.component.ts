@@ -18,6 +18,7 @@ export class StudentDashboard {
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   defaultClass: ClassSession | undefined;
+  roleLabel:string='';
   constructor(
     private activeRoute: ActivatedRoute,
     private router: Router,
@@ -54,8 +55,10 @@ export class StudentDashboard {
   private studentRolesList() {
     this.studentService.StudentRoleslist().subscribe((data) => {
       this.studentRoleList = data;
-      this.sessionStore.SetStudentRole(this.studentRoleList);
-      this.studentRolePageList = this.sessionStore.GetStudentRole();
+      this.roleLabel = this.studentRoleList.map((x) => x.roleName).join(', ');
+
+      this.sessionStore.SetStudentRole(data);
+      this.studentRolePageList = this.sessionStore.GetStudentRoutes();
       console.log('studentRolePageList', {
         studentRolePageList: this.studentRolePageList,
       });
@@ -71,7 +74,6 @@ export class StudentDashboard {
   }
 
   openLink(studentRolePage: RolePagesDtl) {
-    this.sessionStore.SetCurrentRole(studentRolePage.roleName);
     this.router.navigate(['./student', studentRolePage.childPageLink]);
   }
 
