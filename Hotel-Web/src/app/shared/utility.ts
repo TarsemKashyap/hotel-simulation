@@ -22,11 +22,11 @@ export class Utility {
     return formatCurrency(value, 'en-US', '$', undefined, digitInfo);
   }
 
-  public static ToPercent(value:number|any){
-    return formatPercent(value,"en-US",'1.2-2');
+  public static ToPercent(value: number | any) {
+    return formatPercent(value, 'en-US', '1.2-2');
   }
 
- public static formatNumber(value: string): string {
+  public static formatNumberWithComma(value: string): string {
     if (value === '') {
       return '';
     }
@@ -38,6 +38,20 @@ export class Utility {
     }
 
     return number.toLocaleString('en-US');
+  }
+
+  public static formatNumber(value: string): number {
+    if (value === '') {
+      return 0;
+    }
+
+    const number = parseFloat(value.replace(/,/g, ''));
+
+    if (isNaN(number)) {
+      return 0;
+    }
+
+    return parseFloat(number.toString());
   }
 }
 

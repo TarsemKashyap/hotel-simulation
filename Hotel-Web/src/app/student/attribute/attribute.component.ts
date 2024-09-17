@@ -23,7 +23,7 @@ import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
 export class AttributeComponent {
   form: FormGroup;
   submitted = false;
-  totalAccumulated: string = '0';
+  totalAccumulated: number;
   totalAmenities: string = '0';
   totalOther: string = '0';
   totalLabour: string = '0';
@@ -35,6 +35,27 @@ export class AttributeComponent {
 
   ngOnInit(): void {
     this.attributeDecisionList();
+    this.form = this.createForm();
+
+    this.form.valueChanges.subscribe((p) => {
+      const keyVal = Object.entries<number>(p);
+      const map: { [key: string]: number } = {};
+
+      for (const [name, value] of keyVal) {
+        const key = name.replace(/\d+/g, '');
+        let val = map[key];
+        let newval = val ? val + value : value;
+        map[key] = newval;
+      }
+
+      let newtotal = Object.values(map).reduce((p, c) => p + c, 0);
+      console.log('FormValueChange', { p, newtotal, map });
+
+      this.totalOther = map['Other'].toString();
+      this.totalLabour = map['Labour'].toString();
+      this.totalAmenities = map['Amenities'].toString();
+      this.totalExpensesAllocated = newtotal.toString();
+    });
   }
 
   constructor(
@@ -44,7 +65,6 @@ export class AttributeComponent {
     private router: Router,
     private _snackBar: MatSnackBar
   ) {
-    this.form = this.createForm();
     this.currentRole = this.sessionStore.GetRoleids();
     if (!this.currentRole) {
       this.router.navigate(['']);
@@ -55,471 +75,19 @@ export class AttributeComponent {
     return this.form.controls;
   }
 
-  sum() {
-    var NSubTotal;
-    var BSubTotal;
-    var LSubTotal;
-    var sum = parseFloat(
-      this.form.value.Amenities1 === undefined ||
-        this.form.value.Amenities1 === ''
-        ? 0
-        : this.form.value.Amenities1.toString().replace(',', '')
-    );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities2 === undefined ||
-          this.form.value.Amenities2 === ''
-          ? 0
-          : this.form.value.Amenities2.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities3 === undefined ||
-          this.form.value.Amenities3 === ''
-          ? 0
-          : this.form.value.Amenities3.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities4 === undefined ||
-          this.form.value.Amenities4 === ''
-          ? 0
-          : this.form.value.Amenities4.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities5 === undefined ||
-          this.form.value.Amenities5 === ''
-          ? 0
-          : this.form.value.Amenities5.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities6 === undefined ||
-          this.form.value.Amenities6 === ''
-          ? 0
-          : this.form.value.Amenities6.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities7 === undefined ||
-          this.form.value.Amenities7 === ''
-          ? 0
-          : this.form.value.Amenities7.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities8 === undefined ||
-          this.form.value.Amenities8 === ''
-          ? 0
-          : this.form.value.Amenities8.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities9 === undefined ||
-          this.form.value.Amenities9 === ''
-          ? 0
-          : this.form.value.Amenities9.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities10 === undefined ||
-          this.form.value.Amenities10 === ''
-          ? 0
-          : this.form.value.Amenities10.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities11 === undefined ||
-          this.form.value.Amenities11 === ''
-          ? 0
-          : this.form.value.Amenities11.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities12 === undefined ||
-          this.form.value.Amenities12 === ''
-          ? 0
-          : this.form.value.Amenities12.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities13 === undefined ||
-          this.form.value.Amenities13 === ''
-          ? 0
-          : this.form.value.Amenities13.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities14 === undefined ||
-          this.form.value.Amenities14 === ''
-          ? 0
-          : this.form.value.Amenities14.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities15 === undefined ||
-          this.form.value.Amenities15 === ''
-          ? 0
-          : this.form.value.Amenities15.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities16 === undefined ||
-          this.form.value.Amenities16 === ''
-          ? 0
-          : this.form.value.Amenities16.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities17 === undefined ||
-          this.form.value.Amenities17 === ''
-          ? 0
-          : this.form.value.Amenities17.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities18 === undefined ||
-          this.form.value.Amenities18 === ''
-          ? 0
-          : this.form.value.Amenities18.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities19 === undefined ||
-          this.form.value.Amenities19 === ''
-          ? 0
-          : this.form.value.Amenities19.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Amenities20 === undefined ||
-          this.form.value.Amenities20 === ''
-          ? 0
-          : this.form.value.Amenities20.toString().replace(',', '')
-      );
-    NSubTotal = sum;
-    this.totalAmenities = NSubTotal.toString();
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other1 === undefined || this.form.value.Other1 === ''
-          ? 0
-          : this.form.value.Other1.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other2 === undefined || this.form.value.Other2 === ''
-          ? 0
-          : this.form.value.Other2.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other3 === undefined || this.form.value.Other3 === ''
-          ? 0
-          : this.form.value.Other3.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other4 === undefined || this.form.value.Other4 === ''
-          ? 0
-          : this.form.value.Other4.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other5 === undefined || this.form.value.Other5 === ''
-          ? 0
-          : this.form.value.Other5.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other6 === undefined || this.form.value.Other6 === ''
-          ? 0
-          : this.form.value.Other6.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other7 === undefined || this.form.value.Other7 === ''
-          ? 0
-          : this.form.value.Other7.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other8 === undefined || this.form.value.Other8 === ''
-          ? 0
-          : this.form.value.Other8.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other9 === undefined || this.form.value.Other9 === ''
-          ? 0
-          : this.form.value.Other9.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other10 === undefined || this.form.value.Other10 === ''
-          ? 0
-          : this.form.value.Other10.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other11 === undefined || this.form.value.Other11 === ''
-          ? 0
-          : this.form.value.Other11.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other12 === undefined || this.form.value.Other12 === ''
-          ? 0
-          : this.form.value.Other12.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other13 === undefined || this.form.value.Other13 === ''
-          ? 0
-          : this.form.value.Other13.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other14 === undefined || this.form.value.Other14 === ''
-          ? 0
-          : this.form.value.Other14.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other15 === undefined || this.form.value.Other15 === ''
-          ? 0
-          : this.form.value.Other15.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other16 === undefined || this.form.value.Other16 === ''
-          ? 0
-          : this.form.value.Other16.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other17 === undefined || this.form.value.Other17 === ''
-          ? 0
-          : this.form.value.Other17.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other18 === undefined || this.form.value.Other18 === ''
-          ? 0
-          : this.form.value.Other18.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other19 === undefined || this.form.value.Other19 === ''
-          ? 0
-          : this.form.value.Other19.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Other20 === undefined || this.form.value.Other20 === ''
-          ? 0
-          : this.form.value.Other20.toString().replace(',', '')
-      );
-    BSubTotal = sum - NSubTotal;
-    this.totalOther = BSubTotal.toString();
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour1 === undefined || this.form.value.Labour1 === ''
-          ? 0
-          : this.form.value.Labour1.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour2 === undefined || this.form.value.Labour2 === ''
-          ? 0
-          : this.form.value.Labour2.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour3 === undefined || this.form.value.Labour3 === ''
-          ? 0
-          : this.form.value.Labour3.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour4 === undefined || this.form.value.Labour4 === ''
-          ? 0
-          : this.form.value.Labour4.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour5 === undefined || this.form.value.Labour5 === ''
-          ? 0
-          : this.form.value.Labour5.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour6 === undefined || this.form.value.Labour6 === ''
-          ? 0
-          : this.form.value.Labour6.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour7 === undefined || this.form.value.Labour7 === ''
-          ? 0
-          : this.form.value.Labour7.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour8 === undefined || this.form.value.Labour8 === ''
-          ? 0
-          : this.form.value.Labour8.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour9 === undefined || this.form.value.Labour9 === ''
-          ? 0
-          : this.form.value.Labour9.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour10 === undefined ||
-          this.form.value.Labour10 === ''
-          ? 0
-          : this.form.value.Labour10.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour11 === undefined ||
-          this.form.value.Labour11 === ''
-          ? 0
-          : this.form.value.Labour11.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour12 === undefined ||
-          this.form.value.Labour12 === ''
-          ? 0
-          : this.form.value.Labour12.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour13 === undefined ||
-          this.form.value.Labour13 === ''
-          ? 0
-          : this.form.value.Labour13.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour14 === undefined ||
-          this.form.value.Labour14 === ''
-          ? 0
-          : this.form.value.Labour14.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour15 === undefined ||
-          this.form.value.Labour15 === ''
-          ? 0
-          : this.form.value.Labour15.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour16 === undefined ||
-          this.form.value.Labour16 === ''
-          ? 0
-          : this.form.value.Labour16.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour17 === undefined ||
-          this.form.value.Labour17 === ''
-          ? 0
-          : this.form.value.Labour17.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour18 === undefined ||
-          this.form.value.Labour18 === ''
-          ? 0
-          : this.form.value.Labour18.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour19 === undefined ||
-          this.form.value.Labour19 === ''
-          ? 0
-          : this.form.value.Labour19.toString().replace(',', '')
-      );
-    sum =
-      sum +
-      parseFloat(
-        this.form.value.Labour20 === undefined ||
-          this.form.value.Labour20 === ''
-          ? 0
-          : this.form.value.Labour20.toString().replace(',', '')
-      );
-    LSubTotal = sum - NSubTotal - BSubTotal;
-    this.totalLabour = LSubTotal.toString();
-    this.totalExpensesAllocated = sum.toString();
-  }
+  sum() {}
 
   private attributeDecisionList() {
     this.studentService.AttributeDecisionList().subscribe((data) => {
       this.attributeDecisions = data;
+
+      this.totalAccumulated = data
+        .filter((p) => (p.accumulatedCapital ? true : false))
+        .map((p) => p.accumulatedCapital)
+        .reduce((p, c) => p + c, 0);
+
+      console.log({ totalAccumu: this.totalAccumulated });
+
       var spaAttribute = this.attributeDecisions.find(
         (d) => d.attribute === 'Spa'
       );
@@ -547,7 +115,7 @@ export class AttributeComponent {
       );
 
       var resturantsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Management/Sales Attention'
+        (d) => d.attribute === 'Resturants'
       );
 
       var barsAttribute = this.attributeDecisions.find(
@@ -685,164 +253,17 @@ export class AttributeComponent {
         Labour20: courtesyRoomsAttribute?.laborBudget,
       });
 
-     this.disableFieldFB();
-     this.disableFormRevenueManager();
-     this.disableFieldRoomManager();
+      this.disableFieldFB();
+      this.disableFormRevenueManager();
+      this.disableFieldRoomManager();
 
-      var totalAccumu = 0;
-      totalAccumu = parseFloat(
-        spaAttribute?.accumulatedCapital === undefined
-          ? '0'
-          : spaAttribute?.accumulatedCapital.toString()
-      );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          fitnessCenterAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : fitnessCenterAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          banquetAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : banquetAttribute?.accumulatedCapital.toString()
-        );
-
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          buisnessCenterAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : buisnessCenterAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          golfCourseAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : golfCourseAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          recreationFacilitiesAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : recreationFacilitiesAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          salesAttentionAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : salesAttentionAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          resturantsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : resturantsAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          barsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : barsAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          roomServiceAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : roomServiceAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          banquetAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : banquetAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          meetingRoomsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : meetingRoomsAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          entertainmentAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : entertainmentAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          entertainmentAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : entertainmentAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          guestRoomsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : guestRoomsAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          reservationsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : reservationsAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          guestCheckAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : guestCheckAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          conciergeAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : conciergeAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          housekeepingAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : housekeepingAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          maintanenceAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : maintanenceAttribute?.accumulatedCapital.toString()
-        );
-      totalAccumu =
-        totalAccumu +
-        parseFloat(
-          courtesyRoomsAttribute?.accumulatedCapital === undefined
-            ? '0'
-            : courtesyRoomsAttribute?.accumulatedCapital.toString()
-        );
-      this.totalAccumulated = totalAccumu.toString();
       this.sum();
     });
   }
 
   private disableFormRevenueManager() {
     if (this.currentRole.includes(StudentRoles.RoomManager)) {
+      
       this.form.controls['Amenities6'].disable();
       this.form.controls['Other6'].disable();
       this.form.controls['Labour6'].disable();
@@ -932,8 +353,7 @@ export class AttributeComponent {
     }
   }
 
-
-  private disableFieldRoomManager(){
+  private disableFieldRoomManager() {
     if (this.currentRole.includes(StudentRoles.RevenueManager)) {
       this.form.controls['Amenities1'].disable();
       this.form.controls['Other1'].disable();
