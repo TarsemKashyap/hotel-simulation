@@ -14,6 +14,7 @@ import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
+import { Utility } from 'src/app/shared/utility';
 
 @Component({
   selector: 'app-attribute',
@@ -23,11 +24,11 @@ import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
 export class AttributeComponent {
   form: FormGroup;
   submitted = false;
-  totalAccumulated: number;
-  totalAmenities: string = '0';
-  totalOther: string = '0';
-  totalLabour: string = '0';
-  totalExpensesAllocated = '0';
+  totalAccumulated: string;
+  totalAmenities: string;
+  totalOther: string;
+  totalLabour: string;
+  totalExpensesAllocated: string;
   attributeDecisions: AttributeDecision[] = [];
   selectedRoles: any = [];
   selectedRoleList: any = [];
@@ -36,15 +37,16 @@ export class AttributeComponent {
   ngOnInit(): void {
     this.attributeDecisionList();
     this.form = this.createForm();
-
     this.form.valueChanges.subscribe((p) => {
-      const keyVal = Object.entries<number>(p);
+      const keyVal = Object.entries<string>(p);
       const map: { [key: string]: number } = {};
 
       for (const [name, value] of keyVal) {
         const key = name.replace(/\d+/g, '');
         let val = map[key];
-        let newval = val ? val + value : value;
+        let newval = val
+          ? val + Utility.formatNumber(value)
+          : Utility.formatNumber(value);
         map[key] = newval;
       }
 
@@ -75,195 +77,45 @@ export class AttributeComponent {
     return this.form.controls;
   }
 
-  sum() {}
-
   private attributeDecisionList() {
     this.studentService.AttributeDecisionList().subscribe((data) => {
-      this.attributeDecisions = data;
-
       this.totalAccumulated = data
         .filter((p) => (p.accumulatedCapital ? true : false))
         .map((p) => p.accumulatedCapital)
-        .reduce((p, c) => p + c, 0);
+        .reduce((p, c) => p + c, 0)
+        .toString();
 
-      console.log({ totalAccumu: this.totalAccumulated });
-
-      var spaAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Spa'
-      );
-
-      var fitnessCenterAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Fitness Center'
-      );
-
-      var buisnessCenterAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Business Center'
-      );
-
-      var golfCourseAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Golf Course'
-      );
-
-      var recreationFacilitiesAttribute = this.attributeDecisions.find(
-        (d) =>
-          d.attribute ===
-          'Other Recreation Facilities - Pools, game rooms, tennis courts, ect'
-      );
-
-      var salesAttentionAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Management/Sales Attention'
-      );
-
-      var resturantsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Resturants'
-      );
-
-      var barsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Bars'
-      );
-
-      var roomServiceAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Room Service'
-      );
-
-      var banquetAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Banquet & Catering'
-      );
-
-      var meetingRoomsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Meeting Rooms'
-      );
-
-      var entertainmentAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Entertainment'
-      );
-
-      var courtesyAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Courtesy(FB)'
-      );
-
-      var guestRoomsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Guest Rooms'
-      );
-
-      var reservationsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Reservations'
-      );
-
-      var guestCheckAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Guest Check in/Guest Check out'
-      );
-
-      var conciergeAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Concierge'
-      );
-
-      var housekeepingAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Housekeeping'
-      );
-
-      var maintanenceAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Maintanence and security'
-      );
-
-      var courtesyRoomsAttribute = this.attributeDecisions.find(
-        (d) => d.attribute === 'Courtesy (Rooms)'
-      );
-
-      this.form.patchValue({
-        Accumulated1: spaAttribute?.accumulatedCapital,
-        Amenities1: spaAttribute?.newCapital,
-        Other1: spaAttribute?.operationBudget,
-        Labour1: spaAttribute?.laborBudget,
-        Accumulated2: fitnessCenterAttribute?.accumulatedCapital,
-        Amenities2: fitnessCenterAttribute?.newCapital,
-        Other2: fitnessCenterAttribute?.operationBudget,
-        Labour2: fitnessCenterAttribute?.laborBudget,
-        Accumulated3: buisnessCenterAttribute?.accumulatedCapital,
-        Amenities3: buisnessCenterAttribute?.newCapital,
-        Other3: buisnessCenterAttribute?.operationBudget,
-        Labour3: buisnessCenterAttribute?.laborBudget,
-        Accumulated4: golfCourseAttribute?.accumulatedCapital,
-        Amenities4: golfCourseAttribute?.newCapital,
-        Other4: golfCourseAttribute?.operationBudget,
-        Labour4: golfCourseAttribute?.laborBudget,
-        Accumulated5: recreationFacilitiesAttribute?.accumulatedCapital,
-        Amenities5: recreationFacilitiesAttribute?.newCapital,
-        Other5: recreationFacilitiesAttribute?.operationBudget,
-        Labour5: recreationFacilitiesAttribute?.laborBudget,
-        Accumulated6: salesAttentionAttribute?.accumulatedCapital,
-        Amenities6: salesAttentionAttribute?.newCapital,
-        Other6: salesAttentionAttribute?.operationBudget,
-        Labour6: salesAttentionAttribute?.laborBudget,
-        Accumulated7: resturantsAttribute?.accumulatedCapital,
-        Amenities7: resturantsAttribute?.newCapital,
-        Other7: resturantsAttribute?.operationBudget,
-        Labour7: resturantsAttribute?.laborBudget,
-        Accumulated8: barsAttribute?.accumulatedCapital,
-        Amenities8: barsAttribute?.newCapital,
-        Other8: barsAttribute?.operationBudget,
-        Labour8: barsAttribute?.laborBudget,
-        Accumulated9: roomServiceAttribute?.accumulatedCapital,
-        Amenities9: roomServiceAttribute?.newCapital,
-        Other9: roomServiceAttribute?.operationBudget,
-        Labour9: roomServiceAttribute?.laborBudget,
-        Accumulated10: banquetAttribute?.accumulatedCapital,
-        Amenities10: banquetAttribute?.newCapital,
-        Other10: banquetAttribute?.operationBudget,
-        Labour10: banquetAttribute?.laborBudget,
-        Accumulated11: meetingRoomsAttribute?.accumulatedCapital,
-        Amenities11: meetingRoomsAttribute?.newCapital,
-        Other11: meetingRoomsAttribute?.operationBudget,
-        Labour11: meetingRoomsAttribute?.laborBudget,
-        Accumulated12: entertainmentAttribute?.accumulatedCapital,
-        Amenities12: entertainmentAttribute?.newCapital,
-        Other12: entertainmentAttribute?.operationBudget,
-        Labour12: entertainmentAttribute?.laborBudget,
-        Accumulated13: courtesyAttribute?.accumulatedCapital,
-        Amenities13: courtesyAttribute?.newCapital,
-        Other13: courtesyAttribute?.operationBudget,
-        Labour13: courtesyAttribute?.laborBudget,
-        Accumulated14: guestRoomsAttribute?.accumulatedCapital,
-        Amenities14: guestRoomsAttribute?.newCapital,
-        Other14: guestRoomsAttribute?.operationBudget,
-        Labour14: guestRoomsAttribute?.laborBudget,
-        Accumulated15: reservationsAttribute?.accumulatedCapital,
-        Amenities15: reservationsAttribute?.newCapital,
-        Other15: reservationsAttribute?.operationBudget,
-        Labour15: reservationsAttribute?.laborBudget,
-        Accumulated16: guestCheckAttribute?.accumulatedCapital,
-        Amenities16: guestCheckAttribute?.newCapital,
-        Other16: guestCheckAttribute?.operationBudget,
-        Labour16: guestCheckAttribute?.laborBudget,
-        Accumulated17: conciergeAttribute?.accumulatedCapital,
-        Amenities17: conciergeAttribute?.newCapital,
-        Other17: conciergeAttribute?.operationBudget,
-        Labour17: conciergeAttribute?.laborBudget,
-        Accumulated18: housekeepingAttribute?.accumulatedCapital,
-        Amenities18: housekeepingAttribute?.newCapital,
-        Other18: housekeepingAttribute?.operationBudget,
-        Labour18: housekeepingAttribute?.laborBudget,
-        Accumulated19: maintanenceAttribute?.accumulatedCapital,
-        Amenities19: maintanenceAttribute?.newCapital,
-        Other19: maintanenceAttribute?.operationBudget,
-        Labour19: maintanenceAttribute?.laborBudget,
-        Accumulated20: courtesyRoomsAttribute?.accumulatedCapital,
-        Amenities20: courtesyRoomsAttribute?.newCapital,
-        Other20: courtesyRoomsAttribute?.operationBudget,
-        Labour20: courtesyRoomsAttribute?.laborBudget,
-      });
+      this.patchForm(data);
 
       this.disableFieldFB();
       this.disableFormRevenueManager();
       this.disableFieldRoomManager();
-
-      this.sum();
     });
+  }
+
+  private patchForm(data: AttributeDecision[]) {
+    const formData: { [key: string]: string } = {};
+    data.forEach((ele, i) => {
+      formData[`Accumulated${i + 1}`] = Utility.formatNumberWithComma(
+        ele.accumulatedCapital
+      );
+      formData[`Amenities${i + 1}`] = Utility.formatNumberWithComma(
+        ele.newCapital
+      );
+      formData[`Other${i + 1}`] = Utility.formatNumberWithComma(
+        ele.operationBudget
+      );
+      formData[`Labour${i + 1}`] = Utility.formatNumberWithComma(
+        ele.laborBudget
+      );
+    });
+    this.form.patchValue(formData);
+    this.attributeDecisions = data;
+    console.log({ totalAccumu: this.totalAccumulated });
   }
 
   private disableFormRevenueManager() {
     if (this.currentRole.includes(StudentRoles.RoomManager)) {
-      
       this.form.controls['Amenities6'].disable();
       this.form.controls['Other6'].disable();
       this.form.controls['Labour6'].disable();
@@ -524,14 +376,22 @@ export class AttributeComponent {
         }
       }
     });
-    this.studentService
-      .AttributeDecisionUpdate(this.attributeDecisions)
-      .subscribe((x) => {
-        this._snackBar.open('Attribute Updated successfully', 'Close', {
-          duration: 3000,
-        });
-        this.attributeDecisionList();
+
+    const postData = this.attributeDecisions.map((d) => {
+      let copy = Object.assign({}, d);
+      copy.accumulatedCapital = Utility.formatNumber(d.accumulatedCapital.toString());
+      copy.newCapital = Utility.formatNumber(d.newCapital.toString());
+      copy.operationBudget = Utility.formatNumber(d.operationBudget.toString());
+      copy.laborBudget = Utility.formatNumber(d.laborBudget.toString());
+      return copy;
+    });
+
+    this.studentService.AttributeDecisionUpdate(postData).subscribe((x) => {
+      this._snackBar.open('Attribute Updated successfully', 'Close', {
+        duration: 3000,
       });
+      this.attributeDecisionList();
+    });
   }
 
   private createForm(): FormGroup {

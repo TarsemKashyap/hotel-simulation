@@ -154,4 +154,4 @@ export interface BalanceSheet {
   longBorrow: number;
 }
 
-export const DecimalValidator = Validators.pattern('^(?:\\d*.\\d{1,5}|\\d+)$');
+export const DecimalValidator = Validators.pattern('^(?:\\d*.\\d{1,12}|\\d+)$');

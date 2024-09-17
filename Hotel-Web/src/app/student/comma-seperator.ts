@@ -23,7 +23,6 @@ export class NumberCommaSeparatorDirective implements OnInit {
 
   @HostListener('input', ['$event.target.value'])
   onInput(value: string) {
-    debugger;
     const formattedValue = Utility.formatNumberWithComma(value);
     this.renderer.setProperty(this.el.nativeElement, 'value', formattedValue);
   }

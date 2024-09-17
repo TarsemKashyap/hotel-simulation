@@ -26,12 +26,12 @@ export class Utility {
     return formatPercent(value, 'en-US', '1.2-2');
   }
 
-  public static formatNumberWithComma(value: string): string {
+  public static formatNumberWithComma(value: number|string): string {
     if (value === '') {
       return '';
     }
 
-    const number = parseFloat(value.replace(/,/g, ''));
+    const number = parseFloat(value.toString().replace(/,/g, ''));
 
     if (isNaN(number)) {
       return '';
