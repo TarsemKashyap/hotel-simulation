@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { map, Subscription } from 'rxjs';
-import { Utility } from '../shared/utility';
+import { Utility } from './utility';
 
 @Directive({
   selector: '[numfmt]',

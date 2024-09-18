@@ -38,20 +38,17 @@ export class AttributeComponent {
     this.attributeDecisionList();
     this.form = this.createForm();
     this.form.valueChanges.subscribe((p) => {
-      const keyVal = Object.entries<string>(p);
+      const keyVal = Object.entries<number>(p);
       const map: { [key: string]: number } = {};
 
       for (const [name, value] of keyVal) {
         const key = name.replace(/\d+/g, '');
         let val = map[key];
-        let newval = val
-          ? val + Utility.formatNumber(value)
-          : Utility.formatNumber(value);
+        let newval = val ? val + value : value;
         map[key] = newval;
       }
 
       let newtotal = Object.values(map).reduce((p, c) => p + c, 0);
-      console.log('FormValueChange', { p, newtotal, map });
 
       this.totalOther = map['Other'].toString();
       this.totalLabour = map['Labour'].toString();
@@ -94,20 +91,12 @@ export class AttributeComponent {
   }
 
   private patchForm(data: AttributeDecision[]) {
-    const formData: { [key: string]: string } = {};
+    const formData: { [key: string]: number } = {};
     data.forEach((ele, i) => {
-      formData[`Accumulated${i + 1}`] = Utility.formatNumberWithComma(
-        ele.accumulatedCapital
-      );
-      formData[`Amenities${i + 1}`] = Utility.formatNumberWithComma(
-        ele.newCapital
-      );
-      formData[`Other${i + 1}`] = Utility.formatNumberWithComma(
-        ele.operationBudget
-      );
-      formData[`Labour${i + 1}`] = Utility.formatNumberWithComma(
-        ele.laborBudget
-      );
+      formData[`Accumulated${i + 1}`] = ele.accumulatedCapital;
+      formData[`Amenities${i + 1}`] = ele.newCapital;
+      formData[`Other${i + 1}`] = ele.operationBudget;
+      formData[`Labour${i + 1}`] = ele.laborBudget;
     });
     this.form.patchValue(formData);
     this.attributeDecisions = data;
@@ -377,21 +366,23 @@ export class AttributeComponent {
       }
     });
 
-    const postData = this.attributeDecisions.map((d) => {
-      let copy = Object.assign({}, d);
-      copy.accumulatedCapital = Utility.formatNumber(d.accumulatedCapital.toString());
-      copy.newCapital = Utility.formatNumber(d.newCapital.toString());
-      copy.operationBudget = Utility.formatNumber(d.operationBudget.toString());
-      copy.laborBudget = Utility.formatNumber(d.laborBudget.toString());
-      return copy;
-    });
+    // const postData = this.attributeDecisions.map((d) => {
+    //   let copy = Object.assign({}, d);
+    //   copy.accumulatedCapital = Utility.formatNumber(d.accumulatedCapital.toString());
+    //   copy.newCapital = Utility.formatNumber(d.newCapital.toString());
+    //   copy.operationBudget = Utility.formatNumber(d.operationBudget.toString());
+    //   copy.laborBudget = Utility.formatNumber(d.laborBudget.toString());
+    //   return copy;
+    // });
 
-    this.studentService.AttributeDecisionUpdate(postData).subscribe((x) => {
-      this._snackBar.open('Attribute Updated successfully', 'Close', {
-        duration: 3000,
+    this.studentService
+      .AttributeDecisionUpdate(this.attributeDecisions)
+      .subscribe((x) => {
+        this._snackBar.open('Attribute Updated successfully', 'Close', {
+          duration: 3000,
+        });
+        this.attributeDecisionList();
       });
-      this.attributeDecisionList();
-    });
   }
 
   private createForm(): FormGroup {

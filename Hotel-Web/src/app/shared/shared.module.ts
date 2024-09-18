@@ -14,6 +14,8 @@ import { CustomTooltip } from './editors';
 import { CellRenderComponent } from './render';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { OverlayService } from './overlay.service';
+import { TextboxComponent } from './templates/textbox/textbox.component';
+import { NumberCommaSeparatorDirective } from './comma-seperator';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { OverlayService } from './overlay.service';
     NumericEditor,
     CustomTooltip,
     CellRenderComponent,
+    TextboxComponent,
+    NumberCommaSeparatorDirective,
   ],
   imports: [
     CommonModule,
@@ -30,7 +34,11 @@ import { OverlayService } from './overlay.service';
     HttpClientModule,
     MaterialModule,
   ],
-  exports: [ClassModule, ConfirmDialogComponent],
+  exports: [
+    ClassModule,
+    ConfirmDialogComponent,
+    TextboxComponent
+  ],
   providers: [SessionStore, JwtHelperService, OverlayService],
 })
 export class SharedModule {}
