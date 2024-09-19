@@ -13,11 +13,14 @@ export class ClassMenuComponent {
   currentRoles: AppRoles[] = [];
   isClassManageShow: boolean = false;
   classId?: number;
-  constructor(private sessionStore: SessionStore,private route:ActivatedRoute) {
+  constructor(
+    private sessionStore: SessionStore,
+    private route: ActivatedRoute
+  ) {
     this.currentRoles = this.sessionStore.GetRole();
     this.isClassManageShow = this.currentRoles.some(
       (x) => x == AppRoles.Admin || x == AppRoles.Instructor
     );
-    this.classId=this.route.snapshot.params['id'];
+    this.classId = this.route.snapshot.params['id'];
   }
 }

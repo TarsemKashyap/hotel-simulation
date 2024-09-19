@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -12,7 +12,7 @@ import { Utility } from '../../utility';
 @Component({
   selector: 'textbox',
   templateUrl: './textbox.component.html',
-//  styleUrls: ['./textbox.component.css'],
+  styleUrls: ['./textbox.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

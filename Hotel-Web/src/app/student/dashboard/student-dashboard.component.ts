@@ -74,7 +74,9 @@ export class StudentDashboard {
   }
 
   openLink(studentRolePage: RolePagesDtl) {
-    this.router.navigate(['./student', studentRolePage.childPageLink]);
+    const url=['./student', studentRolePage.childPageLink];
+    console.log(url);
+    this.router.navigate(url);
   }
 
   reloadCurrentRoute() {
