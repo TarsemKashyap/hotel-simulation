@@ -12,27 +12,31 @@ const currentRole = 'currentRole';
 const studentRoutes: RolePagesDtl[] = [
   {
     pageKey: 'rmChangeClass',
-    pageName: 'Class Overview',
+    pageName: 'Manage classes',
     roleName: [1, 2, 3, 4, 5, 6],
     childPageLink: 'change-class',
+    icon:'school'
   },
   {
     pageKey: 'rmMakeDecision',
-    pageName: 'Make your decisions',
+    pageName: 'Enter your decisions',
     roleName: [1, 4, 2, 3, 6, 5],
     childPageLink: 'decision',
+    icon:'signpost'
   },
   {
     pageKey: 'gmSetYourObjective',
-    pageName: 'Set your objective',
+    pageName: 'Set your objectives',
     roleName: [4],
     childPageLink: 'goalSetting',
+    icon:'star'
   },
   {
     pageKey: 'rmLoan',
-    pageName: 'Borrow/Pay your loans',
+    pageName: 'Borrow/Pay loans',
     roleName: [1, 4, 2, 3, 6, 5],
     childPageLink: 'loan',
+    icon:'paid'
   },
 ];
 

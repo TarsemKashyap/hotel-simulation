@@ -1,11 +1,10 @@
 <section>
   <div class="container">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    
       <table class="table-auto">
         <tr>
           <td colspan="3" class="tableHeader">
-            <h2 class="style2">OBJECTIVES FOR THIS MONTH</h2>
+            <h2 class="style2">Objectives for Next Month</h2>
           </td>
         </tr>
         <tr>
@@ -32,12 +31,12 @@
           <td>Rooms Revenue</td>
           <td>
             <div class="max-w-sm">
-              $<input
-                type="text"
+              $<textbox
                 formControlName="RoomsRevenue"
                 [ngClass]="{ 'is-invalid': submitted && f.RoomsRevenue.errors }"
-                class="input-field ml-1"
-              />
+                class="ml-1"
+              >
+              </textbox>
             </div>
             <div *ngIf="submitted && f.RoomsRevenue.errors">
               <div *ngIf="f.RoomsRevenue.errors.required">
@@ -51,12 +50,12 @@
           <td>Total Revenue</td>
           <td>
             <div>
-              $<input
-                type="text"
+              $<textbox
                 formControlName="TotalRevenue"
                 [ngClass]="{ 'is-invalid': submitted && f.TotalRevenue.errors }"
-                class="input-field ml-1"
-              />
+                class="ml-1"
+              >
+              </textbox>
             </div>
             <div *ngIf="submitted && f.TotalRevenue.errors">
               <div *ngIf="f.TotalRevenue.errors.required">
@@ -103,11 +102,10 @@
         <tr>
           <td>REVPAR</td>
           <td>
-            $<input
-              type="text"
+            $<textbox
               formControlName="REVPAR"
               [ngClass]="{ 'is-invalid': submitted && f.REVPAR.errors }"
-              class="input-field ml-1"
+              class="ml-1"
             />
             <div *ngIf="submitted && f.REVPAR.errors">
               <div *ngIf="f.REVPAR.errors.required">Value is required</div>
@@ -118,11 +116,10 @@
         <tr>
           <td>ADR</td>
           <td>
-            $<input
-              type="text"
+            $<textbox
               formControlName="ADR"
               [ngClass]="{ 'is-invalid': submitted && f.ADR.errors }"
-              class="input-field ml-1"
+              class="ml-1"
             />
             <div *ngIf="submitted && f.ADR.errors">
               <div *ngIf="f.ADR.errors.required">Value is required</div>

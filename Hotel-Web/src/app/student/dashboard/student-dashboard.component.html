@@ -22,7 +22,7 @@
               class="text-white-500"
               style="margin-right: 5px"
               matRipple
-              fontIcon="school"
+              fontIcon="{{ studentRolePage.icon }}"
             ></mat-icon>
           </button>
           {{ studentRolePage.pageName }}
@@ -38,11 +38,39 @@
               class="text-white-500"
               style="margin-right: 5px"
               matRipple
-              fontIcon="school"
+              fontIcon="analytics"
             ></mat-icon>
           </button>
-          Reports
+          View Reports
         </a>
+
+        <a
+          routerLink="change-password"
+          style="cursor: pointer"
+          class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        >
+          <button>
+            <mat-icon
+              class="text-white-500"
+              style="margin-right: 5px"
+              matRipple
+              fontIcon="vpn_key"
+            ></mat-icon>
+          </button>
+          Change Password
+        </a>
+        <button
+          (click)="logout()"
+          class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        >
+          <mat-icon
+            class="text-white-500"
+            style="margin-right: 5px"
+            matRipple
+            fontIcon="logout"
+          ></mat-icon>
+          Logout
+        </button>
       </nav>
     </div>
   </aside>
@@ -52,8 +80,7 @@
     <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
       <div class="w-1/2">
         <a
-         
-          href="/"
+          href="/student"
           class="rounded-lg bg-primary cursor-pointer bg-opacity-90 py-3 px-6 text-base font-medium text-white hover:bg-opacity-100"
         >
           Home
@@ -82,12 +109,43 @@
           [matMenuTriggerFor]="menu"
           class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
         >
-          <img src="" />
+        <mat-icon fontIcon="person"></mat-icon>
         </button>
 
         <mat-menu #menu="matMenu">
-          <a mat-menu-item routerLink="change-password">Change Password</a>
-          <button mat-menu-item (click)="logout()">Logout</button>
+          <a mat-menu-item class="text-primary" routerLink="change-class">
+            <mat-icon
+              class="text-primary"
+              matRipple
+              fontIcon="school"
+            ></mat-icon>
+            Manage Classes
+          </a>
+          <a
+            mat-menu-item
+            routerLink="change-password"
+            style="cursor: pointer"
+            class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          >
+            <mat-icon
+              class="text-white-500"
+              matRipple
+              fontIcon="vpn_key"
+            ></mat-icon>
+            Change your password
+          </a>
+          <button
+            mat-menu-item
+            (click)="logout()"
+            class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          >
+            <mat-icon
+              class="text-white-500"
+              matRipple
+              fontIcon="logout"
+            ></mat-icon>
+            Logout
+          </button>
         </mat-menu>
         <div
           class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16"

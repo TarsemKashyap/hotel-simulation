@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { GridActionComponent } from '../grid-action/grid-action.component';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 import { ToastrService } from 'ngx-toastr';
+import { valueOrDefault } from 'chart.js/dist/helpers/helpers.core';
 
 @Component({
   selector: 'app-add-removed-class',
@@ -25,13 +26,14 @@ export class AddRemovedClassComponent {
   columnDefs: ColDef[] = [
     {
       field: 'code',
+      headerName: 'Class ID code',
       tooltipValueGetter: () => 'Click to copy code',
       onCellClicked: (event) => {
         Utility.copyToClipboard(event.value);
         this.snackBar.open(`class code ${event.value} copied.`);
       },
     },
-    { field: 'title' },
+    { field: 'title', headerName: 'Class Name' },
     {
       field: 'startDate',
       cellRenderer: (params: { value: string | number | Date }) =>
@@ -45,11 +47,32 @@ export class AddRemovedClassComponent {
     // { field: 'createdBy' },
     {
       field: 'isDefaultSet',
-      headerName: 'Set Default',
+      headerName: 'Class Status',
+      cellRenderer: (param: { value: boolean }) => {
+        return param.value
+          ? 'Default Active Class'
+          : 'Not Default Active Class';
+      },
     },
     {
       field: 'action',
-      headerName: 'Set as default',
+      headerName: 'Set as Default Active',
+      cellRenderer: GridActionComponent,
+      cellRendererParams: {
+        actions: [
+          {
+            placeHolder: 'menu',
+            mode: 'icon',
+            onClick: this.setAsDefault(),
+            hide: () => false,
+            tooltip: 'Set as Default Active Class',
+          },
+        ] as RowAction[],
+      } as GridActionParmas,
+    },
+    {
+      field: 'report',
+      headerName: 'Reports',
       cellRenderer: GridActionComponent,
       cellRendererParams: {
         actions: [
@@ -58,14 +81,7 @@ export class AddRemovedClassComponent {
             mode: 'icon',
             onClick: this.loadReport(),
             hide: () => false,
-            tooltip: 'View Reports',
-          },
-          {
-            placeHolder: 'menu',
-            mode: 'icon',
-            onClick: this.setAsDefault(),
-            hide: () => false,
-            tooltip: 'Set as Default',
+            tooltip: 'View',
           },
         ] as RowAction[],
       } as GridActionParmas,
@@ -85,7 +101,7 @@ export class AddRemovedClassComponent {
     private router: Router,
     public snackBar: MatSnackBar,
     public activeRoute: ActivatedRoute,
-    private toaster:ToastrService
+    private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -112,7 +128,7 @@ export class AddRemovedClassComponent {
     if (this.selectedTitle) {
       this.classService.addStudentInClass(this.selectedTitle).subscribe({
         next: () => {
-          this.toaster.success("Class added successfully!!");
+          this.toaster.success('Class added successfully!!');
           this.loadClasses();
         },
         error: (err) => {

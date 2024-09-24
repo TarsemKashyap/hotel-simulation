@@ -10,6 +10,7 @@ export class RolePagesDtl {
   pageKey: string;
   roleName: number[];
   childPageLink: string;
+  icon?:string;
 }
 
 export interface StudentGroupList {

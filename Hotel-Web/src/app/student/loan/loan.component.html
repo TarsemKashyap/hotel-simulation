@@ -1,99 +1,97 @@
-<section >
-    <div class="container">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <h2>Current Loan</h2>
-            <table class="table-auto">
-                <tr>
-                    <td class="style1">
-                        Long Term Loan:
-                    </td>
-                    <td>
-                        $ {{longTermLoan | number}} 
-                    </td>
-                </tr>
-                <tr>
-                    <td class="style1">
-                        Emergency Loan:
-                    </td>
-                    <td>
-                        $ {{emergencyLoan}} 
-                    </td>
-                </tr>
-            </table>
-            <h2>
-                Pay Loan
-            </h2>
-            <table>
-                <tr>
-                    <td class="style1">
-                        Pay Long Term Loan:
-                    </td>
-                    <td>
-                        $<input type="text" formControlName="payLongTermLoan"   
-                        [ngClass]="{ 'is-invalid': submitted && f.payLongTermLoan.errors }" class="input-field" />
-                        <div *ngIf="submitted && f.payLongTermLoan.errors" >
-                            <div *ngIf="f.payLongTermLoan.errors.required">Value is required</div>
-                            <div *ngIf="f.payLongTermLoan.errors.pattern">Invalid value</div>
-                            <div *ngIf="f.payLongTermLoan.errors.Invalidvalue">Invalid value</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="style1">
-                        Pay Emergency Loan:
-                    </td>
-                    <td>
-                        $<input type="text" formControlName="payEmergencyLoan"
-                        [ngClass]="{ 'is-invalid': submitted && f.payEmergencyLoan.errors }" class="input-field" />
-                        <div *ngIf="submitted && f.payEmergencyLoan.errors" >
-                            <div *ngIf="f.payEmergencyLoan.errors.required">Value is required</div>
-                            <div *ngIf="f.payEmergencyLoan.errors.pattern">Invalid value</div>
-                            <div *ngIf="f.payEmergencyLoan.errors.Invalidvalue">Invalid value</div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <h2>Borrow Long Term Loan</h2>
-    <table>
-        <tr>
-            <td class="style1">Borrow Long Term Loan:
-            </td>
-            <td>$<input type="text" formControlName="borrowLongTermLoan"  
-                [ngClass]="{ 'is-invalid': submitted && f.borrowLongTermLoan.errors }" class="input-field" />
-                <div *ngIf="submitted && f.borrowLongTermLoan.errors" >
-                    <div *ngIf="f.borrowLongTermLoan.errors.required">Value is required</div>
-                    <div *ngIf="f.borrowLongTermLoan.errors.pattern">Invalid value</div>
-                    <div *ngIf="f.borrowLongTermLoan.errors.isGreater">Invalid value</div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                &nbsp;&nbsp;&nbsp;
-            </td>
-            <td>
-                &nbsp;&nbsp;&nbsp; &nbsp;
-            </td>
-        </tr>
-        <tr>
-            <td>
-                &nbsp;&nbsp;&nbsp;
-            </td>
-            <td>
-               
-        </tr>
-    </table>
-    <div class="footer">
+<section>
+  <div class="container">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Current Loans</h2>
+
+      <div class="grid w-[60%] grid-cols-2 gap-4 pb-5">
+        <div>Total long-term loan amount</div>
+        <div>$ {{ longTermLoan | number }}</div>
+        <div>Total emergency loan amount</div>
+        <div>$ {{ emergencyLoan }}</div>
+      </div>
+      <h2>Total long-term loan amount you want to pay</h2>
+      <div class="grid w-[60%] grid-cols-2 gap-4 pb-5">
+        <div>Pay long-term loan</div>
+        <div>
+           
+          $<input
+            type="text"
+            formControlName="payLongTermLoan"
+            [ngClass]="{
+              'is-invalid': submitted && f.payLongTermLoan.errors
+            }"
+            class="input-field"
+          />
+          <div *ngIf="submitted && f.payLongTermLoan.errors">
+            <div *ngIf="f.payLongTermLoan.errors.required">
+              Value is required
+            </div>
+            <div *ngIf="f.payLongTermLoan.errors.pattern">Invalid value</div>
+            <div *ngIf="f.payLongTermLoan.errors.Invalidvalue">
+              Invalid value
+            </div>
+          </div>
+        </div>
+        <div>Total emergency loan amount you want to pay</div>
+        <div>
+          $<input
+            type="text"
+            formControlName="payEmergencyLoan"
+            [ngClass]="{
+              'is-invalid': submitted && f.payEmergencyLoan.errors
+            }"
+            class="input-field"
+          />
+          <div *ngIf="submitted && f.payEmergencyLoan.errors">
+            <div *ngIf="f.payEmergencyLoan.errors.required">
+              Value is required
+            </div>
+            <div *ngIf="f.payEmergencyLoan.errors.pattern">Invalid value</div>
+            <div *ngIf="f.payEmergencyLoan.errors.Invalidvalue">
+              Invalid value
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2>Borrow long-term loan</h2>
+      <div class="grid w-[60%] grid-cols-2 gap-4 pb-5">
+        <div>Total long-term loan you want borrow</div>
+        <div>
+          $<input
+            type="text"
+            formControlName="borrowLongTermLoan"
+            [ngClass]="{
+              'is-invalid': submitted && f.borrowLongTermLoan.errors
+            }"
+            class="input-field"
+          />
+          <div *ngIf="submitted && f.borrowLongTermLoan.errors">
+            <div *ngIf="f.borrowLongTermLoan.errors.required">
+              Value is required
+            </div>
+            <div *ngIf="f.borrowLongTermLoan.errors.pattern">Invalid value</div>
+            <div *ngIf="f.borrowLongTermLoan.errors.isGreater">
+              Invalid value
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <div class="footer pt-30 mt-30">
         <div class="md:flex md:items-center mb-6">
           <div class="md:w-1/2"></div>
           <div class="md:w-4/3">
-            <button type="submit"
-              class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md">
+            <button
+              type="submit"
+              class="bordder-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition duration-300 ease-in-out hover:shadow-md"
+            >
               Save
             </button>
           </div>
         </div>
       </div>
-        </form>
-    </div>
+    </form>
+  </div>
 </section>
