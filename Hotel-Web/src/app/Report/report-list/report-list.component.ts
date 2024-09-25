@@ -36,17 +36,17 @@ export class ReportListComponent {
         this.isInstructorOrAdmin && this.classInfo.currentQuater > 1,
     },
     {
-      text: 'Income Report',
+      text: 'Income Statement',
       link: 'income-report',
     },
     {
-      text: 'Balance Report',
+      text: 'Balance Sheet',
       link: 'balance-report',
       enable: () => this.classInfo.currentQuater > 0,
 
     },
     {
-      text: 'Cash Flow Report',
+      text: 'Cash Flow Statement',
       link: 'cashflow-report',
       enable: () => this.classInfo.currentQuater > 2,
     },
@@ -55,47 +55,47 @@ export class ReportListComponent {
       link: 'occupancy-report',
     },
     {
-      text: 'Avgerage Daily Rate Report',
+      text: 'Avgerage Daily Rate (ADR) Report',
       link: 'avg-daily-rate-report',
     },
     {
-      text: 'Rev Par Go par Report',
+      text: 'REVPAR, TOTAL REVPAR and GOPAR Reports',
       link: 'rev-par-gopar-report',
     },
     {
-      text: 'RoomRate Report',
+      text: 'Room Rates and Cost of Distribution Channel Reports',
       link: 'room-rate-report',
     },
     {
-      text: 'Market Share Revenue Report',
+      text: 'Market Share based on Revenues Reports',
       link: 'market-share-revenue-report',
     },
     {
-      text: 'Market Share Room Sold Report',
+      text: 'Market Share based on Number of Rooms Sold Reports',
       link: 'market-share-roomsold-report',
     },
     {
-      text: 'Market Share Position Alone Report',
+      text: 'Actual Market Share and Market Share by Positioning Alone Reports',
       link: 'market-share-position-alone-report',
     },
     {
-      text: 'Attribute Amentities Report',
+      text: 'Hotel Attributes and Amenities Report',
       link: 'attribute-amentities-report',
     },
     {
-      text: 'Market Expenditure Report',
+      text: 'Marketing Expenditure Reports',
       link: 'market-expenditure-report',
     },
     {
-      text: 'Position Map Report',
+      text: 'Positioning Maps',
       link: 'position-map-report',
     },
     {
-      text: 'Quality Rating Report',
+      text: 'Quality Perceptions and Ratings Reports',
       link: 'quality-rating-report',
     },
     {
-      text: 'Demand Report',
+      text: 'Demand Reports',
       link: 'demand-report',
     },
   ];

@@ -37,6 +37,7 @@ import { ClassModule } from '../shared/class/class.module';
     ValueFormatterPipe,
     FmtPipe,
     Fmt2Pipe,
+    
     PerformanceComponent,
     IncomeComponent,
     BalanceComponent,

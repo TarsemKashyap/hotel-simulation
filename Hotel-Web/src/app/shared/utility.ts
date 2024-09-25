@@ -41,6 +41,7 @@ export class Utility {
   }
 
   public static formatNumber(value: string): number {
+    
     if (value === '') {
       return 0;
     }
