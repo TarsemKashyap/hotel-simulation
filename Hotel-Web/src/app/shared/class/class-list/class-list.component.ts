@@ -25,13 +25,14 @@ export class ClassListComponent implements OnInit {
   columnDefs: ColDef[] = [
     {
       field: 'code',
+      headerName: 'Class ID code',
       tooltipValueGetter: () => 'Click to copy code',
       onCellClicked: (event) => {
         Utility.copyToClipboard(event.value);
         this.snackBar.open(`class code ${event.value} copied.`);
       },
     },
-    { field: 'title' },
+    { field: 'title', headerName: 'Class Name' },
     {
       field: 'startDate',
       cellRenderer: (params: { value: string | number | Date }) =>
@@ -54,18 +55,18 @@ export class ClassListComponent implements OnInit {
       cellRendererParams: {
         actions: [
           {
-            placeHolder: 'assignment',
-            mode: 'icon',
-            onClick: this.navigateToReport(),
-            hide: () => false,
-            tooltip: 'View class Reports',
-          },
-          {
             placeHolder: 'visibility',
             mode: 'icon',
             onClick: this.onOverviewClick(),
             hide: () => false,
             tooltip: 'Class overview',
+          },
+          {
+            placeHolder: 'assignment',
+            mode: 'icon',
+            onClick: this.navigateToReport(),
+            hide: () => false,
+            tooltip: 'View class Reports',
           },
           {
             placeHolder: 'delete',

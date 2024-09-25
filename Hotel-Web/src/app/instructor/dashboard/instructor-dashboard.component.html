@@ -26,19 +26,22 @@
       </a>
       <a
         routerLink="change-password"
-        class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
         <button>
           <mat-icon
             class="text-white-500"
             style="margin-right: 5px"
             matRipple
-            fontIcon="edit"
+            fontIcon="vpn_key"
           ></mat-icon>
         </button>
         Change Password
       </a>
-      <button (click)="logout()" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+      <button
+        (click)="logout()"
+        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+      >
         <mat-icon
           class="text-white-500"
           style="margin-right: 5px"
@@ -55,13 +58,47 @@
     <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
       <div class="w-1/2"></div>
       <div class="relative w-1/2 flex justify-end">
-        <button [matMenuTriggerFor]="menu" class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
-          <img src="" />
+        <button
+          [matMenuTriggerFor]="menu"
+          class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
+        >
+          <mat-icon fontIcon="person"></mat-icon>
         </button>
-        
+
         <mat-menu #menu="matMenu">
-          <a mat-menu-item routerLink="change-password">Change Password</a>
-          <button mat-menu-item (click)="logout()">Logout</button>
+          <a mat-menu-item class="text-primary" routerLink="class/list">
+            <mat-icon
+              class="text-primary"
+              matRipple
+              fontIcon="school"
+            ></mat-icon>
+            Manage Classes
+          </a>
+          <a
+            mat-menu-item
+            routerLink="change-password"
+            style="cursor: pointer"
+            class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          >
+            <mat-icon
+              class="text-white-500"
+              matRipple
+              fontIcon="vpn_key"
+            ></mat-icon>
+            Change your password
+          </a>
+          <button
+            mat-menu-item
+            (click)="logout()"
+            class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          >
+            <mat-icon
+              class="text-white-500"
+              matRipple
+              fontIcon="logout"
+            ></mat-icon>
+            Logout
+          </button>
         </mat-menu>
         <div
           class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16"
@@ -98,7 +135,6 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-
 
       <!-- <button class="w-full bg-white cta-btn  py-2 mt-5 rounded-br-lg rounded-bl-lg rounded-tr-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center">
             <i class="fas fa-plus mr-3"></i> New Report
