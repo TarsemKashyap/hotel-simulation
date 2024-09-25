@@ -14,7 +14,7 @@ export class DecisionComponent {
   private decisionLinks: IHyperLinks[] = [
     {
       link: '../room',
-      text: 'Room Allocation',
+      text: 'Room Allocation Decisions',
       enable: () =>
         this.hasAnyRole([
           StudentRoles.GeneralManager,
@@ -23,7 +23,7 @@ export class DecisionComponent {
     },
     {
       link: '../attribute',
-      text: 'Hotel Attributes and Amenities',
+      text: 'Hotel Attributes and Amenities Decisions',
       enable: () =>
         this.hasAnyRole([
           StudentRoles.GeneralManager,
