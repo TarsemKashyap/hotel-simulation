@@ -9,51 +9,42 @@ const userRole = 'userRole';
 const studentRole = 'studentRole';
 const currentRole = 'currentRole';
 
+const manageClass = {
+  pageKey: 'rmChangeClass',
+  pageName: 'Manage classes',
+  roleName: [1, 2, 3, 4, 5, 6],
+  childPageLink: 'change-class',
+  icon: 'school',
+};
+
+const decision = {
+  pageKey: 'rmMakeDecision',
+  pageName: 'Enter your decisions',
+  roleName: [1, 4, 2, 3, 6, 5],
+  childPageLink: 'decision',
+  icon: 'signpost',
+};
+
 const studentRoutes: RolePagesDtl[] = [
-  {
-    pageKey: 'rmChangeClass',
-    pageName: 'Manage classes',
-    roleName: [1, 2, 3, 4, 5, 6],
-    childPageLink: 'change-class',
-    icon:'school'
-  },
-  {
-    pageKey: 'rmMakeDecision',
-    pageName: 'Enter your decisions',
-    roleName: [1, 4, 2, 3, 6, 5],
-    childPageLink: 'decision',
-    icon:'signpost'
-  },
+  manageClass,
+  decision,
   {
     pageKey: 'gmSetYourObjective',
     pageName: 'Set your objectives',
     roleName: [4],
     childPageLink: 'goalSetting',
-    icon:'star'
+    icon: 'star',
   },
   {
     pageKey: 'rmLoan',
     pageName: 'Borrow/Pay loans',
     roleName: [1, 4, 2, 3, 6, 5],
     childPageLink: 'loan',
-    icon:'paid'
+    icon: 'paid',
   },
 ];
 
-const noRoles: RolePagesDtl[] = [
-  {
-    pageKey: 'ChangePwd',
-    pageName: 'Change password',
-    roleName: [],
-    childPageLink: 'change-password',
-  },
-  {
-    pageKey: 'noRoleChangeClass',
-    pageName: 'Class Overview',
-    roleName: [],
-    childPageLink: 'change-class',
-  },
-];
+const noRoles: RolePagesDtl[] = [manageClass];
 
 @Injectable({ providedIn: 'root' })
 export class SessionStore {
