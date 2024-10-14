@@ -1,24 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { StudentService } from '../student.service';
+import { StudentService } from '../../../student/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   DecimalValidator,
   Goal,
 } from 'src/app/shared/class/model/classSession.model';
 import { ToastrService } from 'ngx-toastr';
+import { BaseDecision } from '../decision/decision.component';
 
 @Component({
   selector: 'app-goal-setting',
   templateUrl: './goal-setting.component.html',
   styleUrls: ['./goal-setting.component.css'],
 })
-export class GoalSettingComponent {
+export class GoalSettingComponent extends BaseDecision {
   form: FormGroup;
   submitted = false;
   errorMsg: string = '';
@@ -31,13 +32,17 @@ export class GoalSettingComponent {
   constructor(
     private studentService: StudentService,
     private fb: FormBuilder,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    injector:Injector
   ) {
+    super(injector);
     this.form = this.createForm();
   }
 
-  private goalDetailList() {
-    this.studentService.GoalDetails().subscribe({
+  private async goalDetailList() {
+    let defaultClass = await this.getActiveClass();
+
+    this.studentService.GoalDetails(defaultClass).subscribe({
       next: (data: Goal) => {
         this.goalDetail = data;
         this.form.patchValue({

@@ -9,16 +9,17 @@ import {
   AuthGuard,
   hasStudentRole,
 } from '../shared/auth.gurad';
-import { DecisionComponent } from './decision/decision.component';
-import { RoomComponent } from './room/room.component';
-import { AttributeComponent } from './attribute/attribute.component';
-import { PriceComponent } from './price/price.component';
-import { MarketingComponent } from './marketing/marketing.component';
-import { AppRoles } from '../public/account';
-import { GoalSettingComponent } from './goal-setting/goal-setting.component';
-import { LoanComponent } from './loan/loan.component';
 
 import { reportRoutes } from '../Report/report-routing.module';
+import {
+  AttributeComponent,
+  DecisionComponent,
+  GoalSettingComponent,
+  LoanComponent,
+  MarketingComponent,
+  PriceComponent,
+  RoomComponent,
+} from '../shared/decisions';
 
 const routes: Routes = [
   {

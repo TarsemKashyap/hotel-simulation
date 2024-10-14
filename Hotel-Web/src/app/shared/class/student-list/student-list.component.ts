@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClassOverview, StudentList } from '../model/studentList.model';
 import { ClassService } from '../class.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StudentRolesEditComponent } from '../student-roles-edit/student-roles-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GridActionComponent } from '../grid-action/grid-action.component';
@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { ClassInformation, ClassSession } from '../model/classSession.model';
 import { ClassModule } from '../class.module';
+import { StudentDecisionsComponent } from '../../decisions/student-decisions/student-decisions.component';
 
 @Component({
   selector: 'app-student-list',
@@ -38,8 +39,17 @@ export class StudentListComponent {
           {
             placeHolder: 'group',
             mode: 'icon',
+            tooltip: 'Manage groups',
             cssClass: 'hover:text-primary',
             onClick: this.onOverviewClick(),
+            hide: () => false,
+          },
+          {
+            placeHolder: 'visibility',
+            mode: 'icon',
+            tooltip: 'View Decisions',
+            cssClass: 'hover:text-primary',
+            onClick: this.onDecisionClick(),
             hide: () => false,
           },
         ] as RowAction[],
@@ -58,14 +68,14 @@ export class StudentListComponent {
   constructor(
     private classService: ClassService,
     private router: Router,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
     private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
-    this.classId = this.route.snapshot.params['id'];
+    this.classId = this.activatedRoute.snapshot.params['id'];
     this.loadStudentList();
   }
 
@@ -74,6 +84,22 @@ export class StudentListComponent {
       this.$rows = x.studentClassMappingDto;
       this.classSession = x.classSessionDto;
     });
+  }
+
+  onDecisionClick() {
+    return ($event: Event, row: IRowNode<StudentList>) => {
+      const dialogRef = this.dialog.open(StudentDecisionsComponent, {
+        width: '90%',
+        height: '90%',
+        data: Object.assign({}, row.data, { classId: this.classId }),
+      });
+
+      dialogRef.beforeClosed().subscribe((x) => {
+        if (x) {
+          this.loadStudentList();
+        }
+      });
+    };
   }
 
   onOverviewClick() {

@@ -53,6 +53,14 @@ public class ClassSessionController : AbstractBaseController
 
     }
 
+    [HttpGet("{id}/detail")]
+    public async Task<IActionResult> GetDetailById(int id)
+    {
+        var appUser = await _classSessionService.GetById(id);
+        return Ok(appUser);
+
+    }
+
     [HttpPost("editClass/{id}")]
     public async Task<IActionResult> ClassUpdate(int id, ClassSessionUpdateDto account)
     {

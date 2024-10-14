@@ -18,7 +18,7 @@ import { InstructorRouteModule } from './instructor-route.module';
     HttpClientModule,
     AgGridModule,
     MaterialModule,
-    InstructorRouteModule
+    InstructorRouteModule,
   ],
   providers: [ChangePasswordService],
   bootstrap: [InstructorDashboard],

@@ -1,0 +1,9 @@
+export { AttributeComponent } from './attribute/attribute.component';
+export { GoalSettingComponent } from './goal-setting/goal-setting.component';
+export { LoanComponent } from './loan/loan.component';
+export { MarketingComponent } from './marketing/marketing.component';
+export { PriceComponent } from './price/price.component';
+export { RoomComponent } from './room/room.component';
+export { DecisionComponent } from './decision/decision.component';
+export { DecisionModule } from './decision.module';
+export { StudentDecisionsComponent } from './student-decisions/student-decisions.component';

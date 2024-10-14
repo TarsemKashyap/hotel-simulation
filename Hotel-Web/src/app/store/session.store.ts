@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import { AppRoles } from '../public/account';
 import { RolePagesDtl, StudentRoles } from '../shared/class/model/Roles';
 import { JsonPipe } from '@angular/common';
+import { DefaultTitleStrategy } from '@angular/router';
+import { DefaultClassSession } from '../shared/class';
 
 const RefreshToken = 'RefreshToken';
 const AccessToken = 'AccessToken';
 const userRole = 'userRole';
 const studentRole = 'studentRole';
 const currentRole = 'currentRole';
+const studentDefaultClass = 'studentDefaultClass';
+const UrlClassId = 'urlClassId';
 
 const manageClass = {
   pageKey: 'rmChangeClass',
@@ -66,6 +70,21 @@ export class SessionStore {
     const stdRoles = this.GetStudentRoleList();
     return stdRoles.map((x) => x.id);
   }
+
+  SetDefaultClass(defaultclass: DefaultClassSession) {
+    localStorage.setItem(studentDefaultClass, JSON.stringify(defaultclass));
+  }
+  removeDefaultClass() {
+    localStorage.removeItem(studentDefaultClass);
+  }
+  GetDefaultClass(): DefaultClassSession | undefined {
+    const cls = localStorage.getItem(studentDefaultClass);
+    if (cls) {
+      return JSON.parse(cls);
+    }
+    return undefined;
+  }
+
 
   GetStudentRoleList() {
     let savedRoles = localStorage.getItem(studentRole);

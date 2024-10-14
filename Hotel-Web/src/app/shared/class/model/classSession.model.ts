@@ -13,6 +13,9 @@ export interface ClassSession {
   classId?: number;
   className?: string;
 }
+export interface DefaultClassSession extends ClassSession {
+  groupSerial: number;
+}
 
 export interface ClassGroup {
   groupId?: number;

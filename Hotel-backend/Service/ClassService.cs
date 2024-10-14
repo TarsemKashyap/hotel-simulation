@@ -184,6 +184,15 @@ public class ClassSessionService : IClassSessionService
         return appUser.Adapt<ClassSessionUpdateDto>();
     }
 
+    public async Task<ClassSessionDto> GetDetailById(int classId)
+    {
+        var appUser = await _context.ClassSessions.Include(x => x.Groups).FirstOrDefaultAsync(x => x.ClassId == classId);
+        ;
+        if (appUser == null)
+            throw new ValidationException("class not found for given classId");
+        return appUser.Adapt<ClassSessionDto>();
+    }
+
     public async Task DeleteId(int classId)
     {
         var appUser = _context.ClassSessions.Include(x => x.Groups).FirstOrDefault(x => x.ClassId == classId);

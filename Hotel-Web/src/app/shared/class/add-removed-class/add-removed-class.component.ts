@@ -11,6 +11,7 @@ import { GridActionComponent } from '../grid-action/grid-action.component';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
 import { ToastrService } from 'ngx-toastr';
 import { valueOrDefault } from 'chart.js/dist/helpers/helpers.core';
+import { SessionStore } from 'src/app/store';
 
 @Component({
   selector: 'app-add-removed-class',
@@ -101,7 +102,8 @@ export class AddRemovedClassComponent {
     private router: Router,
     public snackBar: MatSnackBar,
     public activeRoute: ActivatedRoute,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private sessionStore: SessionStore
   ) {}
 
   ngOnInit(): void {
@@ -150,6 +152,7 @@ export class AddRemovedClassComponent {
   setAsDefault(): ($event: Event, row: any) => void {
     return ($event: Event, row: IRowNode<ClassSession>) => {
       this.classService.setAsDefault(row.data!).subscribe((data) => {
+        this.sessionStore.SetDefaultClass(data);
         this.loadClasses();
         this.snackBar.open('Class added succesfully');
         window.location.reload();

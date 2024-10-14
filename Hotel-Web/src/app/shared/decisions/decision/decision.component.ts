@@ -1,14 +1,40 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Injector } from '@angular/core';
+import { ActivatedRoute, DefaultUrlSerializer, Router } from '@angular/router';
+import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from 'src/app/Report/report-list/IHyperLinks.model';
 import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
 import { SessionStore } from 'src/app/store';
+import { DecisionService } from './decision.service';
+
+export abstract class BaseDecision {
+  private activatedRoute: ActivatedRoute;
+  private decisionService: DecisionService;
+  private router1: Router;
+
+  constructor(injector: Injector) {
+    this.activatedRoute = injector.get(ActivatedRoute);
+    this.decisionService = injector.get(DecisionService);
+    this.router1 = injector.get(Router);
+  }
+
+  public get classId(): string {
+    return this.activatedRoute.snapshot.paramMap.get('id')!;
+  }
+
+  public async getActiveClass() {
+    if (this.decisionService.IsStudent) {
+      return this.decisionService.GetClass();
+    }
+    return await this.decisionService.GetClassById(this.classId);
+  }
+}
+
 @Component({
   selector: 'app-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.css'],
 })
-export class DecisionComponent {
+export class DecisionComponent extends BaseDecision {
   studentRoles: number[];
   activeLinks: IHyperLinks[] = [];
   private decisionLinks: IHyperLinks[] = [
@@ -52,14 +78,19 @@ export class DecisionComponent {
     },
   ];
   constructor(
-    private route: ActivatedRoute,
-    private sessionStore: SessionStore
+    private sessionStore: SessionStore,
+    private accountService: AccountService,
+    injector: Injector
   ) {
+    super(injector);
     this.studentRoles = this.sessionStore.GetRoleids();
   }
 
   private hasAnyRole(roles: StudentRoles[]) {
-    return roles.some((x) => this.studentRoles.includes(x));
+    return (
+      this.accountService.userHasRole(AppRoles.Instructor) ||
+      roles.some((x) => this.studentRoles.includes(x))
+    );
   }
 
   ngOnInit(): void {

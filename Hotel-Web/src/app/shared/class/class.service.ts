@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators';
+import { retry, catchError, map, tap } from 'rxjs/operators';
 import { SessionStore } from 'src/app/store';
 import { ClassSession } from '.';
 import { ClassOverview, StudentList } from './model/studentList.model';
@@ -12,14 +12,21 @@ import {
   StudentRoles,
 } from './model/Roles';
 import { StudentRoleGroupAssign } from './model/StudentRoles';
-import { AddRemoveClassDto, ClassMapping } from './model/classSession.model';
+import {
+  AddRemoveClassDto,
+  ClassMapping,
+  DefaultClassSession,
+} from './model/classSession.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClassService {
   apiUrl: any;
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private sessionStore: SessionStore
+  ) {}
 
   addClass(classSession: ClassSession): Observable<any> {
     return this.httpClient.post('class', classSession);
@@ -81,8 +88,8 @@ export class ClassService {
     );
   }
 
-  setAsDefault(req: ClassSession): Observable<any> {
-    return this.httpClient.post<ClassSession>(
+  setAsDefault(req: ClassSession): Observable<DefaultClassSession> {
+    return this.httpClient.post<DefaultClassSession>(
       'studentClassMapping/studentClassUpdate',
       req
     );
@@ -101,10 +108,14 @@ export class ClassService {
     );
   }
 
-  getStudentDefaultClass(): Observable<ClassSession> {
-    return this.httpClient.get<ClassSession>(
-      'studentClassMapping/defaultclass'
-    );
+  getStudentDefaultClass(): Observable<DefaultClassSession> {
+    return this.httpClient
+      .get<DefaultClassSession>('studentClassMapping/defaultclass')
+      .pipe(
+        tap((cls) => {
+          this.sessionStore.SetDefaultClass(cls);
+        })
+      );
   }
 
   addStudentInClass(classCode: string): Observable<any> {

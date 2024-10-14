@@ -35,7 +35,8 @@ namespace Api.Controllers
                 ClassId = studentClassMappingDto.ClassId
             };
             await _studentClassMappingService.IsDefaultUpdate(LoggedUserId, dto);
-            return Ok();
+            var defaultClass = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
+            return Ok(defaultClass);
         }
 
         [HttpGet("studentClasslist")]

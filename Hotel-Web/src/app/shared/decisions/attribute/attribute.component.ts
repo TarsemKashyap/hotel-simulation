@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { StudentService } from '../student.service';
+import { StudentService } from '../../../student/student.service';
 import {
   AttributeDecision,
   DecimalValidator,
@@ -14,14 +14,14 @@ import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
-import { Utility } from 'src/app/shared/utility';
+import { BaseDecision } from '../decision/decision.component';
 
 @Component({
   selector: 'app-attribute',
-  templateUrl: './attribute.component.html',
+  templateUrl: './attribute.component.html',  
   styleUrls: ['./attribute.component.css'],
 })
-export class AttributeComponent {
+export class AttributeComponent extends BaseDecision {
   form: FormGroup;
   submitted = false;
   totalAccumulated: string;
@@ -62,8 +62,10 @@ export class AttributeComponent {
     private fb: FormBuilder,
     private sessionStore: SessionStore,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    injector: Injector
   ) {
+    super(injector);
     this.currentRole = this.sessionStore.GetRoleids();
     if (!this.currentRole) {
       this.router.navigate(['']);
@@ -74,20 +76,23 @@ export class AttributeComponent {
     return this.form.controls;
   }
 
-  private attributeDecisionList() {
-    this.studentService.AttributeDecisionList().subscribe((data) => {
-      this.totalAccumulated = data
-        .filter((p) => (p.accumulatedCapital ? true : false))
-        .map((p) => p.accumulatedCapital)
-        .reduce((p, c) => p + c, 0)
-        .toString();
+  private async attributeDecisionList() {
+    let defaultClass = await this.getActiveClass();
+    this.studentService
+      .AttributeDecisionList(defaultClass)
+      .subscribe((data) => {
+        this.totalAccumulated = data
+          .filter((p) => (p.accumulatedCapital ? true : false))
+          .map((p) => p.accumulatedCapital)
+          .reduce((p, c) => p + c, 0)
+          .toString();
 
-      this.patchForm(data);
+        this.patchForm(data);
 
-      this.disableFieldFB();
-      this.disableFormRevenueManager();
-      this.disableFieldRoomManager();
-    });
+        this.disableFieldFB();
+        this.disableFormRevenueManager();
+        this.disableFieldRoomManager();
+      });
   }
 
   private patchForm(data: AttributeDecision[]) {
@@ -100,7 +105,6 @@ export class AttributeComponent {
     });
     this.form.patchValue(formData);
     this.attributeDecisions = data;
-    console.log({ totalAccumu: this.totalAccumulated });
   }
 
   private disableFormRevenueManager() {

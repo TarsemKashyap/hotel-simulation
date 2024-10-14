@@ -21,6 +21,15 @@ import { CreateMonthComponent } from './create-month/create-month.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ClassMenuComponent } from './class-menu/class-menu.component';
 import { MonthCalculationComponent } from './month-calculation/month-calculation.component';
+import {
+  DecisionComponent,
+  RoomComponent,
+  AttributeComponent,
+  PriceComponent,
+  MarketingComponent,
+  GoalSettingComponent,
+  LoanComponent,
+} from '../decisions';
 
 @NgModule({
   declarations: [
@@ -71,6 +80,13 @@ export const classRoute: Routes = [
         path: 'student-roles-edit/:id',
         component: StudentRolesEditComponent,
       },
+      { path: ':id/decisions', component: DecisionComponent },
+      { path: ':id/room', component: RoomComponent },
+      { path: ':id/attribute', component: AttributeComponent },
+      { path: ':id/price', component: PriceComponent },
+      { path: ':id/marketing', component: MarketingComponent },
+      { path: ':id/goalSetting', component: GoalSettingComponent },
+      { path: ':id/loan', component: LoanComponent },
     ],
   },
 ];
