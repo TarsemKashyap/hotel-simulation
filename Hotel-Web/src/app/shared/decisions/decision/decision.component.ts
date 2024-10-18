@@ -1,40 +1,16 @@
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, DefaultUrlSerializer, Router } from '@angular/router';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from 'src/app/Report/report-list/IHyperLinks.model';
 import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
 import { SessionStore } from 'src/app/store';
-import { DecisionService } from './decision.service';
-
-export abstract class BaseDecision {
-  private activatedRoute: ActivatedRoute;
-  private decisionService: DecisionService;
-  private router1: Router;
-
-  constructor(injector: Injector) {
-    this.activatedRoute = injector.get(ActivatedRoute);
-    this.decisionService = injector.get(DecisionService);
-    this.router1 = injector.get(Router);
-  }
-
-  public get classId(): string {
-    return this.activatedRoute.snapshot.paramMap.get('id')!;
-  }
-
-  public async getActiveClass() {
-    if (this.decisionService.IsStudent) {
-      return this.decisionService.GetClass();
-    }
-    return await this.decisionService.GetClassById(this.classId);
-  }
-}
 
 @Component({
   selector: 'app-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.css'],
 })
-export class DecisionComponent extends BaseDecision {
+export class DecisionComponent {
   studentRoles: number[];
   activeLinks: IHyperLinks[] = [];
   private decisionLinks: IHyperLinks[] = [
@@ -80,9 +56,7 @@ export class DecisionComponent extends BaseDecision {
   constructor(
     private sessionStore: SessionStore,
     private accountService: AccountService,
-    injector: Injector
   ) {
-    super(injector);
     this.studentRoles = this.sessionStore.GetRoleids();
   }
 

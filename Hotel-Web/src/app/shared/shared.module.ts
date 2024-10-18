@@ -16,6 +16,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { OverlayService } from './overlay.service';
 import { TextboxComponent } from './templates/textbox/textbox.component';
 import { NumberCommaSeparatorDirective } from './comma-seperator';
+import { DecisionManager } from './decisions';
 
 @NgModule({
   declarations: [
@@ -35,10 +36,9 @@ import { NumberCommaSeparatorDirective } from './comma-seperator';
     MaterialModule,
   ],
   exports: [
-    ClassModule,
     ConfirmDialogComponent,
     TextboxComponent
   ],
-  providers: [SessionStore, JwtHelperService, OverlayService],
+  providers: [SessionStore, JwtHelperService, OverlayService,],
 })
 export class SharedModule {}

@@ -11,14 +11,14 @@ import {
 import { StudentService } from '../../../student/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DecimalValidator } from 'src/app/shared/class/model/classSession.model';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
 
 @Component({
   selector: 'app-loan',
   templateUrl: './loan.component.html',
   styleUrls: ['./loan.component.css'],
 })
-export class LoanComponent extends BaseDecision implements OnInit {
+export class LoanComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   errorMsg: string = '';
@@ -31,9 +31,8 @@ export class LoanComponent extends BaseDecision implements OnInit {
     private studentService: StudentService,
     private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    injector: Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.form = this.createForm();
   }
 
@@ -47,7 +46,7 @@ export class LoanComponent extends BaseDecision implements OnInit {
   }
 
   private async getBalanceSheetDetail() {
-    let defaultClass = await this.getActiveClass();
+    let defaultClass = this.decisionManager.getClassDecision();
 
     this.studentService.BalanceSheetDetails(defaultClass).subscribe((data) => {
       this.balanceSheetDetails = data || {};

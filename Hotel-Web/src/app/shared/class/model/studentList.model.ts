@@ -1,4 +1,5 @@
 import { ClassInformation, ClassSession } from './classSession.model';
+import { StudentRoles } from './Roles';
 
 export interface StudentList {
   id: string;
@@ -11,6 +12,10 @@ export interface StudentList {
   startDate: string;
   endDate: string;
   totalStudents: number;
+  classId:number,
+  groupSerial:number
+  roles:StudentRoles[]
+
 }
 
 export interface ClassOverview {

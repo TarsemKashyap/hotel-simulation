@@ -11,14 +11,14 @@ import {
   PriceDecision,
 } from 'src/app/shared/class/model/classSession.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
 
 @Component({
   selector: 'app-price',
   templateUrl: './price.component.html',
   styleUrls: ['./price.component.css'],
 })
-export class PriceComponent extends BaseDecision {
+export class PriceComponent {
   form: FormGroup;
   priceDecision: PriceDecision[] = [];
   submitted = false;
@@ -28,9 +28,8 @@ export class PriceComponent extends BaseDecision {
     private studentService: StudentService,
     private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    injector: Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.form = this.createForm();
   }
 
@@ -39,7 +38,7 @@ export class PriceComponent extends BaseDecision {
   }
 
   private async priceDecisionList() {
-    let defaultClass=await this.getActiveClass();
+    let defaultClass= this.decisionManager.getClassDecision();
     this.studentService.PriceDecisionList(defaultClass).subscribe((data) => {
       this.priceDecision = data;
       this.priceDecision.forEach((element) => {

@@ -49,7 +49,7 @@ namespace Service
         {
             var roles = _context.StudentRoles.ProjectToType<StudentRoleDto>().ToList();
             var groups = _context.ClassGroups.Where(x => x.ClassId == classId).ProjectToType<ClassGroupDto>().ToList();
-            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId).Select(x => x.RoleId).ToList();
+            var selectedRoles = _context.StudentRoleMapping.Where(x => x.StudentId == studentId && x.ClassId == classId).Select(x => x.RoleId).ToList();
             var selectedGrupid = _context.StudentClassMapping.FirstOrDefault(x => x.StudentId == studentId && x.ClassId == classId);
 
             var request = new StudentRoleGroupRequest

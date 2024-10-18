@@ -12,14 +12,14 @@ import {
   Goal,
 } from 'src/app/shared/class/model/classSession.model';
 import { ToastrService } from 'ngx-toastr';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
 
 @Component({
   selector: 'app-goal-setting',
   templateUrl: './goal-setting.component.html',
   styleUrls: ['./goal-setting.component.css'],
 })
-export class GoalSettingComponent extends BaseDecision {
+export class GoalSettingComponent {
   form: FormGroup;
   submitted = false;
   errorMsg: string = '';
@@ -33,14 +33,13 @@ export class GoalSettingComponent extends BaseDecision {
     private studentService: StudentService,
     private fb: FormBuilder,
     private toaster: ToastrService,
-    injector:Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.form = this.createForm();
   }
 
   private async goalDetailList() {
-    let defaultClass = await this.getActiveClass();
+    let defaultClass = this.decisionManager.getClassDecision();
 
     this.studentService.GoalDetails(defaultClass).subscribe({
       next: (data: Goal) => {
@@ -59,7 +58,7 @@ export class GoalSettingComponent extends BaseDecision {
         });
       },
       error: (err) => {
-        const message=Object.values(err.error).at(0) as string;
+        const message = Object.values(err.error).at(0) as string;
         this.toaster.error(message);
       },
     });

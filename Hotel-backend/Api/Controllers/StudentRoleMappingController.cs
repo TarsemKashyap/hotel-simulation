@@ -47,7 +47,7 @@ namespace Api.Controllers
             return Ok(studentRoleResult);
         }
 
-        [HttpPost("studentRolelist")]
+        [HttpGet("studentRolelist")]
         public async Task<ActionResult> GetStudentRoles()
         {
             var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(LoggedUserId);
@@ -117,12 +117,7 @@ namespace Api.Controllers
             return Ok(attributeDecisionDetails);
         }
 
-        [HttpPost("UpdateAttributeDecision")]
-        public async Task<ActionResult> UpdateAttributeDecision(List<AttributeDecisionDto> attributeDecisionDtos)
-        {
-            await _attributeDecisionService.UpdateAttributeDecision(attributeDecisionDtos);
-            return Ok();
-        }
+    
 
         [HttpGet("GoalSettingDetails")]
         public async Task<ActionResult> GoalSettingDetails()
@@ -138,14 +133,9 @@ namespace Api.Controllers
             return Ok(goalSettingDetails);
         }
 
-        [HttpPost("UpdateGoalSetting")]
-        public async Task<ActionResult> UpdateGoalSetting(GoalDto goalDtos)
-        {
-            await _goalSettingService.UpdateGoalSettings(goalDtos);
-            return Ok();
-        }
+     
 
-        [HttpGet("PriceDecisionDetails"), AllowAnonymous]
+        [HttpGet("PriceDecisionDetails")]
         public async Task<ActionResult> PriceDecisionDetails()
         {
             var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
@@ -187,33 +177,6 @@ namespace Api.Controllers
             return Ok();
         }
 
-        [HttpGet("GetBalanceSheet")]
-        public async Task<ActionResult> GetBalanceSheet()
-        {
-            var studenClassMappingDtls = await _studentClassMappingService.GetDefaultByStudentID(LoggedUserId);
-            var groupId = studenClassMappingDtls.GroupSerial;
-            var classId = studenClassMappingDtls.ClassId;
-            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
-            var monthId = monthsDtls.MonthId;
-            var classDtls = await _classSessionService.GetById(classId);
-            var currentQuarter = classDtls.CurrentQuater;
-            var balanceSheetDetails = await _balanceSheetService.BalanceSheetDetails(monthId, groupId, currentQuarter);
-            return Ok(balanceSheetDetails);
-        }
-
-        [HttpPost("UpdateBalanceSheet")]
-        public async Task<ActionResult> UpdateBalanceSheet(BalanceSheetDto balanceSheetDto)
-        {
-            await _balanceSheetService.UpdateBalanceSheetDetails(balanceSheetDto);
-            return Ok();
-        }
-
-        [HttpPost("UpdateRoomAllocationDtls")]
-        public async Task<ActionResult> UpdateRoomAllocationDtls(List<RoomAllocationDto> roomAllocationDto)
-        {
-            await _roomAllocationService.UpdateRoomAlocations(roomAllocationDto);
-            return Ok();
-        }
 
         [HttpPost()]
         public async Task<ActionResult> UpsertStudentData(StudentRoleGroupAssign studentGroupMappingDto)

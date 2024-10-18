@@ -40,8 +40,21 @@ namespace Api.Controllers
             _balanceSheetService = balanceSheetService;
         }
 
+        [HttpPost("UpdateAttributeDecision")]
+        public async Task<ActionResult> UpdateAttributeDecision(List<AttributeDecisionDto> attributeDecisionDtos)
+        {
+            await _attributeDecisionService.UpdateAttributeDecision(attributeDecisionDtos);
+            return Ok();
+        }
+        [HttpPost("UpdateGoalSetting")]
+        public async Task<ActionResult> UpdateGoalSetting(GoalDto goalDtos)
+        {
+            await _goalSettingService.UpdateGoalSettings(goalDtos);
+            return Ok();
+        }
+
         [HttpPost("RoomAllocationDetails")]
-        public async Task<ActionResult> RoomAllocationDetails(StudentClassMappingDto studentClass)
+        public async Task<ActionResult> RoomAllocationDetails(StudentDecisionRequest studentClass)
         {
 
             var groupId = studentClass.GroupSerial;
@@ -65,6 +78,28 @@ namespace Api.Controllers
                 WeekdayTotal = classDtls.RoomInEachHotel,
                 WeekendTotal = classDtls.RoomInEachHotel
             });
+        }
+
+
+
+        [HttpGet("GetBalanceSheet")]
+        public async Task<ActionResult> GetBalanceSheet(StudentDecisionRequest studentDecision)
+        {
+            var groupId = studentDecision.GroupSerial;
+            var classId = studentDecision.ClassId;
+            var monthsDtls = await _monthService.GetMonthDtlsByClassId(classId);
+            var monthId = monthsDtls.MonthId;
+            var classDtls = await _classSessionService.GetById(classId);
+            var currentQuarter = classDtls.CurrentQuater;
+            var balanceSheetDetails = await _balanceSheetService.BalanceSheetDetails(monthId, groupId, currentQuarter);
+            return Ok(balanceSheetDetails);
+        }
+
+        [HttpPost("UpdateBalanceSheet")]
+        public async Task<ActionResult> UpdateBalanceSheet(BalanceSheetDto balanceSheetDto)
+        {
+            await _balanceSheetService.UpdateBalanceSheetDetails(balanceSheetDto);
+            return Ok();
         }
 
         [HttpPost("AttributeDecisionDetails")]
@@ -94,12 +129,6 @@ namespace Api.Controllers
             return Ok(goalSettingDetails);
         }
 
-        [HttpPost("UpdateGoalSetting")]
-        public async Task<ActionResult> UpdateGoalSetting(GoalDto goalDtos)
-        {
-            await _goalSettingService.UpdateGoalSettings(goalDtos);
-            return Ok();
-        }
 
         [HttpPost("PriceDecisionDetails")]
         public async Task<ActionResult> PriceDecisionDetails(StudentClassMappingDto studentClass)
@@ -154,18 +183,19 @@ namespace Api.Controllers
             return Ok(balanceSheetDetails);
         }
 
-        [HttpPost("UpdateBalanceSheet")]
-        public async Task<ActionResult> UpdateBalanceSheet(BalanceSheetDto balanceSheetDto)
-        {
-            await _balanceSheetService.UpdateBalanceSheetDetails(balanceSheetDto);
-            return Ok();
-        }
-
+   
         [HttpPost("UpdateRoomAllocationDtls")]
         public async Task<ActionResult> UpdateRoomAllocationDtls(List<RoomAllocationDto> roomAllocationDto)
         {
             await _roomAllocationService.UpdateRoomAlocations(roomAllocationDto);
             return Ok();
+        }
+
+        [HttpGet("studentRolelist/{studentId}")]
+        public async Task<ActionResult> GetStudentRoles(string studentId)
+        {
+            var studentRoleResult = await _studentRolesMappingService.GetStudentRolesById(studentId);
+            return Ok(studentRoleResult);
         }
 
         [HttpPost()]

@@ -20,6 +20,7 @@ import {
 } from 'rxjs';
 import { AccountService } from '../public/account';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class RefreshTokennterceptor implements HttpInterceptor {
@@ -27,7 +28,11 @@ export class RefreshTokennterceptor implements HttpInterceptor {
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private snakbar: MatSnackBar
+  ) {}
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((error) => {
@@ -35,6 +40,10 @@ export class RefreshTokennterceptor implements HttpInterceptor {
           this.handle401Error(next, req).subscribe((x) =>
             console.log('handle401Error', x)
           );
+        }
+        if (error.status == 400) {
+          const message = Object.values<string>(error.error).at(0);
+          this.snakbar.open(message!);
         }
         return throwError(error);
       })

@@ -48,23 +48,33 @@ namespace Service
                 {
                     Id = x.Id,
                     Title = x.Class.Title,
+                    ClassId = x.Class.ClassId,
                     FirstName = x.Student.FirstName,
                     LastName = x.Student.LastName,
                     Email = x.Student.Email,
                     Code = x.Class.Code,
                     Institute = x.Student.Institue,
                     StudentId = x.StudentId,
+                    GroupId = x.GroupId,
+                    GroupSerial = x.ClassGroup.Serial,
                     GroupName = x.ClassGroup.Name,
                     StartDate = x.Class.StartDate,
                     EndDate = x.Class.EndDate,
+                }).ToList();
 
-                })
-                .ToList();
+            var roleLookup = _context.StudentRoleMapping.Include(x => x.StudentRoles).Where(x => x.ClassId == ClassId).ToLookup(x => x.StudentId, x => x.StudentRoles);
+
+            Parallel.ForEach(studentList, std =>
+            {
+                var elist = roleLookup[std.StudentId];
+                std.Roles = _mapper.Map<StudentRoleDto[]>(elist);
+            });
 
             var classSessions = _context.ClassSessions.Include(x => x.Months).FirstOrDefault(x => x.ClassId == ClassId);
 
             var classDetails = new ClassSessionDto
             {
+                ClassId = classSessions.ClassId,
                 Title = classSessions.Title,
                 TotalStudentCount = studentList.Count,
                 StartDate = classSessions.StartDate,

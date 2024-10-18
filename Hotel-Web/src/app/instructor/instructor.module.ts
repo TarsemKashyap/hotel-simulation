@@ -8,6 +8,12 @@ import { SharedModule } from '../shared/shared.module';
 import { InstructorDashboard } from './dashboard/instructor-dashboard.component';
 import { ChangePasswordService } from '../admin/change-password/change-password.service';
 import { InstructorRouteModule } from './instructor-route.module';
+import {
+  DecisionManager,
+  DecisionModule,
+  InstructorDecisionManager,
+} from '../shared/decisions';
+import { ClassModule } from '../shared/class/class.module';
 
 @NgModule({
   declarations: [InstructorDashboard],
@@ -19,8 +25,17 @@ import { InstructorRouteModule } from './instructor-route.module';
     AgGridModule,
     MaterialModule,
     InstructorRouteModule,
+    DecisionModule,
+    ClassModule,
   ],
-  providers: [ChangePasswordService],
+  providers: [
+    ChangePasswordService,
+    {
+      provide: DecisionManager,
+      useClass: InstructorDecisionManager,
+      multi: false,
+    },
+  ],
   bootstrap: [InstructorDashboard],
 })
 export class InstructorModule {}

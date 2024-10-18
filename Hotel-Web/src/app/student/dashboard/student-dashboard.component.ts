@@ -18,7 +18,7 @@ export class StudentDashboard {
   studentRoleList: StudentRoles[] = [];
   studentRolePageList: RolePagesDtl[] = [];
   defaultClass: ClassSession | undefined;
-  roleLabel:string='';
+  roleLabel: string = '';
   constructor(
     private activeRoute: ActivatedRoute,
     private router: Router,
@@ -74,7 +74,7 @@ export class StudentDashboard {
   }
 
   openLink(studentRolePage: RolePagesDtl) {
-    const url=['./student', studentRolePage.childPageLink];
+    const url = ['./student', studentRolePage.childPageLink];
     this.router.navigate(url);
   }
 

@@ -13,26 +13,21 @@ import {
   RoomAllocationDetails,
   RoomAllocations,
 } from '../shared/class/model/classSession.model';
-import { DecisionService } from '../shared/decisions/decision/decision.service';
+import { StudentDecision } from '../shared/class/model/decision.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
   apiUrl: any;
-  constructor(
-    private httpClient: HttpClient,
-  ) {}
+  constructor(private httpClient: HttpClient) {}
 
   StudentRoleslist(): Observable<StudentRoles[]> {
-    return this.httpClient.post<StudentRoles[]>(
-      'roleMapping/studentRolelist',
-      ''
-    );
+    return this.httpClient.get<StudentRoles[]>('roleMapping/studentRolelist');
   }
 
   RoomAllocationList(
-    defaultClass: DefaultClassSession
+    defaultClass: StudentDecision
   ): Observable<RoomAllocationDetails> {
     return this.httpClient.post<RoomAllocationDetails>(
       'decision/RoomAllocationDetails',
@@ -41,7 +36,7 @@ export class StudentService {
   }
 
   AttributeDecisionList(
-    defaultClass: DefaultClassSession
+    defaultClass: StudentDecision
   ): Observable<AttributeDecision[]> {
     return this.httpClient.post<AttributeDecision[]>(
       'decision/AttributeDecisionDetails',
@@ -53,20 +48,20 @@ export class StudentService {
     attributeDecisionList: AttributeDecision[]
   ): Observable<any> {
     return this.httpClient.post(
-      `roleMapping/UpdateAttributeDecision`,
+      `decision/UpdateAttributeDecision`,
       attributeDecisionList
     );
   }
 
   RoomAllocationUpdate(roomAllocationList: RoomAllocations[]): Observable<any> {
     return this.httpClient.post(
-      `roleMapping/UpdateRoomAllocationDtls`,
+      `decision/UpdateRoomAllocationDtls`,
       roomAllocationList
     );
   }
 
   MarketingDetails(
-    defaultClass: DefaultClassSession
+    defaultClass: StudentDecision
   ): Observable<MarketingDecision[]> {
     return this.httpClient.post<MarketingDecision[]>(
       'decision/MarketingDetails',
@@ -74,7 +69,7 @@ export class StudentService {
     );
   }
 
-  GoalDetails(defaultClass: DefaultClassSession): Observable<Goal> {
+  GoalDetails(defaultClass: StudentDecision): Observable<Goal> {
     return this.httpClient.post<Goal>(
       'decision/GoalSettingDetails',
       defaultClass
@@ -86,7 +81,7 @@ export class StudentService {
   }
 
   BalanceSheetDetails(
-    defaultClass: DefaultClassSession
+    defaultClass: StudentDecision
   ): Observable<BalanceSheet> {
     return this.httpClient.post<BalanceSheet>(
       'decision/GetBalanceSheet',
@@ -95,20 +90,20 @@ export class StudentService {
   }
 
   UpdateGoalDetails(goalList: Goal): Observable<any> {
-    return this.httpClient.post(`roleMapping/UpdateGoalSetting`, goalList);
+    return this.httpClient.post(`decision/UpdateGoalSetting`, goalList);
   }
 
   UpdateMarketingDetails(
     marketingDecisionList: MarketingDecision[]
   ): Observable<any> {
     return this.httpClient.post(
-      `roleMapping/UpdateMarketingDetails`,
+      `decision/UpdateMarketingDetails`,
       marketingDecisionList
     );
   }
 
   PriceDecisionList(
-    defaultClass: DefaultClassSession
+    defaultClass: StudentDecision
   ): Observable<PriceDecision[]> {
     return this.httpClient.post<PriceDecision[]>(
       'decision/PriceDecisionDetails',
@@ -118,7 +113,7 @@ export class StudentService {
 
   PriceDecisionUpdate(priceDecisionList: PriceDecision[]): Observable<any> {
     return this.httpClient.post(
-      `roleMapping/UpdatePriceDecision`,
+      `decision/UpdatePriceDecision`,
       priceDecisionList
     );
   }

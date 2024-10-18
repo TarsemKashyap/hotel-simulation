@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,37 +11,44 @@ import {
   DecimalValidator,
   MarketingDecision,
 } from 'src/app/shared/class/model/classSession.model';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-marketing',
   templateUrl: './marketing.component.html',
   styleUrls: ['./marketing.component.css'],
 })
-export class MarketingComponent extends BaseDecision {
+export class MarketingComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted = false;
   errorMsg: string = '';
   totalOtherExpen: number = 0;
   totalOperatingExpen: number = 0;
   marketingDecisionList: MarketingDecision[] = [];
+  subscription: Subscription;
 
   ngOnInit(): void {
     this.marketDecisionList();
+    this.subscription = this.form.valueChanges.subscribe((val) => {
+      this.sum();
+    });
   }
 
   constructor(
     private studentService: StudentService,
     private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    injector: Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.form = this.createForm();
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private async marketDecisionList() {
-    let defaultClass = await this.getActiveClass();
+    let defaultClass = await this.decisionManager.getClassDecision();
 
     this.studentService.MarketingDetails(defaultClass).subscribe((data) => {
       this.marketingDecisionList = data;

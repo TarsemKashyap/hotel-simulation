@@ -4,6 +4,7 @@ import { RolePagesDtl, StudentRoles } from '../shared/class/model/Roles';
 import { JsonPipe } from '@angular/common';
 import { DefaultTitleStrategy } from '@angular/router';
 import { DefaultClassSession } from '../shared/class';
+import { StudentDecision } from '../shared/class/model/decision.model';
 
 const RefreshToken = 'RefreshToken';
 const AccessToken = 'AccessToken';
@@ -12,6 +13,7 @@ const studentRole = 'studentRole';
 const currentRole = 'currentRole';
 const studentDefaultClass = 'studentDefaultClass';
 const UrlClassId = 'urlClassId';
+const INST_STUDENT_DECISION="inst-student-decision"
 
 const manageClass = {
   pageKey: 'rmChangeClass',
@@ -131,5 +133,16 @@ export class SessionStore {
 
   clearSession() {
     return localStorage.clear();
+  }
+
+  SetStudentDecision(data:StudentDecision){
+    sessionStorage.setItem(INST_STUDENT_DECISION, JSON.stringify(data));
+  }
+  getStudentDecision(){
+    const std= sessionStorage.getItem(INST_STUDENT_DECISION);
+    if(std){
+      return JSON.parse(std);
+    }
+    throw new Error(`No value found for Key ${INST_STUDENT_DECISION} in session storage`)
   }
 }

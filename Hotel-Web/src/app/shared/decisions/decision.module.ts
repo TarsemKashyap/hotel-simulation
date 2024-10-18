@@ -13,6 +13,10 @@ import { PriceComponent } from './price/price.component';
 import { RoomComponent } from './room/room.component';
 import { RouterModule } from '@angular/router';
 import { StudentDecisionsComponent } from './student-decisions/student-decisions.component';
+import { SharedModule } from '../shared.module';
+import { DecisionManager } from './DecisionManager';
+import { StudentDecisionManager } from './StudentDecisionManager';
+import { InstructorDecisionManager } from './InstructorDecisionManager';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,7 @@ import { StudentDecisionsComponent } from './student-decisions/student-decisions
     MarketingComponent,
     PriceComponent,
     RoomComponent,
-    StudentDecisionsComponent
+    StudentDecisionsComponent,
   ],
   imports: [
     CommonModule,
@@ -32,7 +36,8 @@ import { StudentDecisionsComponent } from './student-decisions/student-decisions
     AgGridModule,
     MaterialModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SharedModule,
   ],
   exports: [
     DecisionComponent,
@@ -43,6 +48,7 @@ import { StudentDecisionsComponent } from './student-decisions/student-decisions
     PriceComponent,
     RoomComponent,
   ],
-  bootstrap: [DecisionComponent],
+  providers: [StudentDecisionManager, InstructorDecisionManager],
+  bootstrap: [],
 })
 export class DecisionModule {}

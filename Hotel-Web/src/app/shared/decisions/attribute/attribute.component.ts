@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Inject, inject, Injector } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,14 +14,14 @@ import { SessionStore } from 'src/app/store';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
 
 @Component({
   selector: 'app-attribute',
-  templateUrl: './attribute.component.html',  
+  templateUrl: './attribute.component.html',
   styleUrls: ['./attribute.component.css'],
 })
-export class AttributeComponent extends BaseDecision {
+export class AttributeComponent {
   form: FormGroup;
   submitted = false;
   totalAccumulated: string;
@@ -47,12 +47,11 @@ export class AttributeComponent extends BaseDecision {
         let newval = val ? val + value : value;
         map[key] = newval;
       }
-
       let newtotal = Object.values(map).reduce((p, c) => p + c, 0);
 
-      this.totalOther = map['Other'].toString();
-      this.totalLabour = map['Labour'].toString();
-      this.totalAmenities = map['Amenities'].toString();
+      this.totalOther = map['Other']?.toString();
+      this.totalLabour = map['Labour']?.toString();
+      this.totalAmenities = map['Amenities']?.toString();
       this.totalExpensesAllocated = newtotal.toString();
     });
   }
@@ -63,9 +62,8 @@ export class AttributeComponent extends BaseDecision {
     private sessionStore: SessionStore,
     private router: Router,
     private _snackBar: MatSnackBar,
-    injector: Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.currentRole = this.sessionStore.GetRoleids();
     if (!this.currentRole) {
       this.router.navigate(['']);
@@ -76,11 +74,10 @@ export class AttributeComponent extends BaseDecision {
     return this.form.controls;
   }
 
-  private async attributeDecisionList() {
-    let defaultClass = await this.getActiveClass();
-    this.studentService
-      .AttributeDecisionList(defaultClass)
-      .subscribe((data) => {
+  private attributeDecisionList() {
+    let defaultClass = this.decisionManager.getClassDecision();
+    this.studentService.AttributeDecisionList(defaultClass).subscribe({
+      next: (data) => {
         this.totalAccumulated = data
           .filter((p) => (p.accumulatedCapital ? true : false))
           .map((p) => p.accumulatedCapital)
@@ -92,7 +89,14 @@ export class AttributeComponent extends BaseDecision {
         this.disableFieldFB();
         this.disableFormRevenueManager();
         this.disableFieldRoomManager();
-      });
+      },
+      error: (err) => {
+        if (err.status == 400) {
+          const message = Object.values<string>(err.error).at(0);
+          this._snackBar.open(message!);
+        }
+      },
+    });
   }
 
   private patchForm(data: AttributeDecision[]) {

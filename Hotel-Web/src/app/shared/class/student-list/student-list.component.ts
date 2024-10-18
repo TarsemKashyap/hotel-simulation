@@ -7,12 +7,13 @@ import { StudentRolesEditComponent } from '../student-roles-edit/student-roles-e
 import { MatDialog } from '@angular/material/dialog';
 import { GridActionComponent } from '../grid-action/grid-action.component';
 import { GridActionParmas, RowAction } from '../grid-action/grid-action.model';
-import { ColDef, IRowNode } from 'ag-grid-community';
+import { ColDef, IRowNode, RowNode } from 'ag-grid-community';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { ClassInformation, ClassSession } from '../model/classSession.model';
 import { ClassModule } from '../class.module';
 import { StudentDecisionsComponent } from '../../decisions/student-decisions/student-decisions.component';
+import { InstructorDecisionManager } from '../../decisions';
 
 @Component({
   selector: 'app-student-list',
@@ -26,11 +27,28 @@ export class StudentListComponent {
   columnDefs: ColDef[] = [
     {
       field: 'firstName',
+      headerName: 'Student',
+      cellRenderer: (param: RowNode<any>) => {
+        return `${param.data!.firstName} ${param.data!.lastName}`;
+      },
     },
-    { field: 'lastName' },
     { field: 'email' },
     { field: 'institute' },
     { field: 'groupName' },
+    {
+      field: 'Roles',
+      cellRenderer: (param: RowNode<any>) => {
+        console.log(param);
+        return (param.data as StudentList).roles
+          .map((s) => s.roleName)
+          .join(',');
+      },
+      tooltipValueGetter: (param: any) => {
+        return (param.data as StudentList).roles
+          .map((s) => s.roleName)
+          .join(',');
+      },
+    },
     {
       field: 'action',
       cellRenderer: GridActionComponent,
@@ -45,7 +63,7 @@ export class StudentListComponent {
             hide: () => false,
           },
           {
-            placeHolder: 'visibility',
+            placeHolder: 'dataset',
             mode: 'icon',
             tooltip: 'View Decisions',
             cssClass: 'hover:text-primary',
@@ -57,8 +75,7 @@ export class StudentListComponent {
     },
   ];
   defaultColDef: ColDef = {
-    flex: 1,
-    minWidth: 150,
+    // minWidth: 150,
     filter: 'agTextColumnFilter',
     sortable: true,
   };
@@ -71,7 +88,8 @@ export class StudentListComponent {
     private activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private decisionManager: InstructorDecisionManager
   ) {}
 
   ngOnInit(): void {
@@ -88,10 +106,11 @@ export class StudentListComponent {
 
   onDecisionClick() {
     return ($event: Event, row: IRowNode<StudentList>) => {
+      this.decisionManager.setGridRow(row.data as StudentList);
       const dialogRef = this.dialog.open(StudentDecisionsComponent, {
-        width: '90%',
-        height: '90%',
-        data: Object.assign({}, row.data, { classId: this.classId }),
+        width: '95%',
+        height: '95%',
+        data: Object.assign({}, row.data),
       });
 
       dialogRef.beforeClosed().subscribe((x) => {

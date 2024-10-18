@@ -15,14 +15,14 @@ import {
   RoomAllocations,
 } from 'src/app/shared/class/model/classSession.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BaseDecision } from '../decision/decision.component';
+import { DecisionManager } from '../DecisionManager';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-export class RoomComponent extends BaseDecision {
+export class RoomComponent {
   form: FormGroup;
   submitted = false;
   WeekdayTotal: number = 0;
@@ -40,14 +40,13 @@ export class RoomComponent extends BaseDecision {
     private studentService: StudentService,
     private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    injector: Injector
+    private decisionManager: DecisionManager
   ) {
-    super(injector);
     this.form = this.createForm();
   }
 
   private async roomAllocationList() {
-    let defaultClass = await this.getActiveClass();
+    let defaultClass = this.decisionManager.getClassDecision();
 
     this.studentService.RoomAllocationList(defaultClass).subscribe(
       (data) => {

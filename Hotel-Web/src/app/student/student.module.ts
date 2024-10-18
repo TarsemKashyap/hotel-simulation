@@ -10,7 +10,11 @@ import { SharedModule } from '../shared/shared.module';
 import { StudentDashboard } from './dashboard/student-dashboard.component';
 import { ChangePasswordService } from '../admin/change-password/change-password.service';
 import { AccountService } from '../public/account';
-import { DecisionModule } from '../shared/decisions';
+import {
+  DecisionManager,
+  DecisionModule,
+  StudentDecisionManager,
+} from '../shared/decisions';
 
 @NgModule({
   declarations: [StudentDashboard],
@@ -23,9 +27,17 @@ import { DecisionModule } from '../shared/decisions';
     MaterialModule,
     StudentRouteModule,
     FormsModule,
-    DecisionModule,
+    //DecisionModule,
   ],
-  providers: [ChangePasswordService, AccountService],
+  providers: [
+    ChangePasswordService,
+    AccountService,
+    {
+      provide: DecisionManager,
+      useClass: StudentDecisionManager,
+      multi: false,
+    },
+  ],
   bootstrap: [StudentDashboard],
 })
 export class StudentModule {}
