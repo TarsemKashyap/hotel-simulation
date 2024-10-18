@@ -33,10 +33,11 @@ export class StudentListComponent {
       },
     },
     { field: 'email' },
-    { field: 'institute' },
+    /// { field: 'institute' },
     { field: 'groupName' },
     {
       field: 'Roles',
+      flex: 4,
       cellRenderer: (param: RowNode<any>) => {
         console.log(param);
         return (param.data as StudentList).roles
@@ -52,6 +53,7 @@ export class StudentListComponent {
     {
       field: 'action',
       cellRenderer: GridActionComponent,
+      flex: 2,
       cellRendererParams: {
         actions: [
           {
@@ -75,9 +77,8 @@ export class StudentListComponent {
     },
   ];
   defaultColDef: ColDef = {
-    // minWidth: 150,
-    filter: 'agTextColumnFilter',
-    sortable: true,
+    minWidth: 150,
+    resizable: true,
   };
 
   $rows: StudentList[] = [];

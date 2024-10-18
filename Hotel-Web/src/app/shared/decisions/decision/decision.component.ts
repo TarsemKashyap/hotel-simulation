@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, DefaultUrlSerializer, Router } from '@angular/router';
 import { AccountService, AppRoles } from 'src/app/public/account';
 import { IHyperLinks } from 'src/app/Report/report-list/IHyperLinks.model';
-import { StudentRoles } from 'src/app/shared/class/model/StudentRoles';
+import { StudentRoles as StudentRoles } from 'src/app/shared/class/model/StudentRoles';
 import { SessionStore } from 'src/app/store';
 
 @Component({

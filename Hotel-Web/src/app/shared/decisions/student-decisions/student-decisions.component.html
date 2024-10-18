@@ -1,22 +1,23 @@
 <div class="flex-row">
-  <mat-icon 
-    class="text-white-500 float-right border-solid" mat-dialog-close
+  <mat-icon
+    class="text-white-500 float-right border-solid"
+    mat-dialog-close
     matRipple
     fontIcon="close"
   ></mat-icon>
 
   <mat-tab-group>
-    <mat-tab label="Room Allocation Decisions">
-      <app-room></app-room>
+    <mat-tab *ngIf="showRoom" label="Room Allocation Decisions">
+      <app-room ></app-room>
     </mat-tab>
-    <mat-tab label="Hotel Attributes and Amenities Decisions">
-      <app-attribute></app-attribute>
+    <mat-tab *ngIf="showAttribute" label="Hotel Attributes and Amenities Decisions">
+      <app-attribute ></app-attribute>
     </mat-tab>
-    <mat-tab label="Room Rate Decisions">
-      <app-price></app-price>
+    <mat-tab *ngIf="showRate" label="Room Rate Decisions">
+      <app-price ></app-price>
     </mat-tab>
-    <mat-tab label="Marketing Decisions">
-      <app-marketing></app-marketing>
+    <mat-tab  *ngIf="showmkt" label="Marketing Decisions">
+      <app-marketing ></app-marketing>
     </mat-tab>
   </mat-tab-group>
 </div>
