@@ -1,12 +1,11 @@
 <section class="flex-auto">
-  <div class="flex-row text-2xl pb-10 text-primary">Enter your decisions</div>
+  <div class="flex-row text-xl text-bold pb-10 text-primary">Enter your decisions</div>
   <div class="flex-row text-base">
     <ul>
       <li
-        class="hover:text-primary"
+        class="hover:text-primary text-base"
         *ngFor="let link of activeLinks; let i = index"
       >
-        {{ i + 1 }}.
         <a [routerLink]="[link.link]" class="mx-5 my-10 hover:underline">
           {{ link.text }}</a
         >

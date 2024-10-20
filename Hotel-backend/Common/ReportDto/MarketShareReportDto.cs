@@ -42,7 +42,8 @@ namespace Common.ReportDto
 
         public static Segment Create(string segment)
         {
-            return new Segment(segment);
+            string uiLabel = SEGMENTS.UI_Label(segment);
+            return new Segment(uiLabel);
         }
 
         public List<CategoryLine> Segments { get; private set; } = new List<CategoryLine>();

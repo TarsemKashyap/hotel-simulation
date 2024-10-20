@@ -63,7 +63,7 @@ public class RoomRateReportService : AbstractReportService, IRoomRateReportServi
     private static RoomRateDto GetSegments(string label, List<SoldRoomByChannel> soldRoom, IEnumerable<PriceDecision> priceDecision)
     {
         var dto = new RoomRateDto();
-        dto.Label = label;
+        dto.Label = SEGMENTS.UI_Label(label);
 
         var soldRoomWeeday = soldRoom.FirstOrDefault(x => x.Weekday);
         // weekday

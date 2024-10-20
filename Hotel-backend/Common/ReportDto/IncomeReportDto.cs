@@ -8,7 +8,7 @@ namespace Common.ReportDto
         public ReportAttribute TotalDepartIncome { get; set; } = new ReportAttribute { Label = "TOTAL DEPARTMENTAL INCOME" };
         public UndistOperatingExpenses UndistOperatingExpenses { get; set; }
         public ReportAttribute GrossOperatingProfit { get; set; } = new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
-        public ReportAttribute ManagmentFees { get; set; } = new ReportAttribute { Label = "GROSS OPERATING PROFIT" };
+        public ReportAttribute ManagmentFees { get; set; } = new ReportAttribute { Label = "MANAGEMENT FEES" };
         public ReportAttribute IncomeBeforeFixedCharges { get; set; } = new ReportAttribute { Label = "INCOME BEFORE FIXED CHARGES" };
         public FixedCharges FixedCharges { get; set; }
         public ReportAttribute NetOperatingIncome { get; set; } = new ReportAttribute { Label = "NET OPERATING INCOME (BEFORE TAX)" };

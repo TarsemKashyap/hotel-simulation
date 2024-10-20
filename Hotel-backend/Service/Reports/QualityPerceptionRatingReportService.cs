@@ -118,7 +118,7 @@ namespace Service.Reports
 
             return new SegmentRating
             {
-                Label = "OverAll",
+                Label = "Overall Quality Perception Rating",
                 Hotel = MaxPossibleHotelRating == 0 ? 0 : ((trueHotelRating * 100) / MaxPossibleHotelRating),
                 MarketAverage = MaxPossibleHotelRating2 == 0 ? 0 : ((trueHotelRating2 * 100) / MaxPossibleHotelRating2),
             };
@@ -166,7 +166,7 @@ namespace Service.Reports
             decimal avgRating = _weightedRatingList.Where(x => x.Segment.Equals(segment)).Average(x => x.CustomerRating) * 100 / weight;
             return new SegmentRating
             {
-                Label = segment,
+                Label = SEGMENTS.UI_Label(segment),
                 Hotel = rating,
                 MarketAverage = avgRating
 

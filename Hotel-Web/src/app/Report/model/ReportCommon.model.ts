@@ -42,12 +42,13 @@ export interface propertyEquipement {
   netPropertyAndEquipment: ReportAttribute;
   propertyAndEquipment: ReportAttribute;
 }
-export interface libilitiesAndOwnerEquity1 {
+export interface libilitiesAndOwnerEquity {
   libilitiesAndOwnerEquity: ReportAttribute;
   currentLibalities: ReportAttribute;
   emergencyLoan: ReportAttribute;
   longTermDebt: ReportAttribute;
-  totalLibbalities: ReportAttribute;
+  totalLibbalities: ReportAttribute;  
+  label:string;
 }
 export interface IoccupancyBySegment {
   segmentTitle: string;

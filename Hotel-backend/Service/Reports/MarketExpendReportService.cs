@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Service;
 
@@ -37,7 +38,7 @@ public class MarketExpendReportService : IMarketExpendReportService
         MarketingSegment associationMeetings = Segment(SEGMENTS.ASSOCIATION_MEETINGS, _marketingList);
 
         MarketingExpensReportDto reportDto = new MarketingExpensReportDto();
-        reportDto.Segments = new List<MarketingSegment>() { business, smallBusiness, CoroporateContract, families, afluentMatureTravlers, internationLeisureTravel, CoroporateContract, associationMeetings };
+        reportDto.Segments = new List<MarketingSegment>() { business, smallBusiness, CoroporateContract, families, afluentMatureTravlers, internationLeisureTravel, corporateBusinessMeet, associationMeetings };
 
         await SetMarketAvg(p, reportDto.Segments);
 
@@ -94,9 +95,10 @@ public class MarketExpendReportService : IMarketExpendReportService
     private MarketingSegment Segment(string segment, List<MarketingDecision> _marketingList)
     {
         var dict = _marketingList.Where(x => x.Segment == segment).ToDictionary(x => x.MarketingTechniques);
+        string label = SEGMENTS.UI_Label(segment);
         return new MarketingSegment
         {
-            Label = segment,
+            Label = label,
             Labor = new SegmentDetail
             {
                 Label = "Labor",

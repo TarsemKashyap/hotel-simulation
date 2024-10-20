@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -119,7 +120,8 @@ namespace Service.Reports
 
         private MarketSharePositionDto PositionDto(ReportParams p, string segment)
         {
-            return new MarketSharePositionDto(segment)
+            string label = SEGMENTS.UI_Label(segment);
+            return new MarketSharePositionDto(label)
                .MarketShare(ActualMarketShare(p, segment))
                .Position(ActualMarketPosition(p, segment));
         }

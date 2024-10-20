@@ -19,6 +19,6 @@ export class InstructorDashboard implements OnInit {
 
   logout() {
     this.accountService.clearSession();
-    //this.router.navigate([`login`]);
+    this.router.navigate([`login`]);
   }
 }

@@ -115,7 +115,7 @@ public class BalanceReportService : AbstractReportService, IBalanceReportService
         report.LibilitiesAndOwnerEquity.LongTermDebt = longTermDebt;
         report.LibilitiesAndOwnerEquity.EmergencyLoan = emergencyLoan;
         report.LibilitiesAndOwnerEquity.TotalLibbalities = totalLibilites;
-        report.TotalAssests.AddChild(currentLibailities);
+       // report.TotalAssests.AddChild(currentLibailities);
         return report;
 
     }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Intrinsics.X86;
+﻿using System.Globalization;
+using System.Runtime.Intrinsics.X86;
 
 namespace Common
 {
@@ -13,7 +14,25 @@ namespace Common
         public const string CORPORATE_BUSINESS_MEETINGS = "Corporate/Business Meetings";
         public const string ASSOCIATION_MEETINGS = "Association Meetings";
         public static readonly string[] list = new string[] { BUSINESS, SMALL_BUSINESS, CORPORATE_CONTRACT, FAMILIES, AFLUENT_MATURE_TRAVELERS, INTERNATIONAL_LEISURE_TRAVELERS, CORPORATE_BUSINESS_MEETINGS, ASSOCIATION_MEETINGS };
+
+        public static string UI_Label(string label)
+        {
+            return label switch
+            {
+                BUSINESS => BUSINESS,
+                SMALL_BUSINESS => SMALL_BUSINESS,
+                CORPORATE_CONTRACT => "Corporate Contract",
+                FAMILIES => FAMILIES,
+                AFLUENT_MATURE_TRAVELERS => AFLUENT_MATURE_TRAVELERS,
+                INTERNATIONAL_LEISURE_TRAVELERS => "International Leisure Travelers",
+                CORPORATE_BUSINESS_MEETINGS => CORPORATE_BUSINESS_MEETINGS,
+                ASSOCIATION_MEETINGS => ASSOCIATION_MEETINGS,
+                _ => label
+            };
+        }
     }
+
+
 
     public class MARKETING_TECHNIQUE
     {

@@ -9,18 +9,16 @@
         <div>Total emergency loan amount</div>
         <div>$ {{ emergencyLoan }}</div>
       </div>
-      <h2>Total long-term loan amount you want to pay</h2>
+      <h2>Pay long-term loan</h2>
       <div class="grid w-[60%] grid-cols-2 gap-4 pb-5">
-        <div>Pay long-term loan</div>
+        <div>Total long-term loan amount you want to pay</div>
         <div>
-          $<input
-            type="text"
+          $<textbox
             formControlName="payLongTermLoan"
             [ngClass]="{
               'is-invalid': submitted && f.payLongTermLoan.errors
             }"
-            class="input-field"
-          />
+          ></textbox>
           <div *ngIf="submitted && f.payLongTermLoan.errors">
             <div *ngIf="f.payLongTermLoan.errors.required">
               Value is required
@@ -33,14 +31,13 @@
         </div>
         <div>Total emergency loan amount you want to pay</div>
         <div>
-          $<input
-            type="text"
+          $<textbox
             formControlName="payEmergencyLoan"
             [ngClass]="{
               'is-invalid': submitted && f.payEmergencyLoan.errors
             }"
-            class="input-field"
-          />
+           ></textbox>
+            
           <div *ngIf="submitted && f.payEmergencyLoan.errors">
             <div *ngIf="f.payEmergencyLoan.errors.required">
               Value is required
@@ -56,14 +53,12 @@
       <div class="grid w-[60%] grid-cols-2 gap-4 pb-5">
         <div>Total long-term loan you want borrow</div>
         <div>
-          $<input
-            type="text"
+          $<textbox
             formControlName="borrowLongTermLoan"
             [ngClass]="{
               'is-invalid': submitted && f.borrowLongTermLoan.errors
             }"
-            class="input-field"
-          />
+          ></textbox>
           <div *ngIf="submitted && f.borrowLongTermLoan.errors">
             <div *ngIf="f.borrowLongTermLoan.errors.required">
               Value is required
