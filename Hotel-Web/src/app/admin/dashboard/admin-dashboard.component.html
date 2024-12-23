@@ -3,7 +3,7 @@
     class="relative bg-sidebar bg-primary h-screen w-64 hidden sm:block shadow-xl"
   >
     <div class="p-6">
-      <a href="/" class="text-white text-3xl uppercase hover:text-gray-300"
+      <a href="/admin" class="text-white text-3xl uppercase hover:text-gray-300"
         >Admin</a
       >
     </div>
@@ -54,7 +54,7 @@
 
       <button
         (click)="logout()"
-        class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+        class="flex items-center text-primary opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
       >
         <mat-icon
           class="text-white-500"
@@ -70,13 +70,22 @@
   <div class="w-full flex flex-col h-screen overflow-y-hidden">
     <!-- Desktop Header -->
     <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
-      <div class="w-1/2"></div>
+      <div class="w-1/2">
+        <a href="/admin" class="navbar-logo block w-full py-0">
+          <img 
+            src="assets/images/logo/blue-logo.png"
+            alt="logo"
+            class="header-logo logo w-full"
+          />
+        </a>
+
+      </div>
       <div class="relative w-1/2 flex justify-end">
         <button
           [matMenuTriggerFor]="menu"
-          class="realtive z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none"
+          class="realtive z-10 w-12 h-12 rounded-full border-primary overflow-hidden border-4 focus:outline-none"
         >
-          <img src="" />
+        <mat-icon class="text-primary" fontIcon="person"></mat-icon>
         </button>
 
         <mat-menu #menu="matMenu">
